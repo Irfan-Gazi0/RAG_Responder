@@ -1,4 +1,4 @@
-# Ford Mustang Mach-E 2026 — First Responder RAG Portal
+# First Responder RAG Portal
 
 An AI-powered web portal for firefighters, paramedics, and first responders. Combines a 360° interactive training video with a chatbot that answers emergency response questions using the official Emergency Response Guide (ERG), Rescue Sheet, and training video transcripts — all indexed into a Pinecone vector store and routed through an n8n AI agent.
 
