@@ -1,0 +1,28 @@
+# API keys — never commit
+.env
+
+# Claude Code project instructions
+CLAUDE.md
+
+# Large video files
+360/*.mp4
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+env/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride

@@ -1,0 +1,6516 @@
+{
+  "segments": [
+    {
+      "id": 1,
+      "start": 0.0,
+      "end": 27.86,
+      "start_hms": "00:00:00",
+      "end_hms": "00:00:27",
+      "text": "In coming, my name is Madison Schmidt. I'm with the Nebraska clean cities and communities coalition. The clean cities and communities partnership is from the department of energy and the net coalition across the nation that are committed to promoting and advancing clean transportation in a safe manner, which is why we're here today to learn about electric vehicles and how to approach them safely during emergencies."
+    },
+    {
+      "id": 2,
+      "start": 30.0,
+      "end": 37.44,
+      "start_hms": "00:00:30",
+      "end_hms": "00:00:37",
+      "text": "Our instructor today is Barry Smith from Southeast Community College. He's the program director of technology."
+    },
+    {
+      "id": 3,
+      "start": 39.36,
+      "end": 41.8,
+      "start_hms": "00:00:39",
+      "end_hms": "00:00:41",
+      "text": "We're just going to get right into it. Thanks so much."
+    },
+    {
+      "id": 4,
+      "start": 44.2,
+      "end": 45.0,
+      "start_hms": "00:00:44",
+      "end_hms": "00:00:45",
+      "text": "Thank you."
+    },
+    {
+      "id": 5,
+      "start": 45.0,
+      "end": 71.56,
+      "start_hms": "00:00:45",
+      "end_hms": "00:01:11",
+      "text": "Hi everybody and I'm Barry Smith. I've been teaching for Southeast Community College for the last 23 years, and for about the last 10, I've taught most of the EV hybrid related classes for them. I worked for Honda in Lincoln when we got our first Honda Insight back in 2000."
+    },
+    {
+      "id": 6,
+      "start": 72.24000000000001,
+      "end": 82.36,
+      "start_hms": "00:01:12",
+      "end_hms": "00:01:22",
+      "text": "And so I've been kind of dabbling with EVs as they have continued to evolve and continue to add more and more models to our market."
+    },
+    {
+      "id": 7,
+      "start": 84.32000000000001,
+      "end": 93.12,
+      "start_hms": "00:01:24",
+      "end_hms": "00:01:33",
+      "text": "We're to a point now where there's lots of long road and we're seeing the need for people to be prepared to actually deal with them."
+    },
+    {
+      "id": 8,
+      "start": 95.32000000000001,
+      "end": 96.88,
+      "start_hms": "00:01:35",
+      "end_hms": "00:01:36",
+      "text": "So I'll start with."
+    },
+    {
+      "id": 9,
+      "start": 101.56,
+      "end": 119.96000000000001,
+      "start_hms": "00:01:41",
+      "end_hms": "00:01:59",
+      "text": "So there are, if you look at like in 2020, the U.S. moved into a high volume. We became basically the fastest growing consumer electric hybrid vehicle in the world. We don't have most of them on the road, but we're kind of fast at growing them."
+    },
+    {
+      "id": 10,
+      "start": 120.08,
+      "end": 121.47999999999999,
+      "start_hms": "00:02:00",
+      "end_hms": "00:02:01",
+      "text": "We've got a few painted faces."
+    },
+    {
+      "id": 11,
+      "start": 121.48,
+      "end": 130.48000000000002,
+      "start_hms": "00:02:01",
+      "end_hms": "00:02:10",
+      "text": "electric hybrid vehicle in the world. We don't have most of them on the road, but we're kind of fast at growing."
+    },
+    {
+      "id": 12,
+      "start": 130.48,
+      "end": 134.48,
+      "start_hms": "00:02:10",
+      "end_hms": "00:02:14",
+      "text": "We got."
+    },
+    {
+      "id": 13,
+      "start": 134.48,
+      "end": 142.48,
+      "start_hms": "00:02:14",
+      "end_hms": "00:02:22",
+      "text": "We got."
+    },
+    {
+      "id": 14,
+      "start": 142.48,
+      "end": 169.48,
+      "start_hms": "00:02:22",
+      "end_hms": "00:02:49",
+      "text": "So I tested this thing before I left this morning."
+    },
+    {
+      "id": 15,
+      "start": 170.48,
+      "end": 179.48,
+      "start_hms": "00:02:50",
+      "end_hms": "00:02:59",
+      "text": "All right, so anyway, I'm just going to keep going and we'll hopefully catch anybody up that has to step out."
+    },
+    {
+      "id": 16,
+      "start": 179.48,
+      "end": 187.48,
+      "start_hms": "00:02:59",
+      "end_hms": "00:03:07",
+      "text": "50% increase in sales. So again, bottom line is this line is to say there's a lot of."
+    },
+    {
+      "id": 17,
+      "start": 187.48,
+      "end": 199.48,
+      "start_hms": "00:03:07",
+      "end_hms": "00:03:19",
+      "text": "Okay, this is Mercedes Benz is version of kind of a super car and so these numbers are pretty extreme and not what we're seeing on the average vehicle out there."
+    },
+    {
+      "id": 18,
+      "start": 199.48,
+      "end": 205.48,
+      "start_hms": "00:03:19",
+      "end_hms": "00:03:25",
+      "text": "But we've got vehicles that are coming on the road and they have 620 miles of range and 800 volt battery."
+    },
+    {
+      "id": 19,
+      "start": 206.48,
+      "end": 214.48,
+      "start_hms": "00:03:26",
+      "end_hms": "00:03:34",
+      "text": "When you look at the more average vehicle that most consumers are buying, we're more in the 3 to 400 volt range."
+    },
+    {
+      "id": 20,
+      "start": 214.48,
+      "end": 226.48,
+      "start_hms": "00:03:34",
+      "end_hms": "00:03:46",
+      "text": "Okay, most consumers are now purchasing vehicles that get well over 200 miles of range and 300 is becoming kind of the more normal average for the cars being sold today."
+    },
+    {
+      "id": 21,
+      "start": 226.48,
+      "end": 247.48,
+      "start_hms": "00:03:46",
+      "end_hms": "00:04:07",
+      "text": "Okay, I grabbed just a couple more. Again, when you look at the price point of these, you can get up to 512 miles out of something in the $100,000 range, but you know a Chevy Volt that was sold in 23 is less than $30,000 and you get 250 miles of range out."
+    },
+    {
+      "id": 22,
+      "start": 247.48,
+      "end": 257.48,
+      "start_hms": "00:04:07",
+      "end_hms": "00:04:17",
+      "text": "So I guess I would like to just show these cars are becoming real, just normal. They can do all the normal things that most of us expect to do."
+    },
+    {
+      "id": 23,
+      "start": 257.48,
+      "end": 270.48,
+      "start_hms": "00:04:17",
+      "end_hms": "00:04:30",
+      "text": "Okay, the good news is that with these car cases, the good news is that these cars burn less."
+    },
+    {
+      "id": 24,
+      "start": 271.48,
+      "end": 287.48,
+      "start_hms": "00:04:31",
+      "end_hms": "00:04:47",
+      "text": "Statistically, for every 100,000 EV sold, the U.S. National Transportation Safety Board says about 25,000 will be in fires in their lifetime, right?"
+    },
+    {
+      "id": 25,
+      "start": 287.48,
+      "end": 295.48,
+      "start_hms": "00:04:47",
+      "end_hms": "00:04:55",
+      "text": "And then we expect about 1,500 fires in gas powered vehicles for every 100,000 or so."
+    },
+    {
+      "id": 26,
+      "start": 295.48,
+      "end": 317.48,
+      "start_hms": "00:04:55",
+      "end_hms": "00:05:17",
+      "text": "So we're not seeing, I guess we could say, high volumes of actual fires, right? But the concern is more when they do burn. It can be very, very difficult to contain, to deal with being the length of time they can burn, some of that stuff."
+    },
+    {
+      "id": 27,
+      "start": 317.48,
+      "end": 332.48,
+      "start_hms": "00:05:17",
+      "end_hms": "00:05:32",
+      "text": "Okay, I would like to make sure everybody understands when you're looking at these vehicles, one of the most important things will be identifying what you're actually seeing in an accident, right?"
+    },
+    {
+      "id": 28,
+      "start": 332.48,
+      "end": 346.48,
+      "start_hms": "00:05:32",
+      "end_hms": "00:05:46",
+      "text": "There are four different classifications that most of us use for this. So hydroelectric vehicles or HEDs, this would be very similar to all the Priuses that were sold 10 years ago and beyond."
+    },
+    {
+      "id": 29,
+      "start": 346.48,
+      "end": 355.48,
+      "start_hms": "00:05:46",
+      "end_hms": "00:05:55",
+      "text": "So you've got a gas motor in it, you've got a gas tank, and there's fuel in there. From that standpoint, plus you have a high voltage battery."
+    },
+    {
+      "id": 30,
+      "start": 355.48,
+      "end": 363.48,
+      "start_hms": "00:05:55",
+      "end_hms": "00:06:03",
+      "text": "The good news is most of this early stuff was different metal hydrate batteries, so your fire risk is really low."
+    },
+    {
+      "id": 31,
+      "start": 363.48,
+      "end": 370.48,
+      "start_hms": "00:06:03",
+      "end_hms": "00:06:10",
+      "text": "It's not the same concern we have with all the new modern weapons that are getting us this high range."
+    },
+    {
+      "id": 32,
+      "start": 370.48,
+      "end": 386.48,
+      "start_hms": "00:06:10",
+      "end_hms": "00:06:26",
+      "text": "Okay, then we went into a plug-in. These are kind of an intermediate where they still can have gasoline, but these are vehicles that were designed to actually plug in overnight and maybe get to about 20 to 30 miles range before the gas motor would kick in."
+    },
+    {
+      "id": 33,
+      "start": 386.48,
+      "end": 393.48,
+      "start_hms": "00:06:26",
+      "end_hms": "00:06:33",
+      "text": "Real popular, I would say, right at 10 to about 15 years ago."
+    },
+    {
+      "id": 34,
+      "start": 393.48,
+      "end": 409.48,
+      "start_hms": "00:06:33",
+      "end_hms": "00:06:49",
+      "text": "We move into the battery EV stuff, but now we're talking about no gasoline motor, no gas storage on there as far as gasoline, and then all electric energy that's coming from a battery."
+    },
+    {
+      "id": 35,
+      "start": 409.48,
+      "end": 414.48,
+      "start_hms": "00:06:49",
+      "end_hms": "00:06:54",
+      "text": "By the time you get into that, we're almost all lithium batteries in order to get a useful range, right?"
+    },
+    {
+      "id": 36,
+      "start": 414.48,
+      "end": 428.48,
+      "start_hms": "00:06:54",
+      "end_hms": "00:07:08",
+      "text": "If you want 100 miles or more, you're going to have to drop the nickel metal hydrate, and so the battery fires become more concerning because of the lithium gases that basically can be produced when they're low."
+    },
+    {
+      "id": 37,
+      "start": 428.48,
+      "end": 441.48,
+      "start_hms": "00:07:08",
+      "end_hms": "00:07:21",
+      "text": "Extended range vehicles, really what I'm telling you here is that we are now reaching a point where car makers are really sticking batteries in almost any free space they can come up with."
+    },
+    {
+      "id": 38,
+      "start": 441.48,
+      "end": 450.48,
+      "start_hms": "00:07:21",
+      "end_hms": "00:07:30",
+      "text": "So we're finding that. I stated that they all keep them below the belt line of the car, so they're all typically low."
+    },
+    {
+      "id": 39,
+      "start": 450.48,
+      "end": 455.48,
+      "start_hms": "00:07:30",
+      "end_hms": "00:07:35",
+      "text": "But my point is they're getting real creative about how many batteries they can fit in that space."
+    },
+    {
+      "id": 40,
+      "start": 455.48,
+      "end": 468.48,
+      "start_hms": "00:07:35",
+      "end_hms": "00:07:48",
+      "text": "And we're getting vehicles, like I showed you before, that easily go 300 miles, and it's not uncommon for this market probably to get pushed into that 4500 over the next 500 years."
+    },
+    {
+      "id": 41,
+      "start": 468.48,
+      "end": 480.48,
+      "start_hms": "00:07:48",
+      "end_hms": "00:08:00",
+      "text": "All right, so if you're having a familiarity with the way that we've wired the electric system in typical vehicles for many, many years, this is an example of how we traditionally have done."
+    },
+    {
+      "id": 42,
+      "start": 480.48,
+      "end": 494.48,
+      "start_hms": "00:08:00",
+      "end_hms": "00:08:14",
+      "text": "This is not the EV world. This is just, hey, I've got a gas powered vehicle. I want a starter that starts the vehicle for me. I want all the accessories that run off electrical systems in my car."
+    },
+    {
+      "id": 43,
+      "start": 494.48,
+      "end": 509.48,
+      "start_hms": "00:08:14",
+      "end_hms": "00:08:29",
+      "text": "So we take our battery, right, we insulate typically the positive side, we've got our working loads out there, and we use the vehicle's frame, its chassis, as part of the conductive circuit."
+    },
+    {
+      "id": 44,
+      "start": 509.48,
+      "end": 524.48,
+      "start_hms": "00:08:29",
+      "end_hms": "00:08:44",
+      "text": "Right? So a lot of times the myth people are afraid of is, well, with these high voltage vehicles, you know, what if I get shot because there's some sort of electrical energy on the vehicle's metal chassis, body panels, that type of stuff."
+    },
+    {
+      "id": 45,
+      "start": 524.48,
+      "end": 533.48,
+      "start_hms": "00:08:44",
+      "end_hms": "00:08:53",
+      "text": "We don't do that in a high voltage system. This is kind of an over simplified picture. I've got some actual diagrams we'll look at as we move on."
+    },
+    {
+      "id": 46,
+      "start": 533.48,
+      "end": 544.48,
+      "start_hms": "00:08:53",
+      "end_hms": "00:09:04",
+      "text": "But in a high voltage system, we completely and intentionally insulate all the vehicle's metal chassis parts from the hybrid fueling."
+    },
+    {
+      "id": 47,
+      "start": 544.48,
+      "end": 553.48,
+      "start_hms": "00:09:04",
+      "end_hms": "00:09:13",
+      "text": "Not only do we keep them separate, but we also color code them all so that you should be able to identify them and not cut into."
+    },
+    {
+      "id": 48,
+      "start": 553.48,
+      "end": 558.48,
+      "start_hms": "00:09:13",
+      "end_hms": "00:09:18",
+      "text": "All right, you guys familiar with the fact that they're all orange conduit."
+    },
+    {
+      "id": 49,
+      "start": 558.48,
+      "end": 567.48,
+      "start_hms": "00:09:18",
+      "end_hms": "00:09:27",
+      "text": "Depending on your familiarity, I will tell you, I just always like to say this out loud, yellow wiring and conduit is airbag."
+    },
+    {
+      "id": 50,
+      "start": 567.48,
+      "end": 575.48,
+      "start_hms": "00:09:27",
+      "end_hms": "00:09:35",
+      "text": "The reason we don't want to cut into that is because there's a small risk you could have an unintentional deployment of an airbag."
+    },
+    {
+      "id": 51,
+      "start": 575.48,
+      "end": 583.48,
+      "start_hms": "00:09:35",
+      "end_hms": "00:09:43",
+      "text": "Right. Orange is always high voltage. It'll be over 100 volts if it's orange."
+    },
+    {
+      "id": 52,
+      "start": 583.48,
+      "end": 588.48,
+      "start_hms": "00:09:43",
+      "end_hms": "00:09:48",
+      "text": "OK, so that's kind of our designation."
+    },
+    {
+      "id": 53,
+      "start": 588.48,
+      "end": 600.48,
+      "start_hms": "00:09:48",
+      "end_hms": "00:10:00",
+      "text": "And that can tell you if you're comfortable and you feel familiar with that, you can approach a vehicle in a situation emergency situation and not necessarily."
+    },
+    {
+      "id": 54,
+      "start": 600.48,
+      "end": 605.9200000000001,
+      "start_hms": "00:10:00",
+      "end_hms": "00:10:05",
+      "text": "of documentation to work with to actually know how to initially stay away from orange,"
+    },
+    {
+      "id": 55,
+      "start": 605.9200000000001,
+      "end": 608.72,
+      "start_hms": "00:10:05",
+      "end_hms": "00:10:08",
+      "text": "stay away from yellow, that type of stuff. Are we good?"
+    },
+    {
+      "id": 56,
+      "start": 611.52,
+      "end": 615.6,
+      "start_hms": "00:10:11",
+      "end_hms": "00:10:15",
+      "text": "Okay, so I talked a little bit about cells, but I don't want to go in too deep into the"
+    },
+    {
+      "id": 57,
+      "start": 615.6,
+      "end": 621.28,
+      "start_hms": "00:10:15",
+      "end_hms": "00:10:21",
+      "text": "leads here. The bottom line is when we make batteries, we need two dissimilar metals"
+    },
+    {
+      "id": 58,
+      "start": 621.28,
+      "end": 626.0,
+      "start_hms": "00:10:21",
+      "end_hms": "00:10:26",
+      "text": "and some sort of electroelectric device that's either acidic or a real aggressive base,"
+    },
+    {
+      "id": 59,
+      "start": 626.5600000000001,
+      "end": 631.6800000000001,
+      "start_hms": "00:10:26",
+      "end_hms": "00:10:31",
+      "text": "right, or with that energy we can make a battery, okay. Typical car batteries that we've been using"
+    },
+    {
+      "id": 60,
+      "start": 631.6800000000001,
+      "end": 638.96,
+      "start_hms": "00:10:31",
+      "end_hms": "00:10:38",
+      "text": "for years are light dioxide and sulfuric acid and we make about 2.1 volts per cell, so we need"
+    },
+    {
+      "id": 61,
+      "start": 638.96,
+      "end": 645.9200000000001,
+      "start_hms": "00:10:38",
+      "end_hms": "00:10:45",
+      "text": "six of those cells to get to the 12.6 volts that we typically get out of a car, okay. That's fine,"
+    },
+    {
+      "id": 62,
+      "start": 645.9200000000001,
+      "end": 652.48,
+      "start_hms": "00:10:45",
+      "end_hms": "00:10:52",
+      "text": "that's interesting. Let's move on to if we're going to start talking about battery chemistry"
+    },
+    {
+      "id": 63,
+      "start": 652.48,
+      "end": 657.36,
+      "start_hms": "00:10:52",
+      "end_hms": "00:10:57",
+      "text": "in a vehicle that's actually going to drive the car with these batteries, we're going to have to"
+    },
+    {
+      "id": 64,
+      "start": 657.36,
+      "end": 665.9200000000001,
+      "start_hms": "00:10:57",
+      "end_hms": "00:11:05",
+      "text": "have potentially a stronger battery, okay. With lithium materials we can get up to three volts"
+    },
+    {
+      "id": 65,
+      "start": 665.9200000000001,
+      "end": 671.52,
+      "start_hms": "00:11:05",
+      "end_hms": "00:11:11",
+      "text": "per cell, so that allows us to have less cell divisions but still get into these high voltage"
+    },
+    {
+      "id": 66,
+      "start": 671.52,
+      "end": 677.6,
+      "start_hms": "00:11:11",
+      "end_hms": "00:11:17",
+      "text": "values we want to get into, okay. What we're seeing in most of the stuff that we're working"
+    },
+    {
+      "id": 67,
+      "start": 677.6,
+      "end": 682.96,
+      "start_hms": "00:11:17",
+      "end_hms": "00:11:22",
+      "text": "with right now is actually a lithium ion and we expect to get into that"
+    },
+    {
+      "id": 68,
+      "start": 682.96,
+      "end": 692.64,
+      "start_hms": "00:11:22",
+      "end_hms": "00:11:32",
+      "text": "lithium cobalt stage more and more every day, okay. If I take these battery cells and I arrange"
+    },
+    {
+      "id": 69,
+      "start": 692.64,
+      "end": 696.88,
+      "start_hms": "00:11:32",
+      "end_hms": "00:11:36",
+      "text": "them in parallel where all the positives are touching, all the negatives are touching,"
+    },
+    {
+      "id": 70,
+      "start": 696.88,
+      "end": 702.1600000000001,
+      "start_hms": "00:11:36",
+      "end_hms": "00:11:42",
+      "text": "what you get is you get twice the amount of current available but you're still maintaining"
+    },
+    {
+      "id": 71,
+      "start": 702.1600000000001,
+      "end": 707.28,
+      "start_hms": "00:11:42",
+      "end_hms": "00:11:47",
+      "text": "the low voltage that each cell produces, right. If I put it in series, think about how you stack"
+    },
+    {
+      "id": 72,
+      "start": 707.28,
+      "end": 714.16,
+      "start_hms": "00:11:47",
+      "end_hms": "00:11:54",
+      "text": "them into a flashlight, right, then I can get to where I'm increasing the voltage,"
+    },
+    {
+      "id": 73,
+      "start": 714.8,
+      "end": 720.64,
+      "start_hms": "00:11:54",
+      "end_hms": "00:12:00",
+      "text": "right, doubling, tripling, quadrupling the voltage available as I put that in. If I want to make a"
+    },
+    {
+      "id": 74,
+      "start": 720.64,
+      "end": 726.4,
+      "start_hms": "00:12:00",
+      "end_hms": "00:12:06",
+      "text": "vehicle that drives with battery power, I'm going to take advantage of all these relationships"
+    },
+    {
+      "id": 75,
+      "start": 726.4,
+      "end": 731.6,
+      "start_hms": "00:12:06",
+      "end_hms": "00:12:11",
+      "text": "together. So we're going to have some parallel situations within the cells, we're going to have"
+    },
+    {
+      "id": 76,
+      "start": 731.6,
+      "end": 737.28,
+      "start_hms": "00:12:11",
+      "end_hms": "00:12:17",
+      "text": "some serious relationships outside of the cells and hopefully we're going to package all together"
+    },
+    {
+      "id": 77,
+      "start": 737.28,
+      "end": 743.84,
+      "start_hms": "00:12:17",
+      "end_hms": "00:12:23",
+      "text": "where we can create lots of current and lots of voltage. And in all honesty that's what makes"
+    },
+    {
+      "id": 78,
+      "start": 744.48,
+      "end": 752.48,
+      "start_hms": "00:12:24",
+      "end_hms": "00:12:32",
+      "text": "the shock risk concern. There's plenty of energy here to be a problem, okay, we'll say that but"
+    },
+    {
+      "id": 79,
+      "start": 752.48,
+      "end": 759.84,
+      "start_hms": "00:12:32",
+      "end_hms": "00:12:39",
+      "text": "then I'll tell you that we actually do some very very smart and pretty simple strategies that are"
+    },
+    {
+      "id": 80,
+      "start": 759.84,
+      "end": 766.0,
+      "start_hms": "00:12:39",
+      "end_hms": "00:12:46",
+      "text": "very protectables. One thing I always like to say kind of out loud to everybody is I have Google"
+    },
+    {
+      "id": 81,
+      "start": 766.0,
+      "end": 772.5600000000001,
+      "start_hms": "00:12:46",
+      "end_hms": "00:12:52",
+      "text": "searched it a lot. I've been teaching this class for a little over five years in different capacities"
+    },
+    {
+      "id": 82,
+      "start": 773.2,
+      "end": 779.6800000000001,
+      "start_hms": "00:12:53",
+      "end_hms": "00:12:59",
+      "text": "and I searched pretty regularly on Google. Who's out there that's gotten shocked, right, where's the"
+    },
+    {
+      "id": 83,
+      "start": 779.6800000000001,
+      "end": 785.04,
+      "start_hms": "00:12:59",
+      "end_hms": "00:13:05",
+      "text": "news story for somebody that's got shocked by an electric vehicle and you won't find it. There are"
+    },
+    {
+      "id": 84,
+      "start": 785.04,
+      "end": 790.48,
+      "start_hms": "00:13:05",
+      "end_hms": "00:13:10",
+      "text": "a couple of people who have been shocked with charging systems and they were installers or"
+    },
+    {
+      "id": 85,
+      "start": 790.48,
+      "end": 796.8,
+      "start_hms": "00:13:10",
+      "end_hms": "00:13:16",
+      "text": "maintenance people that were working on them and got shocked on an actual charging station and"
+    },
+    {
+      "id": 86,
+      "start": 797.76,
+      "end": 806.64,
+      "start_hms": "00:13:17",
+      "end_hms": "00:13:26",
+      "text": "unfortunately there was a fatality, right. If you search electric cars killing these people,"
+    },
+    {
+      "id": 87,
+      "start": 806.64,
+      "end": 814.08,
+      "start_hms": "00:13:26",
+      "end_hms": "00:13:34",
+      "text": "right, what you'll find is in instances where self-driving hit pedestrians but again you won't"
+    },
+    {
+      "id": 88,
+      "start": 814.08,
+      "end": 820.08,
+      "start_hms": "00:13:34",
+      "end_hms": "00:13:40",
+      "text": "you can't find, I don't know maybe they're covering it up, I mean you know I'm not a big"
+    },
+    {
+      "id": 89,
+      "start": 820.08,
+      "end": 826.56,
+      "start_hms": "00:13:40",
+      "end_hms": "00:13:46",
+      "text": "conspiracy guy but my point is you cannot find much for data out there where people are getting"
+    },
+    {
+      "id": 90,
+      "start": 826.56,
+      "end": 832.48,
+      "start_hms": "00:13:46",
+      "end_hms": "00:13:52",
+      "text": "hurt or shocked with the electrical cycles. So I always like to say that out loud because they"
+    },
+    {
+      "id": 91,
+      "start": 832.48,
+      "end": 838.8,
+      "start_hms": "00:13:52",
+      "end_hms": "00:13:58",
+      "text": "really do some pretty good things to protect even us from ourselves, all right. What always"
+    },
+    {
+      "id": 92,
+      "start": 838.8,
+      "end": 844.1600000000001,
+      "start_hms": "00:13:58",
+      "end_hms": "00:14:04",
+      "text": "worries me is when these vehicles are the age to a point where now a bunch of 16 year olds have them,"
+    },
+    {
+      "id": 93,
+      "start": 844.72,
+      "end": 849.84,
+      "start_hms": "00:14:04",
+      "end_hms": "00:14:09",
+      "text": "right, and then they decide to start taking things apart and doing what teenagers do,"
+    },
+    {
+      "id": 94,
+      "start": 849.84,
+      "end": 855.9200000000001,
+      "start_hms": "00:14:09",
+      "end_hms": "00:14:15",
+      "text": "maybe that will change, I don't know, stupidly. Right now, right now they've all been very safe."
+    },
+    {
+      "id": 95,
+      "start": 856.88,
+      "end": 863.12,
+      "start_hms": "00:14:16",
+      "end_hms": "00:14:23",
+      "text": "Okay, so from a packaging standpoint I want you to understand that we need to package a whole bunch"
+    },
+    {
+      "id": 96,
+      "start": 863.12,
+      "end": 868.56,
+      "start_hms": "00:14:23",
+      "end_hms": "00:14:28",
+      "text": "of these cells in these electric vehicles, right, so that we can break these high voltages."
+    },
+    {
+      "id": 97,
+      "start": 870.0,
+      "end": 873.6,
+      "start_hms": "00:14:30",
+      "end_hms": "00:14:33",
+      "text": "This big sample that would come from Chevy Poles quite a few years ago now,"
+    },
+    {
+      "id": 98,
+      "start": 874.64,
+      "end": 880.72,
+      "start_hms": "00:14:34",
+      "end_hms": "00:14:40",
+      "text": "it would be arranged where they actually put a lot of this battery technology in the"
+    },
+    {
+      "id": 99,
+      "start": 881.36,
+      "end": 887.84,
+      "start_hms": "00:14:41",
+      "end_hms": "00:14:47",
+      "text": "the hump that we can't initially leave open for our drive shaft right lines, right, we all remember"
+    },
+    {
+      "id": 100,
+      "start": 887.84,
+      "end": 894.56,
+      "start_hms": "00:14:47",
+      "end_hms": "00:14:54",
+      "text": "that from the old cars, yeah, so they can have that console and some of that body space full of"
+    },
+    {
+      "id": 101,
+      "start": 894.56,
+      "end": 900.56,
+      "start_hms": "00:14:54",
+      "end_hms": "00:15:00",
+      "text": "batteries in Chevy Poles. A lot of these older vehicles, they've got a lot of battery capacity"
+    },
+    {
+      "id": 102,
+      "start": 900.56,
+      "end": 906.8800000000001,
+      "start_hms": "00:15:00",
+      "end_hms": "00:15:06",
+      "text": "under the rear seat, maybe part of like the rear hatch area, and so that's where we see everything."
+    },
+    {
+      "id": 103,
+      "start": 907.8399999999999,
+      "end": 913.44,
+      "start_hms": "00:15:07",
+      "end_hms": "00:15:13",
+      "text": "I'm going to say 10 plus years ago that was pretty much the standard, okay, or right around here."
+    },
+    {
+      "id": 104,
+      "start": 915.12,
+      "end": 917.76,
+      "start_hms": "00:15:15",
+      "end_hms": "00:15:17",
+      "text": "Again, almost all these were built on a hybrid battery,"
+    },
+    {
+      "id": 105,
+      "start": 920.0799999999999,
+      "end": 927.52,
+      "start_hms": "00:15:20",
+      "end_hms": "00:15:27",
+      "text": "not really impressive for voltage, but so again, we were getting limited stuff out of these vehicles"
+    },
+    {
+      "id": 106,
+      "start": 927.52,
+      "end": 933.9200000000001,
+      "start_hms": "00:15:27",
+      "end_hms": "00:15:33",
+      "text": "that could get 20, 30, 40 miles of range out of electric only, but then they could supplement"
+    },
+    {
+      "id": 107,
+      "start": 934.4000000000001,
+      "end": 939.44,
+      "start_hms": "00:15:34",
+      "end_hms": "00:15:39",
+      "text": "the gas motor and maybe help you drive a normal car and get close to 50 miles to the gallon out"
+    },
+    {
+      "id": 108,
+      "start": 939.44,
+      "end": 944.24,
+      "start_hms": "00:15:39",
+      "end_hms": "00:15:44",
+      "text": "of some of these frizz, okay, so that was the intention of these types of vehicles."
+    },
+    {
+      "id": 109,
+      "start": 945.28,
+      "end": 950.96,
+      "start_hms": "00:15:45",
+      "end_hms": "00:15:50",
+      "text": "I'm going to move on and really say we don't worry much about these burners. There's not much"
+    },
+    {
+      "id": 110,
+      "start": 950.96,
+      "end": 956.48,
+      "start_hms": "00:15:50",
+      "end_hms": "00:15:56",
+      "text": "for material inside these batteries that can burn. The problem is this is no way to make a fully"
+    },
+    {
+      "id": 111,
+      "start": 956.48,
+      "end": 960.56,
+      "start_hms": "00:15:56",
+      "end_hms": "00:16:00",
+      "text": "electric vehicle, right, we need more energy, so we have to move into the lithium world."
+    },
+    {
+      "id": 112,
+      "start": 961.52,
+      "end": 970.96,
+      "start_hms": "00:16:01",
+      "end_hms": "00:16:10",
+      "text": "So in the lithium world, we're definitely more worried about potential fires. The fire's very"
+    },
+    {
+      "id": 113,
+      "start": 970.96,
+      "end": 979.2,
+      "start_hms": "00:16:10",
+      "end_hms": "00:16:19",
+      "text": "hot, typically all over 2,000 degrees, okay, so there's a significant issue right there alone."
+    },
+    {
+      "id": 114,
+      "start": 982.72,
+      "end": 986.56,
+      "start_hms": "00:16:22",
+      "end_hms": "00:16:26",
+      "text": "There is fluoride gassing that's going to happen if you're on scene,"
+    },
+    {
+      "id": 115,
+      "start": 987.2,
+      "end": 993.52,
+      "start_hms": "00:16:27",
+      "end_hms": "00:16:33",
+      "text": "so PPE is going to be a real important issue, but pretty much the standard across the country,"
+    },
+    {
+      "id": 116,
+      "start": 993.52,
+      "end": 1001.6,
+      "start_hms": "00:16:33",
+      "end_hms": "00:16:41",
+      "text": "they're saying if you're within 100 feet, you need full SCDA, right, so be prepared to take"
+    },
+    {
+      "id": 117,
+      "start": 1001.6,
+      "end": 1011.2,
+      "start_hms": "00:16:41",
+      "end_hms": "00:16:51",
+      "text": "that type of action. They talk about gloves. Here's what I'm going to tell you. When I got"
+    },
+    {
+      "id": 118,
+      "start": 1011.2,
+      "end": 1018.1600000000001,
+      "start_hms": "00:16:51",
+      "end_hms": "00:16:58",
+      "text": "where I was working on these in the early 2000s, everybody was blown up, disabled these vehicles,"
+    },
+    {
+      "id": 119,
+      "start": 1018.8000000000001,
+      "end": 1025.92,
+      "start_hms": "00:16:58",
+      "end_hms": "00:17:05",
+      "text": "and then you could start doing regular work, right. That has really all changed. Ford,"
+    },
+    {
+      "id": 120,
+      "start": 1025.92,
+      "end": 1032.8000000000002,
+      "start_hms": "00:17:05",
+      "end_hms": "00:17:12",
+      "text": "for the last five years, is basically using a one, what we call the one hand rule of thumb,"
+    },
+    {
+      "id": 121,
+      "start": 1033.92,
+      "end": 1039.6,
+      "start_hms": "00:17:13",
+      "end_hms": "00:17:19",
+      "text": "right, so you only use one hand at a time, and nowhere in the surface literature anymore is"
+    },
+    {
+      "id": 122,
+      "start": 1039.6,
+      "end": 1045.52,
+      "start_hms": "00:17:19",
+      "end_hms": "00:17:25",
+      "text": "Ford telling you that you've got to actually put high voltage gloves on, so we've gotten to a place"
+    },
+    {
+      "id": 123,
+      "start": 1045.52,
+      "end": 1052.48,
+      "start_hms": "00:17:25",
+      "end_hms": "00:17:32",
+      "text": "where we have certain levels of confidence in each depowering and de-energizing situation,"
+    },
+    {
+      "id": 124,
+      "start": 1054.64,
+      "end": 1058.96,
+      "start_hms": "00:17:34",
+      "end_hms": "00:17:38",
+      "text": "and thank God, because if you've ever put on linements gloves, right, you've got rubber gloves,"
+    },
+    {
+      "id": 125,
+      "start": 1058.96,
+      "end": 1062.48,
+      "start_hms": "00:17:38",
+      "end_hms": "00:17:42",
+      "text": "and you put leather gloves over the top, I've got a picture that will show you,"
+    },
+    {
+      "id": 126,
+      "start": 1063.8400000000001,
+      "end": 1067.68,
+      "start_hms": "00:17:43",
+      "end_hms": "00:17:47",
+      "text": "but then you're trying to actually do something with your hands and articulate parts and pieces"
+    },
+    {
+      "id": 127,
+      "start": 1067.68,
+      "end": 1073.92,
+      "start_hms": "00:17:47",
+      "end_hms": "00:17:53",
+      "text": "and duals. It's not easy, so I'm a huge fan, and I'm very glad that we are kind of pushing"
+    },
+    {
+      "id": 128,
+      "start": 1073.92,
+      "end": 1081.2,
+      "start_hms": "00:17:53",
+      "end_hms": "00:18:01",
+      "text": "that out of this world of armor, okay. Really, you as emergency responders should really never"
+    },
+    {
+      "id": 129,
+      "start": 1081.2,
+      "end": 1085.76,
+      "start_hms": "00:18:01",
+      "end_hms": "00:18:05",
+      "text": "need to blow up anymore. What we got to do is we just have to make sure that you understand"
+    },
+    {
+      "id": 130,
+      "start": 1085.76,
+      "end": 1091.12,
+      "start_hms": "00:18:05",
+      "end_hms": "00:18:11",
+      "text": "where to find the resources to know you're not going to cut through anything potentially that's"
+    },
+    {
+      "id": 131,
+      "start": 1091.12,
+      "end": 1096.88,
+      "start_hms": "00:18:11",
+      "end_hms": "00:18:16",
+      "text": "high voltage, and as long as we can help you understand that, then you don't need that part"
+    },
+    {
+      "id": 132,
+      "start": 1096.88,
+      "end": 1106.0,
+      "start_hms": "00:18:16",
+      "end_hms": "00:18:26",
+      "text": "of the PPE on scene, okay. So here's an example. This is a Nissan Leaf. It's kind of an older"
+    },
+    {
+      "id": 133,
+      "start": 1106.0,
+      "end": 1111.68,
+      "start_hms": "00:18:26",
+      "end_hms": "00:18:31",
+      "text": "picture now, but this was one of the very early vehicles that was driving around with all electric"
+    },
+    {
+      "id": 134,
+      "start": 1111.68,
+      "end": 1117.92,
+      "start_hms": "00:18:31",
+      "end_hms": "00:18:37",
+      "text": "power, no gas. I like this picture because it kind of shows you how they stack themselves"
+    },
+    {
+      "id": 135,
+      "start": 1118.48,
+      "end": 1124.4,
+      "start_hms": "00:18:38",
+      "end_hms": "00:18:44",
+      "text": "in order to package them in the lower part of the vehicle. If you think about modern electric"
+    },
+    {
+      "id": 136,
+      "start": 1124.4,
+      "end": 1129.92,
+      "start_hms": "00:18:44",
+      "end_hms": "00:18:49",
+      "text": "vehicles, we're talking about storing all the batteries in between the front and rear wheels,"
+    },
+    {
+      "id": 137,
+      "start": 1130.64,
+      "end": 1137.8400000000001,
+      "start_hms": "00:18:50",
+      "end_hms": "00:18:57",
+      "text": "right, under the seating and basically the cabin occupant space. That makes sense? So that's where"
+    },
+    {
+      "id": 138,
+      "start": 1137.8400000000001,
+      "end": 1145.3600000000001,
+      "start_hms": "00:18:57",
+      "end_hms": "00:19:05",
+      "text": "they all are every time. If you get into these high range situations where they're adding an extra"
+    },
+    {
+      "id": 139,
+      "start": 1145.3600000000001,
+      "end": 1152.8000000000002,
+      "start_hms": "00:19:05",
+      "end_hms": "00:19:12",
+      "text": "hundred, say, miles of range, they will then start to approach more on the trunk space,"
+    },
+    {
+      "id": 140,
+      "start": 1152.8000000000002,
+      "end": 1157.28,
+      "start_hms": "00:19:12",
+      "end_hms": "00:19:17",
+      "text": "or kind of hatch space. So then you can kind of picture that they're using that wheel-to-wheel"
+    },
+    {
+      "id": 141,
+      "start": 1157.28,
+      "end": 1163.52,
+      "start_hms": "00:19:17",
+      "end_hms": "00:19:23",
+      "text": "space and then coming up kind of into portions of that trunk. Okay, and that's pretty much"
+    },
+    {
+      "id": 142,
+      "start": 1164.3200000000002,
+      "end": 1169.76,
+      "start_hms": "00:19:24",
+      "end_hms": "00:19:29",
+      "text": "where they all live. That's very universal. Keeps the vehicle centered. Gravity really"
+    },
+    {
+      "id": 143,
+      "start": 1169.76,
+      "end": 1175.12,
+      "start_hms": "00:19:29",
+      "end_hms": "00:19:35",
+      "text": "lowers. It's a real staple. Yes. I was just going to ask if you're talking about sort of the transition,"
+    },
+    {
+      "id": 144,
+      "start": 1175.12,
+      "end": 1181.92,
+      "start_hms": "00:19:35",
+      "end_hms": "00:19:41",
+      "text": "but in terms of like cars on the road, like coming by, I don't know, like these older models still"
+    },
+    {
+      "id": 145,
+      "start": 1181.92,
+      "end": 1187.76,
+      "start_hms": "00:19:41",
+      "end_hms": "00:19:47",
+      "text": "will be coming through York because people still have them. Yes. Yeah, I would expect, I mean,"
+    },
+    {
+      "id": 146,
+      "start": 1189.28,
+      "end": 1196.1599999999999,
+      "start_hms": "00:19:49",
+      "end_hms": "00:19:56",
+      "text": "when I started doing this training, I started with the 2016 Toyota Prius, and that's what I"
+    },
+    {
+      "id": 147,
+      "start": 1196.1599999999999,
+      "end": 1199.92,
+      "start_hms": "00:19:56",
+      "end_hms": "00:19:59",
+      "text": "was using. And that is really what I was talking about with that nickel metal hybrid."
+    },
+    {
+      "id": 148,
+      "start": 1800.4,
+      "end": 1802.5800000000002,
+      "start_hms": "00:30:00",
+      "end_hms": "00:30:02",
+      "text": "they've got a high running situation."
+    },
+    {
+      "id": 149,
+      "start": 1803.44,
+      "end": 1806.0400000000002,
+      "start_hms": "00:30:03",
+      "end_hms": "00:30:06",
+      "text": "There's still probably quite a few of those on there."
+    },
+    {
+      "id": 150,
+      "start": 1807.3200000000002,
+      "end": 1810.2800000000002,
+      "start_hms": "00:30:07",
+      "end_hms": "00:30:10",
+      "text": "But in a lot of ways, they are probably"
+    },
+    {
+      "id": 151,
+      "start": 1810.2800000000002,
+      "end": 1812.44,
+      "start_hms": "00:30:10",
+      "end_hms": "00:30:12",
+      "text": "one of the easiest to work with."
+    },
+    {
+      "id": 152,
+      "start": 1812.44,
+      "end": 1814.92,
+      "start_hms": "00:30:12",
+      "end_hms": "00:30:14",
+      "text": "In fact, their big issue is probably the fact"
+    },
+    {
+      "id": 153,
+      "start": 1814.92,
+      "end": 1818.66,
+      "start_hms": "00:30:14",
+      "end_hms": "00:30:18",
+      "text": "that they're still storing 12 gallons of gasoline."
+    },
+    {
+      "id": 154,
+      "start": 1820.3600000000001,
+      "end": 1822.52,
+      "start_hms": "00:30:20",
+      "end_hms": "00:30:22",
+      "text": "So the electric side of this,"
+    },
+    {
+      "id": 155,
+      "start": 1822.52,
+      "end": 1824.52,
+      "start_hms": "00:30:22",
+      "end_hms": "00:30:24",
+      "text": "and the batteries involved with those"
+    },
+    {
+      "id": 156,
+      "start": 1824.52,
+      "end": 1828.64,
+      "start_hms": "00:30:24",
+      "end_hms": "00:30:28",
+      "text": "are actually practically no fibers."
+    },
+    {
+      "id": 157,
+      "start": 1828.64,
+      "end": 1829.76,
+      "start_hms": "00:30:28",
+      "end_hms": "00:30:29",
+      "text": "We just wanna make sure you guys"
+    },
+    {
+      "id": 158,
+      "start": 1829.76,
+      "end": 1832.64,
+      "start_hms": "00:30:29",
+      "end_hms": "00:30:32",
+      "text": "aren't cutting into any orange cables."
+    },
+    {
+      "id": 159,
+      "start": 1832.64,
+      "end": 1833.92,
+      "start_hms": "00:30:32",
+      "end_hms": "00:30:33",
+      "text": "That'll be the common message"
+    },
+    {
+      "id": 160,
+      "start": 1833.92,
+      "end": 1836.3200000000002,
+      "start_hms": "00:30:33",
+      "end_hms": "00:30:36",
+      "text": "that I'm gonna bring up over and over."
+    },
+    {
+      "id": 161,
+      "start": 1836.3200000000002,
+      "end": 1837.16,
+      "start_hms": "00:30:36",
+      "end_hms": "00:30:37",
+      "text": "Okay?"
+    },
+    {
+      "id": 162,
+      "start": 1839.0,
+      "end": 1841.8000000000002,
+      "start_hms": "00:30:39",
+      "end_hms": "00:30:41",
+      "text": "So here's my picture that kinda starts to talk a little bit"
+    },
+    {
+      "id": 163,
+      "start": 1841.8000000000002,
+      "end": 1844.76,
+      "start_hms": "00:30:41",
+      "end_hms": "00:30:44",
+      "text": "about, okay, we're identifying these orange cables"
+    },
+    {
+      "id": 164,
+      "start": 1844.76,
+      "end": 1847.72,
+      "start_hms": "00:30:44",
+      "end_hms": "00:30:47",
+      "text": "and we're just making sure we're not cutting,"
+    },
+    {
+      "id": 165,
+      "start": 1847.72,
+      "end": 1850.92,
+      "start_hms": "00:30:47",
+      "end_hms": "00:30:50",
+      "text": "disconnecting, and just leave that stuff alone"
+    },
+    {
+      "id": 166,
+      "start": 1850.92,
+      "end": 1852.68,
+      "start_hms": "00:30:50",
+      "end_hms": "00:30:52",
+      "text": "in any type of version."
+    },
+    {
+      "id": 167,
+      "start": 1852.68,
+      "end": 1853.52,
+      "start_hms": "00:30:52",
+      "end_hms": "00:30:53",
+      "text": "Okay?"
+    },
+    {
+      "id": 168,
+      "start": 1853.52,
+      "end": 1856.0400000000002,
+      "start_hms": "00:30:53",
+      "end_hms": "00:30:56",
+      "text": "You will find, this is an example"
+    },
+    {
+      "id": 169,
+      "start": 1856.0400000000002,
+      "end": 1857.6000000000001,
+      "start_hms": "00:30:56",
+      "end_hms": "00:30:57",
+      "text": "of looking under the hood."
+    },
+    {
+      "id": 170,
+      "start": 1857.6000000000001,
+      "end": 1860.92,
+      "start_hms": "00:30:57",
+      "end_hms": "00:31:00",
+      "text": "So just maybe you got an idea"
+    },
+    {
+      "id": 171,
+      "start": 1860.92,
+      "end": 1863.5600000000002,
+      "start_hms": "00:31:00",
+      "end_hms": "00:31:03",
+      "text": "of the architecture of the vehicle."
+    },
+    {
+      "id": 172,
+      "start": 1863.5600000000002,
+      "end": 1866.3200000000002,
+      "start_hms": "00:31:03",
+      "end_hms": "00:31:06",
+      "text": "You're gonna find orange wiring under the hood"
+    },
+    {
+      "id": 173,
+      "start": 1866.3200000000002,
+      "end": 1870.3600000000001,
+      "start_hms": "00:31:06",
+      "end_hms": "00:31:10",
+      "text": "is typically gonna be your controller and your electric motor."
+    },
+    {
+      "id": 174,
+      "start": 1870.3600000000001,
+      "end": 1873.0800000000002,
+      "start_hms": "00:31:10",
+      "end_hms": "00:31:13",
+      "text": "So this is kind of the brains of the operation"
+    },
+    {
+      "id": 175,
+      "start": 1873.0800000000002,
+      "end": 1876.2,
+      "start_hms": "00:31:13",
+      "end_hms": "00:31:16",
+      "text": "and then the electric motor that will actually drive with you."
+    },
+    {
+      "id": 176,
+      "start": 1876.2,
+      "end": 1880.0800000000002,
+      "start_hms": "00:31:16",
+      "end_hms": "00:31:20",
+      "text": "But you're also gonna have some sort of a path"
+    },
+    {
+      "id": 177,
+      "start": 1880.3200000000002,
+      "end": 1883.92,
+      "start_hms": "00:31:20",
+      "end_hms": "00:31:23",
+      "text": "you're also gonna have to have some sort of a pathway"
+    },
+    {
+      "id": 178,
+      "start": 1883.92,
+      "end": 1888.7600000000002,
+      "start_hms": "00:31:23",
+      "end_hms": "00:31:28",
+      "text": "or high voltage to go to a charging outlet, right?"
+    },
+    {
+      "id": 179,
+      "start": 1888.7600000000002,
+      "end": 1892.7600000000002,
+      "start_hms": "00:31:28",
+      "end_hms": "00:31:32",
+      "text": "And you're gonna need to also get to and from the back."
+    },
+    {
+      "id": 180,
+      "start": 1892.7600000000002,
+      "end": 1895.3600000000001,
+      "start_hms": "00:31:32",
+      "end_hms": "00:31:35",
+      "text": "So that's pretty much what you gotta be thinking of."
+    },
+    {
+      "id": 181,
+      "start": 1896.96,
+      "end": 1901.52,
+      "start_hms": "00:31:36",
+      "end_hms": "00:31:41",
+      "text": "Here's another picture that again shows typical,"
+    },
+    {
+      "id": 182,
+      "start": 1902.52,
+      "end": 1904.2,
+      "start_hms": "00:31:42",
+      "end_hms": "00:31:44",
+      "text": "typical people out there on TV"
+    },
+    {
+      "id": 183,
+      "start": 1904.2,
+      "end": 1908.3200000000002,
+      "start_hms": "00:31:44",
+      "end_hms": "00:31:48",
+      "text": "and where this high voltage stuff lives."
+    },
+    {
+      "id": 184,
+      "start": 1908.3200000000002,
+      "end": 1909.16,
+      "start_hms": "00:31:48",
+      "end_hms": "00:31:49",
+      "text": "Okay?"
+    },
+    {
+      "id": 185,
+      "start": 1911.0800000000002,
+      "end": 1912.88,
+      "start_hms": "00:31:51",
+      "end_hms": "00:31:52",
+      "text": "This is the highest point"
+    },
+    {
+      "id": 186,
+      "start": 1912.88,
+      "end": 1916.1200000000001,
+      "start_hms": "00:31:52",
+      "end_hms": "00:31:56",
+      "text": "at which you would find high voltage electrical energy."
+    },
+    {
+      "id": 187,
+      "start": 1916.1200000000001,
+      "end": 1917.96,
+      "start_hms": "00:31:56",
+      "end_hms": "00:31:57",
+      "text": "And this would be the charging point"
+    },
+    {
+      "id": 188,
+      "start": 1917.96,
+      "end": 1919.3200000000002,
+      "start_hms": "00:31:57",
+      "end_hms": "00:31:59",
+      "text": "on this particular car."
+    },
+    {
+      "id": 189,
+      "start": 1927.44,
+      "end": 1929.48,
+      "start_hms": "00:32:07",
+      "end_hms": "00:32:09",
+      "text": "Here's a top side view."
+    },
+    {
+      "id": 190,
+      "start": 1929.48,
+      "end": 1931.88,
+      "start_hms": "00:32:09",
+      "end_hms": "00:32:11",
+      "text": "And one of the really important things to talk about"
+    },
+    {
+      "id": 191,
+      "start": 1931.88,
+      "end": 1936.0,
+      "start_hms": "00:32:11",
+      "end_hms": "00:32:16",
+      "text": "is all these high voltage systems, all of them,"
+    },
+    {
+      "id": 192,
+      "start": 1936.2,
+      "end": 1940.76,
+      "start_hms": "00:32:16",
+      "end_hms": "00:32:20",
+      "text": "must have a low voltage system to operate also."
+    },
+    {
+      "id": 193,
+      "start": 1940.76,
+      "end": 1943.3600000000001,
+      "start_hms": "00:32:20",
+      "end_hms": "00:32:23",
+      "text": "And we'll start with the simple idea of"
+    },
+    {
+      "id": 194,
+      "start": 1943.3600000000001,
+      "end": 1945.76,
+      "start_hms": "00:32:23",
+      "end_hms": "00:32:25",
+      "text": "when these car makers start making electric vehicles,"
+    },
+    {
+      "id": 195,
+      "start": 1945.76,
+      "end": 1948.8400000000001,
+      "start_hms": "00:32:25",
+      "end_hms": "00:32:28",
+      "text": "they're not gonna run out and build unique headlights"
+    },
+    {
+      "id": 196,
+      "start": 1948.8400000000001,
+      "end": 1950.76,
+      "start_hms": "00:32:28",
+      "end_hms": "00:32:30",
+      "text": "and horns and blower motors"
+    },
+    {
+      "id": 197,
+      "start": 1950.76,
+      "end": 1953.3200000000002,
+      "start_hms": "00:32:30",
+      "end_hms": "00:32:33",
+      "text": "and all the other things we do with cars, right?"
+    },
+    {
+      "id": 198,
+      "start": 1953.3200000000002,
+      "end": 1954.3600000000001,
+      "start_hms": "00:32:33",
+      "end_hms": "00:32:34",
+      "text": "These are cars."
+    },
+    {
+      "id": 199,
+      "start": 1954.3600000000001,
+      "end": 1956.2,
+      "start_hms": "00:32:34",
+      "end_hms": "00:32:36",
+      "text": "So they need a 12 volt system"
+    },
+    {
+      "id": 200,
+      "start": 1956.2,
+      "end": 1959.64,
+      "start_hms": "00:32:36",
+      "end_hms": "00:32:39",
+      "text": "to utilize all the normal car parts they use"
+    },
+    {
+      "id": 201,
+      "start": 1959.64,
+      "end": 1961.5600000000002,
+      "start_hms": "00:32:39",
+      "end_hms": "00:32:41",
+      "text": "when they make every other car."
+    },
+    {
+      "id": 202,
+      "start": 1961.5600000000002,
+      "end": 1964.2,
+      "start_hms": "00:32:41",
+      "end_hms": "00:32:44",
+      "text": "They're every other car, right?"
+    },
+    {
+      "id": 203,
+      "start": 1964.2,
+      "end": 1966.3200000000002,
+      "start_hms": "00:32:44",
+      "end_hms": "00:32:46",
+      "text": "In addition to that,"
+    },
+    {
+      "id": 204,
+      "start": 1966.3200000000002,
+      "end": 1971.2,
+      "start_hms": "00:32:46",
+      "end_hms": "00:32:51",
+      "text": "the high voltage energy is all trapped inside the battery"
+    },
+    {
+      "id": 205,
+      "start": 1971.2,
+      "end": 1974.44,
+      "start_hms": "00:32:51",
+      "end_hms": "00:32:54",
+      "text": "and what lets it come out of the battery area"
+    },
+    {
+      "id": 206,
+      "start": 1974.44,
+      "end": 1976.0,
+      "start_hms": "00:32:54",
+      "end_hms": "00:32:56",
+      "text": "is a 12 volt system."
+    },
+    {
+      "id": 207,
+      "start": 1977.3600000000001,
+      "end": 1979.52,
+      "start_hms": "00:32:57",
+      "end_hms": "00:32:59",
+      "text": "So you're all trained."
+    },
+    {
+      "id": 208,
+      "start": 1979.52,
+      "end": 1983.1200000000001,
+      "start_hms": "00:32:59",
+      "end_hms": "00:33:03",
+      "text": "When you get on scene, if you've got a vehicle of concern,"
+    },
+    {
+      "id": 209,
+      "start": 1983.1200000000001,
+      "end": 1985.8000000000002,
+      "start_hms": "00:33:03",
+      "end_hms": "00:33:05",
+      "text": "we basically take the electrical power down, right?"
+    },
+    {
+      "id": 210,
+      "start": 1985.8000000000002,
+      "end": 1989.0800000000002,
+      "start_hms": "00:33:05",
+      "end_hms": "00:33:09",
+      "text": "Cut the battery cable, de-energize."
+    },
+    {
+      "id": 211,
+      "start": 1989.0800000000002,
+      "end": 1991.96,
+      "start_hms": "00:33:09",
+      "end_hms": "00:33:11",
+      "text": "We're gonna do exactly the same thing with this vehicle."
+    },
+    {
+      "id": 212,
+      "start": 1992.0,
+      "end": 1995.44,
+      "start_hms": "00:33:12",
+      "end_hms": "00:33:15",
+      "text": "And when you do that, you have de-powered all high voltage."
+    },
+    {
+      "id": 213,
+      "start": 1995.44,
+      "end": 1997.68,
+      "start_hms": "00:33:15",
+      "end_hms": "00:33:17",
+      "text": "It's not 100% absent."
+    },
+    {
+      "id": 214,
+      "start": 1997.68,
+      "end": 2000.3200000000002,
+      "start_hms": "00:33:17",
+      "end_hms": "00:33:20",
+      "text": "It still has to live somewhere in that vehicle,"
+    },
+    {
+      "id": 215,
+      "start": 2000.3200000000002,
+      "end": 2002.68,
+      "start_hms": "00:33:20",
+      "end_hms": "00:33:22",
+      "text": "but it all lives in the battery casing"
+    },
+    {
+      "id": 216,
+      "start": 2002.68,
+      "end": 2004.16,
+      "start_hms": "00:33:22",
+      "end_hms": "00:33:24",
+      "text": "and housing of that voltage."
+    },
+    {
+      "id": 217,
+      "start": 2005.16,
+      "end": 2006.1200000000001,
+      "start_hms": "00:33:25",
+      "end_hms": "00:33:26",
+      "text": "That make sense?"
+    },
+    {
+      "id": 218,
+      "start": 2008.24,
+      "end": 2011.0800000000002,
+      "start_hms": "00:33:28",
+      "end_hms": "00:33:31",
+      "text": "So here's a diagram I threw out"
+    },
+    {
+      "id": 219,
+      "start": 2011.0800000000002,
+      "end": 2014.0400000000002,
+      "start_hms": "00:33:31",
+      "end_hms": "00:33:34",
+      "text": "that kinda just simplify and show"
+    },
+    {
+      "id": 220,
+      "start": 2014.0400000000002,
+      "end": 2017.64,
+      "start_hms": "00:33:34",
+      "end_hms": "00:33:37",
+      "text": "how every manufacturer out there is essentially doing this."
+    },
+    {
+      "id": 221,
+      "start": 2017.64,
+      "end": 2018.48,
+      "start_hms": "00:33:37",
+      "end_hms": "00:33:38",
+      "text": "Okay?"
+    },
+    {
+      "id": 222,
+      "start": 2019.0400000000002,
+      "end": 2024.0400000000002,
+      "start_hms": "00:33:39",
+      "end_hms": "00:33:44",
+      "text": "So I got a high voltage battery pack that lives somewhere,"
+    },
+    {
+      "id": 223,
+      "start": 2025.16,
+      "end": 2026.0,
+      "start_hms": "00:33:45",
+      "end_hms": "00:33:46",
+      "text": "right?"
+    },
+    {
+      "id": 224,
+      "start": 2026.0,
+      "end": 2029.0,
+      "start_hms": "00:33:46",
+      "end_hms": "00:33:49",
+      "text": "We know now most of them live all the way through here,"
+    },
+    {
+      "id": 225,
+      "start": 2029.0,
+      "end": 2031.6000000000001,
+      "start_hms": "00:33:49",
+      "end_hms": "00:33:51",
+      "text": "but I have to put it in my picture somewhere"
+    },
+    {
+      "id": 226,
+      "start": 2031.6000000000001,
+      "end": 2033.4,
+      "start_hms": "00:33:51",
+      "end_hms": "00:33:53",
+      "text": "to give me room to have all the other stuff."
+    },
+    {
+      "id": 227,
+      "start": 2033.4,
+      "end": 2035.68,
+      "start_hms": "00:33:53",
+      "end_hms": "00:33:55",
+      "text": "Everybody okay with what I'm showing you there?"
+    },
+    {
+      "id": 228,
+      "start": 2035.68,
+      "end": 2040.68,
+      "start_hms": "00:33:55",
+      "end_hms": "00:34:00",
+      "text": "High voltage energy in the cell form is all inside here"
+    },
+    {
+      "id": 229,
+      "start": 2040.72,
+      "end": 2043.8400000000001,
+      "start_hms": "00:34:00",
+      "end_hms": "00:34:03",
+      "text": "and it lives in an island where it can't come out"
+    },
+    {
+      "id": 230,
+      "start": 2043.8400000000001,
+      "end": 2046.16,
+      "start_hms": "00:34:03",
+      "end_hms": "00:34:06",
+      "text": "until the 12 volt system's turned on"
+    },
+    {
+      "id": 231,
+      "start": 2046.16,
+      "end": 2048.76,
+      "start_hms": "00:34:06",
+      "end_hms": "00:34:08",
+      "text": "and lets it, right, off the island."
+    },
+    {
+      "id": 232,
+      "start": 2049.7200000000003,
+      "end": 2053.88,
+      "start_hms": "00:34:09",
+      "end_hms": "00:34:13",
+      "text": "So we have what's called contactors inside here"
+    },
+    {
+      "id": 233,
+      "start": 2053.88,
+      "end": 2058.88,
+      "start_hms": "00:34:13",
+      "end_hms": "00:34:18",
+      "text": "and these basically are 12 volt electromagnetic devices"
+    },
+    {
+      "id": 234,
+      "start": 2059.12,
+      "end": 2061.2400000000002,
+      "start_hms": "00:34:19",
+      "end_hms": "00:34:21",
+      "text": "that essentially close draw bridges"
+    },
+    {
+      "id": 235,
+      "start": 2061.2400000000002,
+      "end": 2064.48,
+      "start_hms": "00:34:21",
+      "end_hms": "00:34:24",
+      "text": "and now let high voltage energy out to do the work."
+    },
+    {
+      "id": 236,
+      "start": 2066.12,
+      "end": 2067.6800000000003,
+      "start_hms": "00:34:26",
+      "end_hms": "00:34:27",
+      "text": "Okay?"
+    },
+    {
+      "id": 237,
+      "start": 2067.6800000000003,
+      "end": 2069.2400000000002,
+      "start_hms": "00:34:27",
+      "end_hms": "00:34:29",
+      "text": "So I've got a couple of different ways"
+    },
+    {
+      "id": 238,
+      "start": 2069.2400000000002,
+      "end": 2070.56,
+      "start_hms": "00:34:29",
+      "end_hms": "00:34:30",
+      "text": "that you start looking at this"
+    },
+    {
+      "id": 239,
+      "start": 2070.56,
+      "end": 2073.44,
+      "start_hms": "00:34:30",
+      "end_hms": "00:34:33",
+      "text": "and I can actually shut down high voltage."
+    },
+    {
+      "id": 240,
+      "start": 2073.44,
+      "end": 2075.32,
+      "start_hms": "00:34:33",
+      "end_hms": "00:34:35",
+      "text": "We'll start with a simple one."
+    },
+    {
+      "id": 241,
+      "start": 2075.32,
+      "end": 2078.32,
+      "start_hms": "00:34:35",
+      "end_hms": "00:34:38",
+      "text": "As an operator of the vehicle, I turn the car off."
+    },
+    {
+      "id": 242,
+      "start": 2080.6000000000004,
+      "end": 2084.7200000000003,
+      "start_hms": "00:34:40",
+      "end_hms": "00:34:44",
+      "text": "If I turn the car off, the 12 volt system's de-energized"
+    },
+    {
+      "id": 243,
+      "start": 2084.7200000000003,
+      "end": 2086.44,
+      "start_hms": "00:34:44",
+      "end_hms": "00:34:46",
+      "text": "and I no longer let the high voltage"
+    },
+    {
+      "id": 244,
+      "start": 2086.44,
+      "end": 2090.36,
+      "start_hms": "00:34:46",
+      "end_hms": "00:34:50",
+      "text": "out of its battery housing space."
+    },
+    {
+      "id": 245,
+      "start": 2090.36,
+      "end": 2091.36,
+      "start_hms": "00:34:50",
+      "end_hms": "00:34:51",
+      "text": "That make sense?"
+    },
+    {
+      "id": 246,
+      "start": 2092.84,
+      "end": 2095.7200000000003,
+      "start_hms": "00:34:52",
+      "end_hms": "00:34:55",
+      "text": "So that alone, I just shut the vehicle off,"
+    },
+    {
+      "id": 247,
+      "start": 2095.7200000000003,
+      "end": 2098.44,
+      "start_hms": "00:34:55",
+      "end_hms": "00:34:58",
+      "text": "high voltage trapped inside the battery."
+    },
+    {
+      "id": 248,
+      "start": 2098.44,
+      "end": 2102.56,
+      "start_hms": "00:34:58",
+      "end_hms": "00:35:02",
+      "text": "It is not out, should never now be out"
+    },
+    {
+      "id": 249,
+      "start": 2102.56,
+      "end": 2104.92,
+      "start_hms": "00:35:02",
+      "end_hms": "00:35:04",
+      "text": "on my orange wiring at that point."
+    },
+    {
+      "id": 250,
+      "start": 2104.92,
+      "end": 2106.76,
+      "start_hms": "00:35:04",
+      "end_hms": "00:35:06",
+      "text": "We still don't cut through the orange wiring"
+    },
+    {
+      "id": 251,
+      "start": 2106.76,
+      "end": 2110.6400000000003,
+      "start_hms": "00:35:06",
+      "end_hms": "00:35:10",
+      "text": "but my point is now it needs to be known, should be isolated."
+    },
+    {
+      "id": 252,
+      "start": 2110.6400000000003,
+      "end": 2112.28,
+      "start_hms": "00:35:10",
+      "end_hms": "00:35:12",
+      "text": "Okay?"
+    },
+    {
+      "id": 253,
+      "start": 2112.28,
+      "end": 2116.6800000000003,
+      "start_hms": "00:35:12",
+      "end_hms": "00:35:16",
+      "text": "I could disconnect a service device."
+    },
+    {
+      "id": 254,
+      "start": 2116.6800000000003,
+      "end": 2120.2400000000002,
+      "start_hms": "00:35:16",
+      "end_hms": "00:35:20",
+      "text": "Almost all these vehicles, there are a few exceptions,"
+    },
+    {
+      "id": 255,
+      "start": 2120.2400000000002,
+      "end": 2123.48,
+      "start_hms": "00:35:20",
+      "end_hms": "00:35:23",
+      "text": "have some sort of what they'll call interlock device"
+    },
+    {
+      "id": 256,
+      "start": 2123.48,
+      "end": 2126.2400000000002,
+      "start_hms": "00:35:23",
+      "end_hms": "00:35:26",
+      "text": "or a manual disconnect device."
+    },
+    {
+      "id": 257,
+      "start": 2126.2400000000002,
+      "end": 2128.76,
+      "start_hms": "00:35:26",
+      "end_hms": "00:35:28",
+      "text": "Primarily what that's for is that's for service individuals"
+    },
+    {
+      "id": 258,
+      "start": 2128.76,
+      "end": 2131.6800000000003,
+      "start_hms": "00:35:28",
+      "end_hms": "00:35:31",
+      "text": "to know that we have more assurance"
+    },
+    {
+      "id": 259,
+      "start": 2131.6800000000003,
+      "end": 2133.84,
+      "start_hms": "00:35:31",
+      "end_hms": "00:35:33",
+      "text": "that we've disabled the vehicle."
+    },
+    {
+      "id": 260,
+      "start": 2133.84,
+      "end": 2134.6800000000003,
+      "start_hms": "00:35:33",
+      "end_hms": "00:35:34",
+      "text": "Right?"
+    },
+    {
+      "id": 261,
+      "start": 2134.6800000000003,
+      "end": 2136.36,
+      "start_hms": "00:35:34",
+      "end_hms": "00:35:36",
+      "text": "High voltage again trapped on the back."
+    },
+    {
+      "id": 262,
+      "start": 2137.88,
+      "end": 2138.76,
+      "start_hms": "00:35:37",
+      "end_hms": "00:35:38",
+      "text": "All right?"
+    },
+    {
+      "id": 263,
+      "start": 2138.76,
+      "end": 2141.76,
+      "start_hms": "00:35:38",
+      "end_hms": "00:35:41",
+      "text": "I'm not a fan of encouraging first responders"
+    },
+    {
+      "id": 264,
+      "start": 2141.76,
+      "end": 2145.76,
+      "start_hms": "00:35:41",
+      "end_hms": "00:35:45",
+      "text": "to go look for and find manual disconnect."
+    },
+    {
+      "id": 265,
+      "start": 2145.76,
+      "end": 2147.36,
+      "start_hms": "00:35:45",
+      "end_hms": "00:35:47",
+      "text": "One piece of good news I would tell you"
+    },
+    {
+      "id": 266,
+      "start": 2147.36,
+      "end": 2150.08,
+      "start_hms": "00:35:47",
+      "end_hms": "00:35:50",
+      "text": "is that feels like in the last five years,"
+    },
+    {
+      "id": 267,
+      "start": 2150.08,
+      "end": 2155.08,
+      "start_hms": "00:35:50",
+      "end_hms": "00:35:55",
+      "text": "many of the manufacturers are becoming more standardized,"
+    },
+    {
+      "id": 268,
+      "start": 2155.36,
+      "end": 2159.36,
+      "start_hms": "00:35:55",
+      "end_hms": "00:35:59",
+      "text": "they're all kind of agreeing to have it look similar."
+    },
+    {
+      "id": 269,
+      "start": 2159.36,
+      "end": 2161.4,
+      "start_hms": "00:35:59",
+      "end_hms": "00:36:01",
+      "text": "If you're looking at all the domestic car companies,"
+    },
+    {
+      "id": 270,
+      "start": 2161.4,
+      "end": 2164.36,
+      "start_hms": "00:36:01",
+      "end_hms": "00:36:04",
+      "text": "so primarily Ford and GM,"
+    },
+    {
+      "id": 271,
+      "start": 2164.36,
+      "end": 2168.84,
+      "start_hms": "00:36:04",
+      "end_hms": "00:36:08",
+      "text": "they're using a light green colored connector"
+    },
+    {
+      "id": 272,
+      "start": 2168.84,
+      "end": 2171.0,
+      "start_hms": "00:36:08",
+      "end_hms": "00:36:11",
+      "text": "that you disconnect."
+    },
+    {
+      "id": 273,
+      "start": 2171.0,
+      "end": 2171.84,
+      "start_hms": "00:36:11",
+      "end_hms": "00:36:11",
+      "text": "Right?"
+    },
+    {
+      "id": 274,
+      "start": 2171.84,
+      "end": 2174.44,
+      "start_hms": "00:36:11",
+      "end_hms": "00:36:14",
+      "text": "It's all under the hood in most domestic stuff"
+    },
+    {
+      "id": 275,
+      "start": 2174.44,
+      "end": 2176.44,
+      "start_hms": "00:36:14",
+      "end_hms": "00:36:16",
+      "text": "for about the last five years."
+    },
+    {
+      "id": 276,
+      "start": 2176.44,
+      "end": 2180.44,
+      "start_hms": "00:36:16",
+      "end_hms": "00:36:20",
+      "text": "So it's becoming more predictable, findable."
+    },
+    {
+      "id": 277,
+      "start": 2180.44,
+      "end": 2181.7200000000003,
+      "start_hms": "00:36:20",
+      "end_hms": "00:36:21",
+      "text": "Right?"
+    },
+    {
+      "id": 278,
+      "start": 2181.7200000000003,
+      "end": 2185.44,
+      "start_hms": "00:36:21",
+      "end_hms": "00:36:25",
+      "text": "However, I'm not a huge fan of encouraging again"
+    },
+    {
+      "id": 279,
+      "start": 2185.44,
+      "end": 2187.76,
+      "start_hms": "00:36:25",
+      "end_hms": "00:36:27",
+      "text": "first responders to go looking for manual disconnects"
+    },
+    {
+      "id": 280,
+      "start": 2187.76,
+      "end": 2190.88,
+      "start_hms": "00:36:27",
+      "end_hms": "00:36:30",
+      "text": "because if you think of the 20 plus years"
+    },
+    {
+      "id": 281,
+      "start": 2190.88,
+      "end": 2192.44,
+      "start_hms": "00:36:30",
+      "end_hms": "00:36:32",
+      "text": "we've had electric vehicles on the road,"
+    },
+    {
+      "id": 282,
+      "start": 2192.44,
+      "end": 2194.8,
+      "start_hms": "00:36:32",
+      "end_hms": "00:36:34",
+      "text": "they've come in lots of different shapes, sizes,"
+    },
+    {
+      "id": 283,
+      "start": 2194.8,
+      "end": 2197.44,
+      "start_hms": "00:36:34",
+      "end_hms": "00:36:37",
+      "text": "and they've been located all over the place."
+    },
+    {
+      "id": 284,
+      "start": 2197.44,
+      "end": 2198.8,
+      "start_hms": "00:36:37",
+      "end_hms": "00:36:38",
+      "text": "Okay?"
+    },
+    {
+      "id": 285,
+      "start": 2198.8,
+      "end": 2200.96,
+      "start_hms": "00:36:38",
+      "end_hms": "00:36:40",
+      "text": "So I do think it's important to say,"
+    },
+    {
+      "id": 286,
+      "start": 2200.96,
+      "end": 2202.08,
+      "start_hms": "00:36:40",
+      "end_hms": "00:36:42",
+      "text": "hey, this exists."
+    },
+    {
+      "id": 287,
+      "start": 2202.08,
+      "end": 2202.92,
+      "start_hms": "00:36:42",
+      "end_hms": "00:36:42",
+      "text": "Right?"
+    },
+    {
+      "id": 288,
+      "start": 2202.92,
+      "end": 2204.2000000000003,
+      "start_hms": "00:36:42",
+      "end_hms": "00:36:44",
+      "text": "If I'm talking about second responders,"
+    },
+    {
+      "id": 289,
+      "start": 2204.2000000000003,
+      "end": 2206.04,
+      "start_hms": "00:36:44",
+      "end_hms": "00:36:46",
+      "text": "somebody shows up to tow the vehicle"
+    },
+    {
+      "id": 290,
+      "start": 2206.04,
+      "end": 2208.04,
+      "start_hms": "00:36:46",
+      "end_hms": "00:36:48",
+      "text": "where they're gonna have to worry about storage,"
+    },
+    {
+      "id": 291,
+      "start": 2208.04,
+      "end": 2211.36,
+      "start_hms": "00:36:48",
+      "end_hms": "00:36:51",
+      "text": "that's when it's worthwhile to figure out where that is,"
+    },
+    {
+      "id": 292,
+      "start": 2211.36,
+      "end": 2212.88,
+      "start_hms": "00:36:51",
+      "end_hms": "00:36:52",
+      "text": "make that disconnection."
+    },
+    {
+      "id": 293,
+      "start": 2212.88,
+      "end": 2213.7200000000003,
+      "start_hms": "00:36:52",
+      "end_hms": "00:36:53",
+      "text": "Okay?"
+    },
+    {
+      "id": 294,
+      "start": 2215.48,
+      "end": 2217.2,
+      "start_hms": "00:36:55",
+      "end_hms": "00:36:57",
+      "text": "From a first responder standpoint,"
+    },
+    {
+      "id": 295,
+      "start": 2217.2,
+      "end": 2220.92,
+      "start_hms": "00:36:57",
+      "end_hms": "00:37:00",
+      "text": "I typically encourage three different methods"
+    },
+    {
+      "id": 296,
+      "start": 2220.92,
+      "end": 2224.52,
+      "start_hms": "00:37:00",
+      "end_hms": "00:37:04",
+      "text": "to guarantee that they've de-powered the vehicle."
+    },
+    {
+      "id": 297,
+      "start": 2224.52,
+      "end": 2229.36,
+      "start_hms": "00:37:04",
+      "end_hms": "00:37:09",
+      "text": "Obviously step one is turn it off."
+    },
+    {
+      "id": 298,
+      "start": 2229.36,
+      "end": 2230.6400000000003,
+      "start_hms": "00:37:09",
+      "end_hms": "00:37:10",
+      "text": "Right?"
+    },
+    {
+      "id": 299,
+      "start": 2230.6400000000003,
+      "end": 2233.6400000000003,
+      "start_hms": "00:37:10",
+      "end_hms": "00:37:13",
+      "text": "Try to find that top button, shut it off."
+    },
+    {
+      "id": 300,
+      "start": 2235.16,
+      "end": 2237.6,
+      "start_hms": "00:37:15",
+      "end_hms": "00:37:17",
+      "text": "That type of stuff, remove the key fob"
+    },
+    {
+      "id": 301,
+      "start": 2237.6,
+      "end": 2239.84,
+      "start_hms": "00:37:17",
+      "end_hms": "00:37:19",
+      "text": "from the vehicle if possible."
+    },
+    {
+      "id": 302,
+      "start": 2239.84,
+      "end": 2241.08,
+      "start_hms": "00:37:19",
+      "end_hms": "00:37:21",
+      "text": "That type of thing."
+    },
+    {
+      "id": 303,
+      "start": 2241.08,
+      "end": 2245.96,
+      "start_hms": "00:37:21",
+      "end_hms": "00:37:25",
+      "text": "Second step would be to disconnect the 12 volts."
+    },
+    {
+      "id": 304,
+      "start": 2245.96,
+      "end": 2246.8,
+      "start_hms": "00:37:25",
+      "end_hms": "00:37:26",
+      "text": "Right?"
+    },
+    {
+      "id": 305,
+      "start": 2246.8,
+      "end": 2251.04,
+      "start_hms": "00:37:26",
+      "end_hms": "00:37:31",
+      "text": "So cut your cable, get the 12 volt system disconnected"
+    },
+    {
+      "id": 306,
+      "start": 2251.04,
+      "end": 2251.88,
+      "start_hms": "00:37:31",
+      "end_hms": "00:37:31",
+      "text": "at the back."
+    },
+    {
+      "id": 307,
+      "start": 2253.84,
+      "end": 2254.6800000000003,
+      "start_hms": "00:37:33",
+      "end_hms": "00:37:34",
+      "text": "Okay?"
+    },
+    {
+      "id": 308,
+      "start": 2256.2400000000002,
+      "end": 2257.48,
+      "start_hms": "00:37:36",
+      "end_hms": "00:37:37",
+      "text": "There's my two methods"
+    },
+    {
+      "id": 309,
+      "start": 2257.48,
+      "end": 2260.6800000000003,
+      "start_hms": "00:37:37",
+      "end_hms": "00:37:40",
+      "text": "that I pretty much preach to everybody across."
+    },
+    {
+      "id": 310,
+      "start": 2260.6800000000003,
+      "end": 2262.7200000000003,
+      "start_hms": "00:37:40",
+      "end_hms": "00:37:42",
+      "text": "If you do those two things,"
+    },
+    {
+      "id": 311,
+      "start": 2262.7200000000003,
+      "end": 2265.96,
+      "start_hms": "00:37:42",
+      "end_hms": "00:37:45",
+      "text": "you should feel very, very comfortable and confident"
+    },
+    {
+      "id": 312,
+      "start": 2265.96,
+      "end": 2270.2000000000003,
+      "start_hms": "00:37:45",
+      "end_hms": "00:37:50",
+      "text": "that again, the electric, the high voltage situation"
+    },
+    {
+      "id": 313,
+      "start": 2270.2000000000003,
+      "end": 2272.96,
+      "start_hms": "00:37:50",
+      "end_hms": "00:37:52",
+      "text": "is in the lower portion of the vehicle"
+    },
+    {
+      "id": 314,
+      "start": 2272.96,
+      "end": 2275.6,
+      "start_hms": "00:37:52",
+      "end_hms": "00:37:55",
+      "text": "trapped inside that battery housing."
+    },
+    {
+      "id": 315,
+      "start": 2275.6,
+      "end": 2276.56,
+      "start_hms": "00:37:55",
+      "end_hms": "00:37:56",
+      "text": "Okay?"
+    },
+    {
+      "id": 316,
+      "start": 2276.56,
+      "end": 2279.6400000000003,
+      "start_hms": "00:37:56",
+      "end_hms": "00:37:59",
+      "text": "So if I gotta help an occupant out of this vehicle,"
+    },
+    {
+      "id": 317,
+      "start": 2279.6400000000003,
+      "end": 2283.2400000000002,
+      "start_hms": "00:37:59",
+      "end_hms": "00:38:03",
+      "text": "I should have some pretty clean cut lines to work with here"
+    },
+    {
+      "id": 318,
+      "start": 2283.2400000000002,
+      "end": 2286.0,
+      "start_hms": "00:38:03",
+      "end_hms": "00:38:06",
+      "text": "and not have to worry about getting into that battery."
+    },
+    {
+      "id": 319,
+      "start": 2288.12,
+      "end": 2288.96,
+      "start_hms": "00:38:08",
+      "end_hms": "00:38:08",
+      "text": "Doing good?"
+    },
+    {
+      "id": 320,
+      "start": 2292.36,
+      "end": 2293.2000000000003,
+      "start_hms": "00:38:12",
+      "end_hms": "00:38:13",
+      "text": "Okay."
+    },
+    {
+      "id": 321,
+      "start": 2296.6,
+      "end": 2297.96,
+      "start_hms": "00:38:16",
+      "end_hms": "00:38:17",
+      "text": "I'll move on."
+    },
+    {
+      "id": 322,
+      "start": 2297.96,
+      "end": 2299.28,
+      "start_hms": "00:38:17",
+      "end_hms": "00:38:19",
+      "text": "This is just really,"
+    },
+    {
+      "id": 323,
+      "start": 2299.28,
+      "end": 2301.92,
+      "start_hms": "00:38:19",
+      "end_hms": "00:38:21",
+      "text": "what this picture is kinda talking to you about"
+    },
+    {
+      "id": 324,
+      "start": 2301.92,
+      "end": 2304.56,
+      "start_hms": "00:38:21",
+      "end_hms": "00:38:24",
+      "text": "is the fact that these contactors that we have,"
+    },
+    {
+      "id": 325,
+      "start": 2304.56,
+      "end": 2306.56,
+      "start_hms": "00:38:24",
+      "end_hms": "00:38:26",
+      "text": "so if I go back to this picture"
+    },
+    {
+      "id": 326,
+      "start": 2306.56,
+      "end": 2309.08,
+      "start_hms": "00:38:26",
+      "end_hms": "00:38:29",
+      "text": "and I talk about the fact that we have these contactors,"
+    },
+    {
+      "id": 327,
+      "start": 2309.08,
+      "end": 2311.08,
+      "start_hms": "00:38:29",
+      "end_hms": "00:38:31",
+      "text": "they'll live within the battery housing."
+    },
+    {
+      "id": 328,
+      "start": 2312.32,
+      "end": 2313.16,
+      "start_hms": "00:38:32",
+      "end_hms": "00:38:33",
+      "text": "Okay?"
+    },
+    {
+      "id": 329,
+      "start": 2313.16,
+      "end": 2315.6400000000003,
+      "start_hms": "00:38:33",
+      "end_hms": "00:38:35",
+      "text": "So when you drop it down, we'll find them in there."
+    },
+    {
+      "id": 330,
+      "start": 2316.52,
+      "end": 2317.76,
+      "start_hms": "00:38:36",
+      "end_hms": "00:38:37",
+      "text": "They live inside there."
+    },
+    {
+      "id": 331,
+      "start": 2317.76,
+      "end": 2320.7200000000003,
+      "start_hms": "00:38:37",
+      "end_hms": "00:38:40",
+      "text": "So again, all of this should be shielded,"
+    },
+    {
+      "id": 332,
+      "start": 2320.7200000000003,
+      "end": 2322.44,
+      "start_hms": "00:38:40",
+      "end_hms": "00:38:42",
+      "text": "protected in metal housing."
+    },
+    {
+      "id": 333,
+      "start": 2322.44,
+      "end": 2324.52,
+      "start_hms": "00:38:42",
+      "end_hms": "00:38:44",
+      "text": "I mean, it's all cut through it,"
+    },
+    {
+      "id": 334,
+      "start": 2324.52,
+      "end": 2327.84,
+      "start_hms": "00:38:44",
+      "end_hms": "00:38:47",
+      "text": "but they're pretty well protected from say,"
+    },
+    {
+      "id": 335,
+      "start": 2328.7200000000003,
+      "end": 2332.0,
+      "start_hms": "00:38:48",
+      "end_hms": "00:38:52",
+      "text": "injury in most of your contacts."
+    },
+    {
+      "id": 336,
+      "start": 2333.2000000000003,
+      "end": 2334.12,
+      "start_hms": "00:38:53",
+      "end_hms": "00:38:54",
+      "text": "That make sense?"
+    },
+    {
+      "id": 337,
+      "start": 2336.48,
+      "end": 2338.08,
+      "start_hms": "00:38:56",
+      "end_hms": "00:38:58",
+      "text": "Here's the contactors."
+    },
+    {
+      "id": 338,
+      "start": 2338.08,
+      "end": 2342.92,
+      "start_hms": "00:38:58",
+      "end_hms": "00:39:02",
+      "text": "I, when I first started teaching this class,"
+    },
+    {
+      "id": 339,
+      "start": 2342.92,
+      "end": 2347.8,
+      "start_hms": "00:39:02",
+      "end_hms": "00:39:07",
+      "text": "I used to say I have lots and lots of confidence"
+    },
+    {
+      "id": 340,
+      "start": 2347.8,
+      "end": 2349.8,
+      "start_hms": "00:39:07",
+      "end_hms": "00:39:09",
+      "text": "in the contactors."
+    },
+    {
+      "id": 341,
+      "start": 2349.8,
+      "end": 2351.28,
+      "start_hms": "00:39:09",
+      "end_hms": "00:39:11",
+      "text": "They're really high quality,"
+    },
+    {
+      "id": 342,
+      "start": 2351.28,
+      "end": 2353.6800000000003,
+      "start_hms": "00:39:11",
+      "end_hms": "00:39:13",
+      "text": "they're really expensive devices."
+    },
+    {
+      "id": 343,
+      "start": 2353.6800000000003,
+      "end": 2358.6800000000003,
+      "start_hms": "00:39:13",
+      "end_hms": "00:39:18",
+      "text": "These car companies don't want the cars to shock people"
+    },
+    {
+      "id": 344,
+      "start": 2358.8,
+      "end": 2362.24,
+      "start_hms": "00:39:18",
+      "end_hms": "00:39:22",
+      "text": "and create all that publicity would come from that, yeah?"
+    },
+    {
+      "id": 345,
+      "start": 2362.24,
+      "end": 2364.56,
+      "start_hms": "00:39:22",
+      "end_hms": "00:39:24",
+      "text": "So I'm a big believer in them."
+    },
+    {
+      "id": 346,
+      "start": 2364.56,
+      "end": 2366.16,
+      "start_hms": "00:39:24",
+      "end_hms": "00:39:26",
+      "text": "They go out, they spend pretty good money."
+    },
+    {
+      "id": 347,
+      "start": 2366.16,
+      "end": 2367.36,
+      "start_hms": "00:39:26",
+      "end_hms": "00:39:27",
+      "text": "These are aircraft,"
+    },
+    {
+      "id": 348,
+      "start": 2367.36,
+      "end": 2368.7200000000003,
+      "start_hms": "00:39:27",
+      "end_hms": "00:39:28",
+      "text": "that's the company that's been building them"
+    },
+    {
+      "id": 349,
+      "start": 2368.7200000000003,
+      "end": 2370.6400000000003,
+      "start_hms": "00:39:28",
+      "end_hms": "00:39:30",
+      "text": "for aircraft for years"
+    },
+    {
+      "id": 350,
+      "start": 2370.6400000000003,
+      "end": 2374.44,
+      "start_hms": "00:39:30",
+      "end_hms": "00:39:34",
+      "text": "and like Ford and GM buy exclusively from this company."
+    },
+    {
+      "id": 351,
+      "start": 2375.7200000000003,
+      "end": 2380.6400000000003,
+      "start_hms": "00:39:35",
+      "end_hms": "00:39:40",
+      "text": "Now, about a year ago, maybe a year and a half ago now,"
+    },
+    {
+      "id": 352,
+      "start": 2380.6400000000003,
+      "end": 2383.12,
+      "start_hms": "00:39:40",
+      "end_hms": "00:39:43",
+      "text": "I came across first technician I know"
+    },
+    {
+      "id": 353,
+      "start": 2383.5600000000004,
+      "end": 2385.5600000000004,
+      "start_hms": "00:39:43",
+      "end_hms": "00:39:45",
+      "text": "that actually had a vehicle where the contactors"
+    },
+    {
+      "id": 354,
+      "start": 2385.5600000000004,
+      "end": 2387.5600000000004,
+      "start_hms": "00:39:45",
+      "end_hms": "00:39:47",
+      "text": "were stuck in energized position."
+    },
+    {
+      "id": 355,
+      "start": 2388.48,
+      "end": 2391.2400000000002,
+      "start_hms": "00:39:48",
+      "end_hms": "00:39:51",
+      "text": "So I've only heard of one situation,"
+    },
+    {
+      "id": 356,
+      "start": 2391.2400000000002,
+      "end": 2393.44,
+      "start_hms": "00:39:51",
+      "end_hms": "00:39:53",
+      "text": "we sat forward and asked him,"
+    },
+    {
+      "id": 357,
+      "start": 2393.44,
+      "end": 2397.12,
+      "start_hms": "00:39:53",
+      "end_hms": "00:39:57",
+      "text": "came across the vehicle where the contactors were stuck hot."
+    },
+    {
+      "id": 358,
+      "start": 2398.04,
+      "end": 2400.32,
+      "start_hms": "00:39:58",
+      "end_hms": "00:40:00",
+      "text": "They would not be energized."
+    },
+    {
+      "id": 359,
+      "start": 2400.32,
+      "end": 2401.36,
+      "start_hms": "00:40:00",
+      "end_hms": "00:40:01",
+      "text": "They had to drop the."
+    },
+    {
+      "id": 360,
+      "start": 4201.76,
+      "end": 4206.16,
+      "start_hms": "01:10:01",
+      "end_hms": "01:10:06",
+      "text": "battery down with all the orange cables hot."
+    },
+    {
+      "id": 361,
+      "start": 4206.16,
+      "end": 4208.06,
+      "start_hms": "01:10:06",
+      "end_hms": "01:10:08",
+      "text": "That's where those guys have to put on"
+    },
+    {
+      "id": 362,
+      "start": 4208.06,
+      "end": 4210.34,
+      "start_hms": "01:10:08",
+      "end_hms": "01:10:10",
+      "text": "basically their lineman's gloves"
+    },
+    {
+      "id": 363,
+      "start": 4210.34,
+      "end": 4212.900000000001,
+      "start_hms": "01:10:10",
+      "end_hms": "01:10:12",
+      "text": "and basically treat it like any part of that"
+    },
+    {
+      "id": 364,
+      "start": 4212.900000000001,
+      "end": 4214.56,
+      "start_hms": "01:10:12",
+      "end_hms": "01:10:14",
+      "text": "eye voltage system is hot."
+    },
+    {
+      "id": 365,
+      "start": 4215.7,
+      "end": 4217.900000000001,
+      "start_hms": "01:10:15",
+      "end_hms": "01:10:17",
+      "text": "That's the only situation wall of people,"
+    },
+    {
+      "id": 366,
+      "start": 4217.900000000001,
+      "end": 4220.26,
+      "start_hms": "01:10:17",
+      "end_hms": "01:10:20",
+      "text": "I've been teaching people to be mechanics"
+    },
+    {
+      "id": 367,
+      "start": 4220.26,
+      "end": 4222.780000000001,
+      "start_hms": "01:10:20",
+      "end_hms": "01:10:22",
+      "text": "for 23 years in Nebraska."
+    },
+    {
+      "id": 368,
+      "start": 4222.780000000001,
+      "end": 4224.74,
+      "start_hms": "01:10:22",
+      "end_hms": "01:10:24",
+      "text": "And I know people in almost every shop,"
+    },
+    {
+      "id": 369,
+      "start": 4224.74,
+      "end": 4226.860000000001,
+      "start_hms": "01:10:24",
+      "end_hms": "01:10:26",
+      "text": "probably in the state."
+    },
+    {
+      "id": 370,
+      "start": 4226.860000000001,
+      "end": 4231.14,
+      "start_hms": "01:10:26",
+      "end_hms": "01:10:31",
+      "text": "And so that's the only feedback I have like that."
+    },
+    {
+      "id": 371,
+      "start": 4231.14,
+      "end": 4233.52,
+      "start_hms": "01:10:31",
+      "end_hms": "01:10:33",
+      "text": "So this is extremely uncommon today."
+    },
+    {
+      "id": 372,
+      "start": 4234.42,
+      "end": 4236.76,
+      "start_hms": "01:10:34",
+      "end_hms": "01:10:36",
+      "text": "What that really means is that mechanically,"
+    },
+    {
+      "id": 373,
+      "start": 4236.76,
+      "end": 4241.8,
+      "start_hms": "01:10:36",
+      "end_hms": "01:10:41",
+      "text": "the contact really stuck high voltage, okay?"
+    },
+    {
+      "id": 374,
+      "start": 4241.8,
+      "end": 4244.64,
+      "start_hms": "01:10:41",
+      "end_hms": "01:10:44",
+      "text": "So very unlikely, but it takes me right back"
+    },
+    {
+      "id": 375,
+      "start": 4244.64,
+      "end": 4247.400000000001,
+      "start_hms": "01:10:44",
+      "end_hms": "01:10:47",
+      "text": "to one of my most important statements is,"
+    },
+    {
+      "id": 376,
+      "start": 4248.360000000001,
+      "end": 4251.360000000001,
+      "start_hms": "01:10:48",
+      "end_hms": "01:10:51",
+      "text": "if it's orange, don't mess with it."
+    },
+    {
+      "id": 377,
+      "start": 4252.92,
+      "end": 4254.22,
+      "start_hms": "01:10:52",
+      "end_hms": "01:10:54",
+      "text": "Everybody good with that?"
+    },
+    {
+      "id": 378,
+      "start": 4255.24,
+      "end": 4256.08,
+      "start_hms": "01:10:55",
+      "end_hms": "01:10:56",
+      "text": "Yeah."
+    },
+    {
+      "id": 379,
+      "start": 4257.400000000001,
+      "end": 4259.04,
+      "start_hms": "01:10:57",
+      "end_hms": "01:10:59",
+      "text": "I would like to make a joke."
+    },
+    {
+      "id": 380,
+      "start": 4259.04,
+      "end": 4260.92,
+      "start_hms": "01:10:59",
+      "end_hms": "01:11:00",
+      "text": "You wouldn't think that you'd ever have to jump start"
+    },
+    {
+      "id": 381,
+      "start": 4261.74,
+      "end": 4263.52,
+      "start_hms": "01:11:01",
+      "end_hms": "01:11:03",
+      "text": "with an electric vehicle again, would you?"
+    },
+    {
+      "id": 382,
+      "start": 4263.52,
+      "end": 4265.9800000000005,
+      "start_hms": "01:11:03",
+      "end_hms": "01:11:05",
+      "text": "But just like any other car out there,"
+    },
+    {
+      "id": 383,
+      "start": 4265.9800000000005,
+      "end": 4268.4800000000005,
+      "start_hms": "01:11:05",
+      "end_hms": "01:11:08",
+      "text": "your 12 volt system goes dead."
+    },
+    {
+      "id": 384,
+      "start": 4269.38,
+      "end": 4271.54,
+      "start_hms": "01:11:09",
+      "end_hms": "01:11:11",
+      "text": "You're not going anywhere until you do what?"
+    },
+    {
+      "id": 385,
+      "start": 4274.22,
+      "end": 4275.74,
+      "start_hms": "01:11:14",
+      "end_hms": "01:11:15",
+      "text": "Bring some 12 volt energy in there"
+    },
+    {
+      "id": 386,
+      "start": 4275.74,
+      "end": 4277.8,
+      "start_hms": "01:11:15",
+      "end_hms": "01:11:17",
+      "text": "to get it both back up again."
+    },
+    {
+      "id": 387,
+      "start": 4277.8,
+      "end": 4279.860000000001,
+      "start_hms": "01:11:17",
+      "end_hms": "01:11:19",
+      "text": "So I purposely like this picture"
+    },
+    {
+      "id": 388,
+      "start": 4279.860000000001,
+      "end": 4281.06,
+      "start_hms": "01:11:19",
+      "end_hms": "01:11:21",
+      "text": "because it's an old Ford truck."
+    },
+    {
+      "id": 389,
+      "start": 4281.06,
+      "end": 4283.46,
+      "start_hms": "01:11:21",
+      "end_hms": "01:11:23",
+      "text": "It's actually getting the electric vehicle going."
+    },
+    {
+      "id": 390,
+      "start": 4284.820000000001,
+      "end": 4289.18,
+      "start_hms": "01:11:24",
+      "end_hms": "01:11:29",
+      "text": "So bottom line is, I'm using this as my second example"
+    },
+    {
+      "id": 391,
+      "start": 4289.18,
+      "end": 4293.320000000001,
+      "start_hms": "01:11:29",
+      "end_hms": "01:11:33",
+      "text": "to say you have to have a functioning 12 volt system"
+    },
+    {
+      "id": 392,
+      "start": 4293.320000000001,
+      "end": 4295.84,
+      "start_hms": "01:11:33",
+      "end_hms": "01:11:35",
+      "text": "for high voltage to actually be out and about"
+    },
+    {
+      "id": 393,
+      "start": 4295.84,
+      "end": 4299.64,
+      "start_hms": "01:11:35",
+      "end_hms": "01:11:39",
+      "text": "on this car doing what it does, okay?"
+    },
+    {
+      "id": 394,
+      "start": 4305.08,
+      "end": 4309.56,
+      "start_hms": "01:11:45",
+      "end_hms": "01:11:49",
+      "text": "Okay, so J2929 is basically"
+    },
+    {
+      "id": 395,
+      "start": 4309.56,
+      "end": 4311.72,
+      "start_hms": "01:11:49",
+      "end_hms": "01:11:51",
+      "text": "the Society of Automotive Engineers."
+    },
+    {
+      "id": 396,
+      "start": 4312.84,
+      "end": 4315.74,
+      "start_hms": "01:11:52",
+      "end_hms": "01:11:55",
+      "text": "It's the documentation that they write up"
+    },
+    {
+      "id": 397,
+      "start": 4315.74,
+      "end": 4319.320000000001,
+      "start_hms": "01:11:55",
+      "end_hms": "01:11:59",
+      "text": "on what car makers should be doing"
+    },
+    {
+      "id": 398,
+      "start": 4319.320000000001,
+      "end": 4323.56,
+      "start_hms": "01:11:59",
+      "end_hms": "01:12:03",
+      "text": "with their EVs in order to keep them safe and functional"
+    },
+    {
+      "id": 399,
+      "start": 4323.56,
+      "end": 4327.02,
+      "start_hms": "01:12:03",
+      "end_hms": "01:12:07",
+      "text": "and let's just call them United States friendly, right?"
+    },
+    {
+      "id": 400,
+      "start": 4327.02,
+      "end": 4330.34,
+      "start_hms": "01:12:07",
+      "end_hms": "01:12:10",
+      "text": "So this is basically our documentation,"
+    },
+    {
+      "id": 401,
+      "start": 4330.34,
+      "end": 4334.56,
+      "start_hms": "01:12:10",
+      "end_hms": "01:12:14",
+      "text": "our stipulations that we want them to abide by."
+    },
+    {
+      "id": 402,
+      "start": 4334.56,
+      "end": 4338.7,
+      "start_hms": "01:12:14",
+      "end_hms": "01:12:18",
+      "text": "And some of the more important stuff that comes out of this"
+    },
+    {
+      "id": 403,
+      "start": 4338.7,
+      "end": 4341.42,
+      "start_hms": "01:12:18",
+      "end_hms": "01:12:21",
+      "text": "is like batch investigations."
+    },
+    {
+      "id": 404,
+      "start": 4341.42,
+      "end": 4343.06,
+      "start_hms": "01:12:21",
+      "end_hms": "01:12:23",
+      "text": "Because as a first responder,"
+    },
+    {
+      "id": 405,
+      "start": 4343.08,
+      "end": 4346.360000000001,
+      "start_hms": "01:12:23",
+      "end_hms": "01:12:26",
+      "text": "one of your biggest problems is you approach a vehicle,"
+    },
+    {
+      "id": 406,
+      "start": 4346.360000000001,
+      "end": 4349.88,
+      "start_hms": "01:12:26",
+      "end_hms": "01:12:29",
+      "text": "how do you know it's an electric vehicle, right?"
+    },
+    {
+      "id": 407,
+      "start": 4349.88,
+      "end": 4352.04,
+      "start_hms": "01:12:29",
+      "end_hms": "01:12:32",
+      "text": "We want to come up with good strategies"
+    },
+    {
+      "id": 408,
+      "start": 4352.04,
+      "end": 4356.56,
+      "start_hms": "01:12:32",
+      "end_hms": "01:12:36",
+      "text": "to identify that immediately on scene, okay?"
+    },
+    {
+      "id": 409,
+      "start": 4356.56,
+      "end": 4359.52,
+      "start_hms": "01:12:36",
+      "end_hms": "01:12:39",
+      "text": "So that's what I have my next little bit to talk about."
+    },
+    {
+      "id": 410,
+      "start": 4359.52,
+      "end": 4361.76,
+      "start_hms": "01:12:39",
+      "end_hms": "01:12:41",
+      "text": "All right, J2929 standardized"
+    },
+    {
+      "id": 411,
+      "start": 4361.76,
+      "end": 4365.2,
+      "start_hms": "01:12:41",
+      "end_hms": "01:12:45",
+      "text": "and factory requirements for EVs sold."
+    },
+    {
+      "id": 412,
+      "start": 4365.2,
+      "end": 4368.5,
+      "start_hms": "01:12:45",
+      "end_hms": "01:12:48",
+      "text": "This standard showed up in 2011."
+    },
+    {
+      "id": 413,
+      "start": 4368.5,
+      "end": 4372.4800000000005,
+      "start_hms": "01:12:48",
+      "end_hms": "01:12:52",
+      "text": "So I'll start with, if it's prior to 2011,"
+    },
+    {
+      "id": 414,
+      "start": 4372.4800000000005,
+      "end": 4375.38,
+      "start_hms": "01:12:52",
+      "end_hms": "01:12:55",
+      "text": "the vehicles likely to not follow these rules."
+    },
+    {
+      "id": 415,
+      "start": 4375.38,
+      "end": 4379.62,
+      "start_hms": "01:12:55",
+      "end_hms": "01:12:59",
+      "text": "In fact, almost all of them were using green badges"
+    },
+    {
+      "id": 416,
+      "start": 4379.62,
+      "end": 4384.06,
+      "start_hms": "01:12:59",
+      "end_hms": "01:13:04",
+      "text": "prior to 2011, okay?"
+    },
+    {
+      "id": 417,
+      "start": 4385.54,
+      "end": 4388.7,
+      "start_hms": "01:13:05",
+      "end_hms": "01:13:08",
+      "text": "The good news is prior to 2011,"
+    },
+    {
+      "id": 418,
+      "start": 4388.7,
+      "end": 4391.5,
+      "start_hms": "01:13:08",
+      "end_hms": "01:13:11",
+      "text": "almost all electric vehicles being sold on the market"
+    },
+    {
+      "id": 419,
+      "start": 4391.5,
+      "end": 4394.900000000001,
+      "start_hms": "01:13:11",
+      "end_hms": "01:13:14",
+      "text": "were kind of unique body style, right?"
+    },
+    {
+      "id": 420,
+      "start": 4394.900000000001,
+      "end": 4397.58,
+      "start_hms": "01:13:14",
+      "end_hms": "01:13:17",
+      "text": "They were trying to appeal and they were selling these cars"
+    },
+    {
+      "id": 421,
+      "start": 4397.58,
+      "end": 4400.14,
+      "start_hms": "01:13:17",
+      "end_hms": "01:13:20",
+      "text": "to people who wanted to show off to their coworkers"
+    },
+    {
+      "id": 422,
+      "start": 4400.6,
+      "end": 4403.6,
+      "start_hms": "01:13:20",
+      "end_hms": "01:13:23",
+      "text": "that I drive a hybrid, right?"
+    },
+    {
+      "id": 423,
+      "start": 4403.6,
+      "end": 4406.56,
+      "start_hms": "01:13:23",
+      "end_hms": "01:13:26",
+      "text": "I love the Earth more than you guys."
+    },
+    {
+      "id": 424,
+      "start": 4406.56,
+      "end": 4409.76,
+      "start_hms": "01:13:26",
+      "end_hms": "01:13:29",
+      "text": "So the point is, is that a lot of times"
+    },
+    {
+      "id": 425,
+      "start": 4409.76,
+      "end": 4414.6,
+      "start_hms": "01:13:29",
+      "end_hms": "01:13:34",
+      "text": "identifying these early vehicles is not terribly hard"
+    },
+    {
+      "id": 426,
+      "start": 4414.6,
+      "end": 4418.16,
+      "start_hms": "01:13:34",
+      "end_hms": "01:13:38",
+      "text": "if you have some familiarity with car models made itself,"
+    },
+    {
+      "id": 427,
+      "start": 4418.16,
+      "end": 4419.16,
+      "start_hms": "01:13:38",
+      "end_hms": "01:13:39",
+      "text": "okay?"
+    },
+    {
+      "id": 428,
+      "start": 4419.16,
+      "end": 4422.76,
+      "start_hms": "01:13:39",
+      "end_hms": "01:13:42",
+      "text": "The good news is this becomes more and more normalized"
+    },
+    {
+      "id": 429,
+      "start": 4422.76,
+      "end": 4427.0,
+      "start_hms": "01:13:42",
+      "end_hms": "01:13:47",
+      "text": "and we see, well, I'll use a Honda Civic as a great example."
+    },
+    {
+      "id": 430,
+      "start": 4427.0,
+      "end": 4428.4400000000005,
+      "start_hms": "01:13:47",
+      "end_hms": "01:13:48",
+      "text": "Honda Civic is probably one of the more"
+    },
+    {
+      "id": 431,
+      "start": 4428.4400000000005,
+      "end": 4431.3,
+      "start_hms": "01:13:48",
+      "end_hms": "01:13:51",
+      "text": "longer running applications where you could get"
+    },
+    {
+      "id": 432,
+      "start": 4431.3,
+      "end": 4434.900000000001,
+      "start_hms": "01:13:51",
+      "end_hms": "01:13:54",
+      "text": "some sort of hybrid or electric version"
+    },
+    {
+      "id": 433,
+      "start": 4434.900000000001,
+      "end": 4439.5,
+      "start_hms": "01:13:54",
+      "end_hms": "01:13:59",
+      "text": "and a gas version throughout most of the last 20 years."
+    },
+    {
+      "id": 434,
+      "start": 4440.42,
+      "end": 4441.58,
+      "start_hms": "01:14:00",
+      "end_hms": "01:14:01",
+      "text": "That make sense?"
+    },
+    {
+      "id": 435,
+      "start": 4441.58,
+      "end": 4445.22,
+      "start_hms": "01:14:01",
+      "end_hms": "01:14:05",
+      "text": "A Prius is kind of unique and a Prius was Toyota's"
+    },
+    {
+      "id": 436,
+      "start": 4445.22,
+      "end": 4447.9400000000005,
+      "start_hms": "01:14:05",
+      "end_hms": "01:14:07",
+      "text": "electric vehicle, the primary one."
+    },
+    {
+      "id": 437,
+      "start": 4447.9400000000005,
+      "end": 4450.74,
+      "start_hms": "01:14:07",
+      "end_hms": "01:14:10",
+      "text": "And so we kind of know that, right?"
+    },
+    {
+      "id": 438,
+      "start": 4451.66,
+      "end": 4455.14,
+      "start_hms": "01:14:11",
+      "end_hms": "01:14:15",
+      "text": "When you start getting models where this version's electric"
+    },
+    {
+      "id": 439,
+      "start": 4455.14,
+      "end": 4456.820000000001,
+      "start_hms": "01:14:15",
+      "end_hms": "01:14:16",
+      "text": "but this version is not,"
+    },
+    {
+      "id": 440,
+      "start": 4456.820000000001,
+      "end": 4458.52,
+      "start_hms": "01:14:16",
+      "end_hms": "01:14:18",
+      "text": "that's where some of these concerns"
+    },
+    {
+      "id": 441,
+      "start": 4458.52,
+      "end": 4461.24,
+      "start_hms": "01:14:18",
+      "end_hms": "01:14:21",
+      "text": "probably become the hardest to work."
+    },
+    {
+      "id": 442,
+      "start": 4462.62,
+      "end": 4466.42,
+      "start_hms": "01:14:22",
+      "end_hms": "01:14:26",
+      "text": "Okay, so what they're supposed to do is they're saying"
+    },
+    {
+      "id": 443,
+      "start": 4466.42,
+      "end": 4470.2,
+      "start_hms": "01:14:26",
+      "end_hms": "01:14:30",
+      "text": "we need identification that can clearly be recognizable"
+    },
+    {
+      "id": 444,
+      "start": 4470.2,
+      "end": 4474.52,
+      "start_hms": "01:14:30",
+      "end_hms": "01:14:34",
+      "text": "as an EV badge by an approaching responder from 50 feet."
+    },
+    {
+      "id": 445,
+      "start": 4476.16,
+      "end": 4478.6,
+      "start_hms": "01:14:36",
+      "end_hms": "01:14:38",
+      "text": "I don't know how to get your eyes harder"
+    },
+    {
+      "id": 446,
+      "start": 4478.6,
+      "end": 4481.68,
+      "start_hms": "01:14:38",
+      "end_hms": "01:14:41",
+      "text": "but when I look at a lot of the different badges,"
+    },
+    {
+      "id": 447,
+      "start": 4481.68,
+      "end": 4485.24,
+      "start_hms": "01:14:41",
+      "end_hms": "01:14:45",
+      "text": "sometimes it's my opinion that 50 feet's a stretch."
+    },
+    {
+      "id": 448,
+      "start": 4485.24,
+      "end": 4487.68,
+      "start_hms": "01:14:45",
+      "end_hms": "01:14:47",
+      "text": "But that's the goal, that's what,"
+    },
+    {
+      "id": 449,
+      "start": 4487.68,
+      "end": 4491.12,
+      "start_hms": "01:14:47",
+      "end_hms": "01:14:51",
+      "text": "again, SAE is telling all car makers to comply."
+    },
+    {
+      "id": 450,
+      "start": 4492.360000000001,
+      "end": 4495.92,
+      "start_hms": "01:14:52",
+      "end_hms": "01:14:55",
+      "text": "It's got a one inch exterior badge."
+    },
+    {
+      "id": 451,
+      "start": 4495.92,
+      "end": 4500.72,
+      "start_hms": "01:14:55",
+      "end_hms": "01:15:00",
+      "text": "They should have one on the rear and one on each side."
+    },
+    {
+      "id": 452,
+      "start": 4500.72,
+      "end": 4503.1,
+      "start_hms": "01:15:00",
+      "end_hms": "01:15:03",
+      "text": "That's the standard, that's the expectation."
+    },
+    {
+      "id": 453,
+      "start": 4504.6,
+      "end": 4506.4400000000005,
+      "start_hms": "01:15:04",
+      "end_hms": "01:15:06",
+      "text": "I will say that there are some troubles"
+    },
+    {
+      "id": 454,
+      "start": 4506.4400000000005,
+      "end": 4508.4800000000005,
+      "start_hms": "01:15:06",
+      "end_hms": "01:15:08",
+      "text": "with some of these high end versions."
+    },
+    {
+      "id": 455,
+      "start": 4508.4800000000005,
+      "end": 4513.4800000000005,
+      "start_hms": "01:15:08",
+      "end_hms": "01:15:13",
+      "text": "Tesla, Lucid, Rivian, they're not compliant with this."
+    },
+    {
+      "id": 456,
+      "start": 4514.4800000000005,
+      "end": 4517.64,
+      "start_hms": "01:15:14",
+      "end_hms": "01:15:17",
+      "text": "They're not very good at it at all."
+    },
+    {
+      "id": 457,
+      "start": 4517.64,
+      "end": 4520.52,
+      "start_hms": "01:15:17",
+      "end_hms": "01:15:20",
+      "text": "So you can judge that for whatever it's worth."
+    },
+    {
+      "id": 458,
+      "start": 4520.52,
+      "end": 4524.9400000000005,
+      "start_hms": "01:15:20",
+      "end_hms": "01:15:24",
+      "text": "I'm a huge fan of Toyota, Honda, GM4,"
+    },
+    {
+      "id": 459,
+      "start": 4524.9400000000005,
+      "end": 4527.12,
+      "start_hms": "01:15:24",
+      "end_hms": "01:15:27",
+      "text": "all four of those are doing a really good job of saying"
+    },
+    {
+      "id": 460,
+      "start": 4527.12,
+      "end": 4530.400000000001,
+      "start_hms": "01:15:27",
+      "end_hms": "01:15:30",
+      "text": "we wanna be compliant, we wanna make this"
+    },
+    {
+      "id": 461,
+      "start": 4530.400000000001,
+      "end": 4532.24,
+      "start_hms": "01:15:30",
+      "end_hms": "01:15:32",
+      "text": "really just better for everybody,"
+    },
+    {
+      "id": 462,
+      "start": 4532.24,
+      "end": 4534.26,
+      "start_hms": "01:15:32",
+      "end_hms": "01:15:34",
+      "text": "including first responders, right?"
+    },
+    {
+      "id": 463,
+      "start": 4535.56,
+      "end": 4539.04,
+      "start_hms": "01:15:35",
+      "end_hms": "01:15:39",
+      "text": "These companies, they kind of get to fall"
+    },
+    {
+      "id": 464,
+      "start": 4539.04,
+      "end": 4542.16,
+      "start_hms": "01:15:39",
+      "end_hms": "01:15:42",
+      "text": "into a non-compliant category"
+    },
+    {
+      "id": 465,
+      "start": 4542.16,
+      "end": 4544.96,
+      "start_hms": "01:15:42",
+      "end_hms": "01:15:44",
+      "text": "because they only make electric vehicles."
+    },
+    {
+      "id": 466,
+      "start": 4546.56,
+      "end": 4550.280000000001,
+      "start_hms": "01:15:46",
+      "end_hms": "01:15:50",
+      "text": "So the government's given them a pass and said,"
+    },
+    {
+      "id": 467,
+      "start": 4550.280000000001,
+      "end": 4555.280000000001,
+      "start_hms": "01:15:50",
+      "end_hms": "01:15:55",
+      "text": "okay, Tesla, since you only make electric vehicles,"
+    },
+    {
+      "id": 468,
+      "start": 4555.68,
+      "end": 4560.12,
+      "start_hms": "01:15:55",
+      "end_hms": "01:16:00",
+      "text": "we won't make you put a blue somewhere in it, right?"
+    },
+    {
+      "id": 469,
+      "start": 4560.12,
+      "end": 4563.84,
+      "start_hms": "01:16:00",
+      "end_hms": "01:16:03",
+      "text": "So I think where that becomes important is"
+    },
+    {
+      "id": 470,
+      "start": 4563.84,
+      "end": 4567.26,
+      "start_hms": "01:16:03",
+      "end_hms": "01:16:07",
+      "text": "it would be helpful if you feel comfortable"
+    },
+    {
+      "id": 471,
+      "start": 4567.26,
+      "end": 4569.76,
+      "start_hms": "01:16:07",
+      "end_hms": "01:16:09",
+      "text": "just understanding what vehicles are out there,"
+    },
+    {
+      "id": 472,
+      "start": 4569.76,
+      "end": 4572.24,
+      "start_hms": "01:16:09",
+      "end_hms": "01:16:12",
+      "text": "what brands are out there"
+    },
+    {
+      "id": 473,
+      "start": 4572.24,
+      "end": 4574.04,
+      "start_hms": "01:16:12",
+      "end_hms": "01:16:14",
+      "text": "and they only make electric vehicles"
+    },
+    {
+      "id": 474,
+      "start": 4574.04,
+      "end": 4577.24,
+      "start_hms": "01:16:14",
+      "end_hms": "01:16:17",
+      "text": "because they're not gonna follow all the same rules."
+    },
+    {
+      "id": 475,
+      "start": 4577.24,
+      "end": 4579.12,
+      "start_hms": "01:16:17",
+      "end_hms": "01:16:19",
+      "text": "Everybody in here knows what Tesla is, right?"
+    },
+    {
+      "id": 476,
+      "start": 4579.12,
+      "end": 4581.52,
+      "start_hms": "01:16:19",
+      "end_hms": "01:16:21",
+      "text": "We've all heard of that, yeah?"
+    },
+    {
+      "id": 477,
+      "start": 4581.52,
+      "end": 4583.88,
+      "start_hms": "01:16:21",
+      "end_hms": "01:16:23",
+      "text": "Rivian, anybody ever heard of that?"
+    },
+    {
+      "id": 478,
+      "start": 4583.88,
+      "end": 4585.96,
+      "start_hms": "01:16:23",
+      "end_hms": "01:16:25",
+      "text": "It's a mildly popular vehicle."
+    },
+    {
+      "id": 479,
+      "start": 4585.96,
+      "end": 4589.96,
+      "start_hms": "01:16:25",
+      "end_hms": "01:16:29",
+      "text": "I mean, I would guess there's probably somewhere near"
+    },
+    {
+      "id": 480,
+      "start": 4589.96,
+      "end": 4592.58,
+      "start_hms": "01:16:29",
+      "end_hms": "01:16:32",
+      "text": "approaching 100 and Lincoln now."
+    },
+    {
+      "id": 481,
+      "start": 4592.58,
+      "end": 4594.68,
+      "start_hms": "01:16:32",
+      "end_hms": "01:16:34",
+      "text": "So I mean, they're around."
+    },
+    {
+      "id": 482,
+      "start": 4594.68,
+      "end": 4598.64,
+      "start_hms": "01:16:34",
+      "end_hms": "01:16:38",
+      "text": "And then Lucid is probably the more rare one."
+    },
+    {
+      "id": 483,
+      "start": 4598.64,
+      "end": 4601.18,
+      "start_hms": "01:16:38",
+      "end_hms": "01:16:41",
+      "text": "I've never personally seen one in person."
+    },
+    {
+      "id": 484,
+      "start": 4602.16,
+      "end": 4604.66,
+      "start_hms": "01:16:42",
+      "end_hms": "01:16:44",
+      "text": "They're $1,000 or more."
+    },
+    {
+      "id": 485,
+      "start": 4604.66,
+      "end": 4607.96,
+      "start_hms": "01:16:44",
+      "end_hms": "01:16:47",
+      "text": "So I don't know how many of those you're gonna come across,"
+    },
+    {
+      "id": 486,
+      "start": 4607.96,
+      "end": 4612.66,
+      "start_hms": "01:16:47",
+      "end_hms": "01:16:52",
+      "text": "but those three are the primary US,"
+    },
+    {
+      "id": 487,
+      "start": 4612.66,
+      "end": 4614.9400000000005,
+      "start_hms": "01:16:52",
+      "end_hms": "01:16:54",
+      "text": "solely in the US market."
+    },
+    {
+      "id": 488,
+      "start": 4614.9400000000005,
+      "end": 4618.56,
+      "start_hms": "01:16:54",
+      "end_hms": "01:16:58",
+      "text": "They're not probably on your more familiar branding list"
+    },
+    {
+      "id": 489,
+      "start": 4618.56,
+      "end": 4621.8,
+      "start_hms": "01:16:58",
+      "end_hms": "01:17:01",
+      "text": "like GM4 or Toyota, Hyundai, that types."
+    },
+    {
+      "id": 490,
+      "start": 4623.56,
+      "end": 4624.92,
+      "start_hms": "01:17:03",
+      "end_hms": "01:17:04",
+      "text": "I think there's one of those Lucid"
+    },
+    {
+      "id": 491,
+      "start": 4624.92,
+      "end": 4626.66,
+      "start_hms": "01:17:04",
+      "end_hms": "01:17:06",
+      "text": "that's in town every week."
+    },
+    {
+      "id": 492,
+      "start": 4626.66,
+      "end": 4627.6,
+      "start_hms": "01:17:06",
+      "end_hms": "01:17:07",
+      "text": "Really? Yeah."
+    },
+    {
+      "id": 493,
+      "start": 4627.6,
+      "end": 4628.4400000000005,
+      "start_hms": "01:17:07",
+      "end_hms": "01:17:08",
+      "text": "There you go."
+    },
+    {
+      "id": 494,
+      "start": 4628.4400000000005,
+      "end": 4633.4400000000005,
+      "start_hms": "01:17:08",
+      "end_hms": "01:17:13",
+      "text": "So I will say, you guys right down this I-80 corridor."
+    },
+    {
+      "id": 495,
+      "start": 4633.92,
+      "end": 4636.400000000001,
+      "start_hms": "01:17:13",
+      "end_hms": "01:17:16",
+      "text": "And so there's no doubt that whether or not"
+    },
+    {
+      "id": 496,
+      "start": 4637.64,
+      "end": 4639.84,
+      "start_hms": "01:17:17",
+      "end_hms": "01:17:19",
+      "text": "you have one in town."
+    },
+    {
+      "id": 497,
+      "start": 4639.84,
+      "end": 4642.8,
+      "start_hms": "01:17:19",
+      "end_hms": "01:17:22",
+      "text": "I've seen it going through town."
+    },
+    {
+      "id": 498,
+      "start": 4642.8,
+      "end": 4645.04,
+      "start_hms": "01:17:22",
+      "end_hms": "01:17:25",
+      "text": "So I don't know if it's from around here"
+    },
+    {
+      "id": 499,
+      "start": 4645.04,
+      "end": 4646.76,
+      "start_hms": "01:17:25",
+      "end_hms": "01:17:26",
+      "text": "or where it's from, but more than once."
+    },
+    {
+      "id": 500,
+      "start": 4646.76,
+      "end": 4648.4800000000005,
+      "start_hms": "01:17:26",
+      "end_hms": "01:17:28",
+      "text": "Okay, there you go."
+    },
+    {
+      "id": 501,
+      "start": 4648.4800000000005,
+      "end": 4650.6,
+      "start_hms": "01:17:28",
+      "end_hms": "01:17:30",
+      "text": "So we know they're gonna be on the road running now."
+    },
+    {
+      "id": 502,
+      "start": 4650.6,
+      "end": 4653.2,
+      "start_hms": "01:17:30",
+      "end_hms": "01:17:33",
+      "text": "So you ought to get to some base familiar with that."
+    },
+    {
+      "id": 503,
+      "start": 4653.2,
+      "end": 4655.76,
+      "start_hms": "01:17:33",
+      "end_hms": "01:17:35",
+      "text": "I'm actually gonna jump ahead and go back up."
+    },
+    {
+      "id": 504,
+      "start": 4655.76,
+      "end": 4657.68,
+      "start_hms": "01:17:35",
+      "end_hms": "01:17:37",
+      "text": "Here's my picture that says, man,"
+    },
+    {
+      "id": 505,
+      "start": 4657.68,
+      "end": 4661.92,
+      "start_hms": "01:17:37",
+      "end_hms": "01:17:41",
+      "text": "worldwide there's a ridiculous amount of EV made, right?"
+    },
+    {
+      "id": 506,
+      "start": 4661.92,
+      "end": 4665.88,
+      "start_hms": "01:17:41",
+      "end_hms": "01:17:45",
+      "text": "The good news is most of these companies out there"
+    },
+    {
+      "id": 507,
+      "start": 4665.88,
+      "end": 4669.320000000001,
+      "start_hms": "01:17:45",
+      "end_hms": "01:17:49",
+      "text": "don't sell EVs in the United States."
+    },
+    {
+      "id": 508,
+      "start": 4670.280000000001,
+      "end": 4672.84,
+      "start_hms": "01:17:50",
+      "end_hms": "01:17:52",
+      "text": "But one of the reasons why I throw this slide show in here"
+    },
+    {
+      "id": 509,
+      "start": 4672.84,
+      "end": 4675.400000000001,
+      "start_hms": "01:17:52",
+      "end_hms": "01:17:55",
+      "text": "is just to make sure you understand"
+    },
+    {
+      "id": 510,
+      "start": 4675.400000000001,
+      "end": 4678.400000000001,
+      "start_hms": "01:17:55",
+      "end_hms": "01:17:58",
+      "text": "that this is an emerging situation"
+    },
+    {
+      "id": 511,
+      "start": 4678.400000000001,
+      "end": 4683.320000000001,
+      "start_hms": "01:17:58",
+      "end_hms": "01:18:03",
+      "text": "and we're going to see more of these coming into the US market."
+    },
+    {
+      "id": 512,
+      "start": 4683.320000000001,
+      "end": 4684.8,
+      "start_hms": "01:18:03",
+      "end_hms": "01:18:04",
+      "text": "This picture I have right here"
+    },
+    {
+      "id": 513,
+      "start": 4684.8,
+      "end": 4687.2,
+      "start_hms": "01:18:04",
+      "end_hms": "01:18:07",
+      "text": "is kind of the European market."
+    },
+    {
+      "id": 514,
+      "start": 4687.2,
+      "end": 4690.16,
+      "start_hms": "01:18:07",
+      "end_hms": "01:18:10",
+      "text": "And then I could get you a totally different list"
+    },
+    {
+      "id": 515,
+      "start": 4690.16,
+      "end": 4693.280000000001,
+      "start_hms": "01:18:10",
+      "end_hms": "01:18:13",
+      "text": "of logos for the Asian market."
+    },
+    {
+      "id": 516,
+      "start": 4693.280000000001,
+      "end": 4697.4800000000005,
+      "start_hms": "01:18:13",
+      "end_hms": "01:18:17",
+      "text": "So again, there's lots of them out there in the world."
+    },
+    {
+      "id": 517,
+      "start": 4697.4800000000005,
+      "end": 4701.8,
+      "start_hms": "01:18:17",
+      "end_hms": "01:18:21",
+      "text": "What comes into the US market really has a lot to do"
+    },
+    {
+      "id": 518,
+      "start": 4701.8,
+      "end": 4704.56,
+      "start_hms": "01:18:21",
+      "end_hms": "01:18:24",
+      "text": "or what keeps things out of some of the US market"
+    },
+    {
+      "id": 519,
+      "start": 4704.56,
+      "end": 4707.0,
+      "start_hms": "01:18:24",
+      "end_hms": "01:18:27",
+      "text": "has a lot to do with safety standards."
+    },
+    {
+      "id": 520,
+      "start": 4707.0,
+      "end": 4709.08,
+      "start_hms": "01:18:27",
+      "end_hms": "01:18:29",
+      "text": "You know, a lot of the Asian car makers"
+    },
+    {
+      "id": 521,
+      "start": 4709.08,
+      "end": 4712.6,
+      "start_hms": "01:18:29",
+      "end_hms": "01:18:32",
+      "text": "that might sell vehicles in India, China,"
+    },
+    {
+      "id": 522,
+      "start": 4712.6,
+      "end": 4713.8,
+      "start_hms": "01:18:32",
+      "end_hms": "01:18:33",
+      "text": "they don't want to make vehicles"
+    },
+    {
+      "id": 523,
+      "start": 4713.8,
+      "end": 4717.52,
+      "start_hms": "01:18:33",
+      "end_hms": "01:18:37",
+      "text": "that meet our safety standards, you know,"
+    },
+    {
+      "id": 524,
+      "start": 4717.52,
+      "end": 4720.360000000001,
+      "start_hms": "01:18:37",
+      "end_hms": "01:18:40",
+      "text": "seat belt systems, airbag systems, things like that."
+    },
+    {
+      "id": 525,
+      "start": 4720.360000000001,
+      "end": 4723.84,
+      "start_hms": "01:18:40",
+      "end_hms": "01:18:43",
+      "text": "And so they'll never sell it, okay?"
+    },
+    {
+      "id": 526,
+      "start": 4725.4800000000005,
+      "end": 4729.84,
+      "start_hms": "01:18:45",
+      "end_hms": "01:18:49",
+      "text": "All right, going back, here's what I hope everybody will do"
+    },
+    {
+      "id": 527,
+      "start": 4729.84,
+      "end": 4734.0,
+      "start_hms": "01:18:49",
+      "end_hms": "01:18:54",
+      "text": "because I think it makes all the sense in the world, okay?"
+    },
+    {
+      "id": 528,
+      "start": 4734.0,
+      "end": 4737.76,
+      "start_hms": "01:18:54",
+      "end_hms": "01:18:57",
+      "text": "Again, J2929 is a list of standards"
+    },
+    {
+      "id": 529,
+      "start": 4737.76,
+      "end": 4739.68,
+      "start_hms": "01:18:57",
+      "end_hms": "01:18:59",
+      "text": "that they're hoping that are able to go by"
+    },
+    {
+      "id": 530,
+      "start": 4739.68,
+      "end": 4742.4800000000005,
+      "start_hms": "01:18:59",
+      "end_hms": "01:19:02",
+      "text": "and they say, look, we want three of the hedges,"
+    },
+    {
+      "id": 531,
+      "start": 4743.320000000001,
+      "end": 4746.320000000001,
+      "start_hms": "01:19:03",
+      "end_hms": "01:19:06",
+      "text": "we want basically one on the rear, two on the sides,"
+    },
+    {
+      "id": 532,
+      "start": 4746.320000000001,
+      "end": 4748.4800000000005,
+      "start_hms": "01:19:06",
+      "end_hms": "01:19:08",
+      "text": "we would like to see blue lettering"
+    },
+    {
+      "id": 533,
+      "start": 4748.4800000000005,
+      "end": 4752.52,
+      "start_hms": "01:19:08",
+      "end_hms": "01:19:12",
+      "text": "and we'd like each badge to be at least one inch in size."
+    },
+    {
+      "id": 534,
+      "start": 4754.12,
+      "end": 4756.72,
+      "start_hms": "01:19:14",
+      "end_hms": "01:19:16",
+      "text": "That right there, if they all followed that,"
+    },
+    {
+      "id": 535,
+      "start": 4756.72,
+      "end": 4759.16,
+      "start_hms": "01:19:16",
+      "end_hms": "01:19:19",
+      "text": "I think it'd be pretty easy for us to walk up and say,"
+    },
+    {
+      "id": 536,
+      "start": 4759.16,
+      "end": 4764.16,
+      "start_hms": "01:19:19",
+      "end_hms": "01:19:24",
+      "text": "hey, this is an EV, I need to be putting my electric vehicle,"
+    },
+    {
+      "id": 537,
+      "start": 4765.4400000000005,
+      "end": 4770.4400000000005,
+      "start_hms": "01:19:25",
+      "end_hms": "01:19:30",
+      "text": "you know, thought process to work, okay?"
+    },
+    {
+      "id": 538,
+      "start": 4772.88,
+      "end": 4774.8,
+      "start_hms": "01:19:32",
+      "end_hms": "01:19:34",
+      "text": "The other thing I will just tell you"
+    },
+    {
+      "id": 539,
+      "start": 4774.8,
+      "end": 4779.4800000000005,
+      "start_hms": "01:19:34",
+      "end_hms": "01:19:39",
+      "text": "is that a lot of the batching is gonna promote"
+    },
+    {
+      "id": 540,
+      "start": 4779.4800000000005,
+      "end": 4781.16,
+      "start_hms": "01:19:39",
+      "end_hms": "01:19:41",
+      "text": "that it's an electric vehicle, right?"
+    },
+    {
+      "id": 541,
+      "start": 4781.16,
+      "end": 4783.4400000000005,
+      "start_hms": "01:19:41",
+      "end_hms": "01:19:43",
+      "text": "So there may be a lacking bolt"
+    },
+    {
+      "id": 542,
+      "start": 4783.4400000000005,
+      "end": 4787.24,
+      "start_hms": "01:19:43",
+      "end_hms": "01:19:47",
+      "text": "or something that looks like a plug on it, right?"
+    },
+    {
+      "id": 543,
+      "start": 4787.24,
+      "end": 4790.56,
+      "start_hms": "01:19:47",
+      "end_hms": "01:19:50",
+      "text": "So just be attentive to that, keep your eyes open."
+    },
+    {
+      "id": 544,
+      "start": 4790.56,
+      "end": 4793.88,
+      "start_hms": "01:19:50",
+      "end_hms": "01:19:53",
+      "text": "Again, most of it, well, all of it from 2001 on"
+    },
+    {
+      "id": 545,
+      "start": 4793.88,
+      "end": 4796.6,
+      "start_hms": "01:19:53",
+      "end_hms": "01:19:56",
+      "text": "is supposed to have blue letters."
+    },
+    {
+      "id": 546,
+      "start": 4796.6,
+      "end": 4798.4400000000005,
+      "start_hms": "01:19:56",
+      "end_hms": "01:19:58",
+      "text": "Then the two examples we brought do,"
+    },
+    {
+      "id": 547,
+      "start": 4798.4400000000005,
+      "end": 4799.8,
+      "start_hms": "01:19:58",
+      "end_hms": "01:19:59",
+      "text": "one's Ford, one's GM."
+    },
+    {
+      "id": 548,
+      "start": 4800.64,
+      "end": 4802.64,
+      "start_hms": "01:20:00",
+      "end_hms": "01:20:02",
+      "text": "And then the other one is a Ford,"
+    },
+    {
+      "id": 549,
+      "start": 4802.64,
+      "end": 4805.64,
+      "start_hms": "01:20:02",
+      "end_hms": "01:20:05",
+      "text": "one's GM, one's Ford, one's GM, one's GM,"
+    },
+    {
+      "id": 550,
+      "start": 4805.64,
+      "end": 4808.64,
+      "start_hms": "01:20:05",
+      "end_hms": "01:20:08",
+      "text": "one's Ford, one's GM, one's Ford, one's GM,"
+    },
+    {
+      "id": 551,
+      "start": 4808.64,
+      "end": 4811.64,
+      "start_hms": "01:20:08",
+      "end_hms": "01:20:11",
+      "text": "one's Ford, one's GM, one's Ford, one's GM,"
+    },
+    {
+      "id": 552,
+      "start": 4811.64,
+      "end": 4814.64,
+      "start_hms": "01:20:11",
+      "end_hms": "01:20:14",
+      "text": "one's Ford, one's GM, one's Ford, one's GM,"
+    },
+    {
+      "id": 553,
+      "start": 4814.64,
+      "end": 4817.64,
+      "start_hms": "01:20:14",
+      "end_hms": "01:20:17",
+      "text": "one's Ford, one's GM, one's Ford, one's GM,"
+    },
+    {
+      "id": 554,
+      "start": 4817.64,
+      "end": 4820.64,
+      "start_hms": "01:20:17",
+      "end_hms": "01:20:20",
+      "text": "one's Ford, one's GM, one's Ford, one's GM,"
+    },
+    {
+      "id": 555,
+      "start": 4820.64,
+      "end": 4823.64,
+      "start_hms": "01:20:20",
+      "end_hms": "01:20:23",
+      "text": "one's Ford, one's GM, one's Ford, one's GM,"
+    },
+    {
+      "id": 556,
+      "start": 4823.64,
+      "end": 4825.64,
+      "start_hms": "01:20:23",
+      "end_hms": "01:20:25",
+      "text": "one's Ford, one's Ford, one's GM,"
+    },
+    {
+      "id": 557,
+      "start": 4825.64,
+      "end": 4828.64,
+      "start_hms": "01:20:25",
+      "end_hms": "01:20:28",
+      "text": "one's Ford, one's GM, one's Ford, one's GM,"
+    },
+    {
+      "id": 558,
+      "start": 9030.400000000001,
+      "end": 9046.400000000001,
+      "start_hms": "02:30:30",
+      "end_hms": "02:30:46",
+      "text": "Okay? Sometimes they'll actually put some sort of designation, you know, for a lot of years we used to try to advertise if this car has, you know, dual overhead cams and then put DOHC somewhere in there."
+    },
+    {
+      "id": 559,
+      "start": 9046.400000000001,
+      "end": 9055.400000000001,
+      "start_hms": "02:30:46",
+      "end_hms": "02:30:55",
+      "text": "Right now in the EV world, what we're doing is we're advertising that it is a plug-in hybrid or hybrid or electric vehicle or EV version or something like that."
+    },
+    {
+      "id": 560,
+      "start": 9055.400000000001,
+      "end": 9060.400000000001,
+      "start_hms": "02:30:55",
+      "end_hms": "02:31:00",
+      "text": "So again, be attentive to that, be on the lookout."
+    },
+    {
+      "id": 561,
+      "start": 9060.400000000001,
+      "end": 9070.400000000001,
+      "start_hms": "02:31:00",
+      "end_hms": "02:31:10",
+      "text": "These are pictures of the older vehicles. These were pre-2011 examples that I just put together so you guys could see."
+    },
+    {
+      "id": 562,
+      "start": 9070.400000000001,
+      "end": 9079.400000000001,
+      "start_hms": "02:31:10",
+      "end_hms": "02:31:19",
+      "text": "Still has the information that should help me understand how both of these lives in that car somewhere, right?"
+    },
+    {
+      "id": 563,
+      "start": 9079.400000000001,
+      "end": 9085.400000000001,
+      "start_hms": "02:31:19",
+      "end_hms": "02:31:25",
+      "text": "But luckily from 11 on, most of them are moving into that group."
+    },
+    {
+      "id": 564,
+      "start": 9085.400000000001,
+      "end": 9099.400000000001,
+      "start_hms": "02:31:25",
+      "end_hms": "02:31:39",
+      "text": "This particular application just says really some of the best car makers, even the prototypes that they're driving around, they got engineers, you know, driving around using them, making sure they work."
+    },
+    {
+      "id": 565,
+      "start": 9099.400000000001,
+      "end": 9104.400000000001,
+      "start_hms": "02:31:39",
+      "end_hms": "02:31:44",
+      "text": "Toyota actually has an illuminated symbol on theirs."
+    },
+    {
+      "id": 566,
+      "start": 9104.400000000001,
+      "end": 9111.400000000001,
+      "start_hms": "02:31:44",
+      "end_hms": "02:31:51",
+      "text": "So if you've ever seen prototypes drive around, they might be all cloaked with, with, you know, fabrics."
+    },
+    {
+      "id": 567,
+      "start": 9111.400000000001,
+      "end": 9122.400000000001,
+      "start_hms": "02:31:51",
+      "end_hms": "02:32:02",
+      "text": "You can't see what's under there, but they'll actually have a cut opening and you'll see basically that electric vehicle designation in the symbols that's poking out."
+    },
+    {
+      "id": 568,
+      "start": 9123.400000000001,
+      "end": 9133.400000000001,
+      "start_hms": "02:32:03",
+      "end_hms": "02:32:13",
+      "text": "In fact, I've seen that. While I've been gassing up at a station in North Platte, there was a bunch of GM vehicles that showed up."
+    },
+    {
+      "id": 569,
+      "start": 9133.400000000001,
+      "end": 9143.400000000001,
+      "start_hms": "02:32:13",
+      "end_hms": "02:32:23",
+      "text": "And of course, I teach people cars in the car world, car business. I went up and I was like, hey, can I look under there and show them what is it?"
+    },
+    {
+      "id": 570,
+      "start": 9144.400000000001,
+      "end": 9156.400000000001,
+      "start_hms": "02:32:24",
+      "end_hms": "02:32:36",
+      "text": "So anyway, the point is, if you happen to have vehicles running down the road that aren't actual consuming products yet, they still will."
+    },
+    {
+      "id": 571,
+      "start": 9156.400000000001,
+      "end": 9163.400000000001,
+      "start_hms": "02:32:36",
+      "end_hms": "02:32:43",
+      "text": "The good conscientious companies are still pretty good about that."
+    },
+    {
+      "id": 572,
+      "start": 9163.400000000001,
+      "end": 9174.400000000001,
+      "start_hms": "02:32:43",
+      "end_hms": "02:32:54",
+      "text": "All right. A couple more things I'm going to talk about. Again, if you're approaching a vehicle, I get some common questions, which, speaking of that, if you have questions or ideas or comments, feel free to speak up."
+    },
+    {
+      "id": 573,
+      "start": 9174.400000000001,
+      "end": 9186.400000000001,
+      "start_hms": "02:32:54",
+      "end_hms": "02:33:06",
+      "text": "One of the things that's come up a lot as I've taught this class is, okay, so I approach a vehicle, it's rolled over, I can't see the badges, you know, for whatever reason."
+    },
+    {
+      "id": 574,
+      "start": 9186.400000000001,
+      "end": 9196.400000000001,
+      "start_hms": "02:33:06",
+      "end_hms": "02:33:16",
+      "text": "How are we going to end up, right? And so all I can do for sure is tell you that I can give you all the tools I can think of to try to help identify."
+    },
+    {
+      "id": 575,
+      "start": 9196.400000000001,
+      "end": 9205.400000000001,
+      "start_hms": "02:33:16",
+      "end_hms": "02:33:25",
+      "text": "And one of the things I want to point out is that inside the vehicle, there are always some differences."
+    },
+    {
+      "id": 576,
+      "start": 9205.400000000001,
+      "end": 9214.400000000001,
+      "start_hms": "02:33:25",
+      "end_hms": "02:33:34",
+      "text": "For example, a lot of these car manufacturers would incorporate some glue in the trim also, right?"
+    },
+    {
+      "id": 577,
+      "start": 9215.400000000001,
+      "end": 9221.400000000001,
+      "start_hms": "02:33:35",
+      "end_hms": "02:33:41",
+      "text": "You will notice that the shifter does not have a traditional gearbox associated with it."
+    },
+    {
+      "id": 578,
+      "start": 9221.400000000001,
+      "end": 9229.400000000001,
+      "start_hms": "02:33:41",
+      "end_hms": "02:33:49",
+      "text": "So it's not going to have, you know, part, reverse, neutral, drive, three, two, one, or anything like that."
+    },
+    {
+      "id": 579,
+      "start": 9229.400000000001,
+      "end": 9240.400000000001,
+      "start_hms": "02:33:49",
+      "end_hms": "02:34:00",
+      "text": "There's going to be limited ranges. In fact, the Equinox is right here, basically has forward, neutral, backwards."
+    },
+    {
+      "id": 580,
+      "start": 9240.400000000001,
+      "end": 9249.400000000001,
+      "start_hms": "02:34:00",
+      "end_hms": "02:34:09",
+      "text": "Okay, so all that is going to a more simplified, you know, look. So that can help be another clue."
+    },
+    {
+      "id": 581,
+      "start": 9252.400000000001,
+      "end": 9257.400000000001,
+      "start_hms": "02:34:12",
+      "end_hms": "02:34:17",
+      "text": "This is a really important thing I want to make sure everybody knows."
+    },
+    {
+      "id": 582,
+      "start": 9257.400000000001,
+      "end": 9266.400000000001,
+      "start_hms": "02:34:17",
+      "end_hms": "02:34:26",
+      "text": "Okay, so one problem with electric vehicles is we don't have a gasoline engine to hear when it's operational, right?"
+    },
+    {
+      "id": 583,
+      "start": 9266.400000000001,
+      "end": 9275.400000000001,
+      "start_hms": "02:34:26",
+      "end_hms": "02:34:35",
+      "text": "So in all these electric vehicles, if they are drive-ready, there is a symbol on the dash that says red."
+    },
+    {
+      "id": 584,
+      "start": 9275.400000000001,
+      "end": 9278.400000000001,
+      "start_hms": "02:34:35",
+      "end_hms": "02:34:38",
+      "text": "It's in green and it's always there."
+    },
+    {
+      "id": 585,
+      "start": 9278.400000000001,
+      "end": 9285.400000000001,
+      "start_hms": "02:34:38",
+      "end_hms": "02:34:45",
+      "text": "So if you've got a line of sight to the actual cluster somehow, the dash, you're going to see a ready light there."
+    },
+    {
+      "id": 586,
+      "start": 9285.400000000001,
+      "end": 9291.400000000001,
+      "start_hms": "02:34:45",
+      "end_hms": "02:34:51",
+      "text": "If this vehicle, for example, if the drive wheels could take off on you."
+    },
+    {
+      "id": 587,
+      "start": 9291.400000000001,
+      "end": 9294.400000000001,
+      "start_hms": "02:34:51",
+      "end_hms": "02:34:54",
+      "text": "So this is going to be something you're going to want to think about."
+    },
+    {
+      "id": 588,
+      "start": 9294.400000000001,
+      "end": 9301.400000000001,
+      "start_hms": "02:34:54",
+      "end_hms": "02:35:01",
+      "text": "You approach a vehicle and it's on its side or the wheels are going to be on the ground, but maybe it's just stuck where it can't move."
+    },
+    {
+      "id": 589,
+      "start": 9301.400000000001,
+      "end": 9312.400000000001,
+      "start_hms": "02:35:01",
+      "end_hms": "02:35:12",
+      "text": "Before I start messing with this and have my feet in a space where I can get rolled over or whatever it is, you want to look at that dash and see if the ready light's on."
+    },
+    {
+      "id": 590,
+      "start": 9313.400000000001,
+      "end": 9316.400000000001,
+      "start_hms": "02:35:13",
+      "end_hms": "02:35:16",
+      "text": "That vehicle's been shut off successfully, right?"
+    },
+    {
+      "id": 591,
+      "start": 9316.400000000001,
+      "end": 9321.400000000001,
+      "start_hms": "02:35:16",
+      "end_hms": "02:35:21",
+      "text": "If we've depowered it, the ready light will not be there."
+    },
+    {
+      "id": 592,
+      "start": 9321.400000000001,
+      "end": 9331.400000000001,
+      "start_hms": "02:35:21",
+      "end_hms": "02:35:31",
+      "text": "Because that is pretty much the driver's signal that he can hit the gas and take off and go down."
+    },
+    {
+      "id": 593,
+      "start": 9331.400000000001,
+      "end": 9333.400000000001,
+      "start_hms": "02:35:31",
+      "end_hms": "02:35:33",
+      "text": "Is that ready?"
+    },
+    {
+      "id": 594,
+      "start": 9333.400000000001,
+      "end": 9334.400000000001,
+      "start_hms": "02:35:33",
+      "end_hms": "02:35:34",
+      "text": "Right?"
+    },
+    {
+      "id": 595,
+      "start": 9334.400000000001,
+      "end": 9335.400000000001,
+      "start_hms": "02:35:34",
+      "end_hms": "02:35:35",
+      "text": "We don't use a tachometer."
+    },
+    {
+      "id": 596,
+      "start": 9335.400000000001,
+      "end": 9337.400000000001,
+      "start_hms": "02:35:35",
+      "end_hms": "02:35:37",
+      "text": "The other clues that we've used in the past."
+    },
+    {
+      "id": 597,
+      "start": 9337.400000000001,
+      "end": 9338.400000000001,
+      "start_hms": "02:35:37",
+      "end_hms": "02:35:38",
+      "text": "Oh, my vehicle died."
+    },
+    {
+      "id": 598,
+      "start": 9338.400000000001,
+      "end": 9340.400000000001,
+      "start_hms": "02:35:38",
+      "end_hms": "02:35:40",
+      "text": "How do I know my vehicle died?"
+    },
+    {
+      "id": 599,
+      "start": 9340.400000000001,
+      "end": 9341.400000000001,
+      "start_hms": "02:35:40",
+      "end_hms": "02:35:41",
+      "text": "I don't hear it."
+    },
+    {
+      "id": 600,
+      "start": 9341.400000000001,
+      "end": 9344.400000000001,
+      "start_hms": "02:35:41",
+      "end_hms": "02:35:44",
+      "text": "See the tachometer showing some RPM."
+    },
+    {
+      "id": 601,
+      "start": 9344.400000000001,
+      "end": 9346.400000000001,
+      "start_hms": "02:35:44",
+      "end_hms": "02:35:46",
+      "text": "Does that make sense?"
+    },
+    {
+      "id": 602,
+      "start": 9346.400000000001,
+      "end": 9349.400000000001,
+      "start_hms": "02:35:46",
+      "end_hms": "02:35:49",
+      "text": "All these starts today, it's ready."
+    },
+    {
+      "id": 603,
+      "start": 9349.400000000001,
+      "end": 9351.400000000001,
+      "start_hms": "02:35:49",
+      "end_hms": "02:35:51",
+      "text": "It's always green."
+    },
+    {
+      "id": 604,
+      "start": 9351.400000000001,
+      "end": 9354.400000000001,
+      "start_hms": "02:35:51",
+      "end_hms": "02:35:54",
+      "text": "So there's some nice uniformity."
+    },
+    {
+      "id": 605,
+      "start": 9354.400000000001,
+      "end": 9358.400000000001,
+      "start_hms": "02:35:54",
+      "end_hms": "02:35:58",
+      "text": "And this even includes the Teslas and the Rivians."
+    },
+    {
+      "id": 606,
+      "start": 9358.400000000001,
+      "end": 9360.400000000001,
+      "start_hms": "02:35:58",
+      "end_hms": "02:36:00",
+      "text": "I think they're better than that."
+    },
+    {
+      "id": 607,
+      "start": 9361.400000000001,
+      "end": 9364.400000000001,
+      "start_hms": "02:36:01",
+      "end_hms": "02:36:04",
+      "text": "Okay."
+    },
+    {
+      "id": 608,
+      "start": 9364.400000000001,
+      "end": 9366.400000000001,
+      "start_hms": "02:36:04",
+      "end_hms": "02:36:06",
+      "text": "Okay."
+    },
+    {
+      "id": 609,
+      "start": 9366.400000000001,
+      "end": 9379.400000000001,
+      "start_hms": "02:36:06",
+      "end_hms": "02:36:19",
+      "text": "When you're working with a high voltage system, you as a first responder or second responder need to be thinking in terms of I need two methods to disable high voltage."
+    },
+    {
+      "id": 610,
+      "start": 9379.400000000001,
+      "end": 9380.400000000001,
+      "start_hms": "02:36:19",
+      "end_hms": "02:36:20",
+      "text": "Right?"
+    },
+    {
+      "id": 611,
+      "start": 9380.400000000001,
+      "end": 9383.400000000001,
+      "start_hms": "02:36:20",
+      "end_hms": "02:36:23",
+      "text": "Before I interact with this vehicle in any way."
+    },
+    {
+      "id": 612,
+      "start": 9383.400000000001,
+      "end": 9385.400000000001,
+      "start_hms": "02:36:23",
+      "end_hms": "02:36:25",
+      "text": "Does that make sense?"
+    },
+    {
+      "id": 613,
+      "start": 9385.400000000001,
+      "end": 9391.400000000001,
+      "start_hms": "02:36:25",
+      "end_hms": "02:36:31",
+      "text": "So based on what we've already talked about so far, what do you think your best two methods count in New York?"
+    },
+    {
+      "id": 614,
+      "start": 9391.400000000001,
+      "end": 9392.400000000001,
+      "start_hms": "02:36:31",
+      "end_hms": "02:36:32",
+      "text": "Shut the car."
+    },
+    {
+      "id": 615,
+      "start": 9392.400000000001,
+      "end": 9393.400000000001,
+      "start_hms": "02:36:32",
+      "end_hms": "02:36:33",
+      "text": "Shut the car."
+    },
+    {
+      "id": 616,
+      "start": 9393.400000000001,
+      "end": 9394.400000000001,
+      "start_hms": "02:36:33",
+      "end_hms": "02:36:34",
+      "text": "Right?"
+    },
+    {
+      "id": 617,
+      "start": 9394.400000000001,
+      "end": 9395.400000000001,
+      "start_hms": "02:36:34",
+      "end_hms": "02:36:35",
+      "text": "That's one right there."
+    },
+    {
+      "id": 618,
+      "start": 9395.400000000001,
+      "end": 9396.400000000001,
+      "start_hms": "02:36:35",
+      "end_hms": "02:36:36",
+      "text": "Right?"
+    },
+    {
+      "id": 619,
+      "start": 9396.400000000001,
+      "end": 9397.400000000001,
+      "start_hms": "02:36:36",
+      "end_hms": "02:36:37",
+      "text": "Hit the power button."
+    },
+    {
+      "id": 620,
+      "start": 9397.400000000001,
+      "end": 9398.400000000001,
+      "start_hms": "02:36:37",
+      "end_hms": "02:36:38",
+      "text": "Move the key."
+    },
+    {
+      "id": 621,
+      "start": 9398.400000000001,
+      "end": 9399.400000000001,
+      "start_hms": "02:36:38",
+      "end_hms": "02:36:39",
+      "text": "Whatever it is."
+    },
+    {
+      "id": 622,
+      "start": 9399.400000000001,
+      "end": 9400.400000000001,
+      "start_hms": "02:36:39",
+      "end_hms": "02:36:40",
+      "text": "Yes?"
+    },
+    {
+      "id": 623,
+      "start": 9400.400000000001,
+      "end": 9402.400000000001,
+      "start_hms": "02:36:40",
+      "end_hms": "02:36:42",
+      "text": "So that's a step in the right direction."
+    },
+    {
+      "id": 624,
+      "start": 9402.400000000001,
+      "end": 9406.400000000001,
+      "start_hms": "02:36:42",
+      "end_hms": "02:36:46",
+      "text": "What's my second favorite one?"
+    },
+    {
+      "id": 625,
+      "start": 9406.400000000001,
+      "end": 9407.400000000001,
+      "start_hms": "02:36:46",
+      "end_hms": "02:36:47",
+      "text": "Yeah."
+    },
+    {
+      "id": 626,
+      "start": 9407.400000000001,
+      "end": 9410.400000000001,
+      "start_hms": "02:36:47",
+      "end_hms": "02:36:50",
+      "text": "Either cut or disconnect the 12 volt battery."
+    },
+    {
+      "id": 627,
+      "start": 9410.400000000001,
+      "end": 9411.400000000001,
+      "start_hms": "02:36:50",
+      "end_hms": "02:36:51",
+      "text": "Okay?"
+    },
+    {
+      "id": 628,
+      "start": 9411.400000000001,
+      "end": 9416.400000000001,
+      "start_hms": "02:36:51",
+      "end_hms": "02:36:56",
+      "text": "So now my biggest problem is I've got to be able to figure out where these 12 volt batteries go."
+    },
+    {
+      "id": 629,
+      "start": 9416.400000000001,
+      "end": 9417.400000000001,
+      "start_hms": "02:36:56",
+      "end_hms": "02:36:57",
+      "text": "Right?"
+    },
+    {
+      "id": 630,
+      "start": 9417.400000000001,
+      "end": 9420.400000000001,
+      "start_hms": "02:36:57",
+      "end_hms": "02:37:00",
+      "text": "They're always in the same spot, aren't they?"
+    },
+    {
+      "id": 631,
+      "start": 9420.400000000001,
+      "end": 9421.400000000001,
+      "start_hms": "02:37:00",
+      "end_hms": "02:37:01",
+      "text": "Yeah."
+    },
+    {
+      "id": 632,
+      "start": 9421.400000000001,
+      "end": 9423.400000000001,
+      "start_hms": "02:37:01",
+      "end_hms": "02:37:03",
+      "text": "You guys get my tune with it, right?"
+    },
+    {
+      "id": 633,
+      "start": 9423.400000000001,
+      "end": 9425.400000000001,
+      "start_hms": "02:37:03",
+      "end_hms": "02:37:05",
+      "text": "They're all over the place, aren't they?"
+    },
+    {
+      "id": 634,
+      "start": 9425.400000000001,
+      "end": 9426.400000000001,
+      "start_hms": "02:37:05",
+      "end_hms": "02:37:06",
+      "text": "So that is a concern."
+    },
+    {
+      "id": 635,
+      "start": 9426.400000000001,
+      "end": 9435.400000000001,
+      "start_hms": "02:37:06",
+      "end_hms": "02:37:15",
+      "text": "I'm going to talk for a minute here about how important it is to understand what resources are available quickly in order to find those 12 volt batteries."
+    },
+    {
+      "id": 636,
+      "start": 9435.400000000001,
+      "end": 9437.400000000001,
+      "start_hms": "02:37:15",
+      "end_hms": "02:37:17",
+      "text": "Okay?"
+    },
+    {
+      "id": 637,
+      "start": 9437.400000000001,
+      "end": 9443.400000000001,
+      "start_hms": "02:37:17",
+      "end_hms": "02:37:23",
+      "text": "Now, responders should realize these methods are only intended to disconnect high voltage sources."
+    },
+    {
+      "id": 638,
+      "start": 9443.400000000001,
+      "end": 9450.400000000001,
+      "start_hms": "02:37:23",
+      "end_hms": "02:37:30",
+      "text": "High voltage is still always present in the batteries housing."
+    },
+    {
+      "id": 639,
+      "start": 9450.400000000001,
+      "end": 9452.400000000001,
+      "start_hms": "02:37:30",
+      "end_hms": "02:37:32",
+      "text": "Everybody with me on that?"
+    },
+    {
+      "id": 640,
+      "start": 9452.400000000001,
+      "end": 9458.400000000001,
+      "start_hms": "02:37:32",
+      "end_hms": "02:37:38",
+      "text": "There's no way to basically deplete the energy that's stored in the batteries."
+    },
+    {
+      "id": 641,
+      "start": 9458.400000000001,
+      "end": 9464.400000000001,
+      "start_hms": "02:37:38",
+      "end_hms": "02:37:44",
+      "text": "So never start cutting into any of the space that actually holds or stores the batteries."
+    },
+    {
+      "id": 642,
+      "start": 9464.400000000001,
+      "end": 9467.400000000001,
+      "start_hms": "02:37:44",
+      "end_hms": "02:37:47",
+      "text": "That's the big message."
+    },
+    {
+      "id": 643,
+      "start": 9467.400000000001,
+      "end": 9468.400000000001,
+      "start_hms": "02:37:47",
+      "end_hms": "02:37:48",
+      "text": "All right."
+    },
+    {
+      "id": 644,
+      "start": 9468.400000000001,
+      "end": 9476.400000000001,
+      "start_hms": "02:37:48",
+      "end_hms": "02:37:56",
+      "text": "So based on again, as they use the J2929 standard, this is what they say, okay?"
+    },
+    {
+      "id": 645,
+      "start": 9476.400000000001,
+      "end": 9483.400000000001,
+      "start_hms": "02:37:56",
+      "end_hms": "02:38:03",
+      "text": "The ODM has the options of using these methods as choices."
+    },
+    {
+      "id": 646,
+      "start": 9483.400000000001,
+      "end": 9487.400000000001,
+      "start_hms": "02:38:03",
+      "end_hms": "02:38:07",
+      "text": "So automatic shutdown of the high voltage system."
+    },
+    {
+      "id": 647,
+      "start": 9487.400000000001,
+      "end": 9497.400000000001,
+      "start_hms": "02:38:07",
+      "end_hms": "02:38:17",
+      "text": "Here's a helpful thing that I personally would never probably use this as one of my two methods because how do you know, right?"
+    },
+    {
+      "id": 648,
+      "start": 9497.400000000001,
+      "end": 9499.400000000001,
+      "start_hms": "02:38:17",
+      "end_hms": "02:38:19",
+      "text": "But here's what I want you to know."
+    },
+    {
+      "id": 649,
+      "start": 9499.400000000001,
+      "end": 9509.400000000001,
+      "start_hms": "02:38:19",
+      "end_hms": "02:38:29",
+      "text": "Most of these electric vehicles, if they have an airbag collision, will automatically, as a part of their protocol, dissipate high voltage."
+    },
+    {
+      "id": 650,
+      "start": 9509.400000000001,
+      "end": 9510.400000000001,
+      "start_hms": "02:38:29",
+      "end_hms": "02:38:30",
+      "text": "Okay?"
+    },
+    {
+      "id": 651,
+      "start": 9510.400000000001,
+      "end": 9516.400000000001,
+      "start_hms": "02:38:30",
+      "end_hms": "02:38:36",
+      "text": "So in that situation, you probably don't have to do anything else, but we're not going to take that chance."
+    },
+    {
+      "id": 652,
+      "start": 9516.400000000001,
+      "end": 9518.400000000001,
+      "start_hms": "02:38:36",
+      "end_hms": "02:38:38",
+      "text": "Are we good?"
+    },
+    {
+      "id": 653,
+      "start": 9518.400000000001,
+      "end": 9524.400000000001,
+      "start_hms": "02:38:38",
+      "end_hms": "02:38:44",
+      "text": "That's just another piece of security that I just think is nice enough, right?"
+    },
+    {
+      "id": 654,
+      "start": 9524.400000000001,
+      "end": 9526.400000000001,
+      "start_hms": "02:38:44",
+      "end_hms": "02:38:46",
+      "text": "And I don't lie."
+    },
+    {
+      "id": 655,
+      "start": 9526.400000000001,
+      "end": 9528.400000000001,
+      "start_hms": "02:38:46",
+      "end_hms": "02:38:48",
+      "text": "Okay?"
+    },
+    {
+      "id": 656,
+      "start": 9528.400000000001,
+      "end": 9532.400000000001,
+      "start_hms": "02:38:48",
+      "end_hms": "02:38:52",
+      "text": "The next one is, again, turn the power off."
+    },
+    {
+      "id": 657,
+      "start": 9532.400000000001,
+      "end": 9538.400000000001,
+      "start_hms": "02:38:52",
+      "end_hms": "02:38:58",
+      "text": "That's a pretty good, pretty useful option most of the time."
+    },
+    {
+      "id": 658,
+      "start": 9538.400000000001,
+      "end": 9547.400000000001,
+      "start_hms": "02:38:58",
+      "end_hms": "02:39:07",
+      "text": "But I might point out that the Chevy Equinox that I brought here today, it does not have a power."
+    },
+    {
+      "id": 659,
+      "start": 9547.400000000001,
+      "end": 9553.400000000001,
+      "start_hms": "02:39:07",
+      "end_hms": "02:39:13",
+      "text": "So anybody know how it turns off?"
+    },
+    {
+      "id": 660,
+      "start": 9553.400000000001,
+      "end": 9557.400000000001,
+      "start_hms": "02:39:13",
+      "end_hms": "02:39:17",
+      "text": "If my butt's in the seat, it's got a seat occupant sensor, right?"
+    },
+    {
+      "id": 661,
+      "start": 9557.400000000001,
+      "end": 9559.400000000001,
+      "start_hms": "02:39:17",
+      "end_hms": "02:39:19",
+      "text": "We all have that now."
+    },
+    {
+      "id": 662,
+      "start": 9559.400000000001,
+      "end": 9563.400000000001,
+      "start_hms": "02:39:19",
+      "end_hms": "02:39:23",
+      "text": "Even cars that are practically 20 years old now have that."
+    },
+    {
+      "id": 663,
+      "start": 9563.400000000001,
+      "end": 9567.400000000001,
+      "start_hms": "02:39:23",
+      "end_hms": "02:39:27",
+      "text": "That's how it knows whether or not to arm the airbag, right?"
+    },
+    {
+      "id": 664,
+      "start": 9567.400000000001,
+      "end": 9576.400000000001,
+      "start_hms": "02:39:27",
+      "end_hms": "02:39:36",
+      "text": "So seat occupants and the driver hits the brake pedal and boom, the dash lights up."
+    },
+    {
+      "id": 665,
+      "start": 9576.400000000001,
+      "end": 9585.400000000001,
+      "start_hms": "02:39:36",
+      "end_hms": "02:39:45",
+      "text": "Then if the driver, while the foot is on the brake, puts it into forward or reverse, you're driving."
+    },
+    {
+      "id": 666,
+      "start": 9585.400000000001,
+      "end": 9594.400000000001,
+      "start_hms": "02:39:45",
+      "end_hms": "02:39:54",
+      "text": "So I will tell you once again, if I come across that vehicle and I'm trying to decide, are the wheels capable of driving away right now?"
+    },
+    {
+      "id": 667,
+      "start": 9594.400000000001,
+      "end": 9599.400000000001,
+      "start_hms": "02:39:54",
+      "end_hms": "02:39:59",
+      "text": "As you can imagine, all the different scenarios, that could be a problem."
+    },
+    {
+      "id": 668,
+      "start": 9599.400000000001,
+      "end": 9603.400000000001,
+      "start_hms": "02:39:59",
+      "end_hms": "02:40:03",
+      "text": "If the vehicle's ready to drive away, what am I going to see on the dash?"
+    },
+    {
+      "id": 669,
+      "start": 9603.400000000001,
+      "end": 9604.400000000001,
+      "start_hms": "02:40:03",
+      "end_hms": "02:40:04",
+      "text": "Ready."
+    },
+    {
+      "id": 670,
+      "start": 9604.400000000001,
+      "end": 9606.400000000001,
+      "start_hms": "02:40:04",
+      "end_hms": "02:40:06",
+      "text": "That's correct."
+    },
+    {
+      "id": 671,
+      "start": 9606.400000000001,
+      "end": 9608.400000000001,
+      "start_hms": "02:40:06",
+      "end_hms": "02:40:08",
+      "text": "Okay?"
+    },
+    {
+      "id": 672,
+      "start": 9608.400000000001,
+      "end": 9614.400000000001,
+      "start_hms": "02:40:08",
+      "end_hms": "02:40:14",
+      "text": "All right, either cut or disconnect both negative and positive battery cables."
+    },
+    {
+      "id": 673,
+      "start": 9614.400000000001,
+      "end": 9619.400000000001,
+      "start_hms": "02:40:14",
+      "end_hms": "02:40:19",
+      "text": "Always remember, if I'm cutting a battery cable, I really need to make two cuts."
+    },
+    {
+      "id": 674,
+      "start": 9619.400000000001,
+      "end": 9621.400000000001,
+      "start_hms": "02:40:19",
+      "end_hms": "02:40:21",
+      "text": "Everybody with me on this?"
+    },
+    {
+      "id": 675,
+      "start": 9621.400000000001,
+      "end": 9627.400000000001,
+      "start_hms": "02:40:21",
+      "end_hms": "02:40:27",
+      "text": "And I need to remove that lead that I have taken out of it so there's no way of accidentally reconnecting."
+    },
+    {
+      "id": 676,
+      "start": 9627.400000000001,
+      "end": 9628.400000000001,
+      "start_hms": "02:40:27",
+      "end_hms": "02:40:28",
+      "text": "Yes?"
+    },
+    {
+      "id": 677,
+      "start": 9628.400000000001,
+      "end": 9630.400000000001,
+      "start_hms": "02:40:28",
+      "end_hms": "02:40:30",
+      "text": "So, cut."
+    },
+    {
+      "id": 678,
+      "start": 18660.800000000003,
+      "end": 18667.120000000003,
+      "start_hms": "05:11:00",
+      "end_hms": "05:11:07",
+      "text": "Well, I think really what I like about preaching this is this is a normal part of our vehicle"
+    },
+    {
+      "id": 679,
+      "start": 18668.72,
+      "end": 18670.640000000003,
+      "start_hms": "05:11:08",
+      "end_hms": "05:11:10",
+      "text": "So"
+    },
+    {
+      "id": 680,
+      "start": 18670.640000000003,
+      "end": 18672.800000000003,
+      "start_hms": "05:11:10",
+      "end_hms": "05:11:12",
+      "text": "Just that that's my favorite"
+    },
+    {
+      "id": 681,
+      "start": 18673.800000000003,
+      "end": 18678.800000000003,
+      "start_hms": "05:11:13",
+      "end_hms": "05:11:18",
+      "text": "Then the challenge is just we're like that but that's a challenge on every car across the board"
+    },
+    {
+      "id": 682,
+      "start": 18679.72,
+      "end": 18683.520000000004,
+      "start_hms": "05:11:19",
+      "end_hms": "05:11:23",
+      "text": "Okay, you can remove the manual disconnect"
+    },
+    {
+      "id": 683,
+      "start": 18684.760000000002,
+      "end": 18689.72,
+      "start_hms": "05:11:24",
+      "end_hms": "05:11:29",
+      "text": "However, again, I wish to remind you that lots of different options out there and they look different"
+    },
+    {
+      "id": 684,
+      "start": 18691.360000000004,
+      "end": 18693.360000000004,
+      "start_hms": "05:11:31",
+      "end_hms": "05:11:33",
+      "text": "across lots of different car makers"
+    },
+    {
+      "id": 685,
+      "start": 18693.640000000003,
+      "end": 18697.480000000003,
+      "start_hms": "05:11:33",
+      "end_hms": "05:11:37",
+      "text": "So here I'm just reminding you already like this is an example"
+    },
+    {
+      "id": 686,
+      "start": 18698.24,
+      "end": 18702.200000000004,
+      "start_hms": "05:11:38",
+      "end_hms": "05:11:42",
+      "text": "I'm gonna use this one as my example. This was a pre to"
+    },
+    {
+      "id": 687,
+      "start": 18703.040000000005,
+      "end": 18704.320000000003,
+      "start_hms": "05:11:43",
+      "end_hms": "05:11:44",
+      "text": "2011"
+    },
+    {
+      "id": 688,
+      "start": 18704.320000000003,
+      "end": 18707.260000000002,
+      "start_hms": "05:11:44",
+      "end_hms": "05:11:47",
+      "text": "Application this would have been an old Prius like maybe"
+    },
+    {
+      "id": 689,
+      "start": 18708.72,
+      "end": 18716.280000000002,
+      "start_hms": "05:11:48",
+      "end_hms": "05:11:56",
+      "text": "2006 Prius that's what they used now today everybody's gone to this ready inside of green"
+    },
+    {
+      "id": 690,
+      "start": 18716.520000000004,
+      "end": 18723.680000000004,
+      "start_hms": "05:11:56",
+      "end_hms": "05:12:03",
+      "text": "So there's more standardization today than ever they still had a green light in a picture of a car"
+    },
+    {
+      "id": 691,
+      "start": 18723.840000000004,
+      "end": 18726.000000000004,
+      "start_hms": "05:12:03",
+      "end_hms": "05:12:06",
+      "text": "But the ready was kind of outside"
+    },
+    {
+      "id": 692,
+      "start": 18727.000000000004,
+      "end": 18731.800000000003,
+      "start_hms": "05:12:07",
+      "end_hms": "05:12:11",
+      "text": "You may find a few over the years wrote the word ready inside"
+    },
+    {
+      "id": 693,
+      "start": 18732.840000000004,
+      "end": 18734.840000000004,
+      "start_hms": "05:12:12",
+      "end_hms": "05:12:14",
+      "text": "Silhouette of that car"
+    },
+    {
+      "id": 694,
+      "start": 18734.840000000004,
+      "end": 18740.800000000003,
+      "start_hms": "05:12:14",
+      "end_hms": "05:12:20",
+      "text": "So that's what you see a lot of that too. Now again, you're looking for some sort of ready symbol that touch"
+    },
+    {
+      "id": 695,
+      "start": 18740.800000000003,
+      "end": 18743.920000000002,
+      "start_hms": "05:12:20",
+      "end_hms": "05:12:23",
+      "text": "The people is not disabled and honestly if you"
+    },
+    {
+      "id": 696,
+      "start": 18744.72,
+      "end": 18748.040000000005,
+      "start_hms": "05:12:24",
+      "end_hms": "05:12:28",
+      "text": "Move it it could potentially take off"
+    },
+    {
+      "id": 697,
+      "start": 18749.72,
+      "end": 18751.72,
+      "start_hms": "05:12:29",
+      "end_hms": "05:12:31",
+      "text": "So that's important considering"
+    },
+    {
+      "id": 698,
+      "start": 18756.600000000002,
+      "end": 18758.600000000002,
+      "start_hms": "05:12:36",
+      "end_hms": "05:12:38",
+      "text": "Okay, so"
+    },
+    {
+      "id": 699,
+      "start": 18758.800000000003,
+      "end": 18763.480000000003,
+      "start_hms": "05:12:38",
+      "end_hms": "05:12:43",
+      "text": "My thoughts on you approach the vehicle you've identified that is an EV"
+    },
+    {
+      "id": 700,
+      "start": 18764.08,
+      "end": 18765.4,
+      "start_hms": "05:12:44",
+      "end_hms": "05:12:45",
+      "text": "right"
+    },
+    {
+      "id": 701,
+      "start": 18765.4,
+      "end": 18772.960000000003,
+      "start_hms": "05:12:45",
+      "end_hms": "05:12:52",
+      "text": "Now you're thinking about how do I keep power it you want to refer to what's called the emergency response guy"
+    },
+    {
+      "id": 702,
+      "start": 18774.480000000003,
+      "end": 18778.24,
+      "start_hms": "05:12:54",
+      "end_hms": "05:12:58",
+      "text": "Okay, actually, there's two terms how to use"
+    },
+    {
+      "id": 703,
+      "start": 18784.480000000003,
+      "end": 18790.24,
+      "start_hms": "05:13:04",
+      "end_hms": "05:13:10",
+      "text": "Every manufacturer either uses the word emergency response guide. There's a GM version"
+    },
+    {
+      "id": 704,
+      "start": 18790.880000000005,
+      "end": 18798.24,
+      "start_hms": "05:13:10",
+      "end_hms": "05:13:18",
+      "text": "This is a Tesla version. This is an emergency response guide. The other application is so many factories will call it a"
+    },
+    {
+      "id": 705,
+      "start": 18798.640000000003,
+      "end": 18800.360000000004,
+      "start_hms": "05:13:18",
+      "end_hms": "05:13:20",
+      "text": "rescue car"
+    },
+    {
+      "id": 706,
+      "start": 18800.360000000004,
+      "end": 18802.800000000003,
+      "start_hms": "05:13:20",
+      "end_hms": "05:13:22",
+      "text": "So watch out for those terminals, okay"
+    },
+    {
+      "id": 707,
+      "start": 18804.360000000004,
+      "end": 18808.960000000003,
+      "start_hms": "05:13:24",
+      "end_hms": "05:13:28",
+      "text": "There there are a variety of ways to get access to these"
+    },
+    {
+      "id": 708,
+      "start": 18810.72,
+      "end": 18816.320000000003,
+      "start_hms": "05:13:30",
+      "end_hms": "05:13:36",
+      "text": "Probably the best list of these is at the car makers website"
+    },
+    {
+      "id": 709,
+      "start": 18816.800000000003,
+      "end": 18821.56,
+      "start_hms": "05:13:36",
+      "end_hms": "05:13:41",
+      "text": "If I put an emergency response guide in Google search and I put forward"
+    },
+    {
+      "id": 710,
+      "start": 18822.4,
+      "end": 18826.160000000003,
+      "start_hms": "05:13:42",
+      "end_hms": "05:13:46",
+      "text": "It'll take me a Google search thing right to their main board page"
+    },
+    {
+      "id": 711,
+      "start": 18826.480000000003,
+      "end": 18832.000000000004,
+      "start_hms": "05:13:46",
+      "end_hms": "05:13:52",
+      "text": "That has a list of every vehicle that they offer that has this emergency response guide"
+    },
+    {
+      "id": 712,
+      "start": 18834.08,
+      "end": 18835.56,
+      "start_hms": "05:13:54",
+      "end_hms": "05:13:55",
+      "text": "Okay"
+    },
+    {
+      "id": 713,
+      "start": 18835.56,
+      "end": 18837.56,
+      "start_hms": "05:13:55",
+      "end_hms": "05:13:57",
+      "text": "so that's how I"
+    },
+    {
+      "id": 714,
+      "start": 18838.360000000004,
+      "end": 18844.480000000003,
+      "start_hms": "05:13:58",
+      "end_hms": "05:14:04",
+      "text": "Like to encourage everybody to approach the scene is somebody identifies. This is a vehicle we need to take special precautions with"
+    },
+    {
+      "id": 715,
+      "start": 18845.200000000004,
+      "end": 18849.56,
+      "start_hms": "05:14:05",
+      "end_hms": "05:14:09",
+      "text": "Somebody's got their device out. Somebody's tracking down that emergency response"
+    },
+    {
+      "id": 716,
+      "start": 18850.680000000004,
+      "end": 18852.280000000002,
+      "start_hms": "05:14:10",
+      "end_hms": "05:14:12",
+      "text": "Okay"
+    },
+    {
+      "id": 717,
+      "start": 18852.280000000002,
+      "end": 18858.72,
+      "start_hms": "05:14:12",
+      "end_hms": "05:14:18",
+      "text": "Once you get there, I mean, it's really helpful. You start looking at where's my 12-volt battery. There it is"
+    },
+    {
+      "id": 718,
+      "start": 18859.72,
+      "end": 18866.520000000004,
+      "start_hms": "05:14:19",
+      "end_hms": "05:14:26",
+      "text": "Okay, if it was under the seat, it'd be you know, illustrated here. If it was in the trunk, it'd be illustrated there"
+    },
+    {
+      "id": 719,
+      "start": 18867.640000000003,
+      "end": 18873.040000000005,
+      "start_hms": "05:14:27",
+      "end_hms": "05:14:33",
+      "text": "In addition to high voltage, this is also showing you wherever I have any gas struts"
+    },
+    {
+      "id": 720,
+      "start": 18873.360000000004,
+      "end": 18877.600000000002,
+      "start_hms": "05:14:33",
+      "end_hms": "05:14:37",
+      "text": "These are nothing more complex and those are the struts that the trunk of the hood, right?"
+    },
+    {
+      "id": 721,
+      "start": 18878.200000000004,
+      "end": 18880.200000000004,
+      "start_hms": "05:14:38",
+      "end_hms": "05:14:40",
+      "text": "But obviously you don't want to cut through them, do you?"
+    },
+    {
+      "id": 722,
+      "start": 18881.040000000005,
+      "end": 18885.920000000002,
+      "start_hms": "05:14:41",
+      "end_hms": "05:14:45",
+      "text": "It's gonna release all that pressure and create potentially the risk of traffic"
+    },
+    {
+      "id": 723,
+      "start": 18886.4,
+      "end": 18888.4,
+      "start_hms": "05:14:46",
+      "end_hms": "05:14:48",
+      "text": "I'm moving out of there"
+    },
+    {
+      "id": 724,
+      "start": 18889.480000000003,
+      "end": 18892.320000000003,
+      "start_hms": "05:14:49",
+      "end_hms": "05:14:52",
+      "text": "What are all the blue blue areas?"
+    },
+    {
+      "id": 725,
+      "start": 18892.960000000003,
+      "end": 18894.72,
+      "start_hms": "05:14:52",
+      "end_hms": "05:14:54",
+      "text": "Those are"
+    },
+    {
+      "id": 726,
+      "start": 18894.72,
+      "end": 18898.680000000004,
+      "start_hms": "05:14:54",
+      "end_hms": "05:14:58",
+      "text": "Those are all airbag related devices or in this case"
+    },
+    {
+      "id": 727,
+      "start": 18898.680000000004,
+      "end": 18905.480000000003,
+      "start_hms": "05:14:58",
+      "end_hms": "05:15:05",
+      "text": "They're pre-seat pre-tensioners, but the reason we care about that is concerned either a charge nitrogen cylinder"
+    },
+    {
+      "id": 728,
+      "start": 18905.840000000004,
+      "end": 18907.920000000002,
+      "start_hms": "05:15:05",
+      "end_hms": "05:15:07",
+      "text": "Right or it's a pyrotechnic device"
+    },
+    {
+      "id": 729,
+      "start": 18907.920000000002,
+      "end": 18909.920000000002,
+      "start_hms": "05:15:07",
+      "end_hms": "05:15:09",
+      "text": "Anybody know what these are?"
+    },
+    {
+      "id": 730,
+      "start": 18913.72,
+      "end": 18915.72,
+      "start_hms": "05:15:13",
+      "end_hms": "05:15:15",
+      "text": "Anybody know what these are?"
+    },
+    {
+      "id": 731,
+      "start": 18919.000000000004,
+      "end": 18923.120000000003,
+      "start_hms": "05:15:19",
+      "end_hms": "05:15:23",
+      "text": "Got a fireman's hat in that imagery if you can see that from back there"
+    },
+    {
+      "id": 732,
+      "start": 18924.040000000005,
+      "end": 18926.040000000005,
+      "start_hms": "05:15:24",
+      "end_hms": "05:15:26",
+      "text": "Those are cut loops"
+    },
+    {
+      "id": 733,
+      "start": 18926.160000000003,
+      "end": 18931.72,
+      "start_hms": "05:15:26",
+      "end_hms": "05:15:31",
+      "text": "So most of these evening manufacturers are now adding like cut loops where they're directing you"
+    },
+    {
+      "id": 734,
+      "start": 18931.840000000004,
+      "end": 18937.4,
+      "start_hms": "05:15:31",
+      "end_hms": "05:15:37",
+      "text": "Hey, we think you should go here. We think you should come back as a way of disabling that global power"
+    },
+    {
+      "id": 735,
+      "start": 18937.960000000003,
+      "end": 18942.520000000004,
+      "start_hms": "05:15:37",
+      "end_hms": "05:15:42",
+      "text": "And I like the fact that like Tessa in this example put one in front"
+    },
+    {
+      "id": 736,
+      "start": 18943.72,
+      "end": 18949.200000000004,
+      "start_hms": "05:15:43",
+      "end_hms": "05:15:49",
+      "text": "So I've got a couple of options depending on how the vehicle is positioned when I approach"
+    },
+    {
+      "id": 737,
+      "start": 18957.280000000002,
+      "end": 18962.920000000002,
+      "start_hms": "05:15:57",
+      "end_hms": "05:16:02",
+      "text": "Here's just to look and make sure we all understand what we're looking at you've got airbags in blue"
+    },
+    {
+      "id": 738,
+      "start": 18963.320000000003,
+      "end": 18965.320000000003,
+      "start_hms": "05:16:03",
+      "end_hms": "05:16:05",
+      "text": "This is really just"
+    },
+    {
+      "id": 739,
+      "start": 18965.360000000004,
+      "end": 18967.360000000004,
+      "start_hms": "05:16:05",
+      "end_hms": "05:16:07",
+      "text": "srs. Control unit"
+    },
+    {
+      "id": 740,
+      "start": 18968.08,
+      "end": 18970.72,
+      "start_hms": "05:16:08",
+      "end_hms": "05:16:10",
+      "text": "This indicates that you've got stored gas"
+    },
+    {
+      "id": 741,
+      "start": 18972.08,
+      "end": 18977.800000000003,
+      "start_hms": "05:16:12",
+      "end_hms": "05:16:17",
+      "text": "some sort of pressurized component that will release energy if I cut through it I"
+    },
+    {
+      "id": 742,
+      "start": 18979.960000000003,
+      "end": 18986.200000000004,
+      "start_hms": "05:16:19",
+      "end_hms": "05:16:26",
+      "text": "Will pitch tables in orange here's a cut cable for emergency responders"
+    },
+    {
+      "id": 743,
+      "start": 18989.040000000005,
+      "end": 18996.520000000004,
+      "start_hms": "05:16:29",
+      "end_hms": "05:16:36",
+      "text": "What about this I mean, how are you guys feeling about vehicles with I think strength steel air"
+    },
+    {
+      "id": 744,
+      "start": 18998.000000000004,
+      "end": 19002.800000000003,
+      "start_hms": "05:16:38",
+      "end_hms": "05:16:42",
+      "text": "Right, if you're using a saw to cut through and you had high strength, it's gonna slow you way down"
+    },
+    {
+      "id": 745,
+      "start": 19003.680000000004,
+      "end": 19005.960000000003,
+      "start_hms": "05:16:43",
+      "end_hms": "05:16:45",
+      "text": "It is significantly different to cut"
+    },
+    {
+      "id": 746,
+      "start": 19006.960000000003,
+      "end": 19010.460000000003,
+      "start_hms": "05:16:46",
+      "end_hms": "05:16:50",
+      "text": "So again, it's kind of nice to know where that is. You can cut around"
+    },
+    {
+      "id": 747,
+      "start": 19015.360000000004,
+      "end": 19018.840000000004,
+      "start_hms": "05:16:55",
+      "end_hms": "05:16:58",
+      "text": "So just a page is kind of highlighting those purchased modern"
+    },
+    {
+      "id": 748,
+      "start": 19018.840000000004,
+      "end": 19020.840000000004,
+      "start_hms": "05:16:58",
+      "end_hms": "05:17:00",
+      "text": "Up"
+    },
+    {
+      "id": 749,
+      "start": 19027.08,
+      "end": 19031.320000000003,
+      "start_hms": "05:17:07",
+      "end_hms": "05:17:11",
+      "text": "It's not they're actually having you use"
+    },
+    {
+      "id": 750,
+      "start": 19032.960000000003,
+      "end": 19038.040000000005,
+      "start_hms": "05:17:12",
+      "end_hms": "05:17:18",
+      "text": "A cut loop in there and you actually on this vehicle have to break that window off to get access to"
+    },
+    {
+      "id": 751,
+      "start": 19040.000000000004,
+      "end": 19043.08,
+      "start_hms": "05:17:20",
+      "end_hms": "05:17:23",
+      "text": "So again, I would use once again I don't use"
+    },
+    {
+      "id": 752,
+      "start": 19043.960000000003,
+      "end": 19048.440000000002,
+      "start_hms": "05:17:23",
+      "end_hms": "05:17:28",
+      "text": "Let me find it. I think that picture that there it is right there. This is all screen chops"
+    },
+    {
+      "id": 753,
+      "start": 19048.880000000005,
+      "end": 19051.760000000002,
+      "start_hms": "05:17:28",
+      "end_hms": "05:17:31",
+      "text": "That I've taken right out of my emergency responder"
+    },
+    {
+      "id": 754,
+      "start": 19052.920000000002,
+      "end": 19055.520000000004,
+      "start_hms": "05:17:32",
+      "end_hms": "05:17:35",
+      "text": "Documents so for Tesla s3"
+    },
+    {
+      "id": 755,
+      "start": 19056.040000000005,
+      "end": 19059.480000000003,
+      "start_hms": "05:17:36",
+      "end_hms": "05:17:39",
+      "text": "They consider this a secondary option"
+    },
+    {
+      "id": 756,
+      "start": 19059.480000000003,
+      "end": 19065.58,
+      "start_hms": "05:17:39",
+      "end_hms": "05:17:45",
+      "text": "They want you to try the primary because primary ones easiest to access unless for example"
+    },
+    {
+      "id": 757,
+      "start": 19065.800000000003,
+      "end": 19067.800000000003,
+      "start_hms": "05:17:45",
+      "end_hms": "05:17:47",
+      "text": "The big was upside down good. You're not"
+    },
+    {
+      "id": 758,
+      "start": 19069.08,
+      "end": 19071.08,
+      "start_hms": "05:17:49",
+      "end_hms": "05:17:51",
+      "text": "Right"
+    },
+    {
+      "id": 759,
+      "start": 19071.800000000003,
+      "end": 19076.120000000003,
+      "start_hms": "05:17:51",
+      "end_hms": "05:17:56",
+      "text": "But if you have to go to the secondary one you break this window"
+    },
+    {
+      "id": 760,
+      "start": 19076.680000000004,
+      "end": 19084.08,
+      "start_hms": "05:17:56",
+      "end_hms": "05:18:04",
+      "text": "You pull a plastic trim that goes around that window pop that out of the way there's a couple right there I"
+    },
+    {
+      "id": 761,
+      "start": 19087.160000000003,
+      "end": 19092.880000000005,
+      "start_hms": "05:18:07",
+      "end_hms": "05:18:12",
+      "text": "Guess I will tell you this if you haven't seen this I do not have a picture. I don't think any here"
+    },
+    {
+      "id": 762,
+      "start": 19094.120000000003,
+      "end": 19096.480000000003,
+      "start_hms": "05:18:14",
+      "end_hms": "05:18:16",
+      "text": "Maybe after I say that we'll see a picture, but any"
+    },
+    {
+      "id": 763,
+      "start": 19097.760000000002,
+      "end": 19102.960000000003,
+      "start_hms": "05:18:17",
+      "end_hms": "05:18:22",
+      "text": "Early Tesla's had a secondary cup loop in some of their vehicles"
+    },
+    {
+      "id": 764,
+      "start": 19103.920000000002,
+      "end": 19105.760000000002,
+      "start_hms": "05:18:23",
+      "end_hms": "05:18:25",
+      "text": "In"
+    },
+    {
+      "id": 765,
+      "start": 19105.760000000002,
+      "end": 19111.640000000003,
+      "start_hms": "05:18:25",
+      "end_hms": "05:18:31",
+      "text": "Basically like what we call the C or D pillar of the rear body"
+    },
+    {
+      "id": 766,
+      "start": 19112.280000000002,
+      "end": 19116.200000000004,
+      "start_hms": "05:18:32",
+      "end_hms": "05:18:36",
+      "text": "So where that that think about that rear door opens"
+    },
+    {
+      "id": 767,
+      "start": 19116.440000000002,
+      "end": 19121.040000000005,
+      "start_hms": "05:18:36",
+      "end_hms": "05:18:41",
+      "text": "You've got the door frame and they literally have a decal with the saw"
+    },
+    {
+      "id": 768,
+      "start": 19121.56,
+      "end": 19124.840000000004,
+      "start_hms": "05:18:41",
+      "end_hms": "05:18:44",
+      "text": "on it saw blade and it says cut here and"
+    },
+    {
+      "id": 769,
+      "start": 19125.640000000003,
+      "end": 19129.040000000005,
+      "start_hms": "05:18:45",
+      "end_hms": "05:18:49",
+      "text": "the idea was I cut right through that metal panel and"
+    },
+    {
+      "id": 770,
+      "start": 19129.480000000003,
+      "end": 19133.000000000004,
+      "start_hms": "05:18:49",
+      "end_hms": "05:18:53",
+      "text": "Behind it is going to be a couple that basically disabled"
+    },
+    {
+      "id": 771,
+      "start": 19134.08,
+      "end": 19136.680000000004,
+      "start_hms": "05:18:54",
+      "end_hms": "05:18:56",
+      "text": "So there are a couple of different applications. You'll see out there"
+    },
+    {
+      "id": 772,
+      "start": 19137.24,
+      "end": 19143.200000000004,
+      "start_hms": "05:18:57",
+      "end_hms": "05:19:03",
+      "text": "everybody's trying to get away from that and they're no longer like hiding them behind metal panels and"
+    },
+    {
+      "id": 773,
+      "start": 19143.72,
+      "end": 19145.520000000004,
+      "start_hms": "05:19:03",
+      "end_hms": "05:19:05",
+      "text": "encouraging their country"
+    },
+    {
+      "id": 774,
+      "start": 19145.520000000004,
+      "end": 19147.520000000004,
+      "start_hms": "05:19:05",
+      "end_hms": "05:19:07",
+      "text": "This makes way more sense"
+    },
+    {
+      "id": 775,
+      "start": 19147.520000000004,
+      "end": 19152.24,
+      "start_hms": "05:19:07",
+      "end_hms": "05:19:12",
+      "text": "If I can have great material out of the way and actually see that I've cut the cable"
+    },
+    {
+      "id": 776,
+      "start": 19152.24,
+      "end": 19156.360000000004,
+      "start_hms": "05:19:12",
+      "end_hms": "05:19:16",
+      "text": "I think the problem is you tell me oh, yeah cut through that and I promise you're good"
+    },
+    {
+      "id": 777,
+      "start": 19156.56,
+      "end": 19159.920000000002,
+      "start_hms": "05:19:16",
+      "end_hms": "05:19:19",
+      "text": "It's better to see it I think people feel more comfortable"
+    },
+    {
+      "id": 778,
+      "start": 19161.280000000002,
+      "end": 19163.280000000002,
+      "start_hms": "05:19:21",
+      "end_hms": "05:19:23",
+      "text": "Okay"
+    },
+    {
+      "id": 779,
+      "start": 19165.200000000004,
+      "end": 19167.200000000004,
+      "start_hms": "05:19:25",
+      "end_hms": "05:19:27",
+      "text": "Let's see"
+    },
+    {
+      "id": 780,
+      "start": 19168.520000000004,
+      "end": 19170.520000000004,
+      "start_hms": "05:19:28",
+      "end_hms": "05:19:30",
+      "text": "Okay"
+    },
+    {
+      "id": 781,
+      "start": 19170.520000000004,
+      "end": 19173.72,
+      "start_hms": "05:19:30",
+      "end_hms": "05:19:33",
+      "text": "One of the other important things to understand is that you're following"
+    },
+    {
+      "id": 782,
+      "start": 19174.320000000003,
+      "end": 19179.360000000004,
+      "start_hms": "05:19:34",
+      "end_hms": "05:19:39",
+      "text": "J2929 rules regulations from again the Society of Underwater Engineers"
+    },
+    {
+      "id": 783,
+      "start": 19179.840000000004,
+      "end": 19183.160000000003,
+      "start_hms": "05:19:39",
+      "end_hms": "05:19:43",
+      "text": "You should be able to access the cut loops"
+    },
+    {
+      "id": 784,
+      "start": 19183.360000000004,
+      "end": 19184.880000000005,
+      "start_hms": "05:19:43",
+      "end_hms": "05:19:44",
+      "text": "Loops"
+    },
+    {
+      "id": 785,
+      "start": 19184.880000000005,
+      "end": 19191.120000000003,
+      "start_hms": "05:19:44",
+      "end_hms": "05:19:51",
+      "text": "Without physical tools, you don't need any wrenches screwdrivers anything like that. Now you may have to do something like break a window"
+    },
+    {
+      "id": 786,
+      "start": 19191.120000000003,
+      "end": 19193.120000000003,
+      "start_hms": "05:19:51",
+      "end_hms": "05:19:53",
+      "text": "We already said that yes"
+    },
+    {
+      "id": 787,
+      "start": 19193.280000000002,
+      "end": 19195.280000000002,
+      "start_hms": "05:19:53",
+      "end_hms": "05:19:55",
+      "text": "Somehow you gotta get a hood open"
+    },
+    {
+      "id": 788,
+      "start": 19195.520000000004,
+      "end": 19202.480000000003,
+      "start_hms": "05:19:55",
+      "end_hms": "05:20:02",
+      "text": "But my point I'm making is when the hoods open for example that access the battery and it's coming"
+    },
+    {
+      "id": 789,
+      "start": 19202.480000000003,
+      "end": 19209.08,
+      "start_hms": "05:20:02",
+      "end_hms": "05:20:09",
+      "text": "That's under a bunch of plastic here. That plastic is all removable with force. They're just"
+    },
+    {
+      "id": 790,
+      "start": 19210.08,
+      "end": 19213.200000000004,
+      "start_hms": "05:20:10",
+      "end_hms": "05:20:13",
+      "text": "Basically those detainee Christmas tree like clips"
+    },
+    {
+      "id": 791,
+      "start": 19214.280000000002,
+      "end": 19216.280000000002,
+      "start_hms": "05:20:14",
+      "end_hms": "05:20:16",
+      "text": "Is what you know what I mean there?"
+    },
+    {
+      "id": 792,
+      "start": 19216.640000000003,
+      "end": 19221.200000000004,
+      "start_hms": "05:20:16",
+      "end_hms": "05:20:21",
+      "text": "So I can pull that all out of my way without unscrewing any fasteners"
+    },
+    {
+      "id": 793,
+      "start": 19222.280000000002,
+      "end": 19225.880000000005,
+      "start_hms": "05:20:22",
+      "end_hms": "05:20:25",
+      "text": "Okay, then once I have that plastic out of the way"
+    },
+    {
+      "id": 794,
+      "start": 19226.960000000003,
+      "end": 19229.200000000004,
+      "start_hms": "05:20:26",
+      "end_hms": "05:20:29",
+      "text": "There's my obvious tough loop in this exam"
+    },
+    {
+      "id": 795,
+      "start": 19230.520000000004,
+      "end": 19235.040000000005,
+      "start_hms": "05:20:30",
+      "end_hms": "05:20:35",
+      "text": "So again according to that thingy they say all first responder"
+    },
+    {
+      "id": 796,
+      "start": 19236.440000000002,
+      "end": 19238.040000000005,
+      "start_hms": "05:20:36",
+      "end_hms": "05:20:38",
+      "text": "disabling methods"
+    },
+    {
+      "id": 797,
+      "start": 19238.08,
+      "end": 19240.08,
+      "start_hms": "05:20:38",
+      "end_hms": "05:20:40",
+      "text": "Should be accessible without physical"
+    },
+    {
+      "id": 798,
+      "start": 19250.520000000004,
+      "end": 19254.08,
+      "start_hms": "05:20:50",
+      "end_hms": "05:20:54",
+      "text": "Here is my picture I couldn't remember if I had this picture in here or not"
+    },
+    {
+      "id": 799,
+      "start": 19254.08,
+      "end": 19260.800000000003,
+      "start_hms": "05:20:54",
+      "end_hms": "05:21:00",
+      "text": "But basically this is the example if you're back on that C pillar of this car. They're telling you"
+    },
+    {
+      "id": 800,
+      "start": 37921.600000000006,
+      "end": 37930.32000000001,
+      "start_hms": "10:32:01",
+      "end_hms": "10:32:10",
+      "text": "you know long as you cut six inches deep you're good that's maybe better than"
+    },
+    {
+      "id": 801,
+      "start": 37930.32000000001,
+      "end": 37937.8,
+      "start_hms": "10:32:10",
+      "end_hms": "10:32:17",
+      "text": "nothing but I'm glad we're moving away okay this right here is examples three"
+    },
+    {
+      "id": 802,
+      "start": 37937.8,
+      "end": 37956.16,
+      "start_hms": "10:32:17",
+      "end_hms": "10:32:36",
+      "text": "2016 all right yeah they will tell me that in that emergency response every"
+    },
+    {
+      "id": 803,
+      "start": 37956.16,
+      "end": 37960.560000000005,
+      "start_hms": "10:32:36",
+      "end_hms": "10:32:40",
+      "text": "whipping so if for some reason and there are a few out there I'm gonna pick on"
+    },
+    {
+      "id": 804,
+      "start": 37960.560000000005,
+      "end": 37974.40000000001,
+      "start_hms": "10:32:40",
+      "end_hms": "10:32:54",
+      "text": "Volkswagen out I'm not the biggest fan of those guys anyway but they are one"
+    },
+    {
+      "id": 805,
+      "start": 37974.40000000001,
+      "end": 37983.240000000005,
+      "start_hms": "10:32:54",
+      "end_hms": "10:33:03",
+      "text": "car manufacturer that actually asks people sometimes to in their protocol in"
+    },
+    {
+      "id": 806,
+      "start": 37983.240000000005,
+      "end": 37988.280000000006,
+      "start_hms": "10:33:03",
+      "end_hms": "10:33:08",
+      "text": "their emergency response guide tell you to get into this fuse panel and remove"
+    },
+    {
+      "id": 807,
+      "start": 37988.280000000006,
+      "end": 37997.08000000001,
+      "start_hms": "10:33:08",
+      "end_hms": "10:33:17",
+      "text": "that and I think that's a horrible you know for all kinds of reasons one if they"
+    },
+    {
+      "id": 808,
+      "start": 37997.08000000001,
+      "end": 38005.72000000001,
+      "start_hms": "10:33:17",
+      "end_hms": "10:33:25",
+      "text": "at least color that relay I don't know orange or something that would be helpful"
+    },
+    {
+      "id": 809,
+      "start": 38005.72000000001,
+      "end": 38011.560000000005,
+      "start_hms": "10:33:25",
+      "end_hms": "10:33:31",
+      "text": "but again not so what I'm gonna tell you is if I'm in this situation and this"
+    },
+    {
+      "id": 810,
+      "start": 38011.560000000005,
+      "end": 38015.96000000001,
+      "start_hms": "10:33:31",
+      "end_hms": "10:33:35",
+      "text": "is what I find in the emergency response guide I'm definitely gonna cut the battery"
+    },
+    {
+      "id": 811,
+      "start": 38015.96000000001,
+      "end": 38028.880000000005,
+      "start_hms": "10:33:35",
+      "end_hms": "10:33:48",
+      "text": "cables okay how are we the time lunch lunch is ready I'm ready if you guys"
+    },
+    {
+      "id": 812,
+      "start": 38028.880000000005,
+      "end": 38034.840000000004,
+      "start_hms": "10:33:48",
+      "end_hms": "10:33:54",
+      "text": "are you can eat and then we'll all talk when you guys eat that way we can keep"
+    },
+    {
+      "id": 813,
+      "start": 38034.840000000004,
+      "end": 38050.68000000001,
+      "start_hms": "10:33:54",
+      "end_hms": "10:34:10",
+      "text": "you want and then there's one person who asked gluten-free so there's one"
+    },
+    {
+      "id": 814,
+      "start": 38050.68000000001,
+      "end": 38054.32000000001,
+      "start_hms": "10:34:10",
+      "end_hms": "10:34:14",
+      "text": "gluten-free bun all right so don't"
+    }
+  ]
+}
