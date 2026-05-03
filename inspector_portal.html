@@ -11,6 +11,8 @@
   <script src="https://cdn.jsdelivr.net/npm/panolens@0.12.1/build/panolens.min.js"></script>
   <!-- Marked.js — render Markdown in chat -->
   <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
+  <!-- HLS.js — adaptive streaming for CloudFront .m3u8 videos -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js"></script>
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -419,8 +421,9 @@
     <div id="panorama-container"></div>
     <div class="video-toggle">
       <span>Video:</span>
-      <button id="btn-vid1" class="active" title="Exterior walk-around">Video 1 — Exterior</button>
-      <button id="btn-vid2" title="Interior / underside">Video 2 — Interior</button>
+      <button id="btn-vid1" class="active" title="Approach">Video 1 — Approach</button>
+      <button id="btn-vid2" title="Exterior walk-around">Video 2 — Exterior</button>
+      <button id="btn-vid3" title="Interior / underside">Video 3 — Interior</button>
     </div>
     <div class="video-controls">
       <button id="btn-play">⏸ Pause</button>
@@ -478,8 +481,9 @@
 // ── CONFIG ────────────────────────────────────────────
 const WEBHOOK_URL = "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1";
 const VIDEOS = [
-  { src: "360/VID_20250912_122900_00_010_012.mp4", label: "1 — Exterior" },
-  { src: "360/VID_20250912_134205_00_013_014.mp4", label: "2 — Interior" },
+  { src: "https://d109tss11k4jxu.cloudfront.net/video1_4k/VID_20250912_110210_00_007_009.m3u8", label: "1 — Approach" },
+  { src: "https://d109tss11k4jxu.cloudfront.net/video2_4k/VID_20250912_122900_00_010_012.m3u8", label: "2 — Exterior" },
+  { src: "https://d109tss11k4jxu.cloudfront.net/stream3/VID_20250912_134205_00_013_014.m3u8",   label: "3 — Interior" },
 ];
 
 // Persistent session ID — keeps Postgres chat memory coherent across page reloads
@@ -501,31 +505,50 @@ const viewer = new PANOLENS.Viewer({
   output:           "console",
 });
 
-// Pre-create both panoramas so switching is instant
-const panoramas = VIDEOS.map(v => new PANOLENS.VideoPanorama(v.src, { autoplay: false }));
-panoramas.forEach(p => viewer.add(p));
+// One capability check, reused for all videos
+const hlsSupported = Hls.isSupported();
+// Stored HLS instances prevent GC from dropping active streams mid-playback
+const hlsInstances = [];
 
-function waitForVideo(panorama, cb) {
-  const poller = setInterval(() => {
-    const v = panorama.videoElement;
-    if (v) { clearInterval(poller); cb(v); }
-  }, 200);
+function makeVideoEl() {
+  const v = document.createElement("video");
+  v.setAttribute("crossorigin", "anonymous");
+  v.setAttribute("playsinline", "");
+  v.muted = true;
+  return v;
 }
 
+// Lazy: only start loading a stream when the user first activates that video
+function ensureHls(idx) {
+  if (hlsInstances[idx]) return;
+  const src = VIDEOS[idx].src;
+  const v = panoramas[idx].videoElement;
+  if (hlsSupported) {
+    const hls = new Hls();
+    hlsInstances[idx] = hls;
+    hls.loadSource(src);
+    hls.attachMedia(v);
+  } else if (v.canPlayType("application/vnd.apple.mpegurl")) {
+    v.src = src;
+    hlsInstances[idx] = true;
+  }
+}
+
+const panoramas = VIDEOS.map(() => new PANOLENS.VideoPanorama(makeVideoEl(), { autoplay: false }));
+panoramas.forEach(p => viewer.add(p));
+
 function activatePanorama(idx) {
+  ensureHls(idx);
   const pano = panoramas[idx];
   viewer.setPanorama(pano);
-
-  waitForVideo(pano, (v) => {
-    activeVideo = v;
-    v.muted = false;
-    v.play().catch(() => { v.muted = true; v.play(); });
-    if (!_controlsBound) {
-      _controlsBound = true;
-      bindVideoControls();
-    }
-    updatePlayButton();
-  });
+  activeVideo = pano.videoElement;
+  activeVideo.muted = false;
+  activeVideo.play().catch(() => { activeVideo.muted = true; activeVideo.play(); });
+  if (!_controlsBound) {
+    _controlsBound = true;
+    bindVideoControls();
+  }
+  updatePlayButton();
 }
 
 // Start with first video
@@ -534,12 +557,14 @@ activatePanorama(0);
 // ── VIDEO TOGGLE ──────────────────────────────────────
 document.getElementById("btn-vid1").addEventListener("click", () => switchVideo(0));
 document.getElementById("btn-vid2").addEventListener("click", () => switchVideo(1));
+document.getElementById("btn-vid3").addEventListener("click", () => switchVideo(2));
 
 function switchVideo(idx) {
   if (idx === currentVideoIdx) return;
   currentVideoIdx = idx;
-  document.getElementById("btn-vid1").classList.toggle("active", idx === 0);
-  document.getElementById("btn-vid2").classList.toggle("active", idx === 1);
+  ["btn-vid1", "btn-vid2", "btn-vid3"].forEach((id, i) =>
+    document.getElementById(id).classList.toggle("active", i === idx)
+  );
   activatePanorama(idx);
 }
 

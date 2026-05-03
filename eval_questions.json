@@ -1,0 +1,509 @@
+{
+  "evaluation_set": "Ford Mustang Mach-E 2026 First Responder RAG — Transcript QA",
+  "generated_at": "2026-04-20",
+  "total_questions": 50,
+  "namespace": "video_transcript_v2",
+  "instructions": "Send each 'question' to the RAG chatbot. Compare the chatbot's answer against 'expected_answer'. Check that the cited source matches 'source.video' and that the timestamp is within ~60 seconds of 'source.approximate_timestamp'.",
+  "questions": [
+    {
+      "id": 1,
+      "topic": "Post-collision storage",
+      "question": "What is the minimum safe distance for storing a post-collision EV from other structures or objects?",
+      "expected_answer": "A minimum of 50 feet from any other structures or objects you do not want to risk losing.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:07:22"
+      }
+    },
+    {
+      "id": 2,
+      "topic": "PPE",
+      "question": "What type of gloves must first responders wear when working near an energized high-voltage EV system?",
+      "expected_answer": "Lineman rubber gloves rated to 10,000 volts, with a leather over-glove placed on top to prevent puncture.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:09:16"
+      }
+    },
+    {
+      "id": 3,
+      "topic": "PPE",
+      "question": "How often do lineman rubber gloves require recertification, and approximately what does it cost?",
+      "expected_answer": "Every calendar year (annually). It costs around $100 to ship them off and have a new dated stamp applied.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:10:25"
+      }
+    },
+    {
+      "id": 4,
+      "topic": "Interlock device",
+      "question": "Where is the interlock device typically located on the Ford Mustang Mach-E?",
+      "expected_answer": "Under the hood.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:11:16"
+      }
+    },
+    {
+      "id": 5,
+      "topic": "Interlock device",
+      "question": "Ford's emergency literature labels the interlock connector as a 'high-voltage power cable.' Is this accurate? What does it actually control?",
+      "expected_answer": "No, it is not accurate. It is a 12-volt circuit that energizes the contactors, which are the devices that allow high voltage to exit the battery housing. Disconnecting it removes the 12V signal to the contactors, not the HV itself.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:11:46"
+      }
+    },
+    {
+      "id": 6,
+      "topic": "HV isolation protocol",
+      "question": "How many independent methods of high-voltage isolation does the instructor require before responders begin working on an EV?",
+      "expected_answer": "Two independent methods. The instructor consistently says he wants two methods confirmed before anyone gets in and starts working on the vehicle.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:11:50"
+      }
+    },
+    {
+      "id": 7,
+      "topic": "Mach-E battery architecture",
+      "question": "Where are the two battery packs located on the Ford Mustang Mach-E?",
+      "expected_answer": "One battery pack is under the hood and one is under the rear seat.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:23:42"
+      }
+    },
+    {
+      "id": 8,
+      "topic": "Interlock device",
+      "question": "What is the service loop on an interlock device, and what should a responder do with it after disconnecting?",
+      "expected_answer": "The service loop is a small loop of extra cable that remains after the connector is pulled. After disconnecting, insert a zip tie or an Allen wrench through the loop so nobody can accidentally re-insert the connector.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:24:37"
+      }
+    },
+    {
+      "id": 9,
+      "topic": "HV isolation tool",
+      "question": "What kind of batteries does the HV isolation tool use, and how many?",
+      "expected_answer": "Three AA batteries.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:34:07"
+      }
+    },
+    {
+      "id": 10,
+      "topic": "HV isolation tool",
+      "question": "What port is on the HV isolation tool, and what is it used for?",
+      "expected_answer": "A mini USB port used to update the tool's software, so it can remain compatible with future EV variants.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:34:20"
+      }
+    },
+    {
+      "id": 11,
+      "topic": "Charging connector safety",
+      "question": "In an EV charging connector, which pins disconnect first when unplugging, and why is this design intentional?",
+      "expected_answer": "The communication wires (shorter pins) lose connection first, before the main charging pins. This ensures the vehicle and charger stop all current flow before the high-power pins separate, preventing arcing.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:25:15"
+      }
+    },
+    {
+      "id": 12,
+      "topic": "Battery fire strategy",
+      "question": "What fire suppression strategy does the instructor recommend based on European experience with EV battery fires?",
+      "expected_answer": "A defensive strategy — let the battery burn out if possible. Most vehicles carry only about two hours of flammable energy. Actively suppressing and cooling creates a cycle of reignition that can extend the event to 10-15 hours.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:01:17"
+      }
+    },
+    {
+      "id": 13,
+      "topic": "Battery fire temperature",
+      "question": "What temperature can a lithium battery fire reach?",
+      "expected_answer": "2,000 to 3,000 degrees Fahrenheit.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:06:40"
+      }
+    },
+    {
+      "id": 14,
+      "topic": "Fire suppression equipment",
+      "question": "Why does the instructor advise against fire blankets for EV battery fires, and approximately how much do they cost?",
+      "expected_answer": "A lithium battery fire reaches 2,000-3,000°F, far exceeding what a fire blanket is designed to handle. They are also impractical to deploy and approximately $3,200 each. The instructor says European departments that tried this approach concluded it did not work well.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:06:38"
+      }
+    },
+    {
+      "id": 15,
+      "topic": "Fire suppression equipment",
+      "question": "What temporary water containment strategy does the instructor describe as the most promising option for EV battery fires?",
+      "expected_answer": "A portable barrier system made of clip-together panels that creates a roughly 3-foot-deep temporary pool around the vehicle, allowing the battery and electrical system to be submerged in water.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:03:25"
+      }
+    },
+    {
+      "id": 16,
+      "topic": "Battery chemistry",
+      "question": "Which battery chemistry is safer from a fire risk perspective — LFP or NMC — and what do those acronyms stand for?",
+      "expected_answer": "LFP (lithium iron phosphate) is safer than NMC (lithium manganese cobalt, also called lithium nickel manganese cobalt oxide). LFP cells are far less prone to thermal runaway.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:04:47"
+      }
+    },
+    {
+      "id": 17,
+      "topic": "Battery disposal",
+      "question": "What is the correct step-by-step procedure for preparing a removed EV battery for shipping?",
+      "expected_answer": "1) Place the battery in a crate with a plastic liner. 2) Fill the crate with sand until the battery is covered. 3) Fill the crate with water. 4) Seal and crate for shipping. This process isolates any remaining electrochemical energy.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:05:34"
+      }
+    },
+    {
+      "id": 18,
+      "topic": "Battery disposal",
+      "question": "How long does GM's battery discharge tool take to fully discharge a battery before it is safe to ship?",
+      "expected_answer": "Approximately four days.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:06:14"
+      }
+    },
+    {
+      "id": 19,
+      "topic": "Post-collision fire risk",
+      "question": "What is the primary cause of EV battery fires following a vehicle crash?",
+      "expected_answer": "Physical damage to the battery pack that allows electrolyte to escape from the cells. Once electrolyte leaks, thermal runaway becomes possible — even hours after the initial crash.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:06:53"
+      }
+    },
+    {
+      "id": 20,
+      "topic": "Vehicle structural changes",
+      "question": "What window change is coming in 2026 vehicles that will make passenger extrication harder?",
+      "expected_answer": "Laminated glass on all side windows (not just the windshield). Unlike tempered glass which can be popped out, laminated glass must be saw-cut, significantly slowing entry.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:09:35"
+      }
+    },
+    {
+      "id": 21,
+      "topic": "Vehicle structural hazards",
+      "question": "What health hazard exists when saw cutting carbon fiber vehicle structures, and what protection is required?",
+      "expected_answer": "Carbon fiber dust has serious respiratory health implications. Full respiratory protection (SCBA or appropriate respirator) is mandatory when saw cutting any carbon fiber component.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:10:28"
+      }
+    },
+    {
+      "id": 22,
+      "topic": "Vehicle structural hazards",
+      "question": "What is an active hood pedestrian safety system, and what should first responders be aware of when approaching the vehicle?",
+      "expected_answer": "Gas shocks that automatically pop the hood upward when sensors detect an imminent pedestrian collision. First responders may arrive to find the hood already deployed/raised, and should not be alarmed or attempt to force it closed.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:10:41"
+      }
+    },
+    {
+      "id": 23,
+      "topic": "HV isolation protocol",
+      "question": "What are the two specific methods the instructor recommends for disabling the HV system before extrication?",
+      "expected_answer": "Method 1: Turn off the vehicle ignition (shuts down the 12V system, closes contactors). Method 2: Disconnect or cut the 12-volt system at the rear of the vehicle. Both must be confirmed before working on the vehicle.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:12:03"
+      }
+    },
+    {
+      "id": 24,
+      "topic": "Extrication safety",
+      "question": "During extrication, why should responders avoid cutting low on the vehicle body or door sills?",
+      "expected_answer": "The main battery pack runs low in the vehicle — under the floor and in the sill area. Cutting low risks penetrating the battery pack, which can cause electrolyte release, arcing, or fire.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:12:25"
+      }
+    },
+    {
+      "id": 25,
+      "topic": "HV cable identification",
+      "question": "What color identifies high-voltage cables in EVs, and what must responders never do if they see them?",
+      "expected_answer": "Orange. Responders must never cut anything with orange wiring or insulation.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:10:23"
+      }
+    },
+    {
+      "id": 26,
+      "topic": "PPE",
+      "question": "Does the instructor recommend that lineman gloves be kept on all emergency response vehicles?",
+      "expected_answer": "No. He says it is probably unnecessary and unrealistic. First responders should not need to expose themselves to HV components if proper shut-down protocols are followed. The gloves are more relevant for service technicians.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:10:42"
+      }
+    },
+    {
+      "id": 27,
+      "topic": "Charging infrastructure",
+      "question": "What charging plug standard did most non-Tesla EVs use historically, before the NACS (Tesla) standard spread?",
+      "expected_answer": "The SAE plug (CCS/SAE J1772 standard).",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:04:41"
+      }
+    },
+    {
+      "id": 28,
+      "topic": "Charging infrastructure",
+      "question": "Why did Tesla decide to open its Supercharger network and license its connector to other manufacturers?",
+      "expected_answer": "Tesla recognized there was profitability in licensing the technology. They initially held out but eventually agreed to license because other manufacturers were using the SAE standard and Tesla saw a business opportunity.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:04:51"
+      }
+    },
+    {
+      "id": 29,
+      "topic": "Post-collision storage",
+      "question": "What is the single most dangerous thing you can do with a post-collision EV in terms of storage location?",
+      "expected_answer": "Bringing it inside a building to store it. The instructor says emphatically: do not do that. Always store post-collision EVs outside with adequate clearance.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:08:49"
+      }
+    },
+    {
+      "id": 30,
+      "topic": "Post-collision fire risk",
+      "question": "If a post-collision EV appears undamaged on the outside, is it still a fire risk?",
+      "expected_answer": "Yes. It is often not feasible to determine battery damage from the outside after a crash. Fires can ignite long after the collision due to internal damage that is not visible. The vehicle must still be treated as a potential fire risk.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:06:30"
+      }
+    },
+    {
+      "id": 31,
+      "topic": "Training resources",
+      "question": "Where can first responders find free NFPA EV training modules, and approximately how long is each module?",
+      "expected_answer": "On the NFPA website under the Emergency Response tab, then Alternate Vehicle Training. Most of the electric vehicle modules are free and approximately 20 minutes each.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:12:44"
+      }
+    },
+    {
+      "id": 32,
+      "topic": "Manual disconnect",
+      "question": "Who does the instructor say manual disconnects are most appropriate for — first responders, tow companies, or service technicians?",
+      "expected_answer": "Tow companies and service technicians for long-term storage situations. The instructor is not a fan of encouraging first responders to use manual disconnects at scene.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:06:00"
+      }
+    },
+    {
+      "id": 33,
+      "topic": "Manual disconnect",
+      "question": "How does a bail-style manual disconnect work?",
+      "expected_answer": "You grab the lever and pull it down, which mechanically walks the connector out of the socket without you pulling directly on it. Pushing the bail back closed walks the connector back in. This design prevents terminal damage from misalignment.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:05:19"
+      }
+    },
+    {
+      "id": 34,
+      "topic": "Scene protocol",
+      "question": "What does the instructor identify as the critical first step when arriving at any EV crash scene?",
+      "expected_answer": "Identify the vehicle as high-voltage electric. You need to recognize it is an EV before you can apply EV-specific protocols.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:11:19"
+      }
+    },
+    {
+      "id": 35,
+      "topic": "Battery fire suppression",
+      "question": "What is the danger of continuously trying to extinguish a lithium battery fire rather than letting it burn out?",
+      "expected_answer": "Each cooling cycle brings the battery temperature down, but once cooling stops the fire reignites. This cycle can extend the total incident duration to 10-15 hours versus the approximately 2 hours the vehicle's energy would take to burn out on its own.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:01:45"
+      }
+    },
+    {
+      "id": 36,
+      "topic": "12V system and HV relationship",
+      "question": "What happens to high-voltage output when the vehicle's 12-volt system is de-energized?",
+      "expected_answer": "The contactors, which are controlled by the 12-volt system, close and no longer allow high voltage to leave the battery housing. Essentially the 12V system acts as the gatekeeper for HV — shut down the 12V and HV stays locked inside the battery.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:11:56"
+      }
+    },
+    {
+      "id": 37,
+      "topic": "Scene protocol",
+      "question": "What does a 'ready' light on the dashboard indicate, and what must responders confirm before working on the vehicle?",
+      "expected_answer": "A ready light indicates the HV system is still active and energized. Responders must confirm the ready light is off — meaning the system is shut down — before beginning work on or around the vehicle.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:11:43"
+      }
+    },
+    {
+      "id": 38,
+      "topic": "HV isolation tool",
+      "question": "How many versions of the Ford Mustang Mach-E sold in the US does the HV isolation tool support?",
+      "expected_answer": "All three versions of the Mach-E ever sold in the United States.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:33:42"
+      }
+    },
+    {
+      "id": 39,
+      "topic": "Post-collision storage — urban challenge",
+      "question": "Why is post-collision EV storage harder in urban areas than in rural Nebraska, and what are some cities doing about it?",
+      "expected_answer": "In urban areas, finding 50+ feet of clearance from structures is much harder. Some cities are building specialized cement-wall containment areas similar to silage storage structures, where a post-collision EV can be placed and monitored safely. The LA Police Department is noted as an example doing this to hold vehicles as evidence.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:07:47"
+      }
+    },
+    {
+      "id": 40,
+      "topic": "Interlock device",
+      "question": "What two-step action is required to disconnect a standard interlock device that has a secondary safety lock?",
+      "expected_answer": "Step 1: Slide the secondary safety tab (a piece of plastic) outward to clear it. Step 2: Depress the main locking tab and pull the connector out. Without clearing the safety tab first, the connector cannot be released.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:11:29"
+      }
+    },
+    {
+      "id": 41,
+      "topic": "Battery thermal runaway",
+      "question": "What makes thermal runaway in a lithium cell pack so hard to stop once it starts?",
+      "expected_answer": "The cells are packed tightly together. When one cell begins to heat and gas, the proximity to adjacent cells causes them to heat in turn — a cascade that is very difficult to interrupt from outside the sealed metal container.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:00:33"
+      }
+    },
+    {
+      "id": 42,
+      "topic": "Battery fire suppression",
+      "question": "What challenge does the instructor identify with all current EV battery fire suppression strategies?",
+      "expected_answer": "None of the strategies are great. The containment panel approach requires expensive pre-positioned equipment that cannot be left on an interstate. Digging a hole is impossible roadside. Fire blankets cannot withstand the temperatures. The instructor acknowledges it is still something everyone is learning as the technology evolves.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:03:56"
+      }
+    },
+    {
+      "id": 43,
+      "topic": "Scene protocol",
+      "question": "What does the instructor mean by 'defensive planning' in the context of EV battery fires?",
+      "expected_answer": "Prioritizing the protection of personnel and exposures (nearby structures/vehicles), establishing a perimeter, and allowing the battery to burn out rather than attempting aggressive suppression that may be ineffective and dangerous.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:02:30"
+      }
+    },
+    {
+      "id": 44,
+      "topic": "Firefighter health",
+      "question": "What health concern does the instructor raise specifically for firefighters working EV battery fires?",
+      "expected_answer": "There is growing research into the health effects of toxic gases and particulates released when EV batteries burn. Full PPE including SCBA is essential — the smoke from a lithium battery fire contains hazardous compounds that pose serious long-term risks.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:08:00"
+      }
+    },
+    {
+      "id": 45,
+      "topic": "Charging infrastructure",
+      "question": "What risk does the instructor identify with home EV Level 2 charger installations?",
+      "expected_answer": "Unauthorized or unlicensed home installations of Level 2 chargers (such as units purchased from Amazon and self-installed without an electrician's license) create fire and safety risks in residential garages.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:18:32"
+      }
+    },
+    {
+      "id": 46,
+      "topic": "Scene protocol — multi-unit response",
+      "question": "What does the instructor recommend regarding signage or communication when multiple responding units arrive at an EV incident?",
+      "expected_answer": "The first arriving unit should identify the vehicle type and communicate it so that second, third, and fourth arriving units immediately know it is a high-voltage EV as they approach. Some manufacturers (like Toyota) have suggested on-scene signage to make this visible at a distance.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:14:48"
+      }
+    },
+    {
+      "id": 47,
+      "topic": "HV isolation tool",
+      "question": "How does the first responder operate the HV isolation tool on the Mach-E?",
+      "expected_answer": "Touch/press the button on the tool. It runs through a self-check process (indicator lights turn on). Once the process completes and the lights go off, the HV system is isolated and the vehicle can be safely moved or worked on.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:33:50"
+      }
+    },
+    {
+      "id": 48,
+      "topic": "Expanded EV fire risk",
+      "question": "Why does the instructor raise EV golf carts and electric side-by-sides when talking about residential fire risk?",
+      "expected_answer": "If these recreational vehicles use lithium batteries for extended range, they carry the same thermal runaway fire risk as full EVs. People often charge them inside residential garages, creating a significant structure fire hazard that responders may not immediately recognize.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:08:42"
+      }
+    },
+    {
+      "id": 49,
+      "topic": "Manual disconnect",
+      "question": "What was the manual disconnect design on early Ford Escape hybrids, and what does this illustrate?",
+      "expected_answer": "Early Escapes literally had just a switch as the manual disconnect. This illustrates how inconsistent and varied the design of manual disconnects has been across different manufacturers, models, and years — there is no single standard location or mechanism.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:05:49"
+      }
+    },
+    {
+      "id": 50,
+      "topic": "Battery fire — interstate scenario",
+      "question": "What makes managing an EV battery fire along an interstate highway particularly challenging according to the instructor?",
+      "expected_answer": "Three problems compound each other: (1) You cannot dig a containment hole along an interstate. (2) You cannot let it cook off there because smoke blows across active traffic lanes. (3) You cannot pre-position a containment barrier along the interstate. There is no clean solution, and the situation requires improvisation with limited options.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:04:15"
+      }
+    }
+  ]
+}

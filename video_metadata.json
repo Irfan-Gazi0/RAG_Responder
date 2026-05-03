@@ -1,0 +1,38 @@
+{
+  "VID_20250912_122900_00_010_012": {
+    "video_id": "vid_010_012",
+    "title": "Video 1 — Exterior Walk-Around",
+    "video_url": null,
+    "channel": "Ford Mustang Mach-E 2026 First Responder Training",
+    "upload_date_iso": "2025-09-12",
+    "duration_hms": "00:52:01",
+    "duration_seconds": 3121.38,
+    "view_count": null,
+    "tags": ["Ford Mach-E", "2026", "first responder", "EV", "exterior", "360"],
+    "categories": ["Emergency Response", "Vehicle Training"],
+    "thumbnail_url": null,
+    "chapter": null,
+    "whisper_model": "turbo",
+    "transcribed_at": "2026-04-13T09:06:09Z",
+    "source_file": "VID_20250912_122900_00_010_012.mp4",
+    "video_label": "Video 1 — Exterior Walk-Around"
+  },
+  "VID_20250912_134205_00_013_014": {
+    "video_id": "vid_013_014",
+    "title": "Video 2 — Interior / Underside",
+    "video_url": null,
+    "channel": "Ford Mustang Mach-E 2026 First Responder Training",
+    "upload_date_iso": "2025-09-12",
+    "duration_hms": "00:34:38",
+    "duration_seconds": 2078.74,
+    "view_count": null,
+    "tags": ["Ford Mach-E", "2026", "first responder", "EV", "interior", "underside", "360"],
+    "categories": ["Emergency Response", "Vehicle Training"],
+    "thumbnail_url": null,
+    "chapter": null,
+    "whisper_model": "turbo",
+    "transcribed_at": "2026-04-13T09:12:25Z",
+    "source_file": "VID_20250912_134205_00_013_014.mp4",
+    "video_label": "Video 2 — Interior / Underside"
+  }
+}

@@ -18,6 +18,7 @@ import argparse
 import json
 import os
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
@@ -95,14 +96,21 @@ def main():
 
         if out_path.exists() and not args.force:
             existing = json.loads(out_path.read_text())
-            n = len(existing.get("segments", []))
-            print(f"  Already transcribed ({n} segments) — skipping. Use --force to redo.")
+            segs = existing if isinstance(existing, list) else existing.get("segments", [])
+            print(f"  Already transcribed ({len(segs)} segments) — skipping. Use --force to redo.")
             continue
 
         segments = transcribe(video_path, model)
 
-        out_path.write_text(json.dumps({"segments": segments}, indent=2, ensure_ascii=False))
         duration_hms = seconds_to_hms(segments[-1]["end"]) if segments else "00:00:00"
+        output = {
+            "source_file":   video_path.name,
+            "whisper_model": args.model,
+            "transcribed_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "duration_hms":  duration_hms,
+            "segments":      segments,
+        }
+        out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False))
         print(f"  ✅ Saved {len(segments)} segments  "
               f"(duration ~{duration_hms})  →  {out_path}")
 
