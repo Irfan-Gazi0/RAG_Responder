@@ -421,9 +421,8 @@
     <div id="panorama-container"></div>
     <div class="video-toggle">
       <span>Video:</span>
-      <button id="btn-vid1" class="active" title="Approach">Video 1 — Approach</button>
-      <button id="btn-vid2" title="Exterior walk-around">Video 2 — Exterior</button>
-      <button id="btn-vid3" title="Interior / underside">Video 3 — Interior</button>
+      <button id="btn-vid1" class="active" title="Exterior walk-around">Video 1 — Exterior</button>
+      <button id="btn-vid2" title="Interior / underside">Video 2 — Interior</button>
     </div>
     <div class="video-controls">
       <button id="btn-play">⏸ Pause</button>
@@ -481,9 +480,8 @@
 // ── CONFIG ────────────────────────────────────────────
 const WEBHOOK_URL = "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1";
 const VIDEOS = [
-  { src: "https://d109tss11k4jxu.cloudfront.net/video1_4k/VID_20250912_110210_00_007_009.m3u8", label: "1 — Approach" },
-  { src: "https://d109tss11k4jxu.cloudfront.net/video2_4k/VID_20250912_122900_00_010_012.m3u8", label: "2 — Exterior" },
-  { src: "https://d109tss11k4jxu.cloudfront.net/stream3/VID_20250912_134205_00_013_014.m3u8",   label: "3 — Interior" },
+  { src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_122900_00_010_012/index.m3u8", label: "1 — Exterior" },
+  { src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_134205_00_013_014/index.m3u8", label: "2 — Interior" },
 ];
 
 // Persistent session ID — keeps Postgres chat memory coherent across page reloads
@@ -557,12 +555,11 @@ activatePanorama(0);
 // ── VIDEO TOGGLE ──────────────────────────────────────
 document.getElementById("btn-vid1").addEventListener("click", () => switchVideo(0));
 document.getElementById("btn-vid2").addEventListener("click", () => switchVideo(1));
-document.getElementById("btn-vid3").addEventListener("click", () => switchVideo(2));
 
 function switchVideo(idx) {
   if (idx === currentVideoIdx) return;
   currentVideoIdx = idx;
-  ["btn-vid1", "btn-vid2", "btn-vid3"].forEach((id, i) =>
+  ["btn-vid1", "btn-vid2"].forEach((id, i) =>
     document.getElementById(id).classList.toggle("active", i === idx)
   );
   activatePanorama(idx);

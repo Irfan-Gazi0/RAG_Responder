@@ -19,14 +19,11 @@ tab1, tab2, tab3 = st.tabs(["VR Videos", "Gaussian Model Viewing", "Unity VR Mod
 with tab1:
     st.header("360° VR Video Viewer")
     st.markdown("Explore the accident scene using the 360° video viewer. Drag to rotate, scroll to zoom.")
-    # Embed the existing inspector_portal.html
-    try:
-        with open("inspector_portal.html", "r", encoding="utf-8") as f:
-            html_content = f.read()
-        # We wrap the HTML to ensure it displays correctly within Streamlit's iframe
-        components.html(html_content, height=800, scrolling=True)
-    except FileNotFoundError:
-        st.error("inspector_portal.html not found. Please ensure it is in the same directory.")
+    components.iframe(
+        "https://d1ni7nkjr0eveg.cloudfront.net/inspector_portal.html",
+        height=800,
+        scrolling=True
+    )
 
 with tab2:
     st.header("3D Gaussian Splatting Model")
