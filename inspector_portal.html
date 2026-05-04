@@ -507,6 +507,8 @@ const viewer = new PANOLENS.Viewer({
 const hlsSupported = Hls.isSupported();
 // Stored HLS instances prevent GC from dropping active streams mid-playback
 const hlsInstances = [];
+// Track which streams have fully loaded their manifest (ready to play)
+const hlsReady = [];
 
 function makeVideoEl() {
   const v = document.createElement("video");
@@ -516,9 +518,23 @@ function makeVideoEl() {
   return v;
 }
 
-// Lazy: only start loading a stream when the user first activates that video
-function ensureHls(idx) {
-  if (hlsInstances[idx]) return;
+// Panoramas are created with videoElement passed via options so pano.videoElement
+// is available immediately (Panolens only sets it from options in the constructor;
+// the first-argument path only sets it during load()).
+const panoramas = VIDEOS.map(() => {
+  const v = makeVideoEl();
+  return new PANOLENS.VideoPanorama(v, { autoplay: false, videoElement: v });
+});
+panoramas.forEach(p => viewer.add(p));
+
+// Lazy HLS init — calls onReady() once the manifest is parsed and play() is safe.
+function ensureHls(idx, onReady) {
+  if (hlsReady[idx]) { onReady && onReady(); return; }
+  if (hlsInstances[idx]) {
+    // Already initializing — queue another listener for the same event
+    if (hlsSupported) hlsInstances[idx].on(Hls.Events.MANIFEST_PARSED, () => onReady && onReady());
+    return;
+  }
   const src = VIDEOS[idx].src;
   const v = panoramas[idx].videoElement;
   if (hlsSupported) {
@@ -526,22 +542,24 @@ function ensureHls(idx) {
     hlsInstances[idx] = hls;
     hls.loadSource(src);
     hls.attachMedia(v);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => { hlsReady[idx] = true; onReady && onReady(); });
   } else if (v.canPlayType("application/vnd.apple.mpegurl")) {
     v.src = src;
     hlsInstances[idx] = true;
+    v.addEventListener("loadedmetadata", () => { hlsReady[idx] = true; onReady && onReady(); }, { once: true });
   }
 }
 
-const panoramas = VIDEOS.map(() => new PANOLENS.VideoPanorama(makeVideoEl(), { autoplay: false }));
-panoramas.forEach(p => viewer.add(p));
-
 function activatePanorama(idx) {
-  ensureHls(idx);
   const pano = panoramas[idx];
   viewer.setPanorama(pano);
   activeVideo = pano.videoElement;
   activeVideo.muted = false;
-  activeVideo.play().catch(() => { activeVideo.muted = true; activeVideo.play(); });
+  const v = activeVideo;  // capture for async closure
+  ensureHls(idx, () => {
+    v.play().catch(() => { v.muted = true; v.play(); });
+    updatePlayButton();
+  });
   if (!_controlsBound) {
     _controlsBound = true;
     bindVideoControls();
