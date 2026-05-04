@@ -168,6 +168,25 @@ Moved video hosting and portal HTML to a single CloudFront distribution (`d1ni7n
 
 ---
 
+## 2026-05-04 — Chatbox Added to Gaussian Splatting Tab
+
+**Status:** Deployed  
+**Author:** Irfan Gazi (Claude Code assisted)
+
+### Change
+
+Added the RAG chatbot to the **Gaussian Model Viewing** tab in `streamlit_app.py`. The tab now uses a 2-column layout (2:1 ratio):
+- **Left:** 3D Gaussian Splat viewer iframe (unchanged)
+- **Right:** Native Streamlit chat panel (`st.chat_message` + `st.chat_input`) backed by the same n8n webhook as the VR Videos portal
+
+Each Gaussian tab session gets its own `session_id` (UUID stored in `st.session_state`) so Postgres chat memory in n8n tracks it independently from VR video sessions.
+
+| File | Change |
+|---|---|
+| `streamlit_app.py` | Split tab2 into 2-column layout; added full chat state + n8n webhook POST |
+
+---
+
 ## Next Steps / Open Items
 
 - [ ] Wire `video_transcript_v2` namespace into n8n workflow (replace or add alongside `video_transcript`)
