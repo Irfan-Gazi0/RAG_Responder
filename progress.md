@@ -135,6 +135,39 @@ Local 360° MP4 files are not accessible on the deployed site. All three videos 
 
 ---
 
+## 2026-05-04 — CloudFront Migration + Streamlit CORS Fix
+
+**Status:** Deployed  
+**Author:** Irfan Gazi (Claude Code assisted)
+
+### Problem
+
+Streamlit Cloud (`nec4-jumpstart.streamlit.app`) showed a black screen in the VR Videos tab. Root cause: `components.html()` injects HTML into a sandboxed `about:srcdoc` iframe whose origin is `nec4-jumpstart.streamlit.app`. HLS.js fetches `.m3u8` and `.ts` files via XHR, which triggers CORS. The old CloudFront distribution (`d109tss11k4jxu.cloudfront.net`) had no `Access-Control-Allow-Origin` response header, so all video requests were blocked.
+
+### Solution
+
+Moved video hosting and portal HTML to a single CloudFront distribution (`d1ni7nkjr0eveg.cloudfront.net`) backed by the `first-responder-training` S3 bucket (us-east-2). Since the HTML and all video segments now share the same origin, CORS is eliminated entirely — no response headers policy or S3 CORS policy needed.
+
+`streamlit_app.py` changed from `components.html(open(...))` to `components.iframe("https://d1ni7nkjr0eveg.cloudfront.net/inspector_portal.html")`.
+
+### Changes
+
+| File | Change |
+|---|---|
+| `inspector_portal.html` | VIDEOS array updated to new CloudFront paths; reduced from 3 to 2 videos |
+| `streamlit_app.py` | Switched from `components.html()` to `components.iframe()` → CloudFront URL |
+
+### Video inventory (new bucket)
+
+| # | Label | S3 path | CloudFront URL |
+|---|---|---|---|
+| 1 | Exterior Walk-Around | `videos/VID_20250912_122900_00_010_012/index.m3u8` | `d1ni7nkjr0eveg.cloudfront.net/...` |
+| 2 | Interior / Underside | `videos/VID_20250912_134205_00_013_014/index.m3u8` | `d1ni7nkjr0eveg.cloudfront.net/...` |
+
+**Note:** The "Approach" video (`007_009`) was not available in the new bucket and was removed from the portal.
+
+---
+
 ## Next Steps / Open Items
 
 - [ ] Wire `video_transcript_v2` namespace into n8n workflow (replace or add alongside `video_transcript`)
