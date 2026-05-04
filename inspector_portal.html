@@ -378,6 +378,33 @@
     }
     #send-btn:hover { background: #dc2626; }
     #send-btn:disabled { background: #334155; cursor: not-allowed; }
+    #mic-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 10px;
+      color: #94a3b8;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      font-size: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    #mic-btn:hover { background: #334155; color: #e2e8f0; }
+    #mic-btn.recording {
+      background: #7f1d1d;
+      border-color: #ef4444;
+      color: #fca5a5;
+      animation: mic-pulse 1s ease-in-out infinite;
+    }
+    #mic-btn.processing { color: #475569; cursor: not-allowed; }
+    @keyframes mic-pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+      50%       { box-shadow: 0 0 0 7px rgba(239,68,68,0); }
+    }
     .input-hint {
       font-size: 10.5px;
       color: #475569;
@@ -466,9 +493,10 @@
           rows="1"
           placeholder="Ask about HV shutdown, fire response, no-cut zones..."
         ></textarea>
+        <button id="mic-btn" title="Voice input">🎤</button>
         <button id="send-btn" title="Send">➤</button>
       </div>
-      <div class="input-hint">Press Enter to send &nbsp;·&nbsp; Shift+Enter for new line</div>
+      <div class="input-hint">Press Enter to send &nbsp;·&nbsp; Shift+Enter for newline &nbsp;·&nbsp; 🎤 for voice</div>
       <div id="error-banner"></div>
     </div>
   </div>
@@ -478,7 +506,8 @@
 <!-- ════════════════════════════════════════════════════ -->
 <script>
 // ── CONFIG ────────────────────────────────────────────
-const WEBHOOK_URL = "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1";
+const WEBHOOK_URL  = "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1";
+const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY";   // ← paste your sk-... key here
 const VIDEOS = [
   { src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_122900_00_010_012/index.m3u8", label: "1 — Exterior" },
   { src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_134205_00_013_014/index.m3u8", label: "2 — Interior" },
@@ -764,6 +793,72 @@ inputEl.addEventListener("input", () => {
 });
 
 sendBtn.addEventListener("click", sendMessage);
+
+// ── VOICE INPUT (OpenAI Whisper) ──────────────────────
+const micBtn = document.getElementById("mic-btn");
+let mediaRecorder = null;
+let audioChunks   = [];
+let isRecording   = false;
+
+micBtn.addEventListener("click", async () => {
+  isRecording ? stopRecording() : await startRecording();
+});
+
+async function startRecording() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder  = new MediaRecorder(stream);
+    audioChunks    = [];
+    mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
+    mediaRecorder.onstop = handleRecordingStop;
+    mediaRecorder.start();
+    isRecording = true;
+    micBtn.classList.add("recording");
+    micBtn.title = "Stop recording";
+  } catch {
+    errorEl.style.display = "block";
+    errorEl.textContent   = "⚠ Microphone access denied. Allow mic permissions and try again.";
+  }
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state !== "inactive") {
+    mediaRecorder.stop();
+    mediaRecorder.stream.getTracks().forEach(t => t.stop());
+  }
+  isRecording = false;
+  micBtn.classList.remove("recording");
+  micBtn.classList.add("processing");
+  micBtn.title    = "Transcribing…";
+  micBtn.disabled = true;
+}
+
+async function handleRecordingStop() {
+  const blob = new Blob(audioChunks, { type: "audio/webm" });
+  try {
+    const fd = new FormData();
+    fd.append("file", blob, "recording.webm");
+    fd.append("model", "whisper-1");
+    const res = await fetch("https://api.openai.com/v1/audio/transcriptions", {
+      method:  "POST",
+      headers: { "Authorization": `Bearer ${OPENAI_API_KEY}` },
+      body:    fd,
+    });
+    if (!res.ok) throw new Error(`Whisper API ${res.status}`);
+    const { text } = await res.json();
+    inputEl.value = (inputEl.value.trim() ? inputEl.value.trim() + " " : "") + text;
+    inputEl.style.height = "auto";
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
+    inputEl.focus();
+  } catch (err) {
+    errorEl.style.display = "block";
+    errorEl.textContent   = `⚠ Transcription failed: ${err.message}`;
+  } finally {
+    micBtn.classList.remove("processing");
+    micBtn.disabled = false;
+    micBtn.title    = "Voice input";
+  }
+}
 </script>
 </body>
 </html>
