@@ -514,9 +514,10 @@ const VIDEOS = [
 ];
 
 // Persistent session ID — keeps Postgres chat memory coherent across page reloads
+// localStorage so session_id is shared with chat_panel.html (same CloudFront origin)
 const SESSION_ID = (() => {
-  let id = sessionStorage.getItem("fr_session_id");
-  if (!id) { id = crypto.randomUUID(); sessionStorage.setItem("fr_session_id", id); }
+  let id = localStorage.getItem("fr_session_id");
+  if (!id) { id = crypto.randomUUID(); localStorage.setItem("fr_session_id", id); }
   return id;
 })();
 
