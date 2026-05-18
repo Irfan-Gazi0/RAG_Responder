@@ -1,8 +1,14 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-PORTAL_URL = "https://d1ni7nkjr0eveg.cloudfront.net/inspector_portal.html"
-CHAT_URL   = "https://d1ni7nkjr0eveg.cloudfront.net/chat_panel.html"
+# Bump this whenever inspector_portal.html / chat_panel.html change on S3.
+# It changes the iframe URL's cache key so browsers can't serve a stale copy
+# (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
+# which a CloudFront invalidation does NOT clear).
+CACHE_BUST = "20260518a"
+
+PORTAL_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/inspector_portal.html?v={CACHE_BUST}"
+CHAT_URL   = f"https://d1ni7nkjr0eveg.cloudfront.net/chat_panel.html?v={CACHE_BUST}"
 SPLAT_URL  = "https://alistairwstbrk.github.io/splat-site/?url=https://huggingface.co/datasets/AlistairWstbrk/splats/resolve/main/3DGS%20.ply%20New%20Vehicle%20Scans/Equinox%20Hood%20Open%20(New)(Cropped).ply"
 
 st.set_page_config(
