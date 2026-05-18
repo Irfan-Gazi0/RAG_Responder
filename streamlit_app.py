@@ -1,37 +1,108 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-# 1. Page Configuration
+PORTAL_URL = "https://d1ni7nkjr0eveg.cloudfront.net/inspector_portal.html"
+CHAT_URL   = "https://d1ni7nkjr0eveg.cloudfront.net/chat_panel.html"
+SPLAT_URL  = "https://alistairwstbrk.github.io/splat-site/?url=https://huggingface.co/datasets/AlistairWstbrk/splats/resolve/main/3DGS%20.ply%20New%20Vehicle%20Scans/Equinox%20Hood%20Open%20(New)(Cropped).ply"
+
 st.set_page_config(
     page_title="RAG Responder Hub",
     page_icon="🚒",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="collapsed",
 )
 
-# 2. Main Header
-st.title("🚒 RAG Responder Hub")
-st.markdown("Welcome to the First Responder Portal. Select a module below to explore the accident scene or view 3D models.")
+# Cohesive dark theme matching the embedded portal (#0f172a slate, #ef4444 red accent)
+st.markdown(
+    """
+    <style>
+      :root {
+        --bg:#0f172a; --panel:#1e293b; --border:#334155;
+        --text:#e2e8f0; --muted:#94a3b8; --accent:#ef4444;
+      }
+      .stApp { background: var(--bg); }
+      #MainMenu, footer,
+      [data-testid="stToolbar"], [data-testid="stDecoration"],
+      [data-testid="stStatusWidget"] { display: none !important; }
+      [data-testid="stHeader"] { background: transparent; height: 0; }
+      .block-container { padding-top: 1.5rem; padding-bottom: 2rem; max-width: 1500px; }
 
-# 3. Create Toggle Tabs
-tab1, tab2, tab3 = st.tabs(["VR Videos", "Gaussian Model Viewing", "Unity VR Module"])
+      .stApp, p, li, span, label { color: var(--text); }
+      h1, h2, h3 { color: #f1f5f9 !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+      .hero {
+        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        border: 1px solid var(--border); border-radius: 14px;
+        padding: 22px 28px; margin-bottom: 22px;
+        display: flex; align-items: center; gap: 18px;
+      }
+      .hero .badge {
+        width: 52px; height: 52px; border-radius: 12px; flex-shrink: 0;
+        background: linear-gradient(135deg, #ef4444, #b91c1c);
+        display: flex; align-items: center; justify-content: center; font-size: 26px;
+      }
+      .hero h1 { font-size: 24px; font-weight: 700; margin: 0; color: #f1f5f9; }
+      .hero p  { font-size: 14px; color: var(--muted); margin: 4px 0 0; }
+
+      [data-baseweb="tab-list"] { gap: 6px; border-bottom: 1px solid var(--border); }
+      [data-baseweb="tab"] {
+        background: var(--panel); color: var(--muted) !important;
+        border-radius: 9px 9px 0 0; padding: 11px 20px;
+        font-weight: 600; font-size: 14px;
+      }
+      [data-baseweb="tab"]:hover { color: var(--text) !important; }
+      [data-baseweb="tab"][aria-selected="true"] {
+        background: var(--accent); color: #fff !important;
+      }
+      [data-baseweb="tab-highlight"], [data-baseweb="tab-border"] { background: transparent; }
+      [data-baseweb="tab-panel"] { padding-top: 20px; }
+
+      [data-testid="stAlert"] {
+        background: var(--panel); border: 1px solid var(--border);
+        border-radius: 10px; color: var(--text);
+      }
+      iframe { border-radius: 12px; border: 1px solid var(--border); background: #000; }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.markdown(
+    """
+    <div class="hero">
+      <div class="badge">🚒</div>
+      <div>
+        <h1>RAG Responder Hub</h1>
+        <p>First Responder portal — explore the scene, query the AI assistant, and review EV rescue procedures.</p>
+      </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+tab1, tab2, tab3 = st.tabs(
+    ["Training Workshop + AI Assistant", "3D Views of EVs", "VR Headset Training Module"]
+)
 
 with tab1:
-    st.header("360° VR Video Viewer")
-    st.markdown("Explore the accident scene using the 360° video viewer. Drag to rotate, scroll to zoom.")
-    components.iframe(
-        "https://d1ni7nkjr0eveg.cloudfront.net/inspector_portal.html",
-        height=800,
-        scrolling=True
+    st.subheader("🎓 Training Workshop + AI Assistant")
+    st.markdown(
+        "Explore the 360° accident scene and ask the First Responder AI anything about "
+        "the vehicle — HV shutdown, fire response, no-cut zones, and more. Drag to rotate."
     )
-
-SPLAT_URL = "https://alistairwstbrk.github.io/splat-site/?url=https://huggingface.co/datasets/AlistairWstbrk/splats/resolve/main/3DGS%20.ply%20New%20Vehicle%20Scans/Equinox%20Hood%20Open%20(New)(Cropped).ply"
-CHAT_URL  = "https://d1ni7nkjr0eveg.cloudfront.net/chat_panel.html"
+    st.info(
+        f"💡 **Meta Quest 3:** For full VR immersion, open the portal directly in the Quest "
+        f"browser: {PORTAL_URL} — then tap **Enter VR** to activate head-tracking."
+    )
+    components.iframe(PORTAL_URL, height=800, scrolling=True)
 
 with tab2:
-    st.header("3D Gaussian Splatting Model")
-    st.markdown("View high-fidelity 3D scans of the vehicle using Gaussian Splatting.")
-
+    st.subheader("🚗 3D Views of EVs")
+    st.markdown(
+        "Inspect high-fidelity Gaussian-splatting 3D scans of the vehicle, with the AI "
+        "assistant alongside for procedure questions."
+    )
     viewer_col, chat_col = st.columns([2, 1])
     with viewer_col:
         components.iframe(SPLAT_URL, height=750, scrolling=True)
@@ -39,5 +110,8 @@ with tab2:
         components.iframe(CHAT_URL, height=750, scrolling=False)
 
 with tab3:
-    st.header("Unity VR Module")
-    st.info("🚧 The Unity VR module is currently in development. Once completed, it will be integrated here.")
+    st.subheader("🥽 VR Headset Training Module")
+    st.info(
+        "🚧 The VR Headset Training Module is currently in development. "
+        "Once completed, the immersive Unity experience will be integrated here."
+    )

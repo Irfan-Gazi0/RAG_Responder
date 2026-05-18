@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>First Responder Portal</title>
 
-  <!-- Three.js (Panolens dependency) -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.125.2/build/three.min.js"></script>
-  <!-- Panolens.js — 360° video player -->
-  <script src="https://cdn.jsdelivr.net/npm/panolens@0.12.1/build/panolens.min.js"></script>
+  <!-- A-Frame — 360° video player with WebXR/VR support -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <!-- Marked.js — render Markdown in chat -->
   <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
   <!-- HLS.js — adaptive streaming for CloudFront .m3u8 videos -->
@@ -107,10 +105,16 @@
       width: 100%;
       position: relative;
       background: #000;
-      cursor: grab;
       overflow: hidden;
     }
-    #panorama-container:active { cursor: grabbing; }
+    /* A-Frame scene fills its flex container */
+    a-scene {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    #panorama-container canvas { cursor: grab; }
+    #panorama-container canvas:active { cursor: grabbing; }
 
     .video-toggle {
       background: #1e293b;
@@ -400,7 +404,6 @@
       color: #fca5a5;
       animation: mic-pulse 1s ease-in-out infinite;
     }
-    #mic-btn.processing { color: #475569; cursor: not-allowed; }
     @keyframes mic-pulse {
       0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
       50%       { box-shadow: 0 0 0 7px rgba(239,68,68,0); }
@@ -443,9 +446,20 @@
   <div class="viewer-panel">
     <div class="viewer-header">
       <span class="dot"></span>
-      360° Site Video &nbsp;·&nbsp; Drag to rotate &nbsp;·&nbsp; Scroll to zoom
+      360° Site Video &nbsp;·&nbsp; Drag to rotate &nbsp;·&nbsp; Tap "Enter VR" on Meta Quest
     </div>
-    <div id="panorama-container"></div>
+    <a-scene id="panorama-container"
+             embedded
+             xr-mode-ui="enabled: true"
+             renderer="antialias: false; maxCanvasWidth: 1920; maxCanvasHeight: 1080"
+             loading-screen="dotsColor: #3b82f6; backgroundColor: #0f172a"
+             vr-mode-ui="enabled: true">
+      <a-assets>
+        <video id="aframe-vid-0" crossorigin="anonymous" playsinline muted></video>
+        <video id="aframe-vid-1" crossorigin="anonymous" playsinline muted></video>
+      </a-assets>
+      <a-videosphere id="videosphere" src="#aframe-vid-0" rotation="0 -90 0"></a-videosphere>
+    </a-scene>
     <div class="video-toggle">
       <span>Video:</span>
       <button id="btn-vid1" class="active" title="Exterior walk-around">Video 1 — Exterior</button>
@@ -462,7 +476,7 @@
       </div>
       <span id="video-time">0:00 / 0:00</span>
     </div>
-    <div class="hint">Hold and drag to rotate view &nbsp;|&nbsp; Scroll to zoom</div>
+    <div class="hint">Hold and drag to rotate view &nbsp;|&nbsp; On Meta Quest: tap "Enter VR" for head-tracking</div>
   </div>
 
   <!-- Right: Chat -->
@@ -507,7 +521,6 @@
 <script>
 // ── CONFIG ────────────────────────────────────────────
 const WEBHOOK_URL  = "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1";
-const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY";   // ← not committed; set before uploading to CloudFront
 const VIDEOS = [
   { src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_122900_00_010_012/index.m3u8", label: "1 — Exterior" },
   { src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_134205_00_013_014/index.m3u8", label: "2 — Interior" },
@@ -521,58 +534,35 @@ const SESSION_ID = (() => {
   return id;
 })();
 
-// ── 360° VIDEO SETUP (Panolens) ───────────────────────
+// ── 360° VIDEO SETUP (A-Frame) ────────────────────────
 let currentVideoIdx = 0;
 let activeVideo     = null;   // the raw <video> element in use
-let _controlsBound  = false;
 
-const viewer = new PANOLENS.Viewer({
-  container:        document.getElementById("panorama-container"),
-  autoHideInfospot: true,
-  controlButtons:   [],
-  output:           "console",
-});
+// Video elements live in <a-assets> — referenced by A-Frame via "#aframe-vid-N"
+const videoEls = [
+  document.getElementById("aframe-vid-0"),
+  document.getElementById("aframe-vid-1"),
+];
 
-// One capability check, reused for all videos
 const hlsSupported = Hls.isSupported();
-// Stored HLS instances prevent GC from dropping active streams mid-playback
 const hlsInstances = [];
-// Track which streams have fully loaded their manifest (ready to play)
-const hlsReady = [];
-
-function makeVideoEl() {
-  const v = document.createElement("video");
-  v.setAttribute("crossorigin", "anonymous");
-  v.setAttribute("playsinline", "");
-  v.muted = true;
-  return v;
-}
-
-// Panoramas are created with videoElement passed via options so pano.videoElement
-// is available immediately (Panolens only sets it from options in the constructor;
-// the first-argument path only sets it during load()).
-const panoramas = VIDEOS.map(() => {
-  const v = makeVideoEl();
-  return new PANOLENS.VideoPanorama(v, { autoplay: false, videoElement: v });
-});
-panoramas.forEach(p => viewer.add(p));
+const hlsReady     = [];
 
 // Lazy HLS init — calls onReady() once the manifest is parsed and play() is safe.
 function ensureHls(idx, onReady) {
   if (hlsReady[idx]) { onReady && onReady(); return; }
   if (hlsInstances[idx]) {
-    // Already initializing — queue another listener for the same event
-    if (hlsSupported) hlsInstances[idx].on(Hls.Events.MANIFEST_PARSED, () => onReady && onReady());
+    if (hlsSupported) hlsInstances[idx].once(Hls.Events.MANIFEST_PARSED, () => onReady && onReady());
     return;
   }
   const src = VIDEOS[idx].src;
-  const v = panoramas[idx].videoElement;
+  const v   = videoEls[idx];
   if (hlsSupported) {
-    const hls = new Hls();
+    const hls = new Hls({ capLevelToPlayerSize: true, capLevelOnFPSDrop: true, maxBufferLength: 20, maxMaxBufferLength: 30 });
     hlsInstances[idx] = hls;
     hls.loadSource(src);
     hls.attachMedia(v);
-    hls.on(Hls.Events.MANIFEST_PARSED, () => { hlsReady[idx] = true; onReady && onReady(); });
+    hls.once(Hls.Events.MANIFEST_PARSED, () => { hlsReady[idx] = true; onReady && onReady(); });
   } else if (v.canPlayType("application/vnd.apple.mpegurl")) {
     v.src = src;
     hlsInstances[idx] = true;
@@ -581,24 +571,35 @@ function ensureHls(idx, onReady) {
 }
 
 function activatePanorama(idx) {
-  const pano = panoramas[idx];
-  viewer.setPanorama(pano);
-  activeVideo = pano.videoElement;
+  activeVideo = videoEls[idx];
   activeVideo.muted = false;
-  const v = activeVideo;  // capture for async closure
-  ensureHls(idx, () => {
-    v.play().catch(() => { v.muted = true; v.play(); });
+  updateMuteButton();
+  document.getElementById("videosphere").setAttribute("src", "#aframe-vid-" + idx);
+  const v = activeVideo;
+  ensureHls(idx, async () => {
+    try {
+      await v.play();
+    } catch {
+      // Autoplay rejected (no gesture / backgrounded) — retry muted, keep UI in sync
+      v.muted = true;
+      updateMuteButton();
+      try { await v.play(); } catch {}
+    }
     updatePlayButton();
   });
-  if (!_controlsBound) {
-    _controlsBound = true;
-    bindVideoControls();
-  }
   updatePlayButton();
 }
 
-// Start with first video
-activatePanorama(0);
+// Controls bind to static elements that exist at parse time — bind once at startup
+bindVideoControls();
+
+// Wait for A-Frame to initialize before activating video
+const _sceneEl = document.getElementById("panorama-container");
+if (_sceneEl.hasLoaded) {
+  activatePanorama(0);
+} else {
+  _sceneEl.addEventListener("loaded", () => activatePanorama(0));
+}
 
 // ── VIDEO TOGGLE ──────────────────────────────────────
 document.getElementById("btn-vid1").addEventListener("click", () => switchVideo(0));
@@ -618,6 +619,12 @@ function updatePlayButton() {
   const btn = document.getElementById("btn-play");
   if (!activeVideo) return;
   btn.textContent = activeVideo.paused ? "▶ Play" : "⏸ Pause";
+}
+
+function updateMuteButton() {
+  const btn = document.getElementById("btn-mute");
+  if (!activeVideo) return;
+  btn.textContent = activeVideo.muted ? "🔊 Unmute" : "🔇 Mute";
 }
 
 function fmt(s) {
@@ -643,18 +650,22 @@ function bindVideoControls() {
   btnMute.addEventListener("click", () => {
     if (!activeVideo) return;
     activeVideo.muted = !activeVideo.muted;
-    btnMute.textContent = activeVideo.muted ? "🔊 Unmute" : "🔇 Mute";
+    updateMuteButton();
   });
 
-  // Update progress bar on timeupdate (for whichever video is active)
-  // We poll so it picks up the activeVideo reference even after switching
+  // Poll (not the `timeupdate` event) so the bar tracks activeVideo across
+  // video switches without rebinding. Skip writes when nothing changed.
+  let lastTime = -1, lastLabel = "";
   setInterval(() => {
     const v = activeVideo;
     if (!v || !v.duration || isNaN(v.duration)) return;
+    if (v.currentTime === lastTime) return;
+    lastTime = v.currentTime;
     const pct = (v.currentTime / v.duration) * 100;
-    progressBar.style.width   = pct + "%";
-    progressThumb.style.left  = pct + "%";
-    timeLabel.textContent = `${fmt(v.currentTime)} / ${fmt(v.duration)}`;
+    progressBar.style.width  = pct + "%";
+    progressThumb.style.left = pct + "%";
+    const label = `${fmt(v.currentTime)} / ${fmt(v.duration)}`;
+    if (label !== lastLabel) { lastLabel = label; timeLabel.textContent = label; }
   }, 250);
 
   // ── Seek: pointer events with capture (works for click + drag) ──────────
@@ -686,6 +697,8 @@ function bindVideoControls() {
 }
 
 // ── CHAT LOGIC ────────────────────────────────────────
+// NOTE: this chat + voice block is intentionally duplicated in chat_panel.html
+// (each file is a standalone CloudFront artifact — no bundler). Keep both in sync.
 const messagesEl = document.getElementById("chat-messages");
 const inputEl    = document.getElementById("chat-input");
 const sendBtn    = document.getElementById("send-btn");
@@ -693,6 +706,11 @@ const errorEl    = document.getElementById("error-banner");
 
 function scrollToBottom() {
   messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function autoGrow() {
+  inputEl.style.height = "auto";
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
 }
 
 function addMessage(role, text) {
@@ -745,7 +763,7 @@ async function sendMessage() {
 
   errorEl.style.display = "none";
   inputEl.value = "";
-  inputEl.style.height = "auto";
+  autoGrow();
   sendBtn.disabled = true;
 
   addMessage("user", question);
@@ -788,77 +806,63 @@ inputEl.addEventListener("keydown", (e) => {
 });
 
 // Auto-grow textarea
-inputEl.addEventListener("input", () => {
-  inputEl.style.height = "auto";
-  inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
-});
+inputEl.addEventListener("input", autoGrow);
 
 sendBtn.addEventListener("click", sendMessage);
 
-// ── VOICE INPUT (OpenAI Whisper) ──────────────────────
+// ── VOICE INPUT (Web Speech API — browser-native, no API key) ──
 const micBtn = document.getElementById("mic-btn");
-let mediaRecorder = null;
-let audioChunks   = [];
-let isRecording   = false;
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let isRecording = false;
 
-micBtn.addEventListener("click", async () => {
-  isRecording ? stopRecording() : await startRecording();
-});
+if (!SpeechRecognition) {
+  micBtn.disabled = true;
+  micBtn.title    = "Voice input not supported in this browser";
+} else {
+  micBtn.addEventListener("click", () => {
+    if (isRecording) { recognition && recognition.stop(); return; }
+    startRecognition();
+  });
+}
 
-async function startRecording() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder  = new MediaRecorder(stream);
-    audioChunks    = [];
-    mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
-    mediaRecorder.onstop = handleRecordingStop;
-    mediaRecorder.start();
+function startRecognition() {
+  recognition = new SpeechRecognition();
+  recognition.lang           = "en-US";
+  recognition.interimResults = true;
+  recognition.continuous     = false;
+
+  // Preserve anything already typed; recognized text is appended to it
+  const baseText = inputEl.value.trim();
+
+  recognition.onstart = () => {
     isRecording = true;
     micBtn.classList.add("recording");
-    micBtn.title = "Stop recording";
-  } catch {
+    micBtn.title = "Listening… click to stop";
+  };
+
+  recognition.onresult = (e) => {
+    let transcript = "";
+    for (let i = 0; i < e.results.length; i++) transcript += e.results[i][0].transcript;
+    inputEl.value = [baseText, transcript.trim()].filter(Boolean).join(" ");
+    autoGrow();
+  };
+
+  recognition.onerror = (e) => {
     errorEl.style.display = "block";
-    errorEl.textContent   = "⚠ Microphone access denied. Allow mic permissions and try again.";
-  }
-}
+    errorEl.textContent = (e.error === "not-allowed" || e.error === "service-not-allowed")
+      ? "⚠ Microphone access denied. Allow mic permissions and try again."
+      : `⚠ Voice input error: ${e.error}`;
+  };
 
-function stopRecording() {
-  if (mediaRecorder && mediaRecorder.state !== "inactive") {
-    mediaRecorder.stop();
-    mediaRecorder.stream.getTracks().forEach(t => t.stop());
-  }
-  isRecording = false;
-  micBtn.classList.remove("recording");
-  micBtn.classList.add("processing");
-  micBtn.title    = "Transcribing…";
-  micBtn.disabled = true;
-}
-
-async function handleRecordingStop() {
-  const blob = new Blob(audioChunks, { type: "audio/webm" });
-  try {
-    const fd = new FormData();
-    fd.append("file", blob, "recording.webm");
-    fd.append("model", "whisper-1");
-    const res = await fetch("https://api.openai.com/v1/audio/transcriptions", {
-      method:  "POST",
-      headers: { "Authorization": `Bearer ${OPENAI_API_KEY}` },
-      body:    fd,
-    });
-    if (!res.ok) throw new Error(`Whisper API ${res.status}`);
-    const { text } = await res.json();
-    inputEl.value = (inputEl.value.trim() ? inputEl.value.trim() + " " : "") + text;
-    inputEl.style.height = "auto";
-    inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
+  recognition.onend = () => {
+    isRecording = false;
+    micBtn.classList.remove("recording");
+    micBtn.title = "Voice input";
     inputEl.focus();
-  } catch (err) {
-    errorEl.style.display = "block";
-    errorEl.textContent   = `⚠ Transcription failed: ${err.message}`;
-  } finally {
-    micBtn.classList.remove("processing");
-    micBtn.disabled = false;
-    micBtn.title    = "Voice input";
-  }
+  };
+
+  recognition.start();
 }
 </script>
 </body>

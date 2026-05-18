@@ -187,8 +187,136 @@ Each Gaussian tab session gets its own `session_id` (UUID stored in `st.session_
 
 ---
 
+## 2026-05-04 — HLS Fix + Whisper Voice Input + chat_panel.html
+
+**Status:** Deployed  
+**Author:** Irfan Gazi (Claude Code assisted)
+
+### HLS fix (`inspector_portal.html`)
+
+`attachMedia()` must be called before `loadSource()` in HLS.js or the manifest never fires. Fixed `ensureHls()` to call `hls.attachMedia(v)` first, then `hls.loadSource(src)`. Added `MANIFEST_PARSED` guard so `play()` is only called once the stream is ready — eliminated the black-screen-on-first-load bug.
+
+### Whisper voice input button (`inspector_portal.html`)
+
+Added a 🎤 microphone button to the chat input row. Clicking starts/stops `MediaRecorder` (browser audio capture); on stop the audio blob is POSTed to the OpenAI Whisper API (`whisper-1`) and the transcript is inserted into the chat textarea. Button states: idle → recording (red pulse animation) → processing (spinner) → idle.
+
+**Note:** `OPENAI_API_KEY` in the portal JS is a placeholder (`"YOUR_OPENAI_API_KEY"`). Set the real key before uploading to CloudFront if voice input is needed.
+
+### chat_panel.html + Gaussian tab refactor (`streamlit_app.py`)
+
+The native Streamlit chat widget in the Gaussian Splatting tab was replaced with an `<iframe>` pointing to `chat_panel.html` hosted on CloudFront. This gives the Gaussian tab an identical chat experience to the VR portal (same Marked.js rendering, same n8n webhook, same session_id persistence). The iframe is `components.iframe(CHAT_URL, height=750)`.
+
+| File | Change |
+|---|---|
+| `chat_panel.html` | New — standalone chatbot panel, identical feature set to portal's chat sidebar |
+| `streamlit_app.py` | tab2 chat column changed from `st.chat_message` loop to `components.iframe(CHAT_URL)` |
+
+---
+
+## 2026-05-04 — Meta Quest 3 VR Support (A-Frame Migration)
+
+**Status:** Deployed  
+**Author:** Irfan Gazi (Claude Code assisted)
+
+### Problem
+
+`inspector_portal.html` used Panolens.js v0.12.1 (built on Three.js v0.125.2) for the 360° viewer. Panolens has no WebXR integration — on Meta Quest 3, the browser could only navigate the video with the joystick like a regular 2D browser. No "Enter VR" button, no head-tracking.
+
+### Solution
+
+Replaced Panolens + Three.js with **A-Frame v1.6**, which bundles its own Three.js with full WebXR support:
+- `<a-scene embedded>` keeps the scene inside the existing panel layout on desktop
+- `<a-videosphere src="#aframe-vid-0">` renders the equirectangular video on a sphere (identical geometry to Panolens)
+- A-Frame's built-in VR mode UI renders an "Enter VR" button automatically on WebXR-capable devices (Quest 3, etc.)
+- On Quest 3, tapping "Enter VR" drops the user into full immersive-vr mode with natural head-tracking
+
+HLS.js integration is unchanged — it attaches to the `<video>` elements in `<a-assets>` the same way as before. All video controls (play/pause, mute, seek, video switching) operate on the raw `<video>` DOM elements and required no changes.
+
+A-Frame initialization is async; `activatePanorama(0)` is now called inside `scene.addEventListener("loaded", ...)` to avoid a race condition.
+
+### Streamlit note
+
+`components.iframe()` does not support the `allow=` attribute, so `xr-spatial-tracking` cannot be granted to the embedded iframe. VR requires opening the CloudFront URL directly in the Quest browser. An `st.info()` banner was added to tab1 with the direct link.
+
+### Changes
+
+| File | Change |
+|---|---|
+| `inspector_portal.html` | Panolens + Three.js → A-Frame v1.6; `<div>` → `<a-scene embedded>`; JS block rewritten |
+| `streamlit_app.py` | Added `st.info()` banner with direct CloudFront URL for Quest VR users |
+
+**Direct VR URL:** `https://d1ni7nkjr0eveg.cloudfront.net/inspector_portal.html`
+
+---
+
+## 2026-05-18 — Code Cleanup, Native Voice Input, Streamlit Polish, Linux/Chrome Video Triage
+
+**Status:** Deployed (quick fix); full video fix pending  
+**Author:** Irfan Gazi (Claude Code assisted)
+
+### Code cleanup (`/simplify` pass)
+
+Reviewed `streamlit_app.py`, `inspector_portal.html`, `chat_panel.html`. Fixes applied:
+- `ensureHls()` — `MANIFEST_PARSED` listeners now use `.once()` (were stacking on rapid video toggles)
+- Removed the `_controlsBound` latch — video controls bind once at startup unconditionally
+- Progress-bar 250 ms poll now skips DOM writes when `currentTime` is unchanged (paused/idle no-op writes eliminated)
+- Autoplay-rejected fallback now syncs the mute button (added `updateMuteButton()`); awaited retry
+- `stopRecording()` no longer leaves the mic button permanently disabled when no recorder is active
+- De-duplicated the 3× textarea auto-grow logic into one `autoGrow()` helper per file
+- `streamlit_app.py` — hoisted all 3 iframe URLs to top constants; dropped numbered narration comments
+
+### Voice input — Whisper → browser-native Web Speech API
+
+Replaced the `MediaRecorder` → OpenAI Whisper flow (which was broken and shipped a
+client-side API key) with the native `webkitSpeechRecognition`/`SpeechRecognition` API in
+both `inspector_portal.html` and `chat_panel.html`. Live transcription, appends to typed
+text, graceful fallback when unsupported. **The client-side `OPENAI_API_KEY` constant is
+fully removed** — resolves the secret-in-browser-source exposure flagged in the cleanup.
+
+### Tab renames + Streamlit polish (`streamlit_app.py`)
+
+- "VR Videos" → **"Training Workshop + AI Assistant"**
+- "Gaussian Model Viewing" → **"3D Views of EVs"**
+- "Unity VR Module" → **"VR Headset Training Module"**
+- Cohesive dark theme matching the embedded portal (slate `#0f172a`, red `#ef4444`),
+  hid default Streamlit chrome, styled tabs/alerts/iframes, added a gradient hero header
+
+### Deploy pipeline note
+
+`aws` CLI is not installed in the working env; `boto3` is available under `python3.10`.
+S3 uploads + CloudFront invalidations are now done via inline `python3.10` + boto3
+reading `.env`. Active CloudFront distribution ID: **`E2FCJOSZVLDA5W`**
+(`d1ni7nkjr0eveg.cloudfront.net`). IAM user `Irfan` has `cloudfront:CreateInvalidation`
++ `ListDistributions` but **not** `GetInvalidation` — verify cache via served content.
+
+### 360° video black-screen on Linux/Chrome (triage + quick fix)
+
+**Symptom:** videosphere plays audio but no picture, controls lag — Linux + Chrome only
+(worked on Mac). **Root cause:** the only HLS rendition is a single 4K30 H.264 stream
+(`upload_to_s3.py` forces `-s 3840x2160`, no ABR ladder). Chrome-on-Linux lacks HW H.264
+decode → software decode + per-frame WebGL texture upload saturates GPU/main thread.
+
+**Quick fix shipped** (`inspector_portal.html`, deployed + invalidated):
+- `renderer="antialias:false; maxCanvasWidth:1920; maxCanvasHeight:1080"`
+- `new Hls({ capLevelToPlayerSize, capLevelOnFPSDrop, maxBufferLength:20, maxMaxBufferLength:30 })`
+
+Fixes the control lag; may not fully restore 4K picture (decode cost unchanged). Full fix
+(mid/low ABR ladder reusing existing 4K in place — no 4K re-upload) is documented as a
+**NEXT STEP** section at the top of `CLAUDE.md`, detailed plan in
+`~/.claude/plans/dreamy-kindling-lobster.md`.
+
+| File | Change |
+|---|---|
+| `inspector_portal.html` | cleanup fixes; Web Speech voice; renderer + HLS.js perf caps |
+| `chat_panel.html` | cleanup fixes; Web Speech voice; removed `OPENAI_API_KEY` |
+| `streamlit_app.py` | tab renames; dark-theme polish; URL constants |
+| `CLAUDE.md` | added "NEXT STEP (pending)" video-fix section |
+
+---
+
 ## Next Steps / Open Items
 
+- [ ] **Full 360° video fix:** add mid (~2560×1280) + low (~1600×800) HLS renditions + master playlist, reusing existing 4K segments in place (see CLAUDE.md NEXT STEP / plan file)
 - [ ] Wire `video_transcript_v2` namespace into n8n workflow (replace or add alongside `video_transcript`)
 - [ ] Run evaluation: send all 50 questions from `eval_questions.json` through the chatbot, score answers
 - [ ] Decide whether to retire `video_transcript` namespace post-evaluation

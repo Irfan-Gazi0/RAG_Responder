@@ -196,7 +196,6 @@
       color: #fca5a5;
       animation: mic-pulse 1s ease-in-out infinite;
     }
-    #mic-btn.processing { color: #475569; cursor: not-allowed; }
     @keyframes mic-pulse {
       0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
       50%       { box-shadow: 0 0 0 7px rgba(239,68,68,0); }
@@ -255,8 +254,9 @@
 </div>
 
 <script>
+// NOTE: this chat + voice block is intentionally duplicated in inspector_portal.html
+// (each file is a standalone CloudFront artifact — no bundler). Keep both in sync.
 const WEBHOOK_URL  = "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1";
-const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY";
 
 // localStorage so the same session_id is shared across all tabs from this origin
 const SESSION_ID = (() => {
@@ -272,6 +272,11 @@ const errorEl    = document.getElementById("error-banner");
 
 function scrollToBottom() {
   messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+function autoGrow() {
+  inputEl.style.height = "auto";
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
 }
 
 function addMessage(role, text) {
@@ -319,7 +324,7 @@ async function sendMessage() {
 
   errorEl.style.display = "none";
   inputEl.value = "";
-  inputEl.style.height = "auto";
+  autoGrow();
   sendBtn.disabled = true;
 
   addMessage("user", question);
@@ -353,77 +358,63 @@ inputEl.addEventListener("keydown", (e) => {
   if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 });
 
-inputEl.addEventListener("input", () => {
-  inputEl.style.height = "auto";
-  inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
-});
+inputEl.addEventListener("input", autoGrow);
 
 sendBtn.addEventListener("click", sendMessage);
 
-// Voice input
+// ── VOICE INPUT (Web Speech API — browser-native, no API key) ──
 const micBtn = document.getElementById("mic-btn");
-let mediaRecorder = null;
-let audioChunks   = [];
-let isRecording   = false;
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+let recognition = null;
+let isRecording = false;
 
-micBtn.addEventListener("click", async () => {
-  isRecording ? stopRecording() : await startRecording();
-});
+if (!SpeechRecognition) {
+  micBtn.disabled = true;
+  micBtn.title    = "Voice input not supported in this browser";
+} else {
+  micBtn.addEventListener("click", () => {
+    if (isRecording) { recognition && recognition.stop(); return; }
+    startRecognition();
+  });
+}
 
-async function startRecording() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    mediaRecorder  = new MediaRecorder(stream);
-    audioChunks    = [];
-    mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
-    mediaRecorder.onstop = handleRecordingStop;
-    mediaRecorder.start();
+function startRecognition() {
+  recognition = new SpeechRecognition();
+  recognition.lang           = "en-US";
+  recognition.interimResults = true;
+  recognition.continuous     = false;
+
+  // Preserve anything already typed; recognized text is appended to it
+  const baseText = inputEl.value.trim();
+
+  recognition.onstart = () => {
     isRecording = true;
     micBtn.classList.add("recording");
-    micBtn.title = "Stop recording";
-  } catch {
+    micBtn.title = "Listening… click to stop";
+  };
+
+  recognition.onresult = (e) => {
+    let transcript = "";
+    for (let i = 0; i < e.results.length; i++) transcript += e.results[i][0].transcript;
+    inputEl.value = [baseText, transcript.trim()].filter(Boolean).join(" ");
+    autoGrow();
+  };
+
+  recognition.onerror = (e) => {
     errorEl.style.display = "block";
-    errorEl.textContent   = "⚠ Microphone access denied. Allow mic permissions and try again.";
-  }
-}
+    errorEl.textContent = (e.error === "not-allowed" || e.error === "service-not-allowed")
+      ? "⚠ Microphone access denied. Allow mic permissions and try again."
+      : `⚠ Voice input error: ${e.error}`;
+  };
 
-function stopRecording() {
-  if (mediaRecorder && mediaRecorder.state !== "inactive") {
-    mediaRecorder.stop();
-    mediaRecorder.stream.getTracks().forEach(t => t.stop());
-  }
-  isRecording = false;
-  micBtn.classList.remove("recording");
-  micBtn.classList.add("processing");
-  micBtn.title    = "Transcribing…";
-  micBtn.disabled = true;
-}
-
-async function handleRecordingStop() {
-  const blob = new Blob(audioChunks, { type: "audio/webm" });
-  try {
-    const fd = new FormData();
-    fd.append("file", blob, "recording.webm");
-    fd.append("model", "whisper-1");
-    const res = await fetch("https://api.openai.com/v1/audio/transcriptions", {
-      method:  "POST",
-      headers: { "Authorization": `Bearer ${OPENAI_API_KEY}` },
-      body:    fd,
-    });
-    if (!res.ok) throw new Error(`Whisper API ${res.status}`);
-    const { text } = await res.json();
-    inputEl.value = (inputEl.value.trim() ? inputEl.value.trim() + " " : "") + text;
-    inputEl.style.height = "auto";
-    inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
+  recognition.onend = () => {
+    isRecording = false;
+    micBtn.classList.remove("recording");
+    micBtn.title = "Voice input";
     inputEl.focus();
-  } catch (err) {
-    errorEl.style.display = "block";
-    errorEl.textContent   = `⚠ Transcription failed: ${err.message}`;
-  } finally {
-    micBtn.classList.remove("processing");
-    micBtn.disabled = false;
-    micBtn.title    = "Voice input";
-  }
+  };
+
+  recognition.start();
 }
 </script>
 </body>

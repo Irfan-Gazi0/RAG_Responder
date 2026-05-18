@@ -6,8 +6,9 @@ An AI-powered web portal for firefighters, paramedics, and first responders. Com
 
 ## What It Does
 
-- **360° Video Player** — interactive walk-around of the Ford Mach-E, drag to rotate, scroll to zoom
+- **360° Video Player** — interactive walk-around of the Ford Mach-E, drag to rotate, scroll to zoom; WebXR "Enter VR" support on Meta Quest
 - **AI Chatbot** — answers questions about HV shutdown, fire response, no-cut zones, airbag locations, etc.
+- **Voice input** — browser-native speech-to-text (Web Speech API); no extra API key required
 - **Three knowledge sources** routed by topic:
   - `erg_full` — 38-page Emergency Response Guide (procedural steps)
   - `rescue_sheet` — 4-page quick-reference diagram card (component locations)
@@ -147,7 +148,7 @@ RAG_Responder/
 
 ```
 Browser
-  ├── 360° Video Player (Panolens + Three.js)
+  ├── 360° Video Player (A-Frame v1.6 / WebXR + HLS.js)
   └── Chatbot UI
         │  POST { question, session_id }
         ▼
@@ -187,8 +188,9 @@ n8n returns:
 
 | Component | Technology |
 |---|---|
-| Video player | Panolens.js + Three.js |
+| Video player | A-Frame v1.6 (WebXR) + HLS.js |
 | Chat UI | Vanilla JS + Marked.js |
+| Voice input | Web Speech API (browser-native, no key) |
 | AI agent | n8n (LangChain agent, GPT-4o) |
 | Vector store | Pinecone (`text-embedding-3-small`, 1536 dims) |
 | Chat memory | PostgreSQL (via n8n) |
@@ -211,3 +213,9 @@ Check that Pinecone is reachable and the index name/namespace match exactly. Ver
 
 **n8n webhook not responding:**  
 Ensure the workflow is set to **Active** in n8n. Test mode webhooks only fire when the workflow editor is open.
+
+**360° video plays audio but shows no picture (Linux + Chrome):**  
+Chrome on Linux often lacks hardware H.264 decode, so the single 4K stream can't keep up as a live WebGL texture. Enable `chrome://settings` → System → **"Use graphics acceleration when available"**, restart Chrome, and confirm `chrome://gpu` shows **"Video Decode: Hardware accelerated"**. A lower-resolution adaptive (ABR) rendition ladder is the full fix (see `CLAUDE.md` → NEXT STEP).
+
+**Voice input button does nothing:**  
+The Web Speech API requires an HTTPS origin and a supported browser (Chrome/Edge/Safari; not Firefox). The button is auto-disabled with a tooltip where unsupported.
