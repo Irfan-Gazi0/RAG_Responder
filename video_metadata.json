@@ -1,4 +1,22 @@
 {
+  "VID_20250912_110210_00_007_009": {
+    "video_id": "vid_007_009",
+    "title": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)",
+    "video_url": null,
+    "channel": "Ford Mustang Mach-E 2026 First Responder Training",
+    "upload_date_iso": "2025-09-12",
+    "duration_hms": "01:02:11",
+    "duration_seconds": 3731.76,
+    "view_count": null,
+    "tags": ["EV", "first responder", "emergency response", "high voltage", "battery fire", "lithium", "intro", "training", "360"],
+    "categories": ["Emergency Response", "Vehicle Training"],
+    "thumbnail_url": null,
+    "chapter": null,
+    "whisper_model": "turbo",
+    "transcribed_at": "2026-05-19T18:20:28Z",
+    "source_file": "VID_20250912_110210_00_007_009.mp4",
+    "video_label": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)"
+  },
   "VID_20250912_122900_00_010_012": {
     "video_id": "vid_010_012",
     "title": "Video 1 — Exterior Walk-Around",

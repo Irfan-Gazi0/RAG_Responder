@@ -120,11 +120,23 @@
       background: #1e293b;
       padding: 8px 16px;
       display: flex;
-      align-items: center;
-      gap: 8px;
+      flex-direction: column;
+      gap: 6px;
       border-top: 1px solid #334155;
       flex-shrink: 0;
     }
+    .video-toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .video-summary {
+      margin: 0;
+      font-size: 11px;
+      line-height: 1.45;
+      color: #94a3b8;
+    }
+    .video-summary strong { color: #cbd5e1; }
     .video-toggle span {
       font-size: 11px;
       color: #64748b;
@@ -457,13 +469,18 @@
       <a-assets>
         <video id="aframe-vid-0" crossorigin="anonymous" playsinline muted></video>
         <video id="aframe-vid-1" crossorigin="anonymous" playsinline muted></video>
+        <video id="aframe-vid-2" crossorigin="anonymous" playsinline muted></video>
       </a-assets>
       <a-videosphere id="videosphere" src="#aframe-vid-0" rotation="0 -90 0"></a-videosphere>
     </a-scene>
     <div class="video-toggle">
-      <span>Video:</span>
-      <button id="btn-vid1" class="active" title="Exterior walk-around">Video 1 — Exterior</button>
-      <button id="btn-vid2" title="Interior / underside">Video 2 — Interior</button>
+      <div class="video-toggle-row">
+        <span>Lecture:</span>
+        <button id="btn-vid1" class="active" title="Part 1 — EV emergency-response fundamentals (intro lecture)">First Part</button>
+        <button id="btn-vid2" title="Part 2 — charging system &amp; HV battery hardware">Second Part</button>
+        <button id="btn-vid3" title="Part 3 — battery fire response &amp; disconnects">Third Part</button>
+      </div>
+      <p id="video-summary" class="video-summary"></p>
     </div>
     <div class="video-controls">
       <button id="btn-play">⏸ Pause</button>
@@ -522,8 +539,9 @@
 // ── CONFIG ────────────────────────────────────────────
 const WEBHOOK_URL  = "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1";
 const VIDEOS = [
-  { src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_122900_00_010_012/index.m3u8", label: "1 — Exterior" },
-  { src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_134205_00_013_014/index.m3u8", label: "2 — Interior" },
+  { src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_110210_00_007_009/index.m3u8", label: "1 — Intro" },
+  { src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_122900_00_010_012/index.m3u8", label: "2 — Exterior" },
+  { src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_134205_00_013_014/index.m3u8", label: "3 — Interior" },
 ];
 
 // Persistent session ID — keeps Postgres chat memory coherent across page reloads
@@ -542,6 +560,7 @@ let activeVideo     = null;   // the raw <video> element in use
 const videoEls = [
   document.getElementById("aframe-vid-0"),
   document.getElementById("aframe-vid-1"),
+  document.getElementById("aframe-vid-2"),
 ];
 
 const hlsSupported = Hls.isSupported();
@@ -602,15 +621,43 @@ if (_sceneEl.hasLoaded) {
 }
 
 // ── VIDEO TOGGLE ──────────────────────────────────────
+// Transcript-derived summaries (source: Talk/*_segments.json) to orient the viewer.
+const VIDEO_SUMMARIES = [
+  "<strong>First Part — EV emergency-response fundamentals.</strong> " +
+  "Classroom intro for first responders: why EV familiarity matters, hybrid vs. " +
+  "lithium battery chemistry and why lithium fires run &gt;2,000&deg;F, how high " +
+  "voltage is contained (contactors gated by the 12 V system), shutting HV down " +
+  "(turn the car off, service disconnect, cut both battery cables, manual " +
+  "disconnect), spotting a drive-away &ldquo;ready&rdquo; state, and SAE J2929 " +
+  "tool-free cut loops.",
+  "<strong>Second Part — Charging system &amp; HV battery hardware.</strong> " +
+  "How to safely disconnect a charger in an emergency — never cut the cable " +
+  "(DC fast charging exceeds 400 V) — how to release a locked Level-3 connector, " +
+  "and how the high-voltage battery is built: modules, conductor plates, and the " +
+  "thermal-transfer material that keeps them cool.",
+  "<strong>Third Part — Battery fire response &amp; disconnects.</strong> " +
+  "Thermal-runaway risk from densely packed lithium cells, the &ldquo;let it burn " +
+  "out vs. keep cooling&rdquo; decision for battery fires, removing 12 V power for " +
+  "extrication, and when to pull the manual disconnect device instead of cutting " +
+  "the battery cables (long-term storage / evidence).",
+];
+
+function updateVideoSummary(idx) {
+  document.getElementById("video-summary").innerHTML = VIDEO_SUMMARIES[idx];
+}
+updateVideoSummary(0);
+
 document.getElementById("btn-vid1").addEventListener("click", () => switchVideo(0));
 document.getElementById("btn-vid2").addEventListener("click", () => switchVideo(1));
+document.getElementById("btn-vid3").addEventListener("click", () => switchVideo(2));
 
 function switchVideo(idx) {
   if (idx === currentVideoIdx) return;
   currentVideoIdx = idx;
-  ["btn-vid1", "btn-vid2"].forEach((id, i) =>
+  ["btn-vid1", "btn-vid2", "btn-vid3"].forEach((id, i) =>
     document.getElementById(id).classList.toggle("active", i === idx)
   );
+  updateVideoSummary(idx);
   activatePanorama(idx);
 }
 
