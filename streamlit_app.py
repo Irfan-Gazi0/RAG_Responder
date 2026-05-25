@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 # It changes the iframe URL's cache key so browsers can't serve a stale copy
 # (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
 # which a CloudFront invalidation does NOT clear).
-CACHE_BUST = "20260519a"
+CACHE_BUST = "20260524a"
 
 PORTAL_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/inspector_portal.html?v={CACHE_BUST}"
 CHAT_URL   = f"https://d1ni7nkjr0eveg.cloudfront.net/chat_panel.html?v={CACHE_BUST}"
@@ -97,9 +97,10 @@ with tab1:
         "Explore the 360° accident scene and ask the First Responder AI anything about "
         "the vehicle — HV shutdown, fire response, no-cut zones, and more. Drag to rotate."
     )
-    st.info(
-        f"💡 **Meta Quest 3:** For full VR immersion, open the portal directly in the Quest "
-        f"browser: {PORTAL_URL} — then tap **Enter VR** to activate head-tracking."
+    st.caption(
+        f"🥽 On Meta Quest: [open the portal in the Quest browser]({PORTAL_URL}) "
+        "for full VR — the embedded iframe can't grant WebXR permission, so the "
+        "in-video **Enter VR** button only works on the direct URL."
     )
     components.iframe(PORTAL_URL, height=800, scrolling=True)
 

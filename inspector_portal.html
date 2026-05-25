@@ -472,6 +472,74 @@
         <video id="aframe-vid-2" crossorigin="anonymous" playsinline muted></video>
       </a-assets>
       <a-videosphere id="videosphere" src="#aframe-vid-0" rotation="0 -90 0"></a-videosphere>
+
+      <!-- ── Camera rig + Quest controllers + in-VR HUD ─────────────────────
+           DOM controls (play/mute/seek/lectures/chat) live outside <a-scene>
+           and disappear in immersive-vr — this HUD is the in-VR replacement.
+           Parented to the camera so it follows head movement. -->
+      <a-entity id="rig" position="0 0 0">
+        <a-entity id="vr-camera" camera look-controls wasd-controls="enabled: false" position="0 1.6 0">
+          <!-- Gaze cursor (fallback when no controllers — desktop / phone VR) -->
+          <a-cursor color="#3b82f6" fuse="false" raycaster="objects: .hud-clickable; far: 8"></a-cursor>
+
+          <a-entity id="vr-hud" position="0 -0.15 -1.4" visible="false">
+
+            <!-- Playback row -->
+            <a-entity id="hud-playback" position="0 0.42 0">
+              <!-- Play / Pause -->
+              <a-plane id="hud-play"  class="hud-clickable" position="-0.78 0 0" width="0.18" height="0.12"
+                       color="#1e293b" opacity="0.92"></a-plane>
+              <a-text  id="hud-play-text"  value="Pause" align="center" position="-0.78 0 0.002"
+                       color="#e2e8f0" width="1.2"></a-text>
+
+              <!-- Mute -->
+              <a-plane id="hud-mute" class="hud-clickable" position="-0.55 0 0" width="0.22" height="0.12"
+                       color="#1e293b" opacity="0.92"></a-plane>
+              <a-text  id="hud-mute-text"  value="Mute" align="center" position="-0.55 0 0.002"
+                       color="#e2e8f0" width="1.2"></a-text>
+
+              <!-- Seek bar (background plane is clickable; fill plane shows progress) -->
+              <a-plane id="hud-seek-bg" class="hud-clickable" position="-0.05 0 0" width="0.7" height="0.05"
+                       color="#334155" opacity="0.9"></a-plane>
+              <a-plane id="hud-seek-fill" position="-0.4 0 0.001" width="0.001" height="0.05"
+                       color="#3b82f6" opacity="1"></a-plane>
+              <a-text  id="hud-time" value="0:00 / 0:00" align="center" position="-0.05 -0.08 0.002"
+                       color="#94a3b8" width="1.0"></a-text>
+
+              <!-- Lecture switcher -->
+              <a-plane id="hud-vid1" class="hud-clickable" position="0.45 0 0" width="0.14" height="0.12"
+                       color="#1e3a8a" opacity="0.92"></a-plane>
+              <a-text  value="1" align="center" position="0.45 0 0.002" color="#e2e8f0" width="1.4"></a-text>
+
+              <a-plane id="hud-vid2" class="hud-clickable" position="0.62 0 0" width="0.14" height="0.12"
+                       color="#1e293b" opacity="0.92"></a-plane>
+              <a-text  value="2" align="center" position="0.62 0 0.002" color="#e2e8f0" width="1.4"></a-text>
+
+              <a-plane id="hud-vid3" class="hud-clickable" position="0.79 0 0" width="0.14" height="0.12"
+                       color="#1e293b" opacity="0.92"></a-plane>
+              <a-text  value="3" align="center" position="0.79 0 0.002" color="#e2e8f0" width="1.4"></a-text>
+            </a-entity>
+
+            <!-- Chat panel -->
+            <a-plane id="hud-chat-bg" position="0 -0.25 0" width="1.9" height="0.85"
+                     color="#0f172a" opacity="0.88"></a-plane>
+            <a-text  id="hud-chat-text"
+                     value="First Responder GPT — hold right trigger and speak."
+                     position="-0.92 0.1 0.002" width="1.85" color="#e2e8f0"
+                     baseline="top" wrap-count="60"></a-text>
+            <a-text  id="hud-transcript" value="" position="-0.92 -0.5 0.002"
+                     width="1.85" color="#3b82f6" baseline="top" wrap-count="60"></a-text>
+            <a-text  id="hud-hint" value="🎤  Hold RIGHT TRIGGER to speak"
+                     align="center" position="0 -0.62 0.002" color="#94a3b8" width="1.4"></a-text>
+          </a-entity>
+        </a-entity>
+
+        <a-entity id="left-hand"  oculus-touch-controls="hand: left"></a-entity>
+        <a-entity id="right-hand" oculus-touch-controls="hand: right"
+                  laser-controls="hand: right"
+                  raycaster="objects: .hud-clickable; far: 8"
+                  line="color: #3b82f6; opacity: 0.7"></a-entity>
+      </a-entity>
     </a-scene>
     <div class="video-toggle">
       <div class="video-toggle-row">
@@ -781,6 +849,7 @@ function addMessage(role, text) {
   wrap.appendChild(bubble);
   messagesEl.appendChild(wrap);
   scrollToBottom();
+  if (typeof mirrorToHud === "function") mirrorToHud(role, text);
   return wrap;
 }
 
@@ -873,43 +942,163 @@ if (!SpeechRecognition) {
   });
 }
 
-function startRecognition() {
+function startRecognition(opts = {}) {
+  const vrMode = opts.source === "vr";
   recognition = new SpeechRecognition();
   recognition.lang           = "en-US";
   recognition.interimResults = true;
   recognition.continuous     = false;
 
-  // Preserve anything already typed; recognized text is appended to it
-  const baseText = inputEl.value.trim();
+  // Preserve anything already typed (desktop path); ignored in VR push-to-talk.
+  const baseText = vrMode ? "" : inputEl.value.trim();
+  let lastTranscript = "";
 
   recognition.onstart = () => {
     isRecording = true;
-    micBtn.classList.add("recording");
-    micBtn.title = "Listening… click to stop";
+    if (vrMode) {
+      hudTranscript && hudTranscript.setAttribute("value", "🎤 listening…");
+    } else {
+      micBtn.classList.add("recording");
+      micBtn.title = "Listening… click to stop";
+    }
   };
 
   recognition.onresult = (e) => {
     let transcript = "";
     for (let i = 0; i < e.results.length; i++) transcript += e.results[i][0].transcript;
-    inputEl.value = [baseText, transcript.trim()].filter(Boolean).join(" ");
-    autoGrow();
+    lastTranscript = transcript.trim();
+    if (vrMode) {
+      hudTranscript && hudTranscript.setAttribute("value", lastTranscript || "🎤 listening…");
+    } else {
+      inputEl.value = [baseText, lastTranscript].filter(Boolean).join(" ");
+      autoGrow();
+    }
   };
 
   recognition.onerror = (e) => {
-    errorEl.style.display = "block";
-    errorEl.textContent = (e.error === "not-allowed" || e.error === "service-not-allowed")
+    const msg = (e.error === "not-allowed" || e.error === "service-not-allowed")
       ? "⚠ Microphone access denied. Allow mic permissions and try again."
       : `⚠ Voice input error: ${e.error}`;
+    if (vrMode) {
+      hudTranscript && hudTranscript.setAttribute("value", msg);
+    } else {
+      errorEl.style.display = "block";
+      errorEl.textContent = msg;
+    }
   };
 
   recognition.onend = () => {
     isRecording = false;
-    micBtn.classList.remove("recording");
-    micBtn.title = "Voice input";
-    inputEl.focus();
+    if (vrMode) {
+      hudTranscript && hudTranscript.setAttribute("value", "");
+      if (lastTranscript) {
+        inputEl.value = lastTranscript;
+        sendMessage();
+      }
+    } else {
+      micBtn.classList.remove("recording");
+      micBtn.title = "Voice input";
+      inputEl.focus();
+    }
   };
 
   recognition.start();
+}
+
+// ── VR HUD WIRING ─────────────────────────────────────
+// HUD entities live inside <a-scene> and only become visible on enter-vr.
+// All click handlers re-use the existing DOM control logic — no duplication.
+const vrHud         = document.getElementById("vr-hud");
+const hudPlay       = document.getElementById("hud-play");
+const hudMute       = document.getElementById("hud-mute");
+const hudSeekBg     = document.getElementById("hud-seek-bg");
+const hudSeekFill   = document.getElementById("hud-seek-fill");
+const hudPlayText   = document.getElementById("hud-play-text");
+const hudMuteText   = document.getElementById("hud-mute-text");
+const hudTimeText   = document.getElementById("hud-time");
+const hudVidBtns    = [
+  document.getElementById("hud-vid1"),
+  document.getElementById("hud-vid2"),
+  document.getElementById("hud-vid3"),
+];
+const hudChatText   = document.getElementById("hud-chat-text");
+const hudTranscript = document.getElementById("hud-transcript");
+
+if (hudPlay) hudPlay.addEventListener("click", () => document.getElementById("btn-play").click());
+if (hudMute) hudMute.addEventListener("click", () => document.getElementById("btn-mute").click());
+hudVidBtns.forEach((el, i) => { if (el) el.addEventListener("click", () => switchVideo(i)); });
+
+// Seek bar: convert ray intersection point → local x on the plane → fraction.
+// Plane background is centered at x=-0.05 with width 0.7 → local x ranges [-0.35, 0.35].
+if (hudSeekBg) {
+  hudSeekBg.addEventListener("click", (e) => {
+    if (!activeVideo || !activeVideo.duration || isNaN(activeVideo.duration)) return;
+    const pt = e.detail && e.detail.intersection && e.detail.intersection.point;
+    if (!pt) return;
+    const local = new THREE.Vector3().copy(pt);
+    hudSeekBg.object3D.worldToLocal(local);
+    const pct = Math.max(0, Math.min(1, (local.x + 0.35) / 0.7));
+    activeVideo.currentTime = pct * activeVideo.duration;
+  });
+}
+
+function updateVrHud() {
+  if (!vrHud || !activeVideo) return;
+  hudPlayText.setAttribute("value", activeVideo.paused ? "Play" : "Pause");
+  hudMuteText.setAttribute("value", activeVideo.muted ? "Unmute" : "Mute");
+  if (activeVideo.duration && !isNaN(activeVideo.duration)) {
+    const pct = activeVideo.currentTime / activeVideo.duration;
+    const w   = Math.max(0.001, 0.7 * pct);
+    // Left edge of seek bg is at x = -0.05 - 0.35 = -0.4
+    hudSeekFill.setAttribute("width", w);
+    hudSeekFill.setAttribute("position", `${-0.4 + w / 2} 0 0.001`);
+    hudTimeText.setAttribute("value", `${fmt(activeVideo.currentTime)} / ${fmt(activeVideo.duration)}`);
+  }
+  hudVidBtns.forEach((el, i) => {
+    if (el) el.setAttribute("color", i === currentVideoIdx ? "#1e3a8a" : "#1e293b");
+  });
+}
+
+// HUD chat mirror — keep the last few exchanges visible in VR
+const hudHistory = [];
+function mirrorToHud(role, text) {
+  if (!hudChatText) return;
+  hudHistory.push({ role, text });
+  while (hudHistory.length > 4) hudHistory.shift();
+  const rendered = hudHistory.map(m => {
+    const prefix = m.role === "user" ? "You: " : "AI: ";
+    const t = m.text.length > 280 ? m.text.slice(0, 277) + "…" : m.text;
+    return prefix + t;
+  }).join("\n\n");
+  hudChatText.setAttribute("value", rendered);
+}
+
+// Show/hide HUD on VR session boundaries; refresh once per second while visible.
+let _vrHudTimer = null;
+_sceneEl.addEventListener("enter-vr", () => {
+  if (vrHud) vrHud.setAttribute("visible", true);
+  updateVrHud();
+  if (!_vrHudTimer) _vrHudTimer = setInterval(updateVrHud, 250);
+});
+_sceneEl.addEventListener("exit-vr", () => {
+  if (vrHud) vrHud.setAttribute("visible", false);
+  if (_vrHudTimer) { clearInterval(_vrHudTimer); _vrHudTimer = null; }
+});
+
+// Right-trigger push-to-talk. When the trigger is pointing at a HUD button,
+// laser-controls already fires `click` — skip voice in that case so the trigger
+// works as a clicker. Otherwise (looking around the scene), start recognition.
+const rightHand = document.getElementById("right-hand");
+if (rightHand && SpeechRecognition) {
+  rightHand.addEventListener("triggerdown", () => {
+    const rc = rightHand.components && rightHand.components.raycaster;
+    const hits = rc && rc.intersectedEls ? rc.intersectedEls : [];
+    if (hits.length > 0) return;
+    if (!isRecording) startRecognition({ source: "vr" });
+  });
+  rightHand.addEventListener("triggerup", () => {
+    if (isRecording && recognition) recognition.stop();
+  });
 }
 </script>
 </body>
