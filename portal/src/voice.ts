@@ -96,7 +96,7 @@ function startSpeechRecognition(vrMode: boolean) {
   recognition.onstart = () => {
     isRecording = true;
     if (vrMode) {
-      setHudTranscript("🎤 listening…");
+      setHudTranscript("Listening...");
     } else {
       micBtn.classList.add("recording");
       micBtn.title = "Listening… click to stop";
@@ -110,7 +110,7 @@ function startSpeechRecognition(vrMode: boolean) {
     }
     lastTranscript = transcript.trim();
     if (vrMode) {
-      setHudTranscript(lastTranscript || "🎤 listening…");
+      setHudTranscript(lastTranscript || "Listening...");
     } else {
       inputEl.value = [baseText, lastTranscript].filter(Boolean).join(" ");
       inputEl.style.height = "auto";
@@ -184,7 +184,7 @@ async function startMediaRecording(vrMode: boolean) {
   mediaRecorder.onstart = () => {
     isRecording = true;
     if (vrMode) {
-      setHudTranscript("🎤 recording…");
+      setHudTranscript("Recording...");
     } else {
       micBtn.classList.add("recording");
       micBtn.title = "Recording… click to stop";
@@ -197,7 +197,7 @@ async function startMediaRecording(vrMode: boolean) {
 
   mediaRecorder.onstop = async () => {
     isRecording = false;
-    if (vrMode) setHudTranscript("⏳ transcribing…");
+    if (vrMode) setHudTranscript("Transcribing...");
     else {
       micBtn.classList.remove("recording");
       micBtn.title = "Transcribing…";

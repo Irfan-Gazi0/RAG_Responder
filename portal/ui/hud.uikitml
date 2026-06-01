@@ -103,9 +103,9 @@
   </div>
 
   <div class="chat-surface">
-    <span id="hud-chat-text" class="chat-history">First Responder GPT — hold right trigger and speak.</span>
+    <span id="hud-chat-text" class="chat-history">First Responder GPT - hold right trigger and speak.</span>
     <span id="hud-transcript" class="chat-transcript"></span>
-    <span id="hud-hint" class="chat-hint">🎤 Hold RIGHT TRIGGER to speak</span>
+    <span id="hud-hint" class="chat-hint">Hold RIGHT TRIGGER or PINCH to speak</span>
   </div>
 
   <button id="xr-button">Enter XR</button>

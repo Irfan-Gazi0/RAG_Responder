@@ -1,8 +1,12 @@
 import {
+  AudioSource,
+  AudioUtils,
   createSystem,
+  type Entity,
   eq,
   PanelDocument,
   PanelUI,
+  PlaybackMode,
   UIKit,
   UIKitDocument,
   VisibilityState,
@@ -11,6 +15,7 @@ import { fmt, getActiveVideo, getCurrentVideoIdx, switchVideo } from "./videosph
 import {
   getRenderedHistory,
   setChatListener,
+  setPendingListener,
   setTranscriptListener,
 } from "./hud-mirror.js";
 
@@ -31,8 +36,34 @@ export class HudSystem extends createSystem({
   private transcriptText: UIKit.Text | null = null;
   private xrButton: UIKit.Text | null = null;
   private elapsedSinceUpdate = 0;
+  private pending = false;
+  private clickAudio: Entity | null = null;
+  private chimeAudio: Entity | null = null;
 
   init() {
+    // Non-positional UI sounds: a click to confirm button presses and a chime
+    // when an AI answer lands (the user may be looking away at the scene).
+    // Separate entities because AudioSource is one-per-entity; preloaded so the
+    // first play has no fetch latency.
+    this.clickAudio = this.world
+      .createTransformEntity()
+      .addComponent(AudioSource, {
+        src: "./audio/click.mp3",
+        positional: false,
+        volume: 0.5,
+        playbackMode: PlaybackMode.Restart,
+      });
+    this.chimeAudio = this.world
+      .createTransformEntity()
+      .addComponent(AudioSource, {
+        src: "./audio/chime.mp3",
+        positional: false,
+        volume: 0.6,
+        playbackMode: PlaybackMode.Restart,
+      });
+    AudioUtils.preload(this.clickAudio);
+    AudioUtils.preload(this.chimeAudio);
+
     this.queries.hudPanel.subscribe("qualify", (entity) => {
       const document = PanelDocument.data.document[entity.index] as UIKitDocument;
       if (!document) return;
@@ -85,17 +116,23 @@ export class HudSystem extends createSystem({
     this.xrButton = doc.getElementById("xr-button") as UIKit.Text;
 
     // HUD buttons proxy to DOM controls (re-uses existing playback/lecture logic)
-    this.playText?.addEventListener("click", () =>
-      window.document.getElementById("btn-play")?.click(),
-    );
-    this.muteText?.addEventListener("click", () =>
-      window.document.getElementById("btn-mute")?.click(),
-    );
+    this.playText?.addEventListener("click", () => {
+      this.playClick();
+      window.document.getElementById("btn-play")?.click();
+    });
+    this.muteText?.addEventListener("click", () => {
+      this.playClick();
+      window.document.getElementById("btn-mute")?.click();
+    });
     this.vidButtons.forEach((btn, i) =>
-      btn?.addEventListener("click", () => switchVideo(i)),
+      btn?.addEventListener("click", () => {
+        this.playClick();
+        switchVideo(i);
+      }),
     );
 
     this.xrButton?.addEventListener("click", () => {
+      this.playClick();
       if (this.world.visibilityState.value === VisibilityState.NonImmersive) {
         this.world.launchXR();
       } else {
@@ -103,13 +140,31 @@ export class HudSystem extends createSystem({
       }
     });
 
-    // Register listeners so chat/voice modules can push updates into the HUD
-    setChatListener(() => {
+    // Register listeners so chat/voice modules can push updates into the HUD.
+    // History is empty at wire time, so the replay inside setChatListener never
+    // chimes for past messages — only live "bot" answers do.
+    setChatListener((role) => {
       this.chatText?.setProperties({ text: getRenderedHistory() });
+      if (role === "bot") this.playChime();
     });
     setTranscriptListener((text) => {
+      // Don't let a stale transcript clobber the "Thinking…" indicator.
+      if (this.pending && !text) return;
       this.transcriptText?.setProperties({ text });
     });
+    setPendingListener((pending) => {
+      this.pending = pending;
+      // ASCII only — the UIKit font atlas has no emoji/ellipsis glyphs.
+      this.transcriptText?.setProperties({ text: pending ? "Thinking..." : "" });
+    });
+  }
+
+  private playClick() {
+    if (this.clickAudio) AudioUtils.play(this.clickAudio);
+  }
+
+  private playChime() {
+    if (this.chimeAudio) AudioUtils.play(this.chimeAudio);
   }
 
   update(delta: number) {

@@ -613,6 +613,74 @@ change handled outside the script.
 
 ---
 
+## 2026-06-01 — IWSDK v2 VR Interface Overhaul (Follower HUD, Audio/Haptics, Pinch-to-Talk)
+
+**Status:** Implemented + statically verified; in-emulator pass pending
+**Author:** Irfan Gazi (Claude Code assisted)
+
+Reworked the v2 in-VR interface to use IWSDK's built-in capabilities instead of
+the thin static-panel slice it shipped with. Driven by Meta's immersive-design
+comfort guidance (skills: `iwsdk-planner`, `hz-immersive-designer`).
+
+### Headline fix — body-locked lazy-follow HUD
+
+The v2 HUD was pinned to a fixed world position `(0, 1.45, -1.6)`, so rotating
+to look around the 360° scene left it behind the user. v1 solved this by rigidly
+parenting the HUD to the camera — but that **rigid head-lock is a documented
+comfort anti-pattern** (nausea, occludes the scene). Replaced it with IWSDK's
+built-in `Follower` component (`FollowSystem`, no feature flag): the panel trails
+the gaze with lag, settles ~1.4 m ahead at eye level (`FollowBehavior.PivotY`,
+`maxAngle: 30`, `tolerance: 0.4`, `speed: 3`), re-centering only after a >30° turn.
+
+### Other improvements
+
+- **Comfort tuning:** PanelUI `maxWidth` 1.8 → 1.3 m (~50° arc comfort ceiling).
+- **Spatial audio:** two preloaded non-positional `AudioSource` entities — a
+  click on button presses and a chime when an AI answer arrives (user may be
+  looking away). New `portal/public/audio/{click,chime}.mp3` (ffmpeg-generated).
+- **Haptics:** controller rumble on button press / voice start / voice stop via
+  the raw WebXR `gamepad.hapticActuators` (no first-class IWSDK API exists).
+- **Pinch-to-talk:** push-to-talk switched to the **select** action, which
+  covers controller trigger *and* hand-tracking pinch in one path — finally
+  using the already-enabled `handTracking` flag. Controller-free voice now works.
+- **"Thinking…" state:** new pending listener in `hud-mirror.ts` mirrors the
+  in-flight n8n round-trip into the HUD so VR users get feedback.
+- **ASCII-clean panel text:** the live dev runtime log surfaced
+  `Missing glyph info for "—"/"…"/emoji` — the UIKit Inter MSDF atlas has no
+  emoji/em-dash/ellipsis glyphs (they render as tofu boxes). Stripped them from
+  all panel-facing strings (`hud.uikitml`, `hud.ts`, `hud-mirror.ts`, and the
+  vrMode-only transcript states in `voice.ts`). DOM strings keep their emoji.
+
+### Changes
+
+| File | Change |
+|---|---|
+| `portal/src/index.ts` | `Follower` on HUD (removed static position); `maxWidth` 1.8 → 1.3 |
+| `portal/src/hud.ts` | click/chime `AudioSource` entities; role-aware chat listener (chime on bot); "Thinking..." pending state |
+| `portal/src/push-to-talk.ts` | unified select-based push-to-talk (trigger + pinch); haptic pulses |
+| `portal/src/hud-mirror.ts` | `setHudPending`/pending listener; ASCII ellipsis |
+| `portal/src/chat.ts` | drive `setHudPending` around the webhook call |
+| `portal/src/voice.ts` | ASCII vrMode transcript states |
+| `portal/ui/hud.uikitml` | ASCII text; hint mentions PINCH |
+| `portal/public/audio/click.mp3`, `chime.mp3` | **New** — UI sounds |
+
+### Verified
+
+- `npx tsc --noEmit` clean; `npm run build` succeeds (UIKitML compiled, audio
+  bundled to `dist/audio/`); compiled `hud.json` has zero non-ASCII chars.
+- Dev server boots at `https://localhost:8081/`, serves HTTP 200, audio
+  reachable, no startup/runtime errors.
+
+### Still pending
+
+- **In-emulator (IWER) visual/interaction pass** — confirm the HUD lazy-follow,
+  comfort width, voice/pinch, chime, and "Thinking..." state in an XR session
+  via the MCP runtime tools. Couldn't run this session (IWER MCP tools not
+  loaded); do after a Claude Code restart or verify manually in the browser.
+- **Quest 3 in-headset shakedown** still gates the v2 → root cutover.
+
+---
+
 ## Next Steps / Open Items
 
 - [ ] **IWSDK v2 dev-server shakedown** — `cd portal && npm run dev`, then drive IWER from MCP runtime tools to verify lecture switching, HUD clicks, push-to-talk, chat round-trip

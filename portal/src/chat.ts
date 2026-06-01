@@ -1,5 +1,5 @@
 import { marked } from "marked";
-import { mirrorToHud } from "./hud-mirror.js";
+import { mirrorToHud, setHudPending } from "./hud-mirror.js";
 
 const WEBHOOK_URL =
   "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1";
@@ -89,6 +89,7 @@ export async function sendMessage() {
 
   addMessage("user", question);
   const typingEl = addTyping();
+  setHudPending(true); // mirror "Thinking…" into the in-VR HUD
 
   try {
     const res = await fetch(WEBHOOK_URL, {
@@ -112,6 +113,7 @@ export async function sendMessage() {
     errorEl.style.display = "block";
     errorEl.textContent = `⚠ ${(err as Error).message}`;
   } finally {
+    setHudPending(false);
     sendBtn.disabled = false;
     inputEl.focus();
   }
