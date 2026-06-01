@@ -486,6 +486,12 @@
 
             <!-- Playback row -->
             <a-entity id="hud-playback" position="0 0.42 0">
+              <!-- Framed-glass border behind the playback row -->
+              <a-plane position="0.09 0 -0.001" width="2.04" height="0.16"
+                       color="#334155" opacity="0.55"></a-plane>
+              <a-plane position="0.09 0 -0.0005" width="2.02" height="0.14"
+                       color="#0f172a" opacity="0.78"></a-plane>
+
               <!-- Play / Pause -->
               <a-plane id="hud-play"  class="hud-clickable" position="-0.78 0 0" width="0.18" height="0.12"
                        color="#1e293b" opacity="0.92"></a-plane>
@@ -518,19 +524,62 @@
               <a-plane id="hud-vid3" class="hud-clickable" position="0.79 0 0" width="0.14" height="0.12"
                        color="#1e293b" opacity="0.92"></a-plane>
               <a-text  value="3" align="center" position="0.79 0 0.002" color="#e2e8f0" width="1.4"></a-text>
+
+              <!-- Info button -->
+              <a-plane id="hud-info-btn" class="hud-clickable" position="0.97 0 0" width="0.12" height="0.12"
+                       color="#1e293b" opacity="0.92"></a-plane>
+              <a-text  value="i" align="center" position="0.97 0 0.002" color="#3b82f6" width="1.8"></a-text>
             </a-entity>
 
-            <!-- Chat panel -->
-            <a-plane id="hud-chat-bg" position="0 -0.25 0" width="1.9" height="0.85"
-                     color="#0f172a" opacity="0.88"></a-plane>
-            <a-text  id="hud-chat-text"
-                     value="First Responder GPT — hold right trigger and speak."
-                     position="-0.92 0.1 0.002" width="1.85" color="#e2e8f0"
-                     baseline="top" wrap-count="60"></a-text>
-            <a-text  id="hud-transcript" value="" position="-0.92 -0.5 0.002"
-                     width="1.85" color="#3b82f6" baseline="top" wrap-count="60"></a-text>
-            <a-text  id="hud-hint" value="🎤  Hold RIGHT TRIGGER to speak"
-                     align="center" position="0 -0.62 0.002" color="#94a3b8" width="1.4"></a-text>
+            <!-- Chat toggle chevron (stays visible when chat is minimized) -->
+            <a-plane id="hud-chat-toggle" class="hud-clickable" position="0.88 0.13 0.003"
+                     width="0.10" height="0.08" color="#1e293b" opacity="0.92"></a-plane>
+            <a-text  id="hud-chat-toggle-text" value="▾" align="center"
+                     position="0.88 0.13 0.005" color="#3b82f6" width="1.6"></a-text>
+
+            <!-- Chat panel (toggleable group) -->
+            <a-entity id="hud-chat-content">
+              <a-plane id="hud-chat-border" position="0 -0.25 -0.001" width="1.92" height="0.87"
+                       color="#334155" opacity="0.55"></a-plane>
+              <a-plane id="hud-chat-bg" position="0 -0.25 0" width="1.9" height="0.85"
+                       color="#0f172a" opacity="0.92"></a-plane>
+              <a-text  id="hud-chat-text"
+                       value="First Responder GPT — hold right trigger and speak."
+                       position="-0.92 0.1 0.002" width="1.85" color="#e2e8f0"
+                       baseline="top" wrap-count="60"></a-text>
+              <a-text  id="hud-transcript" value="" position="-0.92 -0.5 0.002"
+                       width="1.85" color="#3b82f6" baseline="top" wrap-count="60"></a-text>
+              <a-text  id="hud-hint" value="🎤  Hold RIGHT TRIGGER to speak"
+                       align="center" position="0 -0.62 0.002" color="#94a3b8" width="1.4"></a-text>
+            </a-entity>
+          </a-entity>
+
+          <!-- In-VR help overlay (parented to camera, floats in front of HUD) -->
+          <a-entity id="vr-help" position="0 0.05 -1.2" visible="false">
+            <a-plane position="0 0 -0.001" width="1.55" height="1.10"
+                     color="#334155" opacity="0.65"></a-plane>
+            <a-plane position="0 0 0" width="1.50" height="1.06"
+                     color="#0f172a" opacity="0.96"></a-plane>
+            <a-text value="How to use this VR experience" align="center"
+                    position="0 0.44 0.002" color="#e2e8f0" width="1.7"></a-text>
+            <a-plane position="0 0.36 0.001" width="1.30" height="0.004"
+                     color="#3b82f6" opacity="0.85"></a-plane>
+
+            <a-text value="🎯  Point with your right hand — the blue laser shows where you are aiming."
+                    position="-0.70 0.25 0.002" color="#e2e8f0" width="1.55" baseline="top" wrap-count="56"></a-text>
+            <a-text value="🔴  Pull the right trigger on any button to click it."
+                    position="-0.70 0.08 0.002" color="#e2e8f0" width="1.55" baseline="top" wrap-count="56"></a-text>
+            <a-text value="🎤  Hold the right trigger in empty space to talk to the AI. Release to send."
+                    position="-0.70 -0.09 0.002" color="#e2e8f0" width="1.55" baseline="top" wrap-count="56"></a-text>
+            <a-text value="▶️  Use the bottom row to play, pause, seek, and switch lectures (1 · 2 · 3)."
+                    position="-0.70 -0.26 0.002" color="#e2e8f0" width="1.55" baseline="top" wrap-count="56"></a-text>
+            <a-text value="💬  The chat mirrors your desktop conversation. Tap the ▾ chevron to minimize it."
+                    position="-0.70 -0.43 0.002" color="#e2e8f0" width="1.55" baseline="top" wrap-count="56"></a-text>
+
+            <a-plane id="vr-help-close" class="hud-clickable" position="0.66 0.44 0.002"
+                     width="0.10" height="0.10" color="#b91c1c" opacity="0.95"></a-plane>
+            <a-text  value="✕" align="center" position="0.66 0.44 0.004"
+                     color="#e2e8f0" width="1.8"></a-text>
           </a-entity>
         </a-entity>
 
@@ -1023,10 +1072,40 @@ const hudVidBtns    = [
 ];
 const hudChatText   = document.getElementById("hud-chat-text");
 const hudTranscript = document.getElementById("hud-transcript");
+const hudChatContent  = document.getElementById("hud-chat-content");
+const hudChatToggle   = document.getElementById("hud-chat-toggle");
+const hudChatToggleTx = document.getElementById("hud-chat-toggle-text");
+const hudInfoBtn      = document.getElementById("hud-info-btn");
+const vrHelp          = document.getElementById("vr-help");
+const vrHelpClose     = document.getElementById("vr-help-close");
 
 if (hudPlay) hudPlay.addEventListener("click", () => document.getElementById("btn-play").click());
 if (hudMute) hudMute.addEventListener("click", () => document.getElementById("btn-mute").click());
 hudVidBtns.forEach((el, i) => { if (el) el.addEventListener("click", () => switchVideo(i)); });
+
+// Chat surface minimize / expand
+let _hudChatVisible = true;
+if (hudChatToggle) {
+  hudChatToggle.addEventListener("click", () => {
+    _hudChatVisible = !_hudChatVisible;
+    if (hudChatContent)  hudChatContent.setAttribute("visible", _hudChatVisible);
+    if (hudChatToggleTx) hudChatToggleTx.setAttribute("value", _hudChatVisible ? "▾" : "▴");
+  });
+}
+
+// In-VR help overlay — info button toggles, close button hides
+if (hudInfoBtn) {
+  hudInfoBtn.addEventListener("click", () => {
+    if (!vrHelp) return;
+    const visible = vrHelp.getAttribute("visible") === true || vrHelp.getAttribute("visible") === "true";
+    vrHelp.setAttribute("visible", !visible);
+  });
+}
+if (vrHelpClose) {
+  vrHelpClose.addEventListener("click", () => {
+    if (vrHelp) vrHelp.setAttribute("visible", false);
+  });
+}
 
 // Seek bar: convert ray intersection point → local x on the plane → fraction.
 // Plane background is centered at x=-0.05 with width 0.7 → local x ranges [-0.35, 0.35].
@@ -1063,6 +1142,12 @@ function updateVrHud() {
 const hudHistory = [];
 function mirrorToHud(role, text) {
   if (!hudChatText) return;
+  // Auto-expand chat surface when a new message arrives, so the user sees it
+  if (!_hudChatVisible) {
+    _hudChatVisible = true;
+    if (hudChatContent)  hudChatContent.setAttribute("visible", true);
+    if (hudChatToggleTx) hudChatToggleTx.setAttribute("value", "▾");
+  }
   hudHistory.push({ role, text });
   while (hudHistory.length > 4) hudHistory.shift();
   const rendered = hudHistory.map(m => {
@@ -1079,9 +1164,17 @@ _sceneEl.addEventListener("enter-vr", () => {
   if (vrHud) vrHud.setAttribute("visible", true);
   updateVrHud();
   if (!_vrHudTimer) _vrHudTimer = setInterval(updateVrHud, 250);
+  // First-time onboarding: auto-show help overlay once per browser.
+  try {
+    if (vrHelp && !localStorage.getItem("fr_vr_help_seen")) {
+      vrHelp.setAttribute("visible", true);
+      localStorage.setItem("fr_vr_help_seen", "1");
+    }
+  } catch (e) { /* localStorage may be disabled — ignore */ }
 });
 _sceneEl.addEventListener("exit-vr", () => {
   if (vrHud) vrHud.setAttribute("visible", false);
+  if (vrHelp) vrHelp.setAttribute("visible", false);
   if (_vrHudTimer) { clearInterval(_vrHudTimer); _vrHudTimer = null; }
 });
 
