@@ -681,8 +681,120 @@ the gaze with lag, settles ~1.4 m ahead at eye level (`FollowBehavior.PivotY`,
 
 ---
 
+## 2026-06-01 — IWSDK v2 Live IWER Emulator Pass + Quest STT Correction + Transcribe Webhook
+
+**Status:** Emulator pass done; `transcribe-audio` webhook delivered as importable JSON (user to import + activate)
+**Author:** Irfan Gazi (Claude Code assisted)
+
+### Live IWER emulator pass (v2 portal)
+
+Drove the `mcp__iwsdk-runtime__*` MCP tools against the running dev server
+(`npm run dev`, Quest 3 device profile, controller input mode) — the in-emulator
+pass that the earlier 2026-06-01 entry left pending.
+
+- **Boot / render clean:** IWSDK v0.4.1 / Three r181 / EliCS v3.4.2. All 13 systems
+  register and run, including the v2 customs `FollowSystem`, `HudSystem`,
+  `PushToTalkSystem`. `PanelUISystem` shows 1 configured panel.
+- **Follower HUD verified:** the whole HUD is a **single `PanelUI` document**
+  (entity 12 — one `RayInteractable` + `Follower`; buttons are UIKit elements
+  inside it). Spawns at world `(0, 1.6, -1.4)` = 1.4 m ahead at standing height.
+  After a 45° headset yaw it moved to `(-0.99, 1.6, -0.99)` — same 1.4 m radius,
+  re-oriented to face the user (quaternion y≈0.383). Lazy-follow + comfort
+  distance confirmed.
+- **Ray-click lecture switch verified:** aimed the right controller ray at the "2"
+  button and selected → active highlight moved 1→2 and `switchVideo(1)` fired,
+  lazily kicking off the **2nd** video's HLS (`VID_20250912_122900…`). UIKit button
+  routing through the single panel works end-to-end.
+- **ASCII panel text:** renders clean (no tofu) — the font-atlas constraint is
+  being respected.
+- **360° video blank in emulator:** HLS manifests are **CORS-blocked** from the
+  `localhost:8081` dev origin (`No 'Access-Control-Allow-Origin'`). Dev-only —
+  prod v2 is same-origin on CloudFront. **NOTE:** this contradicts the 2026-05-25
+  "CORS fix" note; the emulator still hits CORS for video, so 360° playback can't
+  be validated in IWER — it's a Quest/CloudFront-only test.
+- **Push-to-talk NOT exercisable in the emulator:** headless Chromium has no mic,
+  and (see below) the voice fallback path needs the n8n webhook that didn't exist.
+  No observable effect from a simulated trigger. This is a Quest-only test.
+- **Latent UX concern logged:** `PushToTalkSystem`'s guard is
+  `this.queries.hovered.entities.size > 0` — i.e. **any** hovered entity suppresses
+  voice, not specifically the triggering (right) hand. Because the HUD follows the
+  gaze and sits centered, a resting ray on it could turn the trigger into a silent
+  haptic pulse instead of starting voice. Confirm on-headset; if it bites, scope
+  the guard to the right hand's hover target.
+
+### Quest STT correction (supersedes the 2026-05-25 claim)
+
+The 2026-05-25 entry and CLAUDE.md stated *"Quest 3's Chromium ships
+SpeechRecognition natively, so production was fine."* **This is wrong.** Per
+hands-on use, the **Meta Quest Browser has no native speech-to-text** — there is
+no `webkitSpeechRecognition`/`SpeechRecognition` service. Consequence:
+
+- **Desktop Chrome** (e.g. the dev machine): has `SpeechRecognition` → voice works
+  today via the live-STT path; never calls the webhook.
+- **Quest 3 in VR** (the real target): no `SpeechRecognition` → `voice.ts` falls
+  through to its `MediaRecorder` path, which POSTs recorded audio to
+  `https://irfangazi.app.n8n.cloud/webhook/transcribe-audio`. So that webhook is
+  the **required** path for talking to the chatbot inside the VR interface — NOT a
+  desktop-Linux-only nicety. Until it exists, in-VR voice is dead on Quest.
+
+### Transcribe webhook delivered (`n8n_transcribe_webhook.json`)
+
+The portal client side is already complete (`portal/src/voice.ts`
+`startMediaRecording` + `transcribeBlob`, driven by `PushToTalkSystem` with
+`source: "vr"`). Only the n8n side was missing. Delivered as an **importable
+workflow JSON** at the repo root — a small, **separate** workflow that does NOT
+touch the existing RAG chat workflow ("1.1 First Responder").
+
+3 nodes: **Webhook** (`POST /transcribe-audio`, respond via Respond node) →
+**OpenAI Transcribe a recording** (Whisper, binary field `audio`, OpenAI cred
+`dLb32e73iouY9DvH`) → **Respond to Webhook** (`{ "text": {{ $json.text }} }`).
+
+**How to wire it up:**
+
+1. n8n → **Workflows → Import from File** → select `n8n_transcribe_webhook.json`.
+2. Open the **Transcribe Audio (Whisper)** node and (re)select your OpenAI
+   credential — credential IDs don't always survive import.
+3. Verify the binary field: the Webhook node should expose the uploaded file as
+   binary property **`audio`** (the multipart field name `voice.ts` sends). If your
+   n8n version names it differently (`data` / `file0`), set the OpenAI node's
+   "Input Data Field Name" to match what the Webhook node outputs.
+4. Toggle the workflow **Active** — the production `/webhook/transcribe-audio` URL
+   only works when active (the `/webhook-test/` URL only works while "Listen for
+   test event" is on).
+5. CORS needs no config — the browser sends `FormData` (multipart) and your
+   existing chat webhook already proves n8n cloud answers cross-origin browser
+   POSTs from CloudFront + localhost.
+
+**Quick test (after import + activate):**
+
+```
+curl -X POST https://irfangazi.app.n8n.cloud/webhook/transcribe-audio \
+  -F "audio=@some_clip.webm" -F "session_id=test"
+# expect: {"text":"...transcribed words..."}
+```
+
+### Changes
+
+| File | Change |
+|---|---|
+| `n8n_transcribe_webhook.json` | **New** — importable 3-node transcribe workflow (Webhook → Whisper → Respond) |
+| `progress.md` | This entry |
+| `CLAUDE.md` | Corrected the "Quest is unaffected" / desktop-Linux-only voice notes |
+| `portal/src/voice.ts` | Comment broadened to note Quest Browser lacks STT (no code change) |
+
+### Still pending
+
+- **Import + activate** the transcribe workflow in n8n, then the curl check above.
+- **Quest 3 in-headset shakedown** — in-VR voice end-to-end (pinch/trigger →
+  record → transcribe → answer), HUD comfort, push-to-talk latency, and the
+  hover-guard concern above. Watch for a **mic-permission** gotcha: `getUserMedia`
+  may need permission granted before entering immersive mode.
+
+---
+
 ## Next Steps / Open Items
 
+- [ ] **Import + activate `n8n_transcribe_webhook.json`** in n8n cloud, then verify with the curl check — unblocks in-VR voice on Quest
 - [ ] **IWSDK v2 dev-server shakedown** — `cd portal && npm run dev`, then drive IWER from MCP runtime tools to verify lecture switching, HUD clicks, push-to-talk, chat round-trip
 - [ ] **IWSDK v2 Quest 3 in-headset shakedown** — load `https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html` directly (NOT via Streamlit iframe); validate HUD comfort distance, push-to-talk latency, trigger-vs-laser conflict
 - [ ] **IWSDK v2 cutover** — only after green shakedown: re-upload `portal/dist/index.html` as `inspector_portal.html` (per CLAUDE.md hard rule #2, never `copy_object`), bump CACHE_BUST, invalidate `/inspector_portal.html`

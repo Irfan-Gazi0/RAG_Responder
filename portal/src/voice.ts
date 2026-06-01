@@ -2,7 +2,9 @@ import { sendMessage, setInputValue } from "./chat.js";
 import { setHudTranscript } from "./hud-mirror.js";
 
 // Fallback transcription endpoint used when the browser lacks
-// SpeechRecognition (Chrome on Linux desktop is the known case).
+// SpeechRecognition. The Meta Quest Browser has NO native speech-to-text, so this
+// is the REQUIRED path for in-VR voice on Quest (also covers Chromium on Linux
+// desktop). Desktop Chrome has SpeechRecognition and never reaches this.
 // Expected n8n contract:
 //   POST multipart/form-data with field "audio" (audio/webm or audio/ogg blob)
 //   and optional "session_id" string field.
