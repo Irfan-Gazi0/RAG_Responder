@@ -5,9 +5,16 @@ import streamlit.components.v1 as components
 # It changes the iframe URL's cache key so browsers can't serve a stale copy
 # (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
 # which a CloudFront invalidation does NOT clear).
-CACHE_BUST = "20260524a"
+CACHE_BUST = "20260525a"
 
-PORTAL_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/inspector_portal.html?v={CACHE_BUST}"
+# v2 (IWSDK build) lives under /v2/ as a multi-file bundle.
+# Reviewers can switch the embedded portal via ?portal=v2 in the Streamlit URL.
+_USE_V2 = st.query_params.get("portal", "v1") == "v2"
+
+if _USE_V2:
+    PORTAL_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html?v={CACHE_BUST}"
+else:
+    PORTAL_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/inspector_portal.html?v={CACHE_BUST}"
 CHAT_URL   = f"https://d1ni7nkjr0eveg.cloudfront.net/chat_panel.html?v={CACHE_BUST}"
 SPLAT_URL  = "https://alistairwstbrk.github.io/splat-site/?url=https://huggingface.co/datasets/AlistairWstbrk/splats/resolve/main/3DGS%20.ply%20New%20Vehicle%20Scans/Equinox%20Hood%20Open%20(New)(Cropped).ply"
 

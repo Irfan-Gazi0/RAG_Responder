@@ -1,0 +1,112 @@
+<style>
+  .hud-root {
+    display: flex;
+    flex-direction: column;
+    background-color: #0f172a;
+    border-color: #334155;
+    border-width: 0.15;
+    border-radius: 2;
+    padding: 1.5;
+    width: 60;
+    gap: 1.5;
+  }
+
+  .playback-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1;
+  }
+
+  .hud-btn {
+    padding: 1;
+    background-color: #1e293b;
+    border-color: #334155;
+    border-width: 0.1;
+    border-radius: 1;
+    color: #e2e8f0;
+    font-size: 2.2;
+    font-weight: medium;
+    text-align: center;
+    cursor: pointer;
+    width: 9;
+  }
+
+  .hud-btn-narrow { width: 5; }
+
+  .hud-btn-active {
+    background-color: #1e3a8a;
+    border-color: #3b82f6;
+  }
+
+  .hud-time {
+    color: #94a3b8;
+    font-size: 2;
+    margin-left: 1;
+  }
+
+  .chat-surface {
+    background-color: #1e293b;
+    border-color: #334155;
+    border-width: 0.1;
+    border-radius: 1.5;
+    padding: 1.5;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8;
+    min-height: 22;
+  }
+
+  .chat-history {
+    color: #e2e8f0;
+    font-size: 2;
+    text-align: left;
+  }
+
+  .chat-transcript {
+    color: #3b82f6;
+    font-size: 2;
+    text-align: left;
+    margin-top: 0.5;
+  }
+
+  .chat-hint {
+    color: #94a3b8;
+    font-size: 1.6;
+    text-align: center;
+    margin-top: 0.5;
+  }
+
+  #xr-button {
+    width: 100%;
+    padding: 1.2;
+    background-color: #ef4444;
+    color: #ffffff;
+    border-radius: 1.2;
+    border-width: 0.1;
+    border-color: #b91c1c;
+    font-size: 2.2;
+    font-weight: medium;
+    text-align: center;
+    cursor: pointer;
+  }
+</style>
+
+<div class="hud-root">
+  <div class="playback-row">
+    <button id="hud-play" class="hud-btn">Pause</button>
+    <button id="hud-mute" class="hud-btn">Mute</button>
+    <button id="hud-vid1" class="hud-btn hud-btn-narrow hud-btn-active">1</button>
+    <button id="hud-vid2" class="hud-btn hud-btn-narrow">2</button>
+    <button id="hud-vid3" class="hud-btn hud-btn-narrow">3</button>
+    <span id="hud-time" class="hud-time">0:00 / 0:00</span>
+  </div>
+
+  <div class="chat-surface">
+    <span id="hud-chat-text" class="chat-history">First Responder GPT — hold right trigger and speak.</span>
+    <span id="hud-transcript" class="chat-transcript"></span>
+    <span id="hud-hint" class="chat-hint">🎤 Hold RIGHT TRIGGER to speak</span>
+  </div>
+
+  <button id="xr-button">Enter XR</button>
+</div>

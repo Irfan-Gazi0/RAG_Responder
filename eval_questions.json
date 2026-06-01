@@ -1,9 +1,9 @@
 {
   "evaluation_set": "Ford Mustang Mach-E 2026 First Responder RAG — Transcript QA",
   "generated_at": "2026-04-20",
-  "total_questions": 50,
+  "total_questions": 60,
   "namespace": "video_transcript_v2",
-  "instructions": "Send each 'question' to the RAG chatbot. Compare the chatbot's answer against 'expected_answer'. Check that the cited source matches 'source.video' and that the timestamp is within ~60 seconds of 'source.approximate_timestamp'.",
+  "instructions": "Two question types. (1) source.video → transcript QA: check the cited video and that the timestamp is within ~60s of source.approximate_timestamp. (2) source.type=='pdf' → document QA: route the chatbot to source.namespace, compare the answer against expected_answer, and cross-check against source.pdf_file at source.pdf_page (PDF reader page) / source.printed_page (footer page) using source.verbatim_quote.",
   "questions": [
     {
       "id": 1,
@@ -503,6 +503,164 @@
       "source": {
         "video": "Video 2 — Interior / Underside",
         "approximate_timestamp": "00:04:15"
+      }
+    },
+    {
+      "id": 51,
+      "topic": "Airbag / RCM hazard",
+      "question": "After an airbag or pre-tensioner deploys on the Tesla Model S, how long must responders avoid touching the Restraint Control Module (RCM)?",
+      "expected_answer": "At least 10 seconds. The RCM has an internal energy reserve and stays powered for some time after low-voltage power is disconnected; do not touch it within 10 seconds of an airbag or pre-tensioner deployment.",
+      "source": {
+        "type": "pdf",
+        "vehicle": "Tesla Model S 2021",
+        "namespace": "tesla_model_s_2021",
+        "doc": "Emergency Response Guide",
+        "pdf_file": "EmergencyResponseGuide-Tesla-Model_S-2021.pdf",
+        "pdf_page": 12,
+        "printed_page": 10,
+        "verbatim_quote": "Do not touch the RCM within 10 seconds of an airbag or pre-tensioner deployment."
+      }
+    },
+    {
+      "id": 52,
+      "topic": "Fluid identification",
+      "question": "On the Tesla Model S, how can a responder tell the difference between leaking coolant and other clear liquid?",
+      "expected_answer": "The coolant is blue. The HV battery cells are sealed with not enough electrolyte to form a pool, so any clear liquid is likely water.",
+      "source": {
+        "type": "pdf",
+        "vehicle": "Tesla Model S 2021",
+        "namespace": "tesla_model_s_2021",
+        "doc": "Emergency Response Guide",
+        "pdf_file": "EmergencyResponseGuide-Tesla-Model_S-2021.pdf",
+        "pdf_page": 22,
+        "printed_page": 20,
+        "verbatim_quote": "Clear liquid is likely water. The coolant is blue."
+      }
+    },
+    {
+      "id": 53,
+      "topic": "HV disable method",
+      "question": "What is the main method to disable high voltage on the Tesla Model S 2021?",
+      "expected_answer": "Double cut the first responder loop and then remove the cut section, then disable the low voltage battery. Always double cut the first responder loop and do not attempt to open the HV battery.",
+      "source": {
+        "type": "pdf",
+        "vehicle": "Tesla Model S 2021",
+        "namespace": "tesla_model_s_2021",
+        "doc": "Emergency Response Guide",
+        "pdf_file": "EmergencyResponseGuide-Tesla-Model_S-2021.pdf",
+        "pdf_page": 9,
+        "printed_page": 7,
+        "verbatim_quote": "Double cut the first responder loop and then remove the cut section. / Disable the low voltage battery."
+      }
+    },
+    {
+      "id": 54,
+      "topic": "Post-shutdown wait times",
+      "question": "On the Chevrolet Bolt EV, how long should responders wait after disabling 12-volt power before working on the vehicle?",
+      "expected_answer": "After disabling 12-volt power, wait at least 10 seconds for any un-deployed airbag reserve energy to dissipate, and at least 1 minute for the high-voltage energy to discharge. The low-voltage cable to cut is marked with yellow tape.",
+      "source": {
+        "type": "pdf",
+        "vehicle": "Chevrolet Bolt EV 2022-2023",
+        "namespace": "chevrolet_bolt_ev_2022_2023",
+        "doc": "Emergency Response Guide",
+        "pdf_file": "EmergencyResponseGuide_Chevrolet_Bolt_EV_2022-2023.pdf",
+        "pdf_page": 5,
+        "printed_page": 5,
+        "verbatim_quote": "After disabling 12-volt power, wait at least 10 seconds to allow any un-deployed airbag reserve energy to dissipate and wait at least 1 minute to allow high voltage energy to discharge."
+      }
+    },
+    {
+      "id": 55,
+      "topic": "Hood access with a saw",
+      "question": "If a saw must be used to open the hood of the Rivian R1T, what must be avoided?",
+      "expected_answer": "You may open the hood with a saw only if you avoid the A/C compressor and the 12 V batteries.",
+      "source": {
+        "type": "pdf",
+        "vehicle": "Rivian R1T 2025",
+        "namespace": "rivian_r1t_2025",
+        "doc": "Emergency Response Guide",
+        "pdf_file": "EmergencyResponseGuide-r1t-en-us-20251219_BEV_1.pdf",
+        "pdf_page": 8,
+        "printed_page": 8,
+        "verbatim_quote": "If necessary, you may open the hood with a saw if you avoid the A/C compressor and 12 V batteries."
+      }
+    },
+    {
+      "id": 56,
+      "topic": "HV cable identification / residual energy",
+      "question": "On the Ford F-150 Lightning, how are high-voltage cables identified, and does depowering remove the danger from the battery pack?",
+      "expected_answer": "High-voltage cables and wiring are identified by orange harness tape or orange wire covering. Depowering the high-voltage system does NOT dissipate voltage inside the battery — the battery pack remains live and dangerous.",
+      "source": {
+        "type": "pdf",
+        "vehicle": "Ford F-150 Lightning 2026",
+        "namespace": "ford_lightning_2026",
+        "doc": "Emergency Response Guide",
+        "pdf_file": "EmergencyResponseGuide-Ford-Lightning-2026.pdf",
+        "pdf_page": 11,
+        "verbatim_quote": "DEPOWERING THE HIGH VOLTAGE SYSTEM DOES NOT DISSIPATE VOLTAGE INSIDE THE BATTERY, THE BATTERY PACK REMAINS LIVE AND DANGEROUS."
+      }
+    },
+    {
+      "id": 57,
+      "topic": "Cable cutting prohibition",
+      "question": "What does the Cadillac Lyriq Rescue Sheet say about cutting high-voltage cables?",
+      "expected_answer": "Do not cut any orange colored high voltage cables. (Rescue Sheet identification number 1GY-22101, page 1 of 4.)",
+      "source": {
+        "type": "pdf",
+        "vehicle": "Cadillac Lyriq 2023",
+        "namespace": "cadillac_lyriq_2023",
+        "doc": "Rescue Sheet",
+        "pdf_file": "RescueSheet_Cadillac_Lyriq_2023-.pdf",
+        "pdf_page": 1,
+        "printed_page": 1,
+        "verbatim_quote": "DO NOT CUT ANY ORANGE COLORED HIGH VOLTAGE CABLES."
+      }
+    },
+    {
+      "id": 58,
+      "topic": "Vehicle identification / safety systems",
+      "question": "What body type is the BMW iX3 2027 and what notable pedestrian safety feature appears in its Rescue Sheet legend?",
+      "expected_answer": "The BMW iX3 (NA5) is an SUV. Its Rescue Sheet legend includes an 'active pedestrian protection' system (note: not equipped on US and Canadian market vehicles).",
+      "source": {
+        "type": "pdf",
+        "vehicle": "BMW iX3 2027",
+        "namespace": "bmw_ix3_2027",
+        "doc": "Rescue Sheet",
+        "pdf_file": "RescueSheet-BMW-iX3-2027_BEV_1.pdf",
+        "pdf_page": 1,
+        "printed_page": 1,
+        "verbatim_quote": "BMW iX3 NA5 / SUV ... active pedestrian protection ... Not equipped on US and Canadian market vehicles"
+      }
+    },
+    {
+      "id": 59,
+      "topic": "Submersion",
+      "question": "What is the electric-shock risk for a submerged Volkswagen ID.4, and what hazard arises if water enters the HV battery?",
+      "expected_answer": "There is fundamentally no increased risk of electric shock in water from the high-voltage system, and recovery is identical to a conventional vehicle. However, if water enters the high-voltage battery, electrolysis can start which can lead to a deflagration of oxyhydrogen.",
+      "source": {
+        "type": "pdf",
+        "vehicle": "Volkswagen ID.4 2025",
+        "namespace": "volkswagen_id4_2025",
+        "doc": "Emergency Response Guide",
+        "pdf_file": "EmergencyResponseGuide-Volkswagen2025(ID.4).pdf",
+        "printed_page": 64,
+        "verbatim_quote": "There is fundamentally no increased risk of electric shock in water from the high-voltage system. ... If water enters the high-voltage battery, an electrolysis can be started, which can lead to a deflagration of oxyhydrogen."
+      }
+    },
+    {
+      "id": 60,
+      "topic": "Stabilization",
+      "question": "Where must responders NOT place cribbing or lift airbags when stabilizing the Nissan Ariya?",
+      "expected_answer": "Do not stabilize the vehicle with cribbing under the high-voltage battery. To avoid electrical shock, do not place the lift airbag equipment or wheel chocks under the high-voltage components and harnesses.",
+      "source": {
+        "type": "pdf",
+        "vehicle": "Nissan Ariya 2026",
+        "namespace": "nissan_ariya_2026",
+        "doc": "Emergency Response Guide",
+        "pdf_file": "EmergencyResponseGuide-Nissan-Ariya-2026.pdf",
+        "pdf_page": 21,
+        "printed_page": 21,
+        "verbatim_quote": "Do not stabilize the vehicle with cribbing under the high-voltage battery."
       }
     }
   ]

@@ -4,8 +4,15 @@
 # Claude Code project instructions
 CLAUDE.md
 
-# Large video files
-360/*.mp4
+# Large video files + HLS segments (66 GB raw MP4 + .ts renditions)
+360/
+
+# Node
+node_modules/
+
+# Claude Code machine-local state
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
 
 # Python
 __pycache__/

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "skills": {
+    "aframe-webxr": {
+      "source": "freshtechbro/claudedesignskills",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/aframe-webxr/SKILL.md",
+      "computedHash": "805628258210c6504bcab36dd3407c99d1d0e1d44d17f8a8bdbbb706460c2306"
+    },
+    "developing-with-streamlit": {
+      "source": "streamlit/agent-skills",
+      "sourceType": "github",
+      "computedHash": "d366960761de1ec907dee42ddbdc08b9c868584cebc8c9fe8e0efdccb4bc5db7"
+    },
+    "hz-immersive-designer": {
+      "source": "meta-quest/agentic-tools",
+      "sourceType": "github",
+      "skillPath": "skills/hz-immersive-designer/SKILL.md",
+      "computedHash": "1ea701fc6365f4792d2246cd6abff5806eb6336cdcf31eec853e9e1fdbc36741"
+    },
+    "hz-iwsdk-webxr": {
+      "source": "meta-quest/agentic-tools",
+      "sourceType": "github",
+      "skillPath": "skills/hz-iwsdk-webxr/SKILL.md",
+      "computedHash": "7840a7afc94ea08dd7ec57fe11eb7209467708b5272d1826df49e2ae63bc99ca"
+    }
+  }
+}
