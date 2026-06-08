@@ -12,6 +12,7 @@ import { initVoiceBindings } from "./voice.js";
 import { initVideosphere } from "./videosphere.js";
 import { HudSystem } from "./hud.js";
 import { PushToTalkSystem } from "./push-to-talk.js";
+import { DesktopLookSystem } from "./look-controls.js";
 
 initChatBindings();
 initVoiceBindings();
@@ -59,5 +60,8 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
   // positions it relative to the head, so no static world position is set.
   hudEntity.object3D!.visible = false;
 
-  world.registerSystem(HudSystem).registerSystem(PushToTalkSystem);
+  world
+    .registerSystem(HudSystem)
+    .registerSystem(PushToTalkSystem)
+    .registerSystem(DesktopLookSystem);
 });
