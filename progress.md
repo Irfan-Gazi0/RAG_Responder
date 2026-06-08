@@ -792,10 +792,73 @@ curl -X POST https://irfangazi.app.n8n.cloud/webhook/transcribe-audio \
 
 ---
 
+## 2026-06-01 — Transcribe Webhook Activated + v2 Overhaul DEPLOYED (the stale-bundle fix)
+
+**Status:** Webhook live + verified; v2 overhaul build now actually deployed to CloudFront
+**Author:** Irfan Gazi (Claude Code assisted)
+
+### Transcribe webhook activated + verified end-to-end
+
+User imported and activated `n8n_transcribe_webhook.json`. Verified the live
+endpoint with a real multipart POST (ffmpeg-generated 2 s Opus/WebM tone):
+
+```
+curl -X POST https://irfangazi.app.n8n.cloud/webhook/transcribe-audio \
+  -F "audio=@test_clip.webm;type=audio/webm" -F "session_id=claude-test"
+→ HTTP 200, application/json
+→ {"text":"Beep."}
+```
+
+Confirms the whole chain: Webhook accepts multipart and exposes the file as binary
+property `audio` (field name matched, no remap needed) → Whisper transcribes →
+Respond returns `{"text": ...}`, exactly the shape `voice.ts` `transcribeBlob`
+parses. Server side is fully wired to the client contract.
+
+### Caught: the v2 VR overhaul had never been deployed (root cause of "no changes in VR")
+
+User reported the Quest link showed no VR changes. Investigation: the deployed
+`/v2/` bundle was `index-BcwkWV_r.js` — the **2026-05-25 build** (matched that
+deploy's asset table; markers: no `PINCH` hint, old `Listening...` string). The
+**2026-06-01 VR overhaul** (Follower HUD, pinch-to-talk, audio/haptics, ASCII
+fix) was built + type-checked locally but **never deployed**. The earlier
+2026-06-01 overhaul entry recorded "verified locally" with no deploy step — that
+was the gap.
+
+### Deploy
+
+- `npx tsc --noEmit` clean → `npm run build` (new bundle `index-EH2SN-ar.js`,
+  UIKitML compiled, audio bundled).
+- `python3.10 deploy_portal_v2.py` — uploaded 10 files to
+  `s3://first-responder-training/v2/` (now includes `audio/click.mp3`,
+  `audio/chime.mp3`); CloudFront invalidation **`I925KT8NGZAV1LNRADY7WAVL52`** on
+  `/v2/*`.
+- Post-deploy verification (cache-busted curls):
+  `/v2/index.html` now references `index-EH2SN-ar.js`; `/v2/ui/hud.json` has the
+  `PINCH`/`TRIGGER` hint with **0 non-ASCII bytes**; `audio/{click,chime}.mp3` → 200.
+
+Live at `https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html`. v1
+(`inspector_portal.html`) and the Streamlit default remain untouched.
+
+### Note on what does NOT need a deploy
+
+Today's repo edits (`progress.md`, gitignored `CLAUDE.md`, the `voice.ts` comment,
+`n8n_transcribe_webhook.json`) are not portal runtime code — the deploy above was
+needed only because the 2026-06-01 overhaul bundle itself had never shipped.
+
+### Still pending
+
+- **Quest 3 in-headset shakedown** of the now-deployed build: in-VR voice
+  end-to-end (mic permission → pinch/trigger → record → transcribe → answer),
+  follower-HUD comfort, and the `PushToTalkSystem` hover-guard (any-hovered-entity
+  suppresses voice — aim off-panel to talk).
+
+---
+
 ## Next Steps / Open Items
 
-- [ ] **Import + activate `n8n_transcribe_webhook.json`** in n8n cloud, then verify with the curl check — unblocks in-VR voice on Quest
-- [ ] **IWSDK v2 dev-server shakedown** — `cd portal && npm run dev`, then drive IWER from MCP runtime tools to verify lecture switching, HUD clicks, push-to-talk, chat round-trip
+- [x] **Import + activate `n8n_transcribe_webhook.json`** — done; live endpoint verified (`{"text":"Beep."}`)
+- [x] **Deploy the 2026-06-01 v2 overhaul to CloudFront** — done (`index-EH2SN-ar.js`, invalidation `I925KT8NGZAV1LNRADY7WAVL52`)
+- [x] **IWSDK v2 dev-server shakedown** — done 2026-06-01: IWER pass verified boot, follower-HUD comfort/lazy-follow, ray-click lecture switch. 360° video (dev CORS) + push-to-talk (no mic) are Quest-only tests
 - [ ] **IWSDK v2 Quest 3 in-headset shakedown** — load `https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html` directly (NOT via Streamlit iframe); validate HUD comfort distance, push-to-talk latency, trigger-vs-laser conflict
 - [ ] **IWSDK v2 cutover** — only after green shakedown: re-upload `portal/dist/index.html` as `inspector_portal.html` (per CLAUDE.md hard rule #2, never `copy_object`), bump CACHE_BUST, invalidate `/inspector_portal.html`
 - [ ] **Original A-Frame in-VR HUD shakedown** — superseded by IWSDK shakedown above if v2 cutover proceeds; otherwise still pending
