@@ -5,16 +5,17 @@ import streamlit.components.v1 as components
 # It changes the iframe URL's cache key so browsers can't serve a stale copy
 # (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
 # which a CloudFront invalidation does NOT clear).
-CACHE_BUST = "20260525a"
+CACHE_BUST = "20260608a"
 
-# v2 (IWSDK build) lives under /v2/ as a multi-file bundle.
-# Reviewers can switch the embedded portal via ?portal=v2 in the Streamlit URL.
-_USE_V2 = st.query_params.get("portal", "v1") == "v2"
+# v2 (IWSDK build) is now the default embedded portal — it lives under /v2/ as a
+# multi-file bundle and replaces the old A-Frame v1 (inspector_portal.html).
+# The legacy v1 portal is still reachable as a fallback via ?portal=v1.
+_USE_V1 = st.query_params.get("portal", "v2") == "v1"
 
-if _USE_V2:
-    PORTAL_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html?v={CACHE_BUST}"
-else:
+if _USE_V1:
     PORTAL_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/inspector_portal.html?v={CACHE_BUST}"
+else:
+    PORTAL_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html?v={CACHE_BUST}"
 CHAT_URL   = f"https://d1ni7nkjr0eveg.cloudfront.net/chat_panel.html?v={CACHE_BUST}"
 SPLAT_URL  = "https://alistairwstbrk.github.io/splat-site/?url=https://huggingface.co/datasets/AlistairWstbrk/splats/resolve/main/3DGS%20.ply%20New%20Vehicle%20Scans/Equinox%20Hood%20Open%20(New)(Cropped).ply"
 
@@ -94,8 +95,8 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-tab1, tab2, tab3 = st.tabs(
-    ["Training Workshop + AI Assistant", "3D Views of EVs", "VR Headset Training Module"]
+tab1, tab2 = st.tabs(
+    ["Training Workshop + AI Assistant", "3D Views of EVs"]
 )
 
 with tab1:
@@ -122,10 +123,3 @@ with tab2:
         components.iframe(SPLAT_URL, height=750, scrolling=True)
     with chat_col:
         components.iframe(CHAT_URL, height=750, scrolling=False)
-
-with tab3:
-    st.subheader("🥽 VR Headset Training Module")
-    st.info(
-        "🚧 The VR Headset Training Module is currently in development. "
-        "Once completed, the immersive Unity experience will be integrated here."
-    )
