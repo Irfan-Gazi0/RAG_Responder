@@ -33,3 +33,9 @@ env/
 .DS_Store
 .AppleDouble
 .LSOverride
+
+# graphify — machine-local interpreter paths + regenerable extraction cache
+# (the graph outputs graph.json/graph.html/GRAPH_REPORT.md are committed)
+graphify-out/cache/
+graphify-out/.graphify_python
+graphify-out/.graphify_root

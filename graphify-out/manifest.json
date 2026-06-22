@@ -1,0 +1,602 @@
+{
+  "/home/igazi2/Documents/RAG_Responder/Talk/VID_20250912_110210_00_007_009_segments.json": {
+    "mtime": 1779214828.1384897,
+    "ast_hash": "b5cf2ef5441d57fbabb9e09f214a8579",
+    "semantic_hash": "b5cf2ef5441d57fbabb9e09f214a8579"
+  },
+  "/home/igazi2/Documents/RAG_Responder/Talk/VID_20250912_122900_00_010_012_segments.json": {
+    "mtime": 1776704729.0,
+    "ast_hash": "510f39a660e696c9744896aa0804fb37",
+    "semantic_hash": "510f39a660e696c9744896aa0804fb37"
+  },
+  "/home/igazi2/Documents/RAG_Responder/Talk/VID_20250912_134205_00_013_014_segments.json": {
+    "mtime": 1776089545.0,
+    "ast_hash": "2d32456d3fb271873cccf41daa44ac31",
+    "semantic_hash": "2d32456d3fb271873cccf41daa44ac31"
+  },
+  "/home/igazi2/Documents/RAG_Responder/add_hls_ladder.py": {
+    "mtime": 1779213482.4053614,
+    "ast_hash": "4b0caab4b07298031e125414c54a217d",
+    "semantic_hash": "4b0caab4b07298031e125414c54a217d"
+  },
+  "/home/igazi2/Documents/RAG_Responder/deploy_portal_v2.py": {
+    "mtime": 1779679228.336932,
+    "ast_hash": "4ebd28684824de16433b0d59dae0294b",
+    "semantic_hash": "4ebd28684824de16433b0d59dae0294b"
+  },
+  "/home/igazi2/Documents/RAG_Responder/eval_questions.json": {
+    "mtime": 1781534991.612934,
+    "ast_hash": "2b4556f5e29ff31602d4fe31b8914b26",
+    "semantic_hash": "2b4556f5e29ff31602d4fe31b8914b26"
+  },
+  "/home/igazi2/Documents/RAG_Responder/n8n_transcribe_webhook.json": {
+    "mtime": 1780935907.4344969,
+    "ast_hash": "712e56535b7ccf799a241212e6418031",
+    "semantic_hash": "712e56535b7ccf799a241212e6418031"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.claude/settings.json": {
+    "mtime": 1779678200.391318,
+    "ast_hash": "8aeccfe2e1df1e5c0b26c2e8e746fee1",
+    "semantic_hash": "8aeccfe2e1df1e5c0b26c2e8e746fee1"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.iwsdk/runtime/launch.json": {
+    "mtime": 1780321905.1369789,
+    "ast_hash": "9ad3ad07534d29d72b5fdb284576e9e3",
+    "semantic_hash": "9ad3ad07534d29d72b5fdb284576e9e3"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.iwsdk/runtime/session.json": {
+    "mtime": 1780408903.7497904,
+    "ast_hash": "e4d84d45ed87543cfed6d04c6102bce1",
+    "semantic_hash": "e4d84d45ed87543cfed6d04c6102bce1"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.mcp.json": {
+    "mtime": 1779678288.2432704,
+    "ast_hash": "fdf551a3926784048f2e809ee5b95f28",
+    "semantic_hash": "fdf551a3926784048f2e809ee5b95f28"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.vscode/extensions.json": {
+    "mtime": 1779678200.169318,
+    "ast_hash": "202633963d7c3f154e44e15534249a8e",
+    "semantic_hash": "202633963d7c3f154e44e15534249a8e"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/package.json": {
+    "mtime": 1779679480.7042994,
+    "ast_hash": "e37c5a82df1289a643f854c3e676f7fa",
+    "semantic_hash": "e37c5a82df1289a643f854c3e676f7fa"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/public/ui/hud.json": {
+    "mtime": 1780934035.999433,
+    "ast_hash": "af6364e4f8369dc9c39f4888446fdebd",
+    "semantic_hash": "af6364e4f8369dc9c39f4888446fdebd"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/src/chat.ts": {
+    "mtime": 1780321759.1495347,
+    "ast_hash": "a9c06ee4851132a0249be06f295c7722",
+    "semantic_hash": "a9c06ee4851132a0249be06f295c7722"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/src/hud-mirror.ts": {
+    "mtime": 1780321991.040216,
+    "ast_hash": "ad2bfde425b0a1621f3b5536ed7e54d6",
+    "semantic_hash": "ad2bfde425b0a1621f3b5536ed7e54d6"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/src/hud.ts": {
+    "mtime": 1780321986.8902047,
+    "ast_hash": "cf095cb7771d776a4840885d90ced0b7",
+    "semantic_hash": "cf095cb7771d776a4840885d90ced0b7"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/src/index.ts": {
+    "mtime": 1780934092.0560074,
+    "ast_hash": "57d90d9a00fcca4c275bda17452caabb",
+    "semantic_hash": "57d90d9a00fcca4c275bda17452caabb"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/src/look-controls.ts": {
+    "mtime": 1780934092.0560074,
+    "ast_hash": "800a52f0a0dc673d03a28bc7ac52eb96",
+    "semantic_hash": "800a52f0a0dc673d03a28bc7ac52eb96"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/src/push-to-talk.ts": {
+    "mtime": 1780321843.6337988,
+    "ast_hash": "089c980492972a4b9048bf3f17270421",
+    "semantic_hash": "089c980492972a4b9048bf3f17270421"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/src/videosphere.ts": {
+    "mtime": 1779678942.8185968,
+    "ast_hash": "b32f0d42a4fb243584bb5a68ca502166",
+    "semantic_hash": "b32f0d42a4fb243584bb5a68ca502166"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/src/voice.ts": {
+    "mtime": 1780325459.2755563,
+    "ast_hash": "68073bea7be4eb8d320c4ea0f44ed517",
+    "semantic_hash": "68073bea7be4eb8d320c4ea0f44ed517"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/tsconfig.json": {
+    "mtime": 1779678200.377318,
+    "ast_hash": "77dfe9f8093a5708521a85771d70d674",
+    "semantic_hash": "77dfe9f8093a5708521a85771d70d674"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/vite.config.ts": {
+    "mtime": 1779679491.1971428,
+    "ast_hash": "48577ffd005e178afc12aa94a3010ea5",
+    "semantic_hash": "48577ffd005e178afc12aa94a3010ea5"
+  },
+  "/home/igazi2/Documents/RAG_Responder/skills-lock.json": {
+    "mtime": 1782108501.1830251,
+    "ast_hash": "136d7d601c5cc76424b8ad1de8eac750",
+    "semantic_hash": "136d7d601c5cc76424b8ad1de8eac750"
+  },
+  "/home/igazi2/Documents/RAG_Responder/streamlit_app.py": {
+    "mtime": 1780923875.2415106,
+    "ast_hash": "eb84bfd72269427122666cf5474f314a",
+    "semantic_hash": "eb84bfd72269427122666cf5474f314a"
+  },
+  "/home/igazi2/Documents/RAG_Responder/transcribe_videos.py": {
+    "mtime": 1776699258.0,
+    "ast_hash": "27222d46d55a9c2372a74015924b26f0",
+    "semantic_hash": "27222d46d55a9c2372a74015924b26f0"
+  },
+  "/home/igazi2/Documents/RAG_Responder/upload_to_s3.py": {
+    "mtime": 1777862399.0,
+    "ast_hash": "cab3ab245d9399912c85327733a3cb7f",
+    "semantic_hash": "cab3ab245d9399912c85327733a3cb7f"
+  },
+  "/home/igazi2/Documents/RAG_Responder/video_metadata.json": {
+    "mtime": 1779214906.3809116,
+    "ast_hash": "939bc0dc472c642b9755ca77a83b0a66",
+    "semantic_hash": "939bc0dc472c642b9755ca77a83b0a66"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-mcp-tools-expert/OPERATIONS_GUIDE.md": {
+    "mtime": 1782108130.5880363,
+    "ast_hash": "b3314daa6a73d519ff2a64c62c00ef07",
+    "semantic_hash": "b3314daa6a73d519ff2a64c62c00ef07"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-mcp-tools-expert/README.md": {
+    "mtime": 1782108130.5880363,
+    "ast_hash": "175b7b8202510556907126b7aa56581a",
+    "semantic_hash": "175b7b8202510556907126b7aa56581a"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-mcp-tools-expert/SEARCH_GUIDE.md": {
+    "mtime": 1782108130.5880363,
+    "ast_hash": "43ad2c4df3427669d8f16a334a2ca77f",
+    "semantic_hash": "43ad2c4df3427669d8f16a334a2ca77f"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-mcp-tools-expert/SKILL.md": {
+    "mtime": 1782108130.5880363,
+    "ast_hash": "39c78c26faf13fde37573a912f03c2c6",
+    "semantic_hash": "39c78c26faf13fde37573a912f03c2c6"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-mcp-tools-expert/VALIDATION_GUIDE.md": {
+    "mtime": 1782108130.5880363,
+    "ast_hash": "14c9b700161607d7c3720d5a19af5ecc",
+    "semantic_hash": "14c9b700161607d7c3720d5a19af5ecc"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-mcp-tools-expert/WORKFLOW_GUIDE.md": {
+    "mtime": 1782108130.5880363,
+    "ast_hash": "638657c79072be2b963cb36f26fe79cf",
+    "semantic_hash": "638657c79072be2b963cb36f26fe79cf"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-node-configuration/DEPENDENCIES.md": {
+    "mtime": 1782108156.5079,
+    "ast_hash": "d94103b9ce1e94f50fb4724f39389eb1",
+    "semantic_hash": "d94103b9ce1e94f50fb4724f39389eb1"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-node-configuration/NODE_FAMILY_GOTCHAS.md": {
+    "mtime": 1782108156.5079,
+    "ast_hash": "49bbe3beed2cec62757c9298bce09968",
+    "semantic_hash": "49bbe3beed2cec62757c9298bce09968"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-node-configuration/OPERATION_PATTERNS.md": {
+    "mtime": 1782108156.5079,
+    "ast_hash": "021638c28fa80d4fe3085957993fa605",
+    "semantic_hash": "021638c28fa80d4fe3085957993fa605"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-node-configuration/README.md": {
+    "mtime": 1782108156.5079,
+    "ast_hash": "15d5a5d9b81a83cb79e0b71183d698ac",
+    "semantic_hash": "15d5a5d9b81a83cb79e0b71183d698ac"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-node-configuration/SKILL.md": {
+    "mtime": 1782108156.5079,
+    "ast_hash": "ed270885ec5b31c6d33c6a02a33efcd4",
+    "semantic_hash": "ed270885ec5b31c6d33c6a02a33efcd4"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-workflow-patterns/README.md": {
+    "mtime": 1782108112.004134,
+    "ast_hash": "c01017d9170dbcb8c89135d05b246a72",
+    "semantic_hash": "c01017d9170dbcb8c89135d05b246a72"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-workflow-patterns/SKILL.md": {
+    "mtime": 1782108112.004134,
+    "ast_hash": "93977e907bb81b67a07f58233eef0372",
+    "semantic_hash": "93977e907bb81b67a07f58233eef0372"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-workflow-patterns/ai_agent_workflow.md": {
+    "mtime": 1782108112.004134,
+    "ast_hash": "7fb30f4b260f756b3af8dd7b141adaf4",
+    "semantic_hash": "7fb30f4b260f756b3af8dd7b141adaf4"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-workflow-patterns/database_operations.md": {
+    "mtime": 1782108112.004134,
+    "ast_hash": "3c010366a261429362c5969a6f0d9b81",
+    "semantic_hash": "3c010366a261429362c5969a6f0d9b81"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-workflow-patterns/http_api_integration.md": {
+    "mtime": 1782108112.004134,
+    "ast_hash": "981efe93eb6a317de1bcfbcd5e53942b",
+    "semantic_hash": "981efe93eb6a317de1bcfbcd5e53942b"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-workflow-patterns/scheduled_tasks.md": {
+    "mtime": 1782108112.004134,
+    "ast_hash": "28cd4be45889fa33f83ee903b728e0a3",
+    "semantic_hash": "28cd4be45889fa33f83ee903b728e0a3"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.agents/skills/n8n-workflow-patterns/webhook_processing.md": {
+    "mtime": 1782108112.004134,
+    "ast_hash": "b48f521e405dcbea187905d9057a4494",
+    "semantic_hash": "b48f521e405dcbea187905d9057a4494"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/hz-immersive-designer/SKILL.md": {
+    "mtime": 1779731128.5625327,
+    "ast_hash": "67bb0e1a6356c9ff92d4c41dc0f9a508",
+    "semantic_hash": "67bb0e1a6356c9ff92d4c41dc0f9a508"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/hz-immersive-designer/references/accessibility.md": {
+    "mtime": 1779731128.5625327,
+    "ast_hash": "c57138a61fdcff45853efde786f2f355",
+    "semantic_hash": "c57138a61fdcff45853efde786f2f355"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/hz-immersive-designer/references/comfort-guidelines.md": {
+    "mtime": 1779731128.5625327,
+    "ast_hash": "b3ecc67da10564b92e8dbb31e30cfdf1",
+    "semantic_hash": "b3ecc67da10564b92e8dbb31e30cfdf1"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/hz-immersive-designer/references/interaction-patterns.md": {
+    "mtime": 1779731128.5625327,
+    "ast_hash": "17ed31995b819744e91a721983976710",
+    "semantic_hash": "17ed31995b819744e91a721983976710"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/hz-immersive-designer/references/spatial-layout.md": {
+    "mtime": 1779731128.5625327,
+    "ast_hash": "342764fa54eb7110962d7f21e40cb958",
+    "semantic_hash": "342764fa54eb7110962d7f21e40cb958"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/hz-iwsdk-webxr/SKILL.md": {
+    "mtime": 1779731157.6155362,
+    "ast_hash": "f752059044d2d60257275e6277ad8857",
+    "semantic_hash": "f752059044d2d60257275e6277ad8857"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/hz-iwsdk-webxr/references/ai-assisted-development.md": {
+    "mtime": 1779731157.6155362,
+    "ast_hash": "f7df0a317e5663cb3ea28f6aa9f9adef",
+    "semantic_hash": "f7df0a317e5663cb3ea28f6aa9f9adef"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/hz-iwsdk-webxr/references/ecs-architecture.md": {
+    "mtime": 1779731157.6155362,
+    "ast_hash": "7290c0c1caeaa7ef0c1ced30092b3b30",
+    "semantic_hash": "7290c0c1caeaa7ef0c1ced30092b3b30"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/hz-iwsdk-webxr/references/input-handling.md": {
+    "mtime": 1779731157.6155362,
+    "ast_hash": "a0e9725c2267f75689e019ba4e4fb526",
+    "semantic_hash": "a0e9725c2267f75689e019ba4e4fb526"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/hz-iwsdk-webxr/references/performance-tips.md": {
+    "mtime": 1779731157.6155362,
+    "ast_hash": "8716b567e44830040aacc58a3596073c",
+    "semantic_hash": "8716b567e44830040aacc58a3596073c"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/hz-iwsdk-webxr/references/spatial-ui.md": {
+    "mtime": 1779731157.6155362,
+    "ast_hash": "07fd98b78e4354577a3848c2da068941",
+    "semantic_hash": "07fd98b78e4354577a3848c2da068941"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-agents/CHAT_AGENT_PATTERNS.md": {
+    "mtime": 1782108802.7039773,
+    "ast_hash": "b8e1e54a4b1d4508419453f1137199f1",
+    "semantic_hash": "b8e1e54a4b1d4508419453f1137199f1"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-agents/EXAMPLES.md": {
+    "mtime": 1782108802.7039773,
+    "ast_hash": "724bd5d6d8c7febc99405a51a41bb2d6",
+    "semantic_hash": "724bd5d6d8c7febc99405a51a41bb2d6"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-agents/HUMAN_REVIEW.md": {
+    "mtime": 1782108802.7039773,
+    "ast_hash": "f3fbf9aae478a0e72457886f337b8299",
+    "semantic_hash": "f3fbf9aae478a0e72457886f337b8299"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-agents/MEMORY.md": {
+    "mtime": 1782108802.7039773,
+    "ast_hash": "91f6c6bdcce10d3c10f2440febb0e731",
+    "semantic_hash": "91f6c6bdcce10d3c10f2440febb0e731"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-agents/RAG.md": {
+    "mtime": 1782108802.7039773,
+    "ast_hash": "05a37abc24082b418a7d319ee63d707e",
+    "semantic_hash": "05a37abc24082b418a7d319ee63d707e"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-agents/README.md": {
+    "mtime": 1782108802.7039773,
+    "ast_hash": "747e6e34e0eb155770c843b0908c61ca",
+    "semantic_hash": "747e6e34e0eb155770c843b0908c61ca"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-agents/SKILL.md": {
+    "mtime": 1782108802.7039773,
+    "ast_hash": "1fb3d32fb92266461c496907f6e91073",
+    "semantic_hash": "1fb3d32fb92266461c496907f6e91073"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-agents/SOURCE.md": {
+    "mtime": 1782108802.7049773,
+    "ast_hash": "5e5afbc25cae3a87ed2f5e25a8cb9677",
+    "semantic_hash": "5e5afbc25cae3a87ed2f5e25a8cb9677"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-agents/STRUCTURED_OUTPUT.md": {
+    "mtime": 1782108802.7039773,
+    "ast_hash": "2cb11ab75edb9608e3ed85c981580733",
+    "semantic_hash": "2cb11ab75edb9608e3ed85c981580733"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-agents/SUBWORKFLOW_AS_TOOL.md": {
+    "mtime": 1782108802.7039773,
+    "ast_hash": "d576d9ff313b20126a414c117382eac8",
+    "semantic_hash": "d576d9ff313b20126a414c117382eac8"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-agents/SYSTEM_PROMPT.md": {
+    "mtime": 1782108802.7039773,
+    "ast_hash": "00f217af217c5e0e8aa145234682cc3c",
+    "semantic_hash": "00f217af217c5e0e8aa145234682cc3c"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-agents/TOOLS.md": {
+    "mtime": 1782108802.7039773,
+    "ast_hash": "38a9844d2f041655a9f8aeb32b72101f",
+    "semantic_hash": "38a9844d2f041655a9f8aeb32b72101f"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-workflow-patterns/README.md": {
+    "mtime": 1782108802.7069774,
+    "ast_hash": "c01017d9170dbcb8c89135d05b246a72",
+    "semantic_hash": "c01017d9170dbcb8c89135d05b246a72"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-workflow-patterns/SKILL.md": {
+    "mtime": 1782108802.7069774,
+    "ast_hash": "93977e907bb81b67a07f58233eef0372",
+    "semantic_hash": "93977e907bb81b67a07f58233eef0372"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-workflow-patterns/SOURCE.md": {
+    "mtime": 1782108802.7079775,
+    "ast_hash": "a99f2a8fba82e63d0fa95f990e0d3cdf",
+    "semantic_hash": "a99f2a8fba82e63d0fa95f990e0d3cdf"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-workflow-patterns/ai_agent_workflow.md": {
+    "mtime": 1782108802.7069774,
+    "ast_hash": "7fb30f4b260f756b3af8dd7b141adaf4",
+    "semantic_hash": "7fb30f4b260f756b3af8dd7b141adaf4"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-workflow-patterns/database_operations.md": {
+    "mtime": 1782108802.7069774,
+    "ast_hash": "3c010366a261429362c5969a6f0d9b81",
+    "semantic_hash": "3c010366a261429362c5969a6f0d9b81"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-workflow-patterns/http_api_integration.md": {
+    "mtime": 1782108802.7069774,
+    "ast_hash": "981efe93eb6a317de1bcfbcd5e53942b",
+    "semantic_hash": "981efe93eb6a317de1bcfbcd5e53942b"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-workflow-patterns/scheduled_tasks.md": {
+    "mtime": 1782108802.7069774,
+    "ast_hash": "28cd4be45889fa33f83ee903b728e0a3",
+    "semantic_hash": "28cd4be45889fa33f83ee903b728e0a3"
+  },
+  "/home/igazi2/Documents/RAG_Responder/.claude/skills/n8n-workflow-patterns/webhook_processing.md": {
+    "mtime": 1782108802.7069774,
+    "ast_hash": "b48f521e405dcbea187905d9057a4494",
+    "semantic_hash": "b48f521e405dcbea187905d9057a4494"
+  },
+  "/home/igazi2/Documents/RAG_Responder/apply.md": {
+    "mtime": 1781806174.6231391,
+    "ast_hash": "85a62292e884fd96f6517e2eae0ab86c",
+    "semantic_hash": "85a62292e884fd96f6517e2eae0ab86c"
+  },
+  "/home/igazi2/Documents/RAG_Responder/chat_panel.html": {
+    "mtime": 1779104447.3538222,
+    "ast_hash": "1b2169da16b8f1f2c6eaaa9f3fa85b42",
+    "semantic_hash": "1b2169da16b8f1f2c6eaaa9f3fa85b42"
+  },
+  "/home/igazi2/Documents/RAG_Responder/n8n_router_config.md": {
+    "mtime": 1782111877.9082804,
+    "ast_hash": "62ae8b163fe73252431d74f7581367a2",
+    "semantic_hash": "62ae8b163fe73252431d74f7581367a2"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.claude/agents/iwsdk-project-code-reviewer.md": {
+    "mtime": 1779678200.390318,
+    "ast_hash": "af60b98ddbd7db8d1f27c3996fb08eeb",
+    "semantic_hash": "af60b98ddbd7db8d1f27c3996fb08eeb"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.claude/skills/iwsdk-debug/SKILL.md": {
+    "mtime": 1779678200.392318,
+    "ast_hash": "b2f00baa96c0d3c3c5a85f2d767d12e5",
+    "semantic_hash": "b2f00baa96c0d3c3c5a85f2d767d12e5"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.claude/skills/iwsdk-depth-occlusion/SKILL.md": {
+    "mtime": 1779678200.393318,
+    "ast_hash": "e551dbfbfde0c6c71717a63a1bfa62d6",
+    "semantic_hash": "e551dbfbfde0c6c71717a63a1bfa62d6"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.claude/skills/iwsdk-grab/SKILL.md": {
+    "mtime": 1779678200.393318,
+    "ast_hash": "fa06f02c148654a538a72a7f9a93c5c6",
+    "semantic_hash": "fa06f02c148654a538a72a7f9a93c5c6"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.claude/skills/iwsdk-physics/SKILL.md": {
+    "mtime": 1779678200.3943179,
+    "ast_hash": "3d0c2026f8be2766543e4b9b847d0f74",
+    "semantic_hash": "3d0c2026f8be2766543e4b9b847d0f74"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.claude/skills/iwsdk-planner/SKILL.md": {
+    "mtime": 1779678200.395318,
+    "ast_hash": "e6d2cc8f6217d2769c61626488ddb9f5",
+    "semantic_hash": "e6d2cc8f6217d2769c61626488ddb9f5"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.claude/skills/iwsdk-ray/SKILL.md": {
+    "mtime": 1779678200.396318,
+    "ast_hash": "519595368b2f718da7c311c172c47db0",
+    "semantic_hash": "519595368b2f718da7c311c172c47db0"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/.claude/skills/iwsdk-ui/SKILL.md": {
+    "mtime": 1779678200.397318,
+    "ast_hash": "5831b59fcd28597e50760447c2ff98d7",
+    "semantic_hash": "5831b59fcd28597e50760447c2ff98d7"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/README.md": {
+    "mtime": 1779678200.170318,
+    "ast_hash": "0fc664add50924d93609d661f634deae",
+    "semantic_hash": "0fc664add50924d93609d661f634deae"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/index.html": {
+    "mtime": 1780934092.0560074,
+    "ast_hash": "0bd2e836fcb4889e08d88b8a5ce2f237",
+    "semantic_hash": "0bd2e836fcb4889e08d88b8a5ce2f237"
+  },
+  "/home/igazi2/Documents/RAG_Responder/progress.md": {
+    "mtime": 1782138144.5485978,
+    "ast_hash": "b05c97294a14dd1412f0ecd39c500426",
+    "semantic_hash": "b05c97294a14dd1412f0ecd39c500426"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/EmergencyResponseGuide-Ford-Lightning-2026.pdf": {
+    "mtime": 1777907880.0,
+    "ast_hash": "9e5da2120c2c536027bcbd400cf0db90",
+    "semantic_hash": "9e5da2120c2c536027bcbd400cf0db90"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/EmergencyResponseGuide-Ford-Mach-E-2026.pdf": {
+    "mtime": 1769018507.0,
+    "ast_hash": "d50734fc558cab2f83eecff1bf2f001e",
+    "semantic_hash": "d50734fc558cab2f83eecff1bf2f001e"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/EmergencyResponseGuide-GM-Brightdrop-Zevo_400_600-2022-2024.pdf": {
+    "mtime": 1777908781.0,
+    "ast_hash": "b7f57a7c2d494b3ee13466c8f2666e6e",
+    "semantic_hash": "b7f57a7c2d494b3ee13466c8f2666e6e"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/EmergencyResponseGuide-Nissan-Ariya-2026.pdf": {
+    "mtime": 1777908552.0,
+    "ast_hash": "f22f1e0358f273359b78539452450b1c",
+    "semantic_hash": "f22f1e0358f273359b78539452450b1c"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/EmergencyResponseGuide-Tesla-Model_S-2021.pdf": {
+    "mtime": 1777907750.0,
+    "ast_hash": "bf6a39118bf508cbe208e3618b89d9e7",
+    "semantic_hash": "bf6a39118bf508cbe208e3618b89d9e7"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/EmergencyResponseGuide-Volkswagen2025(ID.4).pdf": {
+    "mtime": 1777908046.0,
+    "ast_hash": "b6bd1f967a4e1a3f140b782bc3254c3a",
+    "semantic_hash": "b6bd1f967a4e1a3f140b782bc3254c3a"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/EmergencyResponseGuide-r1t-en-us-20251219_BEV_1.pdf": {
+    "mtime": 1777908656.0,
+    "ast_hash": "37093c3834ff1e630879b23d7dfbd1c4",
+    "semantic_hash": "37093c3834ff1e630879b23d7dfbd1c4"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/EmergencyResponseGuideChevroletBlazerEV_SUV_2024_5d_Electric_EN_ERG_3GN-23101.pdf": {
+    "mtime": 1777908792.0,
+    "ast_hash": "ec28affd4802862586b2336b428c15b4",
+    "semantic_hash": "ec28affd4802862586b2336b428c15b4"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/EmergencyResponseGuideChevroletEquinoxEVSUV20245dElectricENERG3GN23105.pdf": {
+    "mtime": 1777908803.0,
+    "ast_hash": "cd16be8ed9e9de38a51bc1c2998c4aa2",
+    "semantic_hash": "cd16be8ed9e9de38a51bc1c2998c4aa2"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/EmergencyResponseGuide_Cadillac_Lyriq_2023-.pdf": {
+    "mtime": 1777908766.0,
+    "ast_hash": "7ae99a38b0e2e6959998762e37bf7b1d",
+    "semantic_hash": "7ae99a38b0e2e6959998762e37bf7b1d"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/EmergencyResponseGuide_Chevrolet_Bolt_EV_2022-2023.pdf": {
+    "mtime": 1777907944.0,
+    "ast_hash": "1586f8e2bb1c507b72c26b31194890e3",
+    "semantic_hash": "1586f8e2bb1c507b72c26b31194890e3"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/EmergencyResponseGuide_Hyundai-IONIQ_5-2025.pdf": {
+    "mtime": 1777908111.0,
+    "ast_hash": "13ed394abc4b9e143eab64b08f956f21",
+    "semantic_hash": "13ed394abc4b9e143eab64b08f956f21"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/RescueSheet-BMW-iX3-2027_BEV_1.pdf": {
+    "mtime": 1777908605.0,
+    "ast_hash": "dc691a395f8fda5ab7b59fb99d4be55d",
+    "semantic_hash": "dc691a395f8fda5ab7b59fb99d4be55d"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/RescueSheet-Ford-Lightning-2026.pdf": {
+    "mtime": 1777907931.0,
+    "ast_hash": "2d69270459bdddc0d2b611ba873302ec",
+    "semantic_hash": "2d69270459bdddc0d2b611ba873302ec"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/RescueSheet-Ford-Mach-E-2026.pdf": {
+    "mtime": 1769018512.0,
+    "ast_hash": "731f69413ba5f18b3a4cdb2e1e068d4d",
+    "semantic_hash": "731f69413ba5f18b3a4cdb2e1e068d4d"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/RescueSheet-GM-Brightdrop-Zevo_600-2023-2024.pdf": {
+    "mtime": 1777908786.0,
+    "ast_hash": "8ba7b45265331bd06d828348c17eeaeb",
+    "semantic_hash": "8ba7b45265331bd06d828348c17eeaeb"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/RescueSheet-Hyundai-IONIQ_5-2025.pdf": {
+    "mtime": 1777908123.0,
+    "ast_hash": "5f966db4024e98b0822a932354b5008a",
+    "semantic_hash": "5f966db4024e98b0822a932354b5008a"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/RescueSheet-Tesla-Model_S-2021.pdf": {
+    "mtime": 1777907794.0,
+    "ast_hash": "2d8998ec7aeb8b2f58420e74e2622342",
+    "semantic_hash": "2d8998ec7aeb8b2f58420e74e2622342"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/RescueSheet-Volkswagen-ID4-2025.pdf": {
+    "mtime": 1777908057.0,
+    "ast_hash": "94b0a85e0e16224d1cb90ce594f628f8",
+    "semantic_hash": "94b0a85e0e16224d1cb90ce594f628f8"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/RescueSheet-r1t-en-us-20251219_BEV_1.pdf": {
+    "mtime": 1777908666.0,
+    "ast_hash": "573c78f74817de488af109eefa49b5a3",
+    "semantic_hash": "573c78f74817de488af109eefa49b5a3"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/RescueSheetChevroletEquinoxEVSUV20245dElectricEN3GN23105.pdf": {
+    "mtime": 1777908808.0,
+    "ast_hash": "2b61e0cbedad6fab750d57039a3ec89a",
+    "semantic_hash": "2b61e0cbedad6fab750d57039a3ec89a"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/RescueSheetChevrolet_BlazerEV_SUV_2024_5d_Electric_EN_3GN-23101.pdf": {
+    "mtime": 1777908797.0,
+    "ast_hash": "866ca50ec7b87ca773a9046688fda09b",
+    "semantic_hash": "866ca50ec7b87ca773a9046688fda09b"
+  },
+  "/home/igazi2/Documents/RAG_Responder/vehicle_docs/RescueSheet_Cadillac_Lyriq_2023-.pdf": {
+    "mtime": 1777908775.0,
+    "ast_hash": "299430eff9c309d7e3dc6da03c56d880",
+    "semantic_hash": "299430eff9c309d7e3dc6da03c56d880"
+  },
+  "/home/igazi2/Documents/RAG_Responder/EV_responder_QA_comparison.md": {
+    "mtime": 1782142248.4138129,
+    "ast_hash": "0f39daf8f475b106614c156112aec3ef",
+    "semantic_hash": "0f39daf8f475b106614c156112aec3ef"
+  },
+  "/home/igazi2/Documents/RAG_Responder/baseline_results.md": {
+    "mtime": 1782111832.495724,
+    "ast_hash": "f45518b2a96e79c8cc3f16f9a3d27c7f",
+    "semantic_hash": "f45518b2a96e79c8cc3f16f9a3d27c7f"
+  },
+  "/home/igazi2/Documents/RAG_Responder/postfix_results.md": {
+    "mtime": 1782112209.8815095,
+    "ast_hash": "fc79f06dfbcfec525137122ac2040b2a",
+    "semantic_hash": "fc79f06dfbcfec525137122ac2040b2a"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/public/audio/chime.mp3": {
+    "mtime": 1780321649.5521586,
+    "ast_hash": "2604c337924221172fe74f1c9c7dec5e",
+    "semantic_hash": "2604c337924221172fe74f1c9c7dec5e"
+  },
+  "/home/igazi2/Documents/RAG_Responder/portal/public/audio/click.mp3": {
+    "mtime": 1780321649.5121584,
+    "ast_hash": "2d8b108a9d45b6f132f885f9ac167451",
+    "semantic_hash": "2d8b108a9d45b6f132f885f9ac167451"
+  }
+}
