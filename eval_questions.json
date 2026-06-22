@@ -1,9 +1,9 @@
 {
   "evaluation_set": "Ford Mustang Mach-E 2026 First Responder RAG — Transcript QA",
   "generated_at": "2026-04-20",
-  "total_questions": 60,
+  "total_questions": 90,
   "namespace": "video_transcript_v2",
-  "instructions": "Two question types. (1) source.video → transcript QA: check the cited video and that the timestamp is within ~60s of source.approximate_timestamp. (2) source.type=='pdf' → document QA: route the chatbot to source.namespace, compare the answer against expected_answer, and cross-check against source.pdf_file at source.pdf_page (PDF reader page) / source.printed_page (footer page) using source.verbatim_quote.",
+  "instructions": "Two question types. (1) source.video → transcript QA: check the cited video and that the timestamp is within ~60s of source.approximate_timestamp. (2) source.type=='pdf' → document QA: route the chatbot to source.namespace, compare the answer against expected_answer, and cross-check against source.pdf_file at source.pdf_page (PDF reader page) / source.printed_page (footer page) using source.verbatim_quote. NOTE (2026-06-15): IDs 61-90 are questions actually asked during the live training class — either posed by the instructor to the room or asked by a participant ('asked_by' field) — extracted from the Talk/ transcripts, including Video 0 (the intro lecture), which the original set did not cover.",
   "questions": [
     {
       "id": 1,
@@ -661,6 +661,336 @@
         "pdf_page": 21,
         "printed_page": 21,
         "verbatim_quote": "Do not stabilize the vehicle with cribbing under the high-voltage battery."
+      }
+    },
+    {
+      "id": 61,
+      "topic": "Wiring color codes",
+      "asked_by": "trainer",
+      "question": "On a vehicle, what do orange and yellow wiring/conduit indicate, and what voltage does orange imply?",
+      "expected_answer": "Orange is always high voltage — over 100 volts — and must never be cut into. Yellow wiring and conduit is airbag-related; avoid cutting it to prevent an unintentional airbag deployment.",
+      "source": {
+        "video": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)",
+        "approximate_timestamp": "00:09:28"
+      }
+    },
+    {
+      "id": 62,
+      "topic": "HV disable methods",
+      "asked_by": "trainer",
+      "question": "What two methods does the instructor recommend a first responder use to disable high voltage before working on an EV?",
+      "expected_answer": "(1) Shut the car off (hit the power button, remove the key fob). (2) Cut or disconnect the 12-volt battery. Doing both isolates the high voltage inside the battery housing.",
+      "source": {
+        "video": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)",
+        "approximate_timestamp": "00:45:55"
+      }
+    },
+    {
+      "id": 63,
+      "topic": "Drive-ready detection",
+      "asked_by": "trainer",
+      "question": "The Chevy Equinox EV brought to class has no power button — how does it shut off, and what makes it drive-ready?",
+      "expected_answer": "It uses a seat occupant sensor. With someone in the seat and a foot on the brake the dash lights up; shifting to forward or reverse while braking makes it drive. There is no power button to press.",
+      "source": {
+        "video": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)",
+        "approximate_timestamp": "00:48:39"
+      }
+    },
+    {
+      "id": 64,
+      "topic": "Ready light",
+      "asked_by": "trainer",
+      "question": "How can a responder tell from the dashboard whether an EV is still capable of driving away?",
+      "expected_answer": "Look for the green READY light/symbol on the instrument cluster. It is always green and present when the vehicle is drive-ready; if the vehicle has been depowered the ready light will be off.",
+      "source": {
+        "video": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)",
+        "approximate_timestamp": "00:44:01"
+      }
+    },
+    {
+      "id": 65,
+      "topic": "Rescue sheet legend",
+      "asked_by": "trainer",
+      "question": "On the emergency response guide diagrams, what do the blue-shaded areas represent?",
+      "expected_answer": "Airbag-related devices or seat pretensioners — components that contain either a charged nitrogen cylinder or a pyrotechnic device.",
+      "source": {
+        "video": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)",
+        "approximate_timestamp": "00:53:53"
+      }
+    },
+    {
+      "id": 66,
+      "topic": "EV badging standard",
+      "asked_by": "trainer",
+      "question": "Per SAE J2929, what EV identification badging are manufacturers expected to provide?",
+      "expected_answer": "An EV badge recognizable by an approaching responder from 50 feet — at least one inch in size, with blue lettering, one on the rear and one on each side.",
+      "source": {
+        "video": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)",
+        "approximate_timestamp": "00:38:54"
+      }
+    },
+    {
+      "id": 67,
+      "topic": "Non-compliant brands",
+      "asked_by": "trainer",
+      "question": "Which manufacturers does the instructor say are not compliant with the EV badging standard, and why are they given a pass?",
+      "expected_answer": "Tesla, Lucid, and Rivian. Because they only make electric vehicles, the government gives them a pass — there is no gas version to distinguish, so they do not add the blue EV designation.",
+      "source": {
+        "video": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)",
+        "approximate_timestamp": "00:35:07"
+      }
+    },
+    {
+      "id": 68,
+      "topic": "Manual disconnect",
+      "asked_by": "trainer",
+      "question": "What color and location is the manual disconnect/interlock connector on recent domestic (Ford and GM) vehicles?",
+      "expected_answer": "A light-green colored connector located under the hood — standardized across most domestic vehicles for about the last five years.",
+      "source": {
+        "video": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)",
+        "approximate_timestamp": "00:25:54"
+      }
+    },
+    {
+      "id": 69,
+      "topic": "Cutting battery cable",
+      "asked_by": "trainer",
+      "question": "When cutting a 12-volt battery cable to depower a vehicle, what does the instructor say you must do?",
+      "expected_answer": "Make two cuts and remove the cut-out section of lead, so there is no way of accidentally reconnecting it.",
+      "source": {
+        "video": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)",
+        "approximate_timestamp": "00:49:49"
+      }
+    },
+    {
+      "id": 70,
+      "topic": "Stuck contactors",
+      "asked_by": "trainer",
+      "question": "Has the instructor encountered a case where a vehicle's high-voltage contactors stayed energized, and what did it require?",
+      "expected_answer": "Yes — one case (a shop in Ashland) where the contactors were stuck hot and would not de-energize. The technicians had to drop the battery with the orange cables still hot, treating the whole HV system as live and wearing lineman's gloves. It is extremely uncommon.",
+      "source": {
+        "video": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)",
+        "approximate_timestamp": "00:29:36"
+      }
+    },
+    {
+      "id": 71,
+      "topic": "12-volt role",
+      "asked_by": "trainer",
+      "question": "Why does every high-voltage EV also need a 12-volt system?",
+      "expected_answer": "The 12-volt system runs all the normal car parts (headlights, horn, blower, etc.) and, critically, energizes the contactors that let high voltage out of the battery. Shut down the 12V and the high voltage stays trapped in the battery housing.",
+      "source": {
+        "video": "Video 0 — EV Emergency Response Fundamentals (Intro Lecture)",
+        "approximate_timestamp": "00:22:41"
+      }
+    },
+    {
+      "id": 72,
+      "topic": "Crashed EV storage",
+      "asked_by": "trainer",
+      "question": "What is the worst thing you can do when storing an EV that has been in a collision?",
+      "expected_answer": "Bring it inside your building and store it indoors. Crashed EVs should be stored outside, with space around them (minimum 50 feet from structures or objects you don't want to risk).",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:08:43"
+      }
+    },
+    {
+      "id": 73,
+      "topic": "Disconnect tool cost",
+      "asked_by": "participant",
+      "question": "How much does the emergency disconnect plug tool (from the Netherlands company) cost?",
+      "expected_answer": "About $1,000.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:41:09"
+      }
+    },
+    {
+      "id": 74,
+      "topic": "EV submersion",
+      "asked_by": "trainer",
+      "question": "What should responders do if an EV goes underwater — is there a shock hazard?",
+      "expected_answer": "Treat it like any other vehicle. High voltage will not be present in the water or on the chassis. NHTSA submersion testing found no shock hazard — there isn't enough energy to push dangerous current through the surrounding water.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:42:32"
+      }
+    },
+    {
+      "id": 75,
+      "topic": "Dual 12V batteries",
+      "asked_by": "trainer",
+      "question": "What is special about the 12-volt batteries on the hybrid Ford F-150, and why does it matter?",
+      "expected_answer": "It has a battery under the hood AND a battery under the rear seat. You might think you cut one battery and you're done, but you won't know about the second one unless you consult the emergency response guide.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:23:37"
+      }
+    },
+    {
+      "id": 76,
+      "topic": "Charging cable safety",
+      "asked_by": "trainer",
+      "question": "If an EV is connected to a charger during an emergency, can you cut the charging cable?",
+      "expected_answer": "No — do not cut the charging cable. DC fast charging is over 400 volts. Disconnect it instead, though you may have to overcome a plastic lock that holds high-power level-3 connectors in place.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:26:48"
+      }
+    },
+    {
+      "id": 77,
+      "topic": "Disconnect tool lights",
+      "asked_by": "trainer",
+      "question": "What do the green, blue, yellow, and red lights on the emergency disconnect plug mean?",
+      "expected_answer": "Flashing green = ready / not yet (or unable to) communicate. Solid blue = communication established, high voltage disabled, vehicle parked. Yellow = only one of two communication channels established — HV is shut down but be extra careful around orange. Solid red = not functioning / vehicle not recognized. Flashing red = the tool's batteries are low.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:35:38"
+      }
+    },
+    {
+      "id": 78,
+      "topic": "Leaking fluid ID",
+      "asked_by": "trainer",
+      "question": "If responders see pink or orange liquid leaking from an EV after a crash, what is it likely to be?",
+      "expected_answer": "Most likely coolant, not battery electrolyte. These vehicles carry a lot of coolant (three separate chambers — cabin, battery, and inverter), so leaking colored fluid doesn't necessarily mean the battery is breached or gassing.",
+      "source": {
+        "video": "Video 1 — Exterior Walk-Around",
+        "approximate_timestamp": "00:46:42"
+      }
+    },
+    {
+      "id": 79,
+      "topic": "Battery fire tactic",
+      "asked_by": "trainer",
+      "question": "What do European responders consider the best method for a battery fire, and why not just extinguish it?",
+      "expected_answer": "Let it burn out (get a hook on it and move it somewhere safe if you can). Most vehicles only carry a couple of hours of flammable energy. If you keep trying to extinguish it, you can have a 10-, 12-, even 15-hour event as it cools and reignites repeatedly.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:01:12"
+      }
+    },
+    {
+      "id": 80,
+      "topic": "Fire water volume",
+      "asked_by": "trainer",
+      "question": "Roughly how much water can it take to extinguish an EV battery fire?",
+      "expected_answer": "A lot — reports suggest even 10,000 gallons may not be enough, which is part of why the instructor and many departments favor a defensive let-it-burn approach.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:12:51"
+      }
+    },
+    {
+      "id": 81,
+      "topic": "Battery chemistry safety",
+      "asked_by": "participant",
+      "question": "Which EV battery chemistry is considered safer — LFP or lithium manganese cobalt?",
+      "expected_answer": "LFP (lithium iron phosphate) is much safer than lithium manganese cobalt (NMC). Newer chemistries are expected to move the technology to a safer place.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:04:51"
+      }
+    },
+    {
+      "id": 82,
+      "topic": "Fire blanket",
+      "asked_by": "trainer",
+      "question": "What is the instructor's opinion of fire blankets for EV battery fires, and what do they cost?",
+      "expected_answer": "He doesn't think a fire blanket is the way to go — a lithium fire can be 2,000–3,000 degrees, and covering it raises the question of how long it sits as a fire risk. They cost about $3,200 and may not even work.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:06:38"
+      }
+    },
+    {
+      "id": 83,
+      "topic": "Laminate side glass",
+      "asked_by": "trainer",
+      "question": "What change in side-window glass is coming in 2026 vehicles, and how does it affect extrication?",
+      "expected_answer": "More side glass will be laminated rather than tempered, so you can't just pop the window out — responders will have to saw-cut more of it. It is stronger and better for occupants in a rollover but harder to open.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:09:35"
+      }
+    },
+    {
+      "id": 84,
+      "topic": "Carbon fiber dust",
+      "asked_by": "trainer",
+      "question": "What precaution must responders take when saw-cutting into carbon fiber vehicle structures?",
+      "expected_answer": "Do not breathe the dust — carbon fiber dust has serious health implications. You must have respiration/PPE when cutting anything containing carbon fiber.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:10:17"
+      }
+    },
+    {
+      "id": 85,
+      "topic": "Battery disposal crating",
+      "asked_by": "trainer",
+      "question": "How is a high-voltage battery packaged for disposal/shipping at a dealer?",
+      "expected_answer": "The battery goes in a crate/box lined with plastic, the box is filled with sand around the battery, then filled with water, and then crated up before it can be shipped.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:05:43"
+      }
+    },
+    {
+      "id": 86,
+      "topic": "Airbags vs HV disconnect",
+      "asked_by": "participant",
+      "question": "Does manually disconnecting high voltage, or using the disconnect tool, disable the airbags?",
+      "expected_answer": "No. The airbag module is separate. To make sure the airbags can't fire you still need to disconnect the 12-volt battery — a big reason 12V disconnection should be part of your depowering strategy.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:31:40"
+      }
+    },
+    {
+      "id": 87,
+      "topic": "When not to cut cables",
+      "asked_by": "trainer",
+      "question": "After a crash with all occupants out, why might you NOT want to immediately cut the battery cables?",
+      "expected_answer": "Newer vehicles monitor battery temperatures and circulate coolant after a collision to keep the pack cool. If no one needs extrication, there is value in letting the vehicle keep cooling itself. For long-term storage, prefer pulling the manual disconnect plug rather than cutting/disconnecting the cables.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:32:58"
+      }
+    },
+    {
+      "id": 88,
+      "topic": "Battery-puncture tool",
+      "asked_by": "trainer",
+      "question": "What does the instructor think of the Rosenbauer tool that punctures the battery to inject water?",
+      "expected_answer": "He thinks it's a bad idea — puncturing the battery can cause damage and likely increases the chance of fire in a pack that might not otherwise have burned.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:13:35"
+      }
+    },
+    {
+      "id": 89,
+      "topic": "Charging levels",
+      "asked_by": "trainer",
+      "question": "How does the instructor describe the three charging levels, and why does a fast charger slow down before full?",
+      "expected_answer": "Level 1 (110V) = the 'weekend charge' (up to ~16–28 hours); Level 2 (240V) = the 'overnight charge'; Level 3 DC = the 'quick charge.' A fast charger only charges quickly to about 80%, then slows — like a filling parking lot or topping off a glass, electrons take longer to find a spot as the battery fills. All batteries taper this way.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:24:24"
+      }
+    },
+    {
+      "id": 90,
+      "topic": "Cold-weather charging",
+      "asked_by": "trainer",
+      "question": "Why does an EV charge more slowly in cold weather?",
+      "expected_answer": "Batteries want to be about 50°F or above. When it's cold the vehicle spends energy heating the pack so it can accept charge, so charging slows. You can precondition/warm the battery while still plugged in before leaving.",
+      "source": {
+        "video": "Video 2 — Interior / Underside",
+        "approximate_timestamp": "00:22:45"
       }
     }
   ]

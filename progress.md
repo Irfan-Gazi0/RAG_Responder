@@ -854,17 +854,302 @@ needed only because the 2026-06-01 overhaul bundle itself had never shipped.
 
 ---
 
+## 2026-06-08 — Streamlit Cut Over to v2 + Desktop Drag-to-Look for the 360° Videosphere
+
+**Status:** Deployed + verified live (Playwright/headless Chrome on the production `/v2/` URL)
+**Author:** Irfan Gazi (Claude Code assisted)
+
+### Streamlit now defaults to v2 (IWSDK), VR-module placeholder removed
+
+`streamlit_app.py` had defaulted Tab 1 to v1 (`inspector_portal.html`) and only
+loaded v2 behind `?portal=v2`. Flipped it: the embed now defaults to
+`…/v2/index.html` (IWSDK), with `?portal=v1` kept as a fallback escape hatch.
+The Quest "open in browser" caption reuses `PORTAL_URL`, so it now points at v2
+automatically. Also dropped the in-development **"VR Headset Training Module"**
+placeholder tab (`tab3`) — the app is now two tabs. `CACHE_BUST` `20260525a` →
+`20260608a`. Everything else (hero, dark theme, 3D-EVs splat viewer, standalone
+chat panel) untouched.
+
+Streamlit Cloud deploys from **`feature/streamlit-landing-page`**, so the change
+was committed on `meta-webvr` (`e467488`) and cherry-picked there (`40a63b6`);
+both pushed.
+
+### Reported symptom → real root cause
+
+User loaded `?portal=v2` and reported "no changes," the VR/video looking like
+"an older version," and **no mouse-pan on the video**. Findings:
+
+- **The deployed `/v2/` was NOT stale.** Its bundle hash (`index-EH2SN-ar.js`)
+  matched the latest local build — i.e. the 2026-06-01 overhaul (Follower HUD,
+  pinch-to-talk, audio/haptics) *was* live. ("No changes on `?portal=v2`" is
+  expected: that URL served v2 both before and after the default flip.)
+- **The real bug:** IWSDK ships **no desktop/browser look controls**, so on a
+  flat screen (desktop, and inside the Streamlit iframe) `world.camera` was
+  frozen facing -Z — even though the UI promised *"Drag to rotate."* v1's
+  A-Frame `look-controls` gave drag-to-look for free; the v2 port never
+  reimplemented it. Compounding the "older" feel: the Follower HUD and the rest
+  of the overhaul are **VR-only** (`object3D.visible = inXR`), so on desktop the
+  scene correctly falls back to the DOM controls and looks comparatively bare.
+
+### Fix — `DesktopLookSystem` (`portal/src/look-controls.ts`, new)
+
+Grounded in the `iwsdk-planner` skill (per the project's "invoke planner first"
+rule). Hold-and-drag (mouse **and** touch, via Pointer Events) yaws/pitches
+`world.camera`:
+
+- Drives the **camera `Object3D` directly** — the planner blesses driving
+  `world.camera` for cinematic/orbit views with the player at origin, and the
+  zero-copy Transform binding *reads through* the Object3D (confirmed against
+  `FollowSystem`, which lerps `object3D.position` directly), so writes are not
+  clobbered by `TransformSystem`.
+- **Euler order `YXZ`** (independent yaw/pitch, no creeping roll); pitch clamped
+  to ~±88°. Sensitivity 0.0026 rad/px. Sign matches v1: drag right → look right,
+  drag down → look down.
+- **Gated to `VisibilityState.NonImmersive`** — in XR the headset owns the pose,
+  so `update()` early-returns and the grab cursor swaps to default.
+- Cursor feedback (`grab`/`grabbing`), `touch-action: none`, `user-select: none`
+  on the canvas. Registered after `HudSystem`/`PushToTalkSystem` in `index.ts`.
+
+### Polish — inline 🚒 favicon (`portal/index.html`)
+
+Added a `data:image/svg+xml` 🚒 favicon. Kills the lone remaining console error
+(an auto-requested `/favicon.ico` → S3 returns **403** for missing keys) and
+gives the browser tab a matching icon. No new asset.
+
+### Verified
+
+- `npx tsc --noEmit` clean; `npm run build` clean (new bundle
+  `index-231veDSM.js`).
+- **Headless Chrome + Playwright drag smoke test**, run against both the local
+  built `dist/` and the **live production `/v2/` URL**. A real mouse drag over
+  the canvas flips the cursor `grab → grabbing → grab` (the same handlers that
+  drive yaw/pitch), proving `World.create` resolved, the system registered, and
+  the NonImmersive gate passed. On the live URL: 360° video plays
+  (`readyState 4`, `currentTime` advancing, 1800px wide) and **zero console
+  errors** (403 gone). The localhost-only run showed the known dev-origin video
+  CORS block — absent on the same-origin CloudFront page, as expected.
+
+### Deploy
+
+`python3.10 deploy_portal_v2.py` (run from repo root) — 10 files to
+`s3://first-responder-training/v2/`, bundle `index-231veDSM.js`. Two
+invalidations on `/v2/*`: `I7NBKBAL6JJUAKFNB2ET36UWBI` (look-controls) and
+`I37I5RS0DCN79G6ISEAG1NEG58` (favicon). Portal source committed for a
+reproducible build: `1415cf6` on `meta-webvr`, cherry-picked `94eacf6` on
+`feature/streamlit-landing-page`; both pushed.
+
+### Changes
+
+| File | Change |
+|---|---|
+| `portal/src/look-controls.ts` | **New** — `DesktopLookSystem`: pointer/touch drag-to-look on `world.camera`, NonImmersive-gated |
+| `portal/src/index.ts` | Import + register `DesktopLookSystem` |
+| `portal/index.html` | Inline 🚒 SVG favicon (kills `/favicon.ico` 403) |
+| `streamlit_app.py` | Default embed v1 → v2; `?portal=v2` opt-in → `?portal=v1` fallback; removed `tab3` VR-module placeholder; CACHE_BUST `20260525a` → `20260608a` |
+| `progress.md` | This entry |
+
+### Still pending
+
+- **Quest 3 in-headset shakedown** (unchanged gate for cutover): in-VR voice
+  end-to-end, follower-HUD comfort, push-to-talk latency, the `PushToTalkSystem`
+  any-hovered-entity guard. The desktop drag fix doesn't touch the XR path.
+- **`Enter VR` inside the Streamlit iframe** still can't work — Streamlit's
+  `components.iframe()` withholds `xr-spatial-tracking`; Quest users must use the
+  direct CloudFront URL (the in-app caption says so). Platform limitation, not a
+  code bug.
+
+---
+
+## 2026-06-18 — Ingestion/n8n Audit: Real Bug Was 3 Missing Tool Nodes (Not Re-Ingestion) + `Ford Mache-E` → `vehicle_docs`
+
+**Status:** Done — 3 tool nodes added + system prompt polished (n8n PUT 200, structure verified); repo renamed/docs corrected. Live chat verification BLOCKED by an expired OpenAI key on the n8n agent (see below)
+**Author:** Irfan Gazi (Claude Code assisted)
+
+### Context — the professor's report
+
+A professor flagged chatbot accuracy problems (duplicate / generic answers,
+"refer to the ERG" hedging) and theorized that **only the Mach-E had ever been
+ingested**. We audited Pinecone + n8n to confirm or falsify that.
+
+### Audit findings — the "Mach-E only" theory is FALSE
+
+- **Pinecone is fully populated for all 13 vehicles.** Every per-vehicle
+  namespace holds data — e.g. `volkswagen_id4_2025`=**100** vectors,
+  `nissan_ariya_2026`=**114**, both *more* than `ford_mach_e_2026`=**42**.
+- **The retired `erg_full` / `rescue_sheet` namespaces are gone** (dropped after
+  the per-vehicle re-ingestion).
+- **The repo's `ingestion.ipynb` + `vehicle_docs/processed.log` are simply
+  STALE.** The real per-vehicle ingestion was run out-of-band and never
+  committed; the notebook's `DOCS` list is still Mach-E-only and targets the
+  retired namespaces. So: nothing about the data was actually broken.
+
+### The real bug — 3 missing n8n tool nodes
+
+n8n was mostly correct: 11 per-vehicle Pinecone tools wired,
+`video_transcript` → `video_transcript_v2`, agent temperature 0.1. But **3
+per-vehicle tool nodes were MISSING** — `nissan_ariya_2026`, `rivian_r1t_2025`,
+`volkswagen_id4_2025`. With no tool to reach those namespaces, the agent fell
+back to neighboring vehicles or generic ERG language — the duplicate / generic /
+"refer to the ERG" symptoms the professor saw.
+
+### The fix (n8n side — applied + verified structurally)
+
+- Added the 3 missing tool nodes (`nissan_ariya_2026`, `rivian_r1t_2025`,
+  `volkswagen_id4_2025`), each cloned from the `hyundai_ioniq_5_2025` template
+  (`vectorStorePinecone` tv 1.3, `retrieve-as-tool`, index `ford-mache-erg`,
+  Pinecone cred `phcrMIwaG0BbRZgY`), plus 3 paired `embeddingsOpenAi` nodes —
+  **6 new nodes, 6 new connections** (`Embeddings → tool` ai_embedding,
+  `tool → Router Agent` ai_tool). `toolDescription` text verbatim from
+  `n8n_router_config.md` (Nissan ERG-only caveat kept). **Router Agent now has
+  14 tools wired (was 11).**
+- System-prompt polish (appended to `Router Agent` `options.systemMessage`,
+  nothing removed, temperature left at 0.1): general-EV fallback (labeled
+  `GENERIC — confirm vehicle before relying on this`), partial-ID relaxation,
+  anti-hedge.
+- Applied via the n8n public API: GET → mutate → `PUT /workflows/S3uHJF57JAuA7bL0`
+  (first PUT 400 on `settings` extra props; stripped `timeSavedMode`/
+  `callerPolicy`/`availableInMCP`, kept `executionOrder: v1` → **PUT 200**).
+  Pre-change workflow backed up to `/tmp/n8n_workflow_backup.json` for rollback.
+  Fresh GET confirms `active: true`, all 6 nodes + 6 connections present.
+- **No re-ingestion needed** — the data already exists in Pinecone. Running
+  `ingestion.ipynb` as-is would be harmful (it would recreate the retired
+  `erg_full`/`rescue_sheet` namespaces). Generalizing the notebook to a
+  13-vehicle loop is parked.
+
+### BLOCKED — live chat verification (expired OpenAI key, NOT our change)
+
+The 6 end-to-end webhook tests (VW / Nissan / Rivian + Tesla & Mach-E
+regression + fire-fallback) **could not run**. Every call returns HTTP 200 with
+an empty body in ~1.3 s; the n8n execution detail shows it dies upstream at the
+**`OpenAI Chat Model`** node (the agent's LLM brain) before routing to any
+tool:
+
+> `NodeOperationError: Authorization failed — Incorrect API key provided: sk-proj-…eBgA`
+
+The OpenAI key on n8n credential `dLb32e73iouY9DvH` ("OpenAi account 3") is
+invalid/expired. **The key in the repo `.env` (`OPENAI_API_KEY`) is the SAME
+key (`…eBgA`)** — so re-pasting `.env` into the credential will NOT fix it; a
+fresh `sk-…` key is required. The n8n public API does not expose
+credential-secret updates, so this must be done in the n8n UI
+(Credentials → *OpenAi account 3* → paste a current key → Save). The structural
+fix is in place and verified, so once the key is refreshed the 6 tests should
+resolve to the correct per-vehicle namespaces — re-run them then.
+
+### Repo cleanup — `Ford Mache-E/` → `vehicle_docs/`
+
+The docs folder was historically named `Ford Mache-E/` but holds ERG + Rescue
+Sheet PDFs for all 13 vehicles. Renamed via `git mv` (history + `processed.log`
+preserved). PDF filenames and Pinecone namespace names unchanged.
+
+### Changes
+
+| File / target | Change |
+|---|---|
+| n8n workflow `S3uHJF57JAuA7bL0` | Added 3 tool nodes + 3 embeddings nodes + 6 connections (Router Agent 11→14 tools); appended fallback/partial-ID/anti-hedge to the system prompt; PUT 200; backup at `/tmp/n8n_workflow_backup.json` |
+| `Ford Mache-E/` → `vehicle_docs/` | `git mv` rename; all PDFs + `processed.log` moved with history preserved |
+| `ingestion.ipynb` | `DRIVE_PATH` now `os.path.join(os.getcwd(), "vehicle_docs")` (DOCS list still stale — do NOT Run All as-is) |
+| `README.md` | Updated `processed.log` path + project-layout tree to `vehicle_docs/` |
+| `CLAUDE.md` | Project-layout tree + re-ingest command path → `vehicle_docs/`; rewrote the stale "n8n still points at retired namespaces" open issue to reflect the true state |
+| `progress.md` | This entry |
+
+---
+
+## 2026-06-22 — Router Re-Diagnosis: Real Bug Was Retrieval Depth + Prompt Contradiction + Weak Model (Supersedes the 06-18 "3 Missing Tools" Theory) + Eval Set 60→90 + Skill Cleanup
+
+**Status:** Done — fix applied to live workflow `S3uHJF57JAuA7bL0` via the n8n public API, verified live before/after through the chat webhook
+**Author:** Irfan Gazi (Claude Code assisted)
+
+### Context — the professor's report, take two
+
+After the 06-18 changes a professor still reported the same class of failures:
+answers identical across different vehicles, hallucinated numbers, intermittent
+generic "refer to the ERG" deferrals, hedging, and no graceful fallback when the
+vehicle was unidentified. We re-audited from scratch via the n8n API + Pinecone
+REST.
+
+### What the re-audit ruled OUT (the assumed causes were wrong)
+
+- **Data is present and correctly namespaced for all 13 vehicles** — not a
+  Mach-E-only index.
+- **All 14 retrieval tools were already wired** — the 06-18 "3 missing tool
+  nodes" diagnosis was superseded; the tools were present.
+- **Embeddings already matched ingestion** (`text-embedding-3-small`, 1536-dim) —
+  no embedding mismatch.
+
+### The real root causes (all in the live workflow, none in the repo data)
+
+1. **`topK` unset → silently defaulted to 4** on every one of the 14
+   `vectorStorePinecone` tools. Vehicle-specific HV-shutdown / no-cut chunks fell
+   outside the top-4, so the model back-filled from generic EV knowledge. This was
+   the **dominant, model-independent cause**.
+2. **A self-contradicting system prompt.** STEP 1 said "if no vehicle, do NOT call
+   a tool, ask the user" and ROUTING said "the ONLY exception is asking to specify
+   the vehicle" — both directly conflicted with the appended GENERIC-EV FALLBACK /
+   partial-ID / anti-hedge sections, making those sections dead letters. Named
+   vehicles intermittently fell through to the generic refusal (~1-in-3).
+3. **A weak router model** — `gpt-5-mini` at `reasoningEffort: low`.
+
+### The fix (applied via the n8n public API — GET → mutate → PUT)
+
+- **`topK = 10` on all 14 `vectorStorePinecone` nodes** (was unset/4). The single
+  highest-impact change.
+- **Router model → Claude Opus 4.8** — node "Anthropic Chat Model"
+  (`lmChatAnthropic`), credential `UCQvHWq77alNk0u4` "Anthropic account (Opus
+  router)", replacing the gpt-5-mini brain.
+- **De-contradicted the STEP 1 and ROUTING-RULES clauses** so the GENERIC-EV
+  fallback, partial-ID relaxation, and anti-hedge sections actually fire: when no
+  supported vehicle is identified, the agent now outputs the clearly-labeled
+  GENERIC interim protocol first, then asks for make/model/year.
+- **Embeddings untouched** — Anthropic has no embeddings API and the index is
+  1536-dim 3-small; **no re-ingestion needed.**
+- Verified live via the chat webhook (before/after reproduction). This also
+  clears the 06-18 BLOCKED state — the prior expired-OpenAI-key blocker on the
+  agent LLM is moot now that the brain is the Anthropic credential.
+
+### Eval set expanded 60 → 90 (live-class questions)
+
+`eval_questions.json` grew from 60 to 90 questions. **IDs 61-90 are questions
+actually asked during the live training class** — posed by the instructor to the
+room or by a participant (new `asked_by` field) — extracted from the `Talk/`
+transcripts, including **Video 0 (the intro lecture)**, which the original set
+never covered. Topics include orange/yellow wiring color codes, the two HV-disable
+methods, seat-occupant drive-ready detection, and the green READY light.
+
+### Repo / skill cleanup
+
+- Removed the **`aframe-webxr`** skill (SKILL.md + assets/references/scripts) and
+  dropped both `aframe-webxr` and `developing-with-streamlit` from
+  `skills-lock.json` — the A-Frame v1 VR portal was retired in favor of IWSDK v2.
+- Deleted top-level `README.md` (project docs now live in `CLAUDE.md` +
+  `progress.md`).
+
+### Changes
+
+| File / target | Change |
+|---|---|
+| n8n workflow `S3uHJF57JAuA7bL0` | `topK = 10` on all 14 Pinecone tools; router model → Claude Opus 4.8 (`lmChatAnthropic`, cred `UCQvHWq77alNk0u4`); de-contradicted STEP 1 + ROUTING clauses so the GENERIC fallback fires; verified live |
+| `n8n_router_config.md` | Added 2026-06-22 update note; rewrote STEP 1 + ROUTING-RULES to allow the labeled GENERIC interim protocol before vehicle ID |
+| `eval_questions.json` | 60 → 90 questions; IDs 61-90 are live-class questions (new `asked_by` field) from `Talk/` transcripts incl. Video 0 intro lecture |
+| `.claude/skills/aframe-webxr/` + `skills-lock.json` | Removed the A-Frame skill; dropped `aframe-webxr` + `developing-with-streamlit` lock entries |
+| `README.md` | Deleted |
+| `CLAUDE.md` | "Known open issues" rewritten — the 06-18 "3 missing tools" note marked superseded; real causes (topK/prompt/model) documented |
+| `progress.md` | This entry |
+
+---
+
 ## Next Steps / Open Items
 
 - [x] **Import + activate `n8n_transcribe_webhook.json`** — done; live endpoint verified (`{"text":"Beep."}`)
 - [x] **Deploy the 2026-06-01 v2 overhaul to CloudFront** — done (`index-EH2SN-ar.js`, invalidation `I925KT8NGZAV1LNRADY7WAVL52`)
 - [x] **IWSDK v2 dev-server shakedown** — done 2026-06-01: IWER pass verified boot, follower-HUD comfort/lazy-follow, ray-click lecture switch. 360° video (dev CORS) + push-to-talk (no mic) are Quest-only tests
+- [x] **Streamlit default → v2 IWSDK** — done 2026-06-08: tab1 embeds `/v2/index.html`, `?portal=v1` fallback; VR-module placeholder tab removed (deploy branch `feature/streamlit-landing-page`)
+- [x] **Desktop/touch drag-to-look for the v2 360° videosphere** — done 2026-06-08 (`DesktopLookSystem`); verified live via Playwright (`index-231veDSM.js`)
 - [ ] **IWSDK v2 Quest 3 in-headset shakedown** — load `https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html` directly (NOT via Streamlit iframe); validate HUD comfort distance, push-to-talk latency, trigger-vs-laser conflict
 - [ ] **IWSDK v2 cutover** — only after green shakedown: re-upload `portal/dist/index.html` as `inspector_portal.html` (per CLAUDE.md hard rule #2, never `copy_object`), bump CACHE_BUST, invalidate `/inspector_portal.html`
 - [ ] **Original A-Frame in-VR HUD shakedown** — superseded by IWSDK shakedown above if v2 cutover proceeds; otherwise still pending
 - [ ] **Full 360° video fix:** add mid (~2560×1280) + low (~1600×800) HLS renditions + master playlist, reusing existing 4K segments in place (plan: `~/.claude/plans/dreamy-kindling-lobster.md`)
 - [ ] Wire `video_transcript_v2` namespace into n8n workflow (replace or add alongside `video_transcript`)
-- [ ] Run evaluation: send all 50 questions from `eval_questions.json` through the chatbot, score answers
+- [ ] Run evaluation: send all 90 questions from `eval_questions.json` (incl. the 30 live-class questions, IDs 61-90) through the chatbot, score answers
 - [ ] Decide whether to retire `video_transcript` namespace post-evaluation
 - [ ] Consider adding chapter markers to `video_metadata.json` for finer-grained citations
 - [ ] Portal UI: surface `chunk_start_seconds` from responses to auto-seek the 360° video player to the cited moment
