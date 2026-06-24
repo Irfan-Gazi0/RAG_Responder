@@ -2338,3 +2338,100 @@ If the power switch cannot be turned off, use one of these instead (both still r
 Would you like the specific fuse locations or the service plug removal steps next?
 
 ---
+
+## Opus 4.6 router re-test (2026-06-22)
+
+_The live router model was switched from **Claude Opus 4.8** to **Claude Opus 4.6**, and all 24 grounded prompts above (the 16 vehicle-named retests + Q15/Q16/Q20 + R1–R5) were re-sent to the chat webhook with a fresh `session_id` each. The answers documented above are the Opus 4.8 baseline; this section records how Opus 4.6 differed. Latency 14–36 s/call (R5 slowest)._
+
+### Headline: no regression
+
+All 24 stayed 🟢 grounded and source-cited. Nothing fell through to the generic refusal, no vehicle was missed, and **every safety-critical number matched the 4.8 baseline** (water volumes 2,000–3,000 / 3,000–8,000 gal; 50 ft / 15 m storage standoff; 5-/10-min discharge waits; >400 V DC fast charge; F-150 two-cut 3 in spacing; etc.). The deferral→grounded policy behaves identically — naming the vehicle still unlocks the page-cited procedure.
+
+Opus 4.6 trended **more verbose and structured**: more comparison tables (Q6, Q17, R5), verbatim instructor quotes (Q15, Q16), and useful extras (R2 "do NOT use a forklift," Q20 Level 1/2/3 charger breakdown, R5 all three shutdown methods with fuse labels).
+
+### Parity summary
+
+| Bucket | Count | Questions |
+|---|---:|---|
+| 🟢 Same core facts + citations, equivalent or richer | 21 | Q1, Q2, Q5, Q6, Q7, Q9, Q12, Q13, Q14, Q15, Q16, Q18, Q19, Q20, Q21, R1, R2, R3, R4, R5 (+Q8) |
+| 🟡 Grounded but a hedging/scope nuance worth a look | 3 | Q3, Q8, Q10 |
+
+### Watch-items (3)
+
+- **Q3 (Blazer "Ready" light) — slightly less hedged.** 4.8 explicitly flagged *"the source has no color callout for the Ready light."* 4.6 dropped that caveat and asserted a **"Hands-Free Start"** system + a direct green-Ready meaning. Cleaner to read, but it states more than 4.8 would. **Verify "Hands-Free Start" is actually in the Blazer EV 2024 ERG.**
+- **Q8 / Q10 (IONIQ 5 "Emergency Plug").** Both still correctly refuse to invent the feature / light-code and return the documented HV Cut-Off Switch method. 4.6 additionally **names real third-party tools** (Rosenbauer / Hi-Volt "Emergency Plug") — helpful framing, but that's outside-corpus knowledge, not the IONIQ 5 PDFs.
+
+### Citation-drift spot-check
+
+A few answers cite slightly different page ranges than 4.8 (same documents, overlapping ranges): Q7, Q17, Q21, R5. Most are harmless, but 4.6 added **granular specifics worth verifying against the actual PDFs** — that's where a confident-but-wrong detail would hide:
+
+- **R5 (Ariya):** exact fuse labels/amps — *"VCM fuse (EV CONT, 10A)"*, *"HV BAT DRIVE RLY1, 40A"* — and a service-plug zipper under the rear center seat cushion.
+- **Q17 (ID.4):** a "re-active hood" with gas-pressure struts + pyrotechnic fuels for pedestrian protection.
+- **Q7 (F-150 Lightning):** its "Option 2 — non-urgent" basically **duplicates Option 1's steps** rather than describing the real standard procedure (4.8 was more honest: *"refer to the full ERG Non-urgent section"*). It also newly places the 12V in the **rear cargo area** (plausibly correct, but new vs. 4.8).
+
+**Bottom line:** Opus 4.6 is on par with Opus 4.8 for this eval — same grounding policy, same numbers, generally better formatting. The only things to eyeball before relying on it are the R5 fuse specs, the Q17 re-active-hood detail, and the Q3 "Hands-Free Start" claim.
+
+---
+
+## Opus 4.6 Verification Appendix (2026-06-24)
+
+The three watch-items flagged above were checked **directly against the source PDFs** in `vehicle_docs/` (text extracted with `pdftotext -layout`). Result: **2 of 3 fully confirmed; the third is a real term but supports 4.8's hedge, not 4.6's stronger claim.**
+
+| Item | 4.6 claim | Source check | Verdict |
+|---|---|---|---|
+| **R5** (Nissan Ariya 2026) | Fuse labels `VCM fuse (EV CONT, 10A)` and `HV BAT DRIVE RLY1, 40A`; service-plug zipper under rear center seat cushion | ERG p.30 / p.32 | ✅ **Confirmed verbatim** |
+| **Q17** (VW ID.4 2025) | "Re-active hood" lifted by gas-pressure struts + pyrotechnic fuels for pedestrian protection | ERG p.81 | ✅ **Confirmed verbatim** |
+| **Q3** (Chevrolet Blazer EV 2024) | "Hands-Free Start" system + direct green-"Ready" meaning | ERG p.5 / Section 3 | ⚠️ **Term confirmed; green-"Ready" color claim NOT in source** |
+
+### R5 — Nissan Ariya 2026 ERG · ✅ confirmed
+
+From *Alternate Procedure 1 (Remove Fuses)*, ERG p.30:
+- `• VCM fuse (EV CONT 10A)` — verbatim.
+- `• 12V main relay fuse (HV BAT DRIVE RLY1 40A)` — verbatim.
+
+From *Alternate Procedure 2 (Remove Service Plug)*, ERG p.32:
+- *"Open the zipper (1) on the lower front-facing surface of the **rear center seat cushion**."* — verbatim.
+
+All R5 specifics are grounded in the actual PDF.
+
+### Q17 — Volkswagen ID.4 2025 ERG · ✅ confirmed
+
+"Re-active hood" is a labeled section (TOC p.81). Verbatim text:
+> *"In order to ensure optimal pedestrian protection, some Volkswagen vehicle models are equipped with an active hood. The re-active hood is lifted in the front and rear areas by pretensioned **gas-pressure struts and pyrotechnic fuels** in the event of a collision with a **pedestrian**."*
+
+Gas-pressure struts + pyrotechnic fuels + pedestrian protection all check out.
+
+### Q3 — Chevrolet Blazer EV 2024 ERG · ⚠️ term real, color claim unsupported
+
+"Hands-Free Start" **is** a labeled feature in the ERG (appears twice — p.5 and Section 3), so 4.6 did not invent the term. **However**, the ERG's "Hands-Free Start" content is exclusively about **powering off** (the vehicle has no power button; it turns off when shifted to P + seat belt unbuckled + driver door opened, or via the "Vehicle Off" infotainment symbol). It says **nothing about a green "Ready" light or any indicator color.**
+
+- 4.6 citing "Hands-Free Start" → legitimate, it's in the source.
+- 4.6 asserting a green-"Ready" color meaning → still **not** in the ERG — exactly the gap 4.8 flagged with its *"the source has no color callout for the Ready light"* caveat.
+
+**Net:** R5 and Q17 clear all watch-items. For Q3, 4.8's more hedged posture was the more accurate one; the "Hands-Free Start" label is genuine but does not back the green-light color claim.
+
+---
+
+## Final router model: Claude Sonnet 4.6 (2026-06-24)
+
+_Audit-log closeout. The live router on workflow `S3uHJF57JAuA7bL0` was moved to **Claude Sonnet 4.6** (`claude-sonnet-4-6`) and **left in place as the production model.** Confirmed live via the n8n public API on 2026-06-24: node **"Anthropic Chat Model"** (`@n8n/n8n-nodes-langchain.lmChatAnthropic`), credential `UCQvHWq77alNk0u4` ("Anthropic account (Opus router)" — the credential name is historical; it now serves the Sonnet model). The earlier sections of this file are the **Opus 4.8 baseline** and the **Opus 4.6 retest**; this section records the final production choice._
+
+### Why Sonnet 4.6 is recorded as acceptable without a fresh 24-prompt harness run
+
+This is an **operator-confirmed** finalization, **not** a new 24-prompt webhook capture — stated plainly so the audit trail is not misread as a fresh test run. The basis:
+
+- **The grounding/deferral behavior is model-independent.** The 2026-06-22 diagnosis established that the dominant defects were **retrieval depth (`topK` 4→10)** and a **self-contradicting system prompt**, not the model. Those fixes live in the workflow regardless of which chat model is wired in.
+- **Parity was already demonstrated across two models.** Opus 4.8 (baseline) and Opus 4.6 (retest above) returned the same safety-critical numbers, the same source citations, and the same "name the vehicle -> grounded, page-cited answer" policy. No regression appeared when the model changed.
+- **Sonnet 4.6 confirmed good in live operator use** ("works great") on the same webhook, same prompts, same deferral-then-ground behavior.
+
+### Status
+
+| Model | Role | Verification | Live now |
+|---|---|---|---|
+| Claude Opus 4.8 | Original post-fix router | Full 24-prompt webhook capture (above) | no |
+| Claude Opus 4.6 | Re-test | Full 24-prompt retest + source-PDF verification appendix (above) | no |
+| **Claude Sonnet 4.6** | **Production router** | Operator-confirmed in live use; inherits the topK/prompt fixes; parity precedent from the two Opus runs | **yes** |
+
+**Caveat for completeness:** Sonnet 4.6 has not been put through the formal 24-prompt harness in this audit. If a future professor-facing demo needs a model-matched capture, re-send the 24 grounded prompts (the 16 vehicle-named retests + Q15/Q16/Q20 + R1-R5) with fresh `session_id`s and append a parity table here, exactly as was done for Opus 4.6.
+
+---

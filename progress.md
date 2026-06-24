@@ -1137,6 +1137,37 @@ methods, seat-occupant drive-ready detection, and the green READY light.
 
 ---
 
+## 2026-06-24 — Router Model Finalized: Claude Sonnet 4.6 (Audit-Log Closeout)
+
+The live router on workflow `S3uHJF57JAuA7bL0` is now **`claude-sonnet-4-6`** and
+left in place as the production model. Confirmed live via the n8n public API:
+node "Anthropic Chat Model" (`@n8n/n8n-nodes-langchain.lmChatAnthropic`),
+credential `UCQvHWq77alNk0u4` (name "Anthropic account (Opus router)" is
+historical; it now serves Sonnet).
+
+**Lineage:** Opus 4.8 (2026-06-22 post-fix baseline) → Opus 4.6 (retest, full
+24-prompt parity + source-PDF verification) → **Sonnet 4.6 (production)**. The
+2026-06-22 fix established the real defects were retrieval depth (`topK` 4→10)
+and a self-contradicting system prompt — **model-independent**. Parity (same
+safety-critical numbers, same citations, same deferral-then-ground policy) held
+across both Opus models, so swapping in Sonnet 4.6 carries that precedent.
+
+**Honesty note:** Sonnet 4.6 is **operator-confirmed in live use, NOT re-run
+through the formal 24-prompt harness.** The closeout is recorded as such in
+`EV_responder_QA_comparison.md` ("Final router model" section) so the audit trail
+is not misread as a fresh capture. To produce a model-matched capture later,
+re-send the 24 grounded prompts with fresh `session_id`s and append a parity
+table.
+
+| File / target | Change |
+|---|---|
+| n8n workflow `S3uHJF57JAuA7bL0` | Production router confirmed `claude-sonnet-4-6` (read-only verification; no workflow edit this session) |
+| `EV_responder_QA_comparison.md` | Appended "Final router model: Claude Sonnet 4.6" closeout section |
+| `CLAUDE.md` | "Known open issues" router note updated: production model now Sonnet 4.6 (was Opus 4.8) |
+| `progress.md` | This entry |
+
+---
+
 ## Next Steps / Open Items
 
 - [x] **Import + activate `n8n_transcribe_webhook.json`** — done; live endpoint verified (`{"text":"Beep."}`)
