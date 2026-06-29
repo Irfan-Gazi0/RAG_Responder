@@ -87,8 +87,8 @@ st.markdown(
     <div class="hero">
       <div class="badge">🚒</div>
       <div>
-        <h1>RAG Responder Hub</h1>
-        <p>First Responder portal — explore the scene, query the AI assistant, and review EV rescue procedures.</p>
+        <h1>First Responder Portal</h1>
+        <p>Train. Explore. Ask. Respond.</p>
       </div>
     </div>
     """,
@@ -102,13 +102,11 @@ tab1, tab2 = st.tabs(
 with tab1:
     st.subheader("🎓 Training Workshop + AI Assistant")
     st.markdown(
-        "Explore the 360° accident scene and ask the First Responder AI anything about "
-        "the vehicle — HV shutdown, fire response, no-cut zones, and more. Drag to rotate."
+        "Watch the immersive training videos and Query the AI assistant"
     )
     st.caption(
-        f"🥽 On Meta Quest: [open the portal in the Quest browser]({PORTAL_URL}) "
-        "for full VR — the embedded iframe can't grant WebXR permission, so the "
-        "in-video **Enter VR** button only works on the direct URL."
+        f"🥽 Using a VR headset? [Open the portal directly]({PORTAL_URL}), "
+        "then tap **Enter VR**."
     )
     components.iframe(PORTAL_URL, height=800, scrolling=True)
 
