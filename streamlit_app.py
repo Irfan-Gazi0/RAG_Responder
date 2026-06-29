@@ -105,8 +105,9 @@ with tab1:
         "Watch the immersive training videos and Query the AI assistant"
     )
     st.caption(
-        f"🥽 Using a VR headset? [Open the portal directly]({PORTAL_URL}), "
-        "then tap **Enter VR**."
+        f"🥽 On a VR headset? [Open the portal directly]({PORTAL_URL}) in your "
+        "headset's browser, then tap the **Enter VR** button in the bottom-right "
+        "corner to step inside."
     )
     components.iframe(PORTAL_URL, height=800, scrolling=True)
 
