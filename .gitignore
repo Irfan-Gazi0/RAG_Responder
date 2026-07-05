@@ -39,3 +39,6 @@ env/
 graphify-out/cache/
 graphify-out/.graphify_python
 graphify-out/.graphify_root
+
+# run_eval.py cache (regenerable, keyed by router-config hash)
+eval_results/.cache/

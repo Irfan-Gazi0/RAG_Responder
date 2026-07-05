@@ -25,7 +25,7 @@
     "semantic_hash": "4ebd28684824de16433b0d59dae0294b"
   },
   "eval_questions.json": {
-    "mtime": 1781534991.612934,
+    "mtime": 1782744961.4001484,
     "ast_hash": "2b4556f5e29ff31602d4fe31b8914b26",
     "semantic_hash": "2b4556f5e29ff31602d4fe31b8914b26"
   },
@@ -65,7 +65,7 @@
     "semantic_hash": "e37c5a82df1289a643f854c3e676f7fa"
   },
   "portal/public/ui/hud.json": {
-    "mtime": 1780934035.999433,
+    "mtime": 1782744771.9337287,
     "ast_hash": "af6364e4f8369dc9c39f4888446fdebd",
     "semantic_hash": "af6364e4f8369dc9c39f4888446fdebd"
   },
@@ -120,13 +120,13 @@
     "semantic_hash": "48577ffd005e178afc12aa94a3010ea5"
   },
   "skills-lock.json": {
-    "mtime": 1782108501.1830251,
-    "ast_hash": "136d7d601c5cc76424b8ad1de8eac750",
-    "semantic_hash": "136d7d601c5cc76424b8ad1de8eac750"
+    "mtime": 1782759523.1992657,
+    "ast_hash": "463bcd464863f0fbb7b7819b8e7d580d",
+    "semantic_hash": ""
   },
   "streamlit_app.py": {
-    "mtime": 1782742388.8040197,
-    "ast_hash": "dbbe636ef0768c117a8ee4ef477de726",
+    "mtime": 1782744961.4071486,
+    "ast_hash": "c2cb7fe66aa1cadf5fae11e843c69b9d",
     "semantic_hash": ""
   },
   "transcribe_videos.py": {
@@ -143,96 +143,6 @@
     "mtime": 1779214906.3809116,
     "ast_hash": "939bc0dc472c642b9755ca77a83b0a66",
     "semantic_hash": "939bc0dc472c642b9755ca77a83b0a66"
-  },
-  ".agents/skills/n8n-mcp-tools-expert/OPERATIONS_GUIDE.md": {
-    "mtime": 1782108130.5880363,
-    "ast_hash": "b3314daa6a73d519ff2a64c62c00ef07",
-    "semantic_hash": "b3314daa6a73d519ff2a64c62c00ef07"
-  },
-  ".agents/skills/n8n-mcp-tools-expert/README.md": {
-    "mtime": 1782108130.5880363,
-    "ast_hash": "175b7b8202510556907126b7aa56581a",
-    "semantic_hash": "175b7b8202510556907126b7aa56581a"
-  },
-  ".agents/skills/n8n-mcp-tools-expert/SEARCH_GUIDE.md": {
-    "mtime": 1782108130.5880363,
-    "ast_hash": "43ad2c4df3427669d8f16a334a2ca77f",
-    "semantic_hash": "43ad2c4df3427669d8f16a334a2ca77f"
-  },
-  ".agents/skills/n8n-mcp-tools-expert/SKILL.md": {
-    "mtime": 1782108130.5880363,
-    "ast_hash": "39c78c26faf13fde37573a912f03c2c6",
-    "semantic_hash": "39c78c26faf13fde37573a912f03c2c6"
-  },
-  ".agents/skills/n8n-mcp-tools-expert/VALIDATION_GUIDE.md": {
-    "mtime": 1782108130.5880363,
-    "ast_hash": "14c9b700161607d7c3720d5a19af5ecc",
-    "semantic_hash": "14c9b700161607d7c3720d5a19af5ecc"
-  },
-  ".agents/skills/n8n-mcp-tools-expert/WORKFLOW_GUIDE.md": {
-    "mtime": 1782108130.5880363,
-    "ast_hash": "638657c79072be2b963cb36f26fe79cf",
-    "semantic_hash": "638657c79072be2b963cb36f26fe79cf"
-  },
-  ".agents/skills/n8n-node-configuration/DEPENDENCIES.md": {
-    "mtime": 1782108156.5079,
-    "ast_hash": "d94103b9ce1e94f50fb4724f39389eb1",
-    "semantic_hash": "d94103b9ce1e94f50fb4724f39389eb1"
-  },
-  ".agents/skills/n8n-node-configuration/NODE_FAMILY_GOTCHAS.md": {
-    "mtime": 1782108156.5079,
-    "ast_hash": "49bbe3beed2cec62757c9298bce09968",
-    "semantic_hash": "49bbe3beed2cec62757c9298bce09968"
-  },
-  ".agents/skills/n8n-node-configuration/OPERATION_PATTERNS.md": {
-    "mtime": 1782108156.5079,
-    "ast_hash": "021638c28fa80d4fe3085957993fa605",
-    "semantic_hash": "021638c28fa80d4fe3085957993fa605"
-  },
-  ".agents/skills/n8n-node-configuration/README.md": {
-    "mtime": 1782108156.5079,
-    "ast_hash": "15d5a5d9b81a83cb79e0b71183d698ac",
-    "semantic_hash": "15d5a5d9b81a83cb79e0b71183d698ac"
-  },
-  ".agents/skills/n8n-node-configuration/SKILL.md": {
-    "mtime": 1782108156.5079,
-    "ast_hash": "ed270885ec5b31c6d33c6a02a33efcd4",
-    "semantic_hash": "ed270885ec5b31c6d33c6a02a33efcd4"
-  },
-  ".agents/skills/n8n-workflow-patterns/README.md": {
-    "mtime": 1782108112.004134,
-    "ast_hash": "c01017d9170dbcb8c89135d05b246a72",
-    "semantic_hash": "c01017d9170dbcb8c89135d05b246a72"
-  },
-  ".agents/skills/n8n-workflow-patterns/SKILL.md": {
-    "mtime": 1782108112.004134,
-    "ast_hash": "93977e907bb81b67a07f58233eef0372",
-    "semantic_hash": "93977e907bb81b67a07f58233eef0372"
-  },
-  ".agents/skills/n8n-workflow-patterns/ai_agent_workflow.md": {
-    "mtime": 1782108112.004134,
-    "ast_hash": "7fb30f4b260f756b3af8dd7b141adaf4",
-    "semantic_hash": "7fb30f4b260f756b3af8dd7b141adaf4"
-  },
-  ".agents/skills/n8n-workflow-patterns/database_operations.md": {
-    "mtime": 1782108112.004134,
-    "ast_hash": "3c010366a261429362c5969a6f0d9b81",
-    "semantic_hash": "3c010366a261429362c5969a6f0d9b81"
-  },
-  ".agents/skills/n8n-workflow-patterns/http_api_integration.md": {
-    "mtime": 1782108112.004134,
-    "ast_hash": "981efe93eb6a317de1bcfbcd5e53942b",
-    "semantic_hash": "981efe93eb6a317de1bcfbcd5e53942b"
-  },
-  ".agents/skills/n8n-workflow-patterns/scheduled_tasks.md": {
-    "mtime": 1782108112.004134,
-    "ast_hash": "28cd4be45889fa33f83ee903b728e0a3",
-    "semantic_hash": "28cd4be45889fa33f83ee903b728e0a3"
-  },
-  ".agents/skills/n8n-workflow-patterns/webhook_processing.md": {
-    "mtime": 1782108112.004134,
-    "ast_hash": "b48f521e405dcbea187905d9057a4494",
-    "semantic_hash": "b48f521e405dcbea187905d9057a4494"
   },
   ".claude/skills/hz-immersive-designer/SKILL.md": {
     "mtime": 1779731128.5625327,
@@ -290,107 +200,107 @@
     "semantic_hash": "07fd98b78e4354577a3848c2da068941"
   },
   ".claude/skills/n8n-agents/CHAT_AGENT_PATTERNS.md": {
-    "mtime": 1782108802.7039773,
+    "mtime": 1782744961.3991485,
     "ast_hash": "b8e1e54a4b1d4508419453f1137199f1",
     "semantic_hash": "b8e1e54a4b1d4508419453f1137199f1"
   },
   ".claude/skills/n8n-agents/EXAMPLES.md": {
-    "mtime": 1782108802.7039773,
+    "mtime": 1782744961.3991485,
     "ast_hash": "724bd5d6d8c7febc99405a51a41bb2d6",
     "semantic_hash": "724bd5d6d8c7febc99405a51a41bb2d6"
   },
   ".claude/skills/n8n-agents/HUMAN_REVIEW.md": {
-    "mtime": 1782108802.7039773,
+    "mtime": 1782744961.3991485,
     "ast_hash": "f3fbf9aae478a0e72457886f337b8299",
     "semantic_hash": "f3fbf9aae478a0e72457886f337b8299"
   },
   ".claude/skills/n8n-agents/MEMORY.md": {
-    "mtime": 1782108802.7039773,
+    "mtime": 1782744961.3991485,
     "ast_hash": "91f6c6bdcce10d3c10f2440febb0e731",
     "semantic_hash": "91f6c6bdcce10d3c10f2440febb0e731"
   },
   ".claude/skills/n8n-agents/RAG.md": {
-    "mtime": 1782108802.7039773,
+    "mtime": 1782744961.3991485,
     "ast_hash": "05a37abc24082b418a7d319ee63d707e",
     "semantic_hash": "05a37abc24082b418a7d319ee63d707e"
   },
   ".claude/skills/n8n-agents/README.md": {
-    "mtime": 1782108802.7039773,
+    "mtime": 1782744961.3991485,
     "ast_hash": "747e6e34e0eb155770c843b0908c61ca",
     "semantic_hash": "747e6e34e0eb155770c843b0908c61ca"
   },
   ".claude/skills/n8n-agents/SKILL.md": {
-    "mtime": 1782108802.7039773,
+    "mtime": 1782744961.3991485,
     "ast_hash": "1fb3d32fb92266461c496907f6e91073",
     "semantic_hash": "1fb3d32fb92266461c496907f6e91073"
   },
   ".claude/skills/n8n-agents/SOURCE.md": {
-    "mtime": 1782108802.7049773,
+    "mtime": 1782744961.3991485,
     "ast_hash": "5e5afbc25cae3a87ed2f5e25a8cb9677",
     "semantic_hash": "5e5afbc25cae3a87ed2f5e25a8cb9677"
   },
   ".claude/skills/n8n-agents/STRUCTURED_OUTPUT.md": {
-    "mtime": 1782108802.7039773,
+    "mtime": 1782744961.3991485,
     "ast_hash": "2cb11ab75edb9608e3ed85c981580733",
     "semantic_hash": "2cb11ab75edb9608e3ed85c981580733"
   },
   ".claude/skills/n8n-agents/SUBWORKFLOW_AS_TOOL.md": {
-    "mtime": 1782108802.7039773,
+    "mtime": 1782744961.3991485,
     "ast_hash": "d576d9ff313b20126a414c117382eac8",
     "semantic_hash": "d576d9ff313b20126a414c117382eac8"
   },
   ".claude/skills/n8n-agents/SYSTEM_PROMPT.md": {
-    "mtime": 1782108802.7039773,
+    "mtime": 1782744961.3991485,
     "ast_hash": "00f217af217c5e0e8aa145234682cc3c",
     "semantic_hash": "00f217af217c5e0e8aa145234682cc3c"
   },
   ".claude/skills/n8n-agents/TOOLS.md": {
-    "mtime": 1782108802.7039773,
+    "mtime": 1782744961.3991485,
     "ast_hash": "38a9844d2f041655a9f8aeb32b72101f",
     "semantic_hash": "38a9844d2f041655a9f8aeb32b72101f"
   },
   ".claude/skills/n8n-workflow-patterns/README.md": {
-    "mtime": 1782108802.7069774,
+    "mtime": 1782744961.3991485,
     "ast_hash": "c01017d9170dbcb8c89135d05b246a72",
     "semantic_hash": "c01017d9170dbcb8c89135d05b246a72"
   },
   ".claude/skills/n8n-workflow-patterns/SKILL.md": {
-    "mtime": 1782108802.7069774,
+    "mtime": 1782744961.3991485,
     "ast_hash": "93977e907bb81b67a07f58233eef0372",
     "semantic_hash": "93977e907bb81b67a07f58233eef0372"
   },
   ".claude/skills/n8n-workflow-patterns/SOURCE.md": {
-    "mtime": 1782108802.7079775,
+    "mtime": 1782744961.3991485,
     "ast_hash": "a99f2a8fba82e63d0fa95f990e0d3cdf",
     "semantic_hash": "a99f2a8fba82e63d0fa95f990e0d3cdf"
   },
   ".claude/skills/n8n-workflow-patterns/ai_agent_workflow.md": {
-    "mtime": 1782108802.7069774,
+    "mtime": 1782744961.3991485,
     "ast_hash": "7fb30f4b260f756b3af8dd7b141adaf4",
     "semantic_hash": "7fb30f4b260f756b3af8dd7b141adaf4"
   },
   ".claude/skills/n8n-workflow-patterns/database_operations.md": {
-    "mtime": 1782108802.7069774,
+    "mtime": 1782744961.4001484,
     "ast_hash": "3c010366a261429362c5969a6f0d9b81",
     "semantic_hash": "3c010366a261429362c5969a6f0d9b81"
   },
   ".claude/skills/n8n-workflow-patterns/http_api_integration.md": {
-    "mtime": 1782108802.7069774,
+    "mtime": 1782744961.4001484,
     "ast_hash": "981efe93eb6a317de1bcfbcd5e53942b",
     "semantic_hash": "981efe93eb6a317de1bcfbcd5e53942b"
   },
   ".claude/skills/n8n-workflow-patterns/scheduled_tasks.md": {
-    "mtime": 1782108802.7069774,
+    "mtime": 1782744961.4001484,
     "ast_hash": "28cd4be45889fa33f83ee903b728e0a3",
     "semantic_hash": "28cd4be45889fa33f83ee903b728e0a3"
   },
   ".claude/skills/n8n-workflow-patterns/webhook_processing.md": {
-    "mtime": 1782108802.7069774,
+    "mtime": 1782744961.4001484,
     "ast_hash": "b48f521e405dcbea187905d9057a4494",
     "semantic_hash": "b48f521e405dcbea187905d9057a4494"
   },
   "apply.md": {
-    "mtime": 1781806174.6231391,
+    "mtime": 1782744961.4001484,
     "ast_hash": "85a62292e884fd96f6517e2eae0ab86c",
     "semantic_hash": "85a62292e884fd96f6517e2eae0ab86c"
   },
@@ -400,9 +310,9 @@
     "semantic_hash": "1b2169da16b8f1f2c6eaaa9f3fa85b42"
   },
   "n8n_router_config.md": {
-    "mtime": 1782111877.9082804,
-    "ast_hash": "62ae8b163fe73252431d74f7581367a2",
-    "semantic_hash": "62ae8b163fe73252431d74f7581367a2"
+    "mtime": 1782760305.8535507,
+    "ast_hash": "c64478911e71cfdde6fc69a76c26184c",
+    "semantic_hash": ""
   },
   "portal/.claude/agents/iwsdk-project-code-reviewer.md": {
     "mtime": 1779678200.390318,
@@ -445,147 +355,147 @@
     "semantic_hash": "5831b59fcd28597e50760447c2ff98d7"
   },
   "portal/README.md": {
-    "mtime": 1779678200.170318,
-    "ast_hash": "0fc664add50924d93609d661f634deae",
-    "semantic_hash": "0fc664add50924d93609d661f634deae"
+    "mtime": 1783283675.1368666,
+    "ast_hash": "e633e6cc528212a5c7e7bbdf7490d505",
+    "semantic_hash": ""
   },
   "portal/index.html": {
-    "mtime": 1780934092.0560074,
-    "ast_hash": "0bd2e836fcb4889e08d88b8a5ce2f237",
-    "semantic_hash": "0bd2e836fcb4889e08d88b8a5ce2f237"
+    "mtime": 1782853827.7930467,
+    "ast_hash": "0960db2884f369c2f6f8d4dcae576a42",
+    "semantic_hash": ""
   },
   "progress.md": {
-    "mtime": 1782322184.1525347,
-    "ast_hash": "b0fbf7ddff93a0774178a3b6079dabf4",
+    "mtime": 1782746291.147348,
+    "ast_hash": "9f7354e1fe9e4c7015a029bd3dff07d6",
     "semantic_hash": ""
   },
   "vehicle_docs/EmergencyResponseGuide-Ford-Lightning-2026.pdf": {
-    "mtime": 1777907880.0,
+    "mtime": 1782744961.4281487,
     "ast_hash": "9e5da2120c2c536027bcbd400cf0db90",
     "semantic_hash": "9e5da2120c2c536027bcbd400cf0db90"
   },
   "vehicle_docs/EmergencyResponseGuide-Ford-Mach-E-2026.pdf": {
-    "mtime": 1769018507.0,
+    "mtime": 1782744961.4441488,
     "ast_hash": "d50734fc558cab2f83eecff1bf2f001e",
     "semantic_hash": "d50734fc558cab2f83eecff1bf2f001e"
   },
   "vehicle_docs/EmergencyResponseGuide-GM-Brightdrop-Zevo_400_600-2022-2024.pdf": {
-    "mtime": 1777908781.0,
+    "mtime": 1782744961.4531488,
     "ast_hash": "b7f57a7c2d494b3ee13466c8f2666e6e",
     "semantic_hash": "b7f57a7c2d494b3ee13466c8f2666e6e"
   },
   "vehicle_docs/EmergencyResponseGuide-Nissan-Ariya-2026.pdf": {
-    "mtime": 1777908552.0,
+    "mtime": 1782744961.4701488,
     "ast_hash": "f22f1e0358f273359b78539452450b1c",
     "semantic_hash": "f22f1e0358f273359b78539452450b1c"
   },
   "vehicle_docs/EmergencyResponseGuide-Tesla-Model_S-2021.pdf": {
-    "mtime": 1777907750.0,
+    "mtime": 1782744961.496149,
     "ast_hash": "bf6a39118bf508cbe208e3618b89d9e7",
     "semantic_hash": "bf6a39118bf508cbe208e3618b89d9e7"
   },
   "vehicle_docs/EmergencyResponseGuide-Volkswagen2025(ID.4).pdf": {
-    "mtime": 1777908046.0,
+    "mtime": 1782744961.5311491,
     "ast_hash": "b6bd1f967a4e1a3f140b782bc3254c3a",
     "semantic_hash": "b6bd1f967a4e1a3f140b782bc3254c3a"
   },
   "vehicle_docs/EmergencyResponseGuide-r1t-en-us-20251219_BEV_1.pdf": {
-    "mtime": 1777908656.0,
+    "mtime": 1782744961.5331492,
     "ast_hash": "37093c3834ff1e630879b23d7dfbd1c4",
     "semantic_hash": "37093c3834ff1e630879b23d7dfbd1c4"
   },
   "vehicle_docs/EmergencyResponseGuideChevroletBlazerEV_SUV_2024_5d_Electric_EN_ERG_3GN-23101.pdf": {
-    "mtime": 1777908792.0,
+    "mtime": 1782744961.5401492,
     "ast_hash": "ec28affd4802862586b2336b428c15b4",
     "semantic_hash": "ec28affd4802862586b2336b428c15b4"
   },
   "vehicle_docs/EmergencyResponseGuideChevroletEquinoxEVSUV20245dElectricENERG3GN23105.pdf": {
-    "mtime": 1777908803.0,
+    "mtime": 1782744961.5461493,
     "ast_hash": "cd16be8ed9e9de38a51bc1c2998c4aa2",
     "semantic_hash": "cd16be8ed9e9de38a51bc1c2998c4aa2"
   },
   "vehicle_docs/EmergencyResponseGuide_Cadillac_Lyriq_2023-.pdf": {
-    "mtime": 1777908766.0,
+    "mtime": 1782744961.5511494,
     "ast_hash": "7ae99a38b0e2e6959998762e37bf7b1d",
     "semantic_hash": "7ae99a38b0e2e6959998762e37bf7b1d"
   },
   "vehicle_docs/EmergencyResponseGuide_Chevrolet_Bolt_EV_2022-2023.pdf": {
-    "mtime": 1777907944.0,
+    "mtime": 1782744961.5561495,
     "ast_hash": "1586f8e2bb1c507b72c26b31194890e3",
     "semantic_hash": "1586f8e2bb1c507b72c26b31194890e3"
   },
   "vehicle_docs/EmergencyResponseGuide_Hyundai-IONIQ_5-2025.pdf": {
-    "mtime": 1777908111.0,
+    "mtime": 1782744961.5691495,
     "ast_hash": "13ed394abc4b9e143eab64b08f956f21",
     "semantic_hash": "13ed394abc4b9e143eab64b08f956f21"
   },
   "vehicle_docs/RescueSheet-BMW-iX3-2027_BEV_1.pdf": {
-    "mtime": 1777908605.0,
+    "mtime": 1782744961.6021497,
     "ast_hash": "dc691a395f8fda5ab7b59fb99d4be55d",
     "semantic_hash": "dc691a395f8fda5ab7b59fb99d4be55d"
   },
   "vehicle_docs/RescueSheet-Ford-Lightning-2026.pdf": {
-    "mtime": 1777907931.0,
+    "mtime": 1782744961.6061497,
     "ast_hash": "2d69270459bdddc0d2b611ba873302ec",
     "semantic_hash": "2d69270459bdddc0d2b611ba873302ec"
   },
   "vehicle_docs/RescueSheet-Ford-Mach-E-2026.pdf": {
-    "mtime": 1769018512.0,
+    "mtime": 1782744961.6101496,
     "ast_hash": "731f69413ba5f18b3a4cdb2e1e068d4d",
     "semantic_hash": "731f69413ba5f18b3a4cdb2e1e068d4d"
   },
   "vehicle_docs/RescueSheet-GM-Brightdrop-Zevo_600-2023-2024.pdf": {
-    "mtime": 1777908786.0,
+    "mtime": 1782744961.6141498,
     "ast_hash": "8ba7b45265331bd06d828348c17eeaeb",
     "semantic_hash": "8ba7b45265331bd06d828348c17eeaeb"
   },
   "vehicle_docs/RescueSheet-Hyundai-IONIQ_5-2025.pdf": {
-    "mtime": 1777908123.0,
+    "mtime": 1782744961.6171498,
     "ast_hash": "5f966db4024e98b0822a932354b5008a",
     "semantic_hash": "5f966db4024e98b0822a932354b5008a"
   },
   "vehicle_docs/RescueSheet-Tesla-Model_S-2021.pdf": {
-    "mtime": 1777907794.0,
+    "mtime": 1782744961.6281497,
     "ast_hash": "2d8998ec7aeb8b2f58420e74e2622342",
     "semantic_hash": "2d8998ec7aeb8b2f58420e74e2622342"
   },
   "vehicle_docs/RescueSheet-Volkswagen-ID4-2025.pdf": {
-    "mtime": 1777908057.0,
+    "mtime": 1782744961.6301498,
     "ast_hash": "94b0a85e0e16224d1cb90ce594f628f8",
     "semantic_hash": "94b0a85e0e16224d1cb90ce594f628f8"
   },
   "vehicle_docs/RescueSheet-r1t-en-us-20251219_BEV_1.pdf": {
-    "mtime": 1777908666.0,
+    "mtime": 1782744961.6371498,
     "ast_hash": "573c78f74817de488af109eefa49b5a3",
     "semantic_hash": "573c78f74817de488af109eefa49b5a3"
   },
   "vehicle_docs/RescueSheetChevroletEquinoxEVSUV20245dElectricEN3GN23105.pdf": {
-    "mtime": 1777908808.0,
+    "mtime": 1782744961.64115,
     "ast_hash": "2b61e0cbedad6fab750d57039a3ec89a",
     "semantic_hash": "2b61e0cbedad6fab750d57039a3ec89a"
   },
   "vehicle_docs/RescueSheetChevrolet_BlazerEV_SUV_2024_5d_Electric_EN_3GN-23101.pdf": {
-    "mtime": 1777908797.0,
+    "mtime": 1782744961.64515,
     "ast_hash": "866ca50ec7b87ca773a9046688fda09b",
     "semantic_hash": "866ca50ec7b87ca773a9046688fda09b"
   },
   "vehicle_docs/RescueSheet_Cadillac_Lyriq_2023-.pdf": {
-    "mtime": 1777908775.0,
+    "mtime": 1782744961.64915,
     "ast_hash": "299430eff9c309d7e3dc6da03c56d880",
     "semantic_hash": "299430eff9c309d7e3dc6da03c56d880"
   },
   "EV_responder_QA_comparison.md": {
-    "mtime": 1782322144.2375927,
+    "mtime": 1782744961.4001484,
     "ast_hash": "2d998bc7b877bf66792af042f66b109b",
     "semantic_hash": ""
   },
   "baseline_results.md": {
-    "mtime": 1782111832.495724,
+    "mtime": 1782744961.4001484,
     "ast_hash": "f45518b2a96e79c8cc3f16f9a3d27c7f",
     "semantic_hash": "f45518b2a96e79c8cc3f16f9a3d27c7f"
   },
   "postfix_results.md": {
-    "mtime": 1782112209.8815095,
+    "mtime": 1782744961.4071486,
     "ast_hash": "fc79f06dfbcfec525137122ac2040b2a",
     "semantic_hash": "fc79f06dfbcfec525137122ac2040b2a"
   },
@@ -598,5 +508,30 @@
     "mtime": 1780321649.5121584,
     "ast_hash": "2d8b108a9d45b6f132f885f9ac167451",
     "semantic_hash": "2d8b108a9d45b6f132f885f9ac167451"
+  },
+  ".claude/settings.local.json": {
+    "mtime": 1783283543.9288633,
+    "ast_hash": "68f4d1312599f8794de22fec8373b09f",
+    "semantic_hash": ""
+  },
+  "n8n_sync.py": {
+    "mtime": 1783283613.1688654,
+    "ast_hash": "6369e38a2c7a23e790c8152d7df9af1d",
+    "semantic_hash": ""
+  },
+  "run_eval.py": {
+    "mtime": 1783283589.1068647,
+    "ast_hash": "223cb8d23e2ccd91b960fcbbe7a2643b",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1782745113.6469278,
+    "ast_hash": "53d12bd1c543d7cb35d0f0e8130b35c6",
+    "semantic_hash": ""
+  },
+  "portal/CLAUDE.md": {
+    "mtime": 1783283712.376867,
+    "ast_hash": "8f0b6df7a6e69d15bb33a489b2551e8f",
+    "semantic_hash": ""
   }
 }
