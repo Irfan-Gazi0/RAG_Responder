@@ -13,6 +13,31 @@ and ROUTING-RULES clauses below were de-contradicted so the GENERIC-EV fallback,
 partial-ID relaxation, and anti-hedge sections actually fire. Embeddings stay on
 OpenAI `text-embedding-3-small` (index is 1536-dim; Anthropic has no embeddings API).
 
+**2026-06-29 update (minimal router hardening):** Set **`maxIterations = 10`** on
+the Router Agent (`parameters.options.maxIterations`; was unset → no cap). Removed
+the standalone **VIDEO TRANSCRIPT TOOL** block from the system message below — it
+duplicated the `video_transcript` tool's own description, and the Mach-E
+orchestration it implied is already preserved in ROUTING RULES ("call
+video_transcript FIRST … ALSO cross-check ford_mach_e_2026"). No retrieval/`topK`,
+model, or embedding changes. (API gotcha: `PUT /workflows/{id}` rejects extra
+`settings` props — send only the public-API-allowed subset, e.g. `executionOrder`;
+n8n re-applies its internal defaults itself.)
+
+**2026-06-29 update (router prompt review — single-tool/multi-tool de-contradiction):**
+Reworded the SUPPORTED VEHICLES header from "call exactly one vehicle tool per answer"
+→ "call the matching vehicle tool — normally one per answer; the Mach-E video path in
+ROUTING RULES may use two, and the GENERIC/partial-ID fallbacks use none." The old
+absolute "exactly one" literally contradicted the ROUTING-RULES Mach-E path (call
+`video_transcript` FIRST, ALSO cross-check `ford_mach_e_2026`) and could silently
+suppress that safety cross-check — the same self-contradiction class as the 2026-06-22
+fix, here on a safety path. Also synced section 1 below to the **full** live system
+message: appended GENERAL-EV FALLBACK, PARTIAL-IDENTIFIER RELAXATION, and ANTI-HEDGE,
+which were live but missing from this doc (so a re-paste from the repo can't regress the
+2026-06-22 fix). No retrieval/`topK`, model, or embedding changes; `maxIterations`
+unchanged at 10. Applied via `PUT /workflows/S3uHJF57JAuA7bL0` (systemMessage now 6495
+chars). Optional enhancements (few-shot examples; a "found-but-ambiguous" output line)
+were reviewed and deferred to keep scope tight.
+
 ---
 
 ## 1. Router Agent — System Message
@@ -39,7 +64,7 @@ STEP 1 — IDENTIFY THE VEHICLE (do this before anything else):
   not covered and list the supported vehicles. Never substitute data from a
   different vehicle.
 
-SUPPORTED VEHICLES → TOOL (call exactly one vehicle tool per answer):
+SUPPORTED VEHICLES → TOOL (call the matching vehicle tool — normally one per answer; the Mach-E video path in ROUTING RULES may use two, and the GENERIC/partial-ID fallbacks use none):
 - BMW iX3 2027 ................................. bmw_ix3_2027        (Rescue Sheet only)
 - Cadillac Lyriq 2023 ......................... cadillac_lyriq_2023
 - Chevrolet Blazer EV 2024 .................... chevrolet_blazer_ev_2024
@@ -53,12 +78,6 @@ SUPPORTED VEHICLES → TOOL (call exactly one vehicle tool per answer):
 - Rivian R1T 2025 ............................ rivian_r1t_2025
 - Tesla Model S 2021 ......................... tesla_model_s_2021
 - Volkswagen ID.4 2025 ....................... volkswagen_id4_2025
-
-VIDEO TRANSCRIPT TOOL:
-- video_transcript → Instructor narration from the 360° training video. This video
-  ONLY covers the Ford Mustang Mach-E 2026. Use it only for Mach-E questions about
-  what the instructor said/showed, verbal walkthroughs, or demonstration commentary.
-  Never use it for any other vehicle.
 
 ROUTING RULES:
 - Every vehicle tool returns BOTH that vehicle's ERG (procedural / how-to / narrative)
@@ -98,6 +117,35 @@ OUTPUT RULES:
 - NEVER include raw tool inputs, tool output JSON, intermediate steps, or
   '[Used tools: ...]' blocks in your response. Your reply must be the clean,
   synthesized final answer only.
+
+GENERAL-EV FALLBACK (when the vehicle CANNOT be identified):
+Before asking the user to specify make/model/year, FIRST provide a clearly-labeled
+generic interim protocol. Prefix it exactly with:
+"GENERIC — confirm vehicle before relying on this:"
+Then give these baseline EV-incident actions:
+- Power the vehicle off and keep the key/fob at least 5 m away.
+- Chock the wheels; the vehicle may move silently if powered.
+- Treat the vehicle as energized at all times.
+- Locate and isolate the high-voltage disconnect/service disconnect and the 12V battery.
+- Wear insulated PPE rated for HV work.
+- Do NOT use an ABC/dry-chemical extinguisher on a lithium-ion battery fire; cool with
+  copious water for an extended period.
+- Watch for stranded energy and delayed re-ignition; monitor the pack after the fire is out.
+This is generic guidance only. NEVER present it as model-specific, and after giving it,
+ask the user to confirm the make, model, and year so you can pull the correct vehicle source.
+
+PARTIAL-IDENTIFIER RELAXATION:
+If the user gives only a partial identifier (e.g. "white Chevy SUV", "a Volkswagen",
+"the Ford"), do NOT hard-refuse. Instead: narrow to the supported candidates that match
+(list them), ask ONE concise clarifying question to pin down the exact model/year, and
+offer the GENERIC interim protocol above in the meantime. Only call a vehicle tool once
+exactly one supported vehicle is identified.
+
+ANTI-HEDGE:
+When you are stating a fact that came from a tool result, state it definitively. Do NOT
+soften ERG/Rescue Sheet facts with hedging words like "typically", "may", "generally",
+or "usually" — the source is authoritative for that vehicle. (Hedging is only acceptable
+in the GENERIC fallback, which is explicitly labeled as not model-specific.)
 ```
 
 ---

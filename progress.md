@@ -1168,6 +1168,101 @@ table.
 
 ---
 
+## 2026-06-29 — v2 Portal Copy Cleanup + Streamlit VR Caption Reword (Deployed)
+
+**Status:** Deployed — v2 live on CloudFront; Streamlit caption pushed to `feature/streamlit-landing-page`
+**Author:** Irfan Gazi (Claude Code assisted)
+
+Frontend copy polish, no behavior change.
+
+### `portal/index.html` (v2)
+
+- Removed the bottom hint line `Hold and drag to rotate view | On Meta Quest: tap "Enter VR"` (redundant — drag-to-look is discoverable, and the Enter VR button is self-explanatory).
+- Removed the middle `First Responder GPT — Ask Anything` chat-panel header.
+- Viewer header `360° Site Video` → `360° Video`.
+
+### `streamlit_app.py` (VR caption)
+
+Reworded the Tab 1 caption to tell headset users they can enter VR by tapping the **Enter VR** button in the bottom-right corner, from their headset's browser:
+
+> 🥽 On a VR headset? [Open the portal directly](…) in your headset's browser, then tap the **Enter VR** button in the bottom-right corner to step inside.
+
+No `CACHE_BUST` bump — this edits the Streamlit app itself (redeployed wholesale by Streamlit Cloud), not the embedded portal HTML.
+
+### Deploy
+
+- `npx tsc --noEmit` clean → `npm run build` (bundle `index-231veDSM.js`) → `python3.10 deploy_portal_v2.py` (10 files to `s3://…/v2/`, CloudFront invalidation `IZPVZMGQ3JZF5CRDWT28OZW7N` on `/v2/*`). Live at `…/v2/index.html`.
+- Streamlit caption committed + pushed to **`feature/streamlit-landing-page`** (the branch Streamlit Cloud auto-deploys from). The `portal/index.html` commit lives on `meta-webvr` (local; not pushed).
+
+### Changes
+
+| File | Change |
+|---|---|
+| `portal/index.html` | Removed bottom rotate/Enter-VR hint + chat-panel header; `360° Site Video` → `360° Video` |
+| `streamlit_app.py` | Reworded VR caption to point at the bottom-right Enter VR button |
+| `CLAUDE.md` | Trimmed the router open-issue wall; removed the resolved transcribe-webhook issue; refreshed v2-shakedown + voice.ts notes |
+| `progress.md` | This entry |
+
+---
+
+## 2026-06-29 — n8n Router Minimal Hardening (maxIterations + prompt de-dup)
+
+**Status:** Applied live to workflow `S3uHJF57JAuA7bL0`; verified via API + chat-webhook smoke test
+**Author:** Irfan Gazi (Claude Code assisted)
+
+Low-risk hardening of the live Router Agent — **not** a fix; the router was already
+operator-confirmed live. Triggered by a ChatGPT verdict suggesting (a) a
+router→answer-agent split and (b) collapsing the 14 per-vehicle Pinecone tools into
+one `search_vehicle_documents(vehicle, …)` tool. Both were checked against the live
+workflow and **rejected**: there is no separate answer agent (it's a single
+`@n8n/n8n-nodes-langchain.agent` that routes *and* composes), and each of the 14
+`vectorStorePinecone` tools has its namespace hardcoded — wrong-vehicle retrieval is
+structurally impossible today. A single `$fromAI`-slug tool would move the namespace
+to an LLM-generated string whose typos return empty results silently, re-opening the
+exact generic-backfill failure mode the 2026-06-22 `topK` fix closed. Revisit only at
+50+ vehicles, and only with a deterministic vehicle→namespace map (a `.toolWorkflow`,
+not `$fromAI`).
+
+Two changes only — **no retrieval/`topK`, model, embedding, or architecture changes:**
+
+1. **`options.maxIterations = 10`** on the Router Agent (was unset). The Mach-E path
+   instructs two tool calls before answering (`call video_transcript FIRST … ALSO
+   cross-check ford_mach_e_2026`); 10 is ample headroom and cheap insurance against
+   truncated multi-call answers.
+2. **Dropped the standalone `VIDEO TRANSCRIPT TOOL:` block** (5 lines) from the system
+   message — fully duplicated by the `video_transcript` tool's own description, and the
+   cross-tool orchestration it implied is already preserved in ROUTING RULES. System
+   message 6,693 → 6,380 chars. Everything else kept verbatim (SUPPORTED VEHICLES list,
+   GENERIC fallback, partial-ID relaxation, anti-hedge, citations).
+
+### Mechanics / gotcha
+
+Edited via the n8n public API (`PUT /workflows/{id}`) from a backed-up copy of the
+live JSON. **`PUT` rejects extra top-level props and extra `settings` props** — first
+attempt 400'd on `settings must NOT have additional properties` (`timeSavedMode`,
+`callerPolicy`, `availableInMCP`). Fix: send only `{ name, nodes, connections,
+settings }` with `settings` trimmed to the public-API-allowed subset (`executionOrder`
+here); n8n re-applies its internal defaults itself (verified the live settings came
+back identical). A full backup was kept for rollback (not needed).
+
+### Verification
+
+- Re-GET asserts: `maxIterations == 10`, no `VIDEO TRANSCRIPT TOOL` in the prompt,
+  only the Router Agent node changed vs backup, all 14 Pinecone tools still `topK=10`,
+  model still `claude-sonnet-4-6` (cred `UCQvHWq77alNk0u4`), workflow still active.
+- Live chat-webhook smoke test (fresh `session_id` per probe): Mach-E video question
+  still routes to `video_transcript`; Tesla 12V-location stays Tesla-specific (no
+  cross-vehicle bleed); unsupported "Lucid Air" returns the labeled GENERIC protocol +
+  asks for make/model/year. No regression.
+
+| File / target | Change |
+|---|---|
+| n8n workflow `S3uHJF57JAuA7bL0` | `options.maxIterations = 10` on Router Agent; removed duplicated `VIDEO TRANSCRIPT TOOL` block from system message |
+| `n8n_router_config.md` | Removed the block from the embedded system message; added 2026-06-29 hardening note + PUT-settings gotcha |
+| `progress.md` | This entry |
+
+---
+
 ## Next Steps / Open Items
 
 - [x] **Import + activate `n8n_transcribe_webhook.json`** — done; live endpoint verified (`{"text":"Beep."}`)
