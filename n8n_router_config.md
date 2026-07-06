@@ -4,7 +4,7 @@ Generated 2026-05-18. Paste section 1 into the Router Agent **system message**; 
 each block in section 2 into the matching Pinecone tool's **description** field.
 
 **2026-06-22 update (live workflow `S3uHJF57JAuA7bL0`):** Router model is now
-**Claude Opus 4.8** (`lmChatAnthropic`, node "Anthropic Chat Model", credential
+**claude-sonnet-4-6** (`lmChatAnthropic`, node "Anthropic Chat Model", credential
 "Anthropic account (Opus router)") — replaced gpt-5-mini/reasoningEffort:low. All
 14 Pinecone retrieval tools now set **`topK = 10`** (was unset → default 4); the
 shallow top-4 retrieval was the dominant cause of generic/"no information" answers

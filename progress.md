@@ -1263,6 +1263,132 @@ back identical). A full backup was kept for rollback (not needed).
 
 ---
 
+## 2026-06-29 — Router Prompt De-Contradiction (Single/Multi-Tool Wording) + Full System-Message Doc Sync
+
+**Status:** Applied live to workflow `S3uHJF57JAuA7bL0`; doc sync committed 2026-07-05
+**Author:** Irfan Gazi (Claude Code assisted)
+
+Follow-on to the maxIterations/VIDEO-TRANSCRIPT-TOOL hardening above, same day. Reworded
+the SUPPORTED VEHICLES header from "call exactly one vehicle tool per answer" to "call
+the matching vehicle tool — normally one per answer; the Mach-E video path in ROUTING
+RULES may use two, and the GENERIC/partial-ID fallbacks use none." The old absolute
+"exactly one" directly contradicted the ROUTING-RULES Mach-E path (call
+`video_transcript` FIRST, ALSO cross-check `ford_mach_e_2026`) — the same
+self-contradiction class as the 2026-06-22 topK/prompt fix, this time sitting on a
+safety-relevant cross-check path rather than the generic-fallback path.
+
+Also synced `n8n_router_config.md` section 1 to the **full** live system message —
+GENERAL-EV FALLBACK, PARTIAL-IDENTIFIER RELAXATION, and ANTI-HEDGE blocks were live
+(from the 2026-06-22 fix) but missing from the doc, so a future re-paste from the repo
+into n8n would have silently regressed that fix. Applied via `PUT
+/workflows/S3uHJF57JAuA7bL0`; live systemMessage now 6,495 chars. `maxIterations`
+unchanged at 10; no retrieval/topK/model/embedding changes. Optional enhancements
+(few-shot examples, a "found-but-ambiguous" output line) were reviewed and deferred to
+keep scope tight.
+
+The doc-sync commit itself landed six days late (2026-07-05, `ea3bfa8`) — the n8n side
+was live-current the whole time; only the repo's written record lagged.
+
+| File / target | Change |
+|---|---|
+| n8n workflow `S3uHJF57JAuA7bL0` | Reworded SUPPORTED VEHICLES header to stop contradicting the Mach-E two-tool path |
+| `n8n_router_config.md` | Full sync to live system message (GENERIC fallback, partial-ID relaxation, anti-hedge); added 2026-06-29 note |
+| `progress.md` | This entry |
+
+---
+
+## 2026-07-05 — Workflow Tooling: Graphify Prune, Skill-Tree Consolidation, `n8n_sync.py` + `run_eval.py`
+
+**Status:** Committed (`88c6252`)
+**Author:** Irfan Gazi (Claude Code assisted)
+
+Housekeeping + two new operational scripts, no product-behavior change.
+
+**Graphify:** added `.graphifyignore` (mirrors the large/secret excludes already in
+`.gitignore` — notably `360/`, 66 GB — since a root `.graphifyignore` *shadows*
+`.gitignore` for graphify's own scan) and excluded the vendored skill trees
+(`.claude/skills/`, `portal/.claude/skills/`) so the graph indexes project code, not
+skill documentation. Pruned the resulting stale skill-doc nodes from `graph.json` and
+regenerated `GRAPH_REPORT.md`/`graph.html` — `graphify query "deployment workflow"` now
+returns project code instead of skill boilerplate.
+
+**Skill trees:** consolidated `.agents/` into `.claude/skills/` — migrated the two
+skills unique to `.agents/` (`n8n-mcp-tools-expert`, `n8n-node-configuration`) with
+`SOURCE.md` provenance notes, committed the vendored `prompt-engineering-patterns`
+skill (already tracked in `skills-lock.json` but not committed), then deleted
+`.agents/`.
+
+**`n8n_sync.py`** (new, `python3.10` + stdlib + dotenv): read-only drift check of the
+live workflow against the 4 production invariants established by the 2026-06-22/24/29
+router work — topK==10 on all 14 `vectorStorePinecone` nodes, router model
+`claude-sonnet-4-6`, `maxIterations`==10, live `systemMessage` sha256 matches
+`n8n_router_config.md` §1. `--push`/`--push --yes` sync doc→live. Verified green
+against the live workflow at commit time. Directly encodes the 2026-06-22 lesson
+(diagnose the *live* workflow, not repo data) as a repeatable check instead of a
+one-off manual audit.
+
+**`run_eval.py`** (new): automated eval runner — POSTs all of `eval_questions.json` (90
+QA pairs) to the chat webhook, writes a dated `eval_results/<date>.md` pass/fail table
+(heuristic keyword-overlap triage, REVIEW rows for hand-check). `--sample N`, `--ids
+61-90`, `--cache` (skip IDs already answered for the current router-config hash).
+Replaces the hand-filled `baseline_results.md`/`postfix_results.md` workflow from the
+2026-06-18/22 audits. Smoke-tested on 3 questions.
+
+**`ingestion.ipynb`:** added a stale-`DOCS`-list guard cell — raises unless
+`I_UNDERSTAND_DOCS_IS_STALE=True`, since the notebook's `DOCS` list still targets the
+retired Mach-E-only `erg_full`/`rescue_sheet` namespaces and a blind Run-All would
+recreate them. Saved outputs cleared.
+
+| File / target | Change |
+|---|---|
+| `.graphifyignore` (new) | Excludes vendored skill trees + `360/` from graphify's scan |
+| `graphify-out/*` | Pruned stale skill-doc nodes, regenerated report/html |
+| `.agents/` → `.claude/skills/` | Consolidated; `.agents/` deleted |
+| `n8n_sync.py` (new) | Read-only (+ `--push`) drift checker for the live router workflow |
+| `run_eval.py` (new) | Automated 90-question eval runner → dated results tables |
+| `ingestion.ipynb` | Added stale-`DOCS` guard cell; cleared outputs |
+| `progress.md` | This entry |
+
+---
+
+## 2026-07-06 — v2 Portal: Deploy the Dead-CSS Cleanup That Never Shipped + Graphify Refresh + Router Doc Fix
+
+**Status:** Deployed; verified live
+**Author:** Irfan Gazi (Claude Code assisted)
+
+Session-start check ("is everything live?") turned up a real gap: `ea3bfa8`
+(2026-07-05) had removed the now-orphaned `.v2-tag`, `.chat-header`, and `.hint` CSS
+rules from `portal/index.html` (dead code left behind by the 2026-06-29 copy cleanup,
+which removed the *elements* those rules styled but not the rules themselves) — but
+that commit was never built or deployed. `portal/dist/` was still the 2026-06-29
+09:52 build; CloudFront was serving it unchanged. Confirmed via `curl` against
+`https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html`: the stale `chat-header`/`v2-tag`
+selectors were still present live.
+
+Fixed: `npx tsc --noEmit` (clean) → `npm run build` → `python3.10 deploy_portal_v2.py`
+(10 files to `s3://first-responder-training/v2/`, CloudFront invalidation
+`I5VU7J5XCZKNMVWDJTQSMLG1XS` on `/v2/*`). Re-curled post-invalidation: stale selectors
+gone. JS bundle hash unchanged (`index-231veDSM.js`) since only the unhashed
+`index.html` changed.
+
+Also ran `python3.10 n8n_sync.py --check` (all 4 invariants PASS — the live router
+needed no changes) and `graphify update .` to refresh the knowledge graph, which had
+gone 12 days stale (last built 2026-06-24, missing the `88c6252`/`ea3bfa8` commits):
+now 206 nodes, 269 edges, 13 communities.
+
+Left for a follow-up commit: `n8n_router_config.md` still has one stale label
+("Claude Opus 4.8" instead of "claude-sonnet-4-6" in the 2026-06-22 update header) —
+a doc-only correction, not a live-workflow change.
+
+| File / target | Change |
+|---|---|
+| `portal/dist/` + `s3://…/v2/` | Rebuilt and redeployed — ships the 2026-07-05 dead-CSS removal that had been committed but not deployed |
+| `graphify-out/*` | Refreshed (was 12 days stale): 206 nodes, 269 edges, 13 communities |
+| — | `n8n_sync.py --check`: all 4 production invariants PASS, no live changes needed |
+| `progress.md` | This entry |
+
+---
+
 ## Next Steps / Open Items
 
 - [x] **Import + activate `n8n_transcribe_webhook.json`** — done; live endpoint verified (`{"text":"Beep."}`)
