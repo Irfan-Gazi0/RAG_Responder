@@ -17,6 +17,15 @@ import {
 // Skip starting voice if the laser is hovering an Interactable (UIKit button) —
 // there the select should fire the button click, so we emit a short haptic
 // confirmation instead.
+//
+// When a PTT release actually stops a recording, we stamp the time so the HUD
+// can suppress the phantom button click that the same select-end dispatches if
+// the laser happens to be over a HUD button on release (see hud.ts guardedClick).
+let lastPttStopAt = 0;
+export function pttStopWasRecent(windowMs = 150): boolean {
+  return performance.now() - lastPttStopAt < windowMs;
+}
+
 export class PushToTalkSystem extends createSystem({
   hovered: { required: [Hovered] },
 }) {
@@ -41,6 +50,7 @@ export class PushToTalkSystem extends createSystem({
     }
     if (endPressed && isCurrentlyRecording()) {
       stopRecognition();
+      lastPttStopAt = performance.now();
       this.pulse(0.3, 40); // confirm voice capture stopped
     }
   }

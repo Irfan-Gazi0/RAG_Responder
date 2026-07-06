@@ -1,5 +1,5 @@
 import { marked } from "marked";
-import { mirrorToHud, setHudPending } from "./hud-mirror.js";
+import { mirrorToHud, setHudPending, flashHudStatus } from "./hud-mirror.js";
 
 const WEBHOOK_URL =
   "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1";
@@ -91,11 +91,15 @@ export async function sendMessage() {
   const typingEl = addTyping();
   setHudPending(true); // mirror "Thinking…" into the in-VR HUD
 
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000);
+
   try {
     const res = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question, session_id: SESSION_ID }),
+      signal: controller.signal,
     });
 
     typingEl.remove();
@@ -112,7 +116,13 @@ export async function sendMessage() {
     typingEl.remove();
     errorEl.style.display = "block";
     errorEl.textContent = `⚠ ${(err as Error).message}`;
+    if ((err as Error).name === "AbortError") {
+      flashHudStatus("Request timed out - try again.");
+    } else {
+      flashHudStatus("Chat error: " + (err as Error).message);
+    }
   } finally {
+    clearTimeout(timeout);
     setHudPending(false);
     sendBtn.disabled = false;
     inputEl.focus();

@@ -9,6 +9,7 @@ import {
   World,
 } from "@iwsdk/core";
 import Hls from "hls.js";
+import { flashHudStatus } from "./hud-mirror.js";
 
 export interface LectureConfig {
   src: string;
@@ -68,6 +69,14 @@ export function getCurrentVideoIdx(): number {
   return currentVideoIdx;
 }
 
+function showErrorBanner(msg: string) {
+  const el = document.getElementById("error-banner");
+  if (el) {
+    el.style.display = "block";
+    el.textContent = msg;
+  }
+}
+
 function fmt(s: number): string {
   const m = Math.floor(s / 60);
   const sec = Math.floor(s % 60).toString().padStart(2, "0");
@@ -120,6 +129,13 @@ function ensureHls(idx: number, onReady?: () => void) {
       hlsReady[idx] = true;
       onReady?.();
     });
+    hls.on(Hls.Events.ERROR, (_evt, data) => {
+      if (!data.fatal) return;
+      if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
+      videoEls[idx].pause();
+      flashHudStatus("Video failed to load - check connection.");
+      showErrorBanner("Video failed to load - check connection.");
+    });
   } else if (v.canPlayType("application/vnd.apple.mpegurl")) {
     v.src = src;
     hlsInstances[idx] = true;
@@ -131,12 +147,18 @@ function ensureHls(idx: number, onReady?: () => void) {
       },
       { once: true },
     );
+    v.addEventListener("error", () => {
+      v.pause();
+      flashHudStatus("Video failed to load - check connection.");
+      showErrorBanner("Video failed to load - check connection.");
+    });
   }
 }
 
 export function activatePanorama(idx: number) {
+  const prevMuted = activeVideo?.muted ?? false;
   activeVideo = videoEls[idx];
-  activeVideo.muted = false;
+  activeVideo.muted = prevMuted;
   updateMuteButton();
   if (sphereMaterial) {
     sphereMaterial.map = videoTextures[idx];

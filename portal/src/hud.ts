@@ -15,9 +15,9 @@ import { fmt, getActiveVideo, getCurrentVideoIdx, switchVideo } from "./videosph
 import {
   getRenderedHistory,
   setChatListener,
-  setPendingListener,
   setTranscriptListener,
 } from "./hud-mirror.js";
+import { pttStopWasRecent } from "./push-to-talk.js";
 
 const HUD_CONFIG_PATH = "./ui/hud.json";
 
@@ -36,7 +36,7 @@ export class HudSystem extends createSystem({
   private transcriptText: UIKit.Text | null = null;
   private xrButton: UIKit.Text | null = null;
   private elapsedSinceUpdate = 0;
-  private pending = false;
+  private lastActiveIdx = -1;
   private clickAudio: Entity | null = null;
   private chimeAudio: Entity | null = null;
 
@@ -116,29 +116,25 @@ export class HudSystem extends createSystem({
     this.xrButton = doc.getElementById("xr-button") as UIKit.Text;
 
     // HUD buttons proxy to DOM controls (re-uses existing playback/lecture logic)
-    this.playText?.addEventListener("click", () => {
-      this.playClick();
-      window.document.getElementById("btn-play")?.click();
-    });
-    this.muteText?.addEventListener("click", () => {
-      this.playClick();
-      window.document.getElementById("btn-mute")?.click();
-    });
+    this.playText?.addEventListener("click", () =>
+      this.guardedClick(() => window.document.getElementById("btn-play")?.click()),
+    );
+    this.muteText?.addEventListener("click", () =>
+      this.guardedClick(() => window.document.getElementById("btn-mute")?.click()),
+    );
     this.vidButtons.forEach((btn, i) =>
-      btn?.addEventListener("click", () => {
-        this.playClick();
-        switchVideo(i);
-      }),
+      btn?.addEventListener("click", () => this.guardedClick(() => switchVideo(i))),
     );
 
-    this.xrButton?.addEventListener("click", () => {
-      this.playClick();
-      if (this.world.visibilityState.value === VisibilityState.NonImmersive) {
-        this.world.launchXR();
-      } else {
-        this.world.exitXR();
-      }
-    });
+    this.xrButton?.addEventListener("click", () =>
+      this.guardedClick(() => {
+        if (this.world.visibilityState.value === VisibilityState.NonImmersive) {
+          this.world.launchXR();
+        } else {
+          this.world.exitXR();
+        }
+      }),
+    );
 
     // Register listeners so chat/voice modules can push updates into the HUD.
     // History is empty at wire time, so the replay inside setChatListener never
@@ -147,16 +143,24 @@ export class HudSystem extends createSystem({
       this.chatText?.setProperties({ text: getRenderedHistory() });
       if (role === "bot") this.playChime();
     });
+    // hud-mirror merges the live + transient channels before calling this, so we
+    // just render. Hide the element when empty so it reserves no blank line. (The
+    // span is seeded with a placeholder in hud.uikitml so UIKit builds it as a
+    // Text — an empty span compiles to a Container and ignores text updates.)
     setTranscriptListener((text) => {
-      // Don't let a stale transcript clobber the "Thinking…" indicator.
-      if (this.pending && !text) return;
-      this.transcriptText?.setProperties({ text });
+      this.transcriptText?.setProperties({ display: text ? "flex" : "none", text });
     });
-    setPendingListener((pending) => {
-      this.pending = pending;
-      // ASCII only — the UIKit font atlas has no emoji/ellipsis glyphs.
-      this.transcriptText?.setProperties({ text: pending ? "Thinking..." : "" });
-    });
+    // Start hidden — nothing to show until a voice/chat status arrives.
+    this.transcriptText?.setProperties({ display: "none", text: "" });
+  }
+
+  // Suppress the phantom click UIKit dispatches when a push-to-talk release
+  // happens with the laser over a HUD button. No playClick() on suppression so
+  // there's no stray click sound either.
+  private guardedClick(fn: () => void) {
+    if (pttStopWasRecent()) return;
+    this.playClick();
+    fn();
   }
 
   private playClick() {
@@ -182,11 +186,19 @@ export class HudSystem extends createSystem({
         text: `${fmt(v.currentTime)} / ${fmt(v.duration)}`,
       });
     }
+    // Active-lecture highlight via the .hud-btn-active class (blue border+fill
+    // from hud.uikitml). Only re-toggle on change, not every 0.25 s poll.
     const idx = getCurrentVideoIdx();
-    this.vidButtons.forEach((btn, i) => {
-      btn?.setProperties({
-        backgroundColor: i === idx ? "#1e3a8a" : "#1e293b",
+    if (idx !== this.lastActiveIdx) {
+      this.lastActiveIdx = idx;
+      this.vidButtons.forEach((btn, i) => {
+        if (!btn) return;
+        const active = i === idx;
+        const has = btn.classList.contains("hud-btn-active");
+        // Guard add/remove (UIKit's ClassList.remove warns on a missing class).
+        if (active && !has) btn.classList.add("hud-btn-active");
+        else if (!active && has) btn.classList.remove("hud-btn-active");
       });
-    });
+    }
   }
 }
