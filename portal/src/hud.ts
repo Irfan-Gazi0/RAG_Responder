@@ -42,6 +42,7 @@ export class HudSystem extends createSystem({
   private lastActiveIdx = -1;
   private clickAudio: Entity | null = null;
   private chimeAudio: Entity | null = null;
+  private loggedFirstBubble = false;
 
   init() {
     // Non-positional UI sounds: a click to confirm button presses and a chime
@@ -67,12 +68,15 @@ export class HudSystem extends createSystem({
     AudioUtils.preload(this.clickAudio);
     AudioUtils.preload(this.chimeAudio);
 
-    this.queries.hudPanel.subscribe("qualify", (entity) => {
-      const document = PanelDocument.data.document[entity.index] as UIKitDocument;
-      if (!document) return;
-      this.hudDoc = document;
-      this.wireHud();
-    });
+    // elics 'qualify' fires only on FUTURE transitions. The panel adds
+    // PanelDocument asynchronously (after the hud.json fetch), so it *usually*
+    // qualifies after this subscribe runs — but the ordering is timing-dependent
+    // and can differ on device / behind CloudFront caching. If the panel already
+    // qualified, the event was missed and wireHud never runs → dead buttons AND
+    // a null chatListener (plan2.md H1, symptoms A + B). Subscribe for future
+    // transitions AND catch up on any entity that already matches.
+    this.queries.hudPanel.subscribe("qualify", (entity) => this.adopt(entity));
+    for (const entity of this.queries.hudPanel.entities) this.adopt(entity);
 
     // DOM Enter VR button → launchXR
     const enterBtn = window.document.getElementById("btn-enter-vr");
@@ -100,6 +104,15 @@ export class HudSystem extends createSystem({
         }
       }),
     );
+  }
+
+  // Wire a HUD panel entity exactly once. Guarded so the qualify subscription
+  // and the init-time catch-up loop can't double-wire the same document.
+  private adopt(entity: Entity) {
+    const document = PanelDocument.data.document[entity.index] as UIKitDocument;
+    if (!document || this.hudDoc === document) return;
+    this.hudDoc = document;
+    this.wireHud();
   }
 
   private wireHud() {
@@ -163,6 +176,12 @@ export class HudSystem extends createSystem({
     // History is empty at wire time, so the replay inside setChatListener never
     // chimes for past messages — only live "bot" answers do.
     setChatListener((role) => {
+      // Breadcrumb: proves the DOM->HUD chat bridge reached the HUD on device
+      // (symptom B is "bubbles never render in VR"). Logged once to avoid spam.
+      if (!this.loggedFirstBubble) {
+        console.log("[hud] first chat bubble render, role =", role);
+        this.loggedFirstBubble = true;
+      }
       this.renderChatBubbles();
       if (role === "bot") this.playChime();
     });
@@ -176,6 +195,11 @@ export class HudSystem extends createSystem({
     });
     // Start hidden — nothing to show until a voice/chat status arrives.
     this.transcriptText?.setProperties({ display: "none", text: "" });
+
+    // Breadcrumb: proves wireHud ran on device. If this line never appears in
+    // the Quest console, buttons are dead (A) and no chat listener is attached
+    // (B) — the single root cause in plan2.md's working hypothesis.
+    console.log("[hud] wireHud complete - buttons + chat listener wired");
   }
 
   // Rebuild the bubble list from scratch. Runs only when a message arrives

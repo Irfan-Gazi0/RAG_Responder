@@ -113,6 +113,7 @@ export async function sendMessage(overrideText?: string) {
     const answer = parseN8nResponse(data);
     addMessage("bot", answer);
   } catch (err) {
+    console.error("[chat] sendMessage failed:", err); // breadcrumb for on-device debugging
     typingEl.remove();
     errorEl.style.display = "block";
     errorEl.textContent = `⚠ ${(err as Error).message}`;

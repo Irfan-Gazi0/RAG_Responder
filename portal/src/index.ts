@@ -17,11 +17,18 @@ import { DesktopLookSystem } from "./look-controls.js";
 initChatBindings();
 initVoiceBindings();
 
+// layers:true promotes the HUD panel to a WebXR quad layer on the Quest (not in
+// the IWER emulator). Suspected (plan2.md H4) of the panel rendering but not
+// repainting new chat bubbles on device. If Phase-1 shows the bubble meshes in
+// the tree but nothing visible/updating on the headset, flip this to false and
+// re-test on the Quest — one-line A/B.
+const USE_WEBXR_LAYERS = true;
+
 World.create(document.getElementById("scene-container") as HTMLDivElement, {
   xr: {
     sessionMode: SessionMode.ImmersiveVR,
     offer: "always",
-    features: { handTracking: true, layers: true },
+    features: { handTracking: true, layers: USE_WEBXR_LAYERS },
   },
   features: {
     locomotion: false,
