@@ -1389,6 +1389,81 @@ a doc-only correction, not a live-workflow change.
 
 ---
 
+## 2026-07-20 — v2 HUD Overhaul: Scrollable Chat Bubbles, Seek Controls, Quick-Ask Chips, Thumbstick Scroll
+
+**Status:** Committed (`a7f9b28`) and verified in the IWER emulator — **NOT deployed**
+**Author:** Irfan Gazi (Claude Code assisted)
+
+Executed `portal/plan.md` top to bottom — four changes to the in-VR HUD, all in the
+v2 IWSDK portal.
+
+**1. Scrollable chat bubble list.** The HUD previously flattened the whole
+conversation into one `<span>` capped at 4 messages x 280 chars. Replaced with
+`#hud-chat-scroll`, a fixed-height (`26`) `overflow: scroll` container holding
+per-role bubbles built at runtime via `new UIKit.Container` / `new UIKit.Text`.
+User bubbles are right-aligned blue, bot bubbles left-aligned grey, each with a
+role label. History cap 4 -> 40; `getRenderedHistory()` and its 280-char
+truncation deleted in favour of `getChatHistory()`. The list rebuilds whole on each
+message (cheap at n<=40, far simpler than diffing) and auto-scrolls to the newest
+one `setTimeout(..., 50)` later, since UIKit layout is async.
+
+**2. Video seek controls.** New seek row between the playback row and the chat
+surface: `< 10s` / `10s >` buttons plus a progress track/fill. `seekBy()` clamps to
+`[0, duration]`; the existing 0.25 s poll drives the fill width as a percentage.
+
+**3. Quick-Ask chips.** Three preset questions (shut down HV / battery fire / where
+to cut) sendable with one ray click — no typing, no voice, which matters with
+gloves on. `sendMessage()` gained an optional `overrideText` param and a thin
+`askQuickQuestion()` wrapper; answers flow through the existing
+`addMessage` -> `mirrorToHud` path, so bubbles and the answer chime work with no
+extra code. Also hardened the DOM send button: `addEventListener("click", sendMessage)`
+became an explicit zero-arg closure, since a bare reference would have passed the
+DOM `Event` object in as `overrideText`.
+
+**4. Left-thumbstick chat scrolling**, running every frame ahead of the 0.25 s
+throttle (the right hand stays free for push-to-talk). Sign verified in-emulator as
+written — stick up scrolls toward older messages — so no negation was needed.
+
+**Verification.** `npx tsc --noEmit` clean; uikitml compiled (the `&lt;`/`&gt;`
+entities decode correctly to `< 10s` / `10s >`, and `overflow: scroll` survives into
+`public/ui/hud.json`); `npm run build` succeeded; `graphify update .` refreshed the
+graph to 675 nodes / 925 edges / 43 communities. In the IWER emulator: HUD renders
+with no tofu boxes, chip `:hover` fires, a chip ray-click produced a correctly
+labelled user bubble with "Thinking..." status, stacked bubbles auto-scrolled to
+bottom, and thumbstick scrolling moved the list with a visible scrollbar.
+
+**Found during verification — the n8n chat webhook is returning empty responses.**
+`POST` to the chat webhook returns **HTTP 200 with a zero-byte body** in ~2 s (far
+too fast for an agent call), so the client's `res.json()` throws and no answer ever
+renders. Reproduced independently of the portal with `curl` (`status=200
+size=0`); the HUD surfaced it exactly as designed: *"Chat error: Failed to execute
+'json' on 'Response': Unexpected end of JSON input"*. Workflow `S3uHJF57JAuA7bL0` is
+active and its Webhook node is correctly configured (`responseMode: responseNode`,
+Respond node present), so it is failing somewhere upstream of the response. **Not
+caused by this session's changes** — `chat.ts`'s request/parse path is untouched
+apart from where the question string originates. Left unfixed pending a decision;
+see Open Items.
+
+Consequence: the **bot**-role bubble branch is code-review-verified only — it is the
+same `makeBubble` call with the role flipped, but no bot bubble was ever observed
+rendering. Re-check once the webhook is fixed.
+
+Not deployed, per the plan — the Quest shakedown still gates deploys, and the seek
+row + progress bar cannot be exercised in the emulator anyway (CORS blocks the HLS
+360 video), so both join the Quest-hardware test list.
+
+| File / target | Change |
+|---|---|
+| `portal/ui/hud.uikitml` | Seek row, chips row, `#hud-chat-scroll`; dropped `.chat-history` + `.chat-surface`'s `min-height` |
+| `portal/src/hud.ts` | Bubble rendering (`renderChatBubbles`/`makeBubble`), `seekBy`, progress fill, chip wiring, thumbstick scroll |
+| `portal/src/hud-mirror.ts` | History cap 4 -> 40; `getRenderedHistory()` -> `getChatHistory()` (no truncation) |
+| `portal/src/chat.ts` | `sendMessage(overrideText?)` + `askQuickQuestion()`; send-button closure fix |
+| `graphify-out/*` | Refreshed: 675 nodes, 925 edges, 43 communities |
+| — | **Not deployed.** Chat webhook found returning empty 200s (pre-existing, server-side) |
+| `progress.md` | This entry |
+
+---
+
 ## Next Steps / Open Items
 
 - [x] **Import + activate `n8n_transcribe_webhook.json`** — done; live endpoint verified (`{"text":"Beep."}`)
@@ -1396,7 +1471,10 @@ a doc-only correction, not a live-workflow change.
 - [x] **IWSDK v2 dev-server shakedown** — done 2026-06-01: IWER pass verified boot, follower-HUD comfort/lazy-follow, ray-click lecture switch. 360° video (dev CORS) + push-to-talk (no mic) are Quest-only tests
 - [x] **Streamlit default → v2 IWSDK** — done 2026-06-08: tab1 embeds `/v2/index.html`, `?portal=v1` fallback; VR-module placeholder tab removed (deploy branch `feature/streamlit-landing-page`)
 - [x] **Desktop/touch drag-to-look for the v2 360° videosphere** — done 2026-06-08 (`DesktopLookSystem`); verified live via Playwright (`index-231veDSM.js`)
-- [ ] **IWSDK v2 Quest 3 in-headset shakedown** — load `https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html` directly (NOT via Streamlit iframe); validate HUD comfort distance, push-to-talk latency, trigger-vs-laser conflict
+- [ ] **Chat webhook returns empty 200s (2026-07-20)** — `POST` to the chat webhook answers HTTP 200 with a zero-byte body in ~2 s, breaking every client (v1, v2, and the eval runner). Workflow `S3uHJF57JAuA7bL0` is active with a correct Webhook/Respond pair, so the failure is upstream of the response node. Diagnose the LIVE workflow first (`n8n_sync.py --check`), per the 2026-06-22 lesson
+- [ ] **Deploy the 2026-07-20 HUD overhaul to `/v2/`** — `python3.10 deploy_portal_v2.py` from the repo root; needed before the changes are testable on a Quest. Best done after the webhook is fixed so the chat path can be validated in the same pass
+- [ ] **Verify the bot-role chat bubble renders** — blocked on the webhook; only the user-role branch was observed in the emulator
+- [ ] **IWSDK v2 Quest 3 in-headset shakedown** — load `https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html` directly (NOT via Streamlit iframe); validate HUD comfort distance, push-to-talk latency, trigger-vs-laser conflict. **Now also covers:** seek buttons + progress bar (untestable in the emulator — CORS blocks HLS) and thumbstick chat scrolling
 - [ ] **IWSDK v2 cutover** — only after green shakedown: re-upload `portal/dist/index.html` as `inspector_portal.html` (per CLAUDE.md hard rule #2, never `copy_object`), bump CACHE_BUST, invalidate `/inspector_portal.html`
 - [ ] **Original A-Frame in-VR HUD shakedown** — superseded by IWSDK shakedown above if v2 cutover proceeds; otherwise still pending
 - [ ] **Full 360° video fix:** add mid (~2560×1280) + low (~1600×800) HLS renditions + master playlist, reusing existing 4K segments in place (plan: `~/.claude/plans/dreamy-kindling-lobster.md`)
