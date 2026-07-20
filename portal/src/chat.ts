@@ -78,12 +78,12 @@ function parseN8nResponse(data: unknown): string {
   return String(data);
 }
 
-export async function sendMessage() {
-  const question = inputEl.value.trim();
+export async function sendMessage(overrideText?: string) {
+  const question = (overrideText ?? inputEl.value).trim();
   if (!question) return;
 
   errorEl.style.display = "none";
-  inputEl.value = "";
+  if (!overrideText) inputEl.value = "";
   autoGrow();
   sendBtn.disabled = true;
 
@@ -129,6 +129,11 @@ export async function sendMessage() {
   }
 }
 
+// Send a preset question without touching the DOM input (in-VR Quick-Ask chips).
+export function askQuickQuestion(question: string) {
+  void sendMessage(question);
+}
+
 export function setInputValue(text: string) {
   inputEl.value = text;
 }
@@ -141,5 +146,6 @@ export function initChatBindings() {
     }
   });
   inputEl.addEventListener("input", autoGrow);
-  sendBtn.addEventListener("click", sendMessage);
+  // Explicit closure: a bare reference would pass the DOM Event as overrideText.
+  sendBtn.addEventListener("click", () => sendMessage());
 }

@@ -50,6 +50,30 @@
     margin-left: 1;
   }
 
+  .seek-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1;
+  }
+
+  .hud-btn-seek { width: 8; font-size: 1.8; padding: 0.7; }
+
+  .progress-track {
+    flex-grow: 1;
+    height: 1.2;
+    background-color: #334155;
+    border-radius: 0.6;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    width: 0%;
+    height: 100%;
+    background-color: #3b82f6;
+    border-radius: 0.6;
+  }
+
   .chat-surface {
     background-color: #1e293b;
     border-color: #334155;
@@ -59,13 +83,38 @@
     display: flex;
     flex-direction: column;
     gap: 0.8;
-    min-height: 22;
   }
 
-  .chat-history {
-    color: #e2e8f0;
-    font-size: 2;
-    text-align: left;
+  .chips-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1;
+  }
+
+  .hud-chip {
+    flex-grow: 1;
+    padding: 0.7;
+    background-color: #0f172a;
+    border-color: #3b82f6;
+    border-width: 0.1;
+    border-radius: 2;
+    color: #93c5fd;
+    font-size: 1.7;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .hud-chip:hover { background-color: #1e3a8a; }
+
+  .chat-scroll {
+    height: 26;
+    overflow: scroll;
+    scrollbar-color: #64748b;
+    scrollbar-width: 0.4;
+    display: flex;
+    flex-direction: column;
+    gap: 1;
+    padding-right: 1;
   }
 
   .chat-transcript {
@@ -111,8 +160,21 @@
     <span id="hud-time" class="hud-time">--:-- / --:--</span>
   </div>
 
+  <div class="seek-row">
+    <button id="hud-back10" class="hud-btn hud-btn-seek">&lt; 10s</button>
+    <div id="hud-progress-track" class="progress-track">
+      <div id="hud-progress-fill" class="progress-fill"></div>
+    </div>
+    <button id="hud-fwd10" class="hud-btn hud-btn-seek">10s &gt;</button>
+  </div>
+
   <div class="chat-surface">
-    <span id="hud-chat-text" class="chat-history">First Responder GPT - hold right trigger and speak.</span>
+    <div class="chips-row">
+      <button id="hud-chip1" class="hud-chip">Shut down HV</button>
+      <button id="hud-chip2" class="hud-chip">Battery fire</button>
+      <button id="hud-chip3" class="hud-chip">Where to cut</button>
+    </div>
+    <div id="hud-chat-scroll" class="chat-scroll"></div>
     <span id="hud-transcript" class="chat-transcript">-</span>
     <span id="hud-hint" class="chat-hint">Hold RIGHT TRIGGER or PINCH to speak</span>
   </div>

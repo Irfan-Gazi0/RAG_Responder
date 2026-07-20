@@ -53,8 +53,8 @@ export function setTranscriptListener(fn: TranscriptListener | null) {
 
 // Collapse a bot answer's markdown to plain text for the HUD chat surface:
 // marked -> HTML -> textContent (drops **bold**, links, list markers, etc.),
-// then ASCII-sanitized. Length is handled downstream by getRenderedHistory's
-// 280-char truncation.
+// then ASCII-sanitized. The HUD renders full text in a scrollable bubble list,
+// so no truncation happens here or downstream.
 function mdToPlain(md: string): string {
   const html = marked.parse(md) as string;
   const div = document.createElement("div");
@@ -65,7 +65,7 @@ function mdToPlain(md: string): string {
 export function mirrorToHud(role: "user" | "bot", text: string) {
   const stored = role === "bot" ? mdToPlain(text) : toAscii(text);
   chatHistory.push({ role, text: stored });
-  while (chatHistory.length > 4) chatHistory.shift();
+  while (chatHistory.length > 40) chatHistory.shift();
   chatListener?.(role, stored);
 }
 
@@ -96,12 +96,6 @@ export function setHudPending(pending: boolean) {
   pushMerged();
 }
 
-export function getRenderedHistory(): string {
-  return chatHistory
-    .map((m) => {
-      const prefix = m.role === "user" ? "You: " : "AI: ";
-      const t = m.text.length > 280 ? m.text.slice(0, 277) + "..." : m.text;
-      return prefix + t;
-    })
-    .join("\n\n");
+export function getChatHistory(): readonly { role: "user" | "bot"; text: string }[] {
+  return chatHistory;
 }

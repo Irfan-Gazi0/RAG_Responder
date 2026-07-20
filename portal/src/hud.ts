@@ -4,6 +4,7 @@ import {
   createSystem,
   type Entity,
   eq,
+  InputComponent,
   PanelDocument,
   PanelUI,
   PlaybackMode,
@@ -13,10 +14,11 @@ import {
 } from "@iwsdk/core";
 import { fmt, getActiveVideo, getCurrentVideoIdx, switchVideo } from "./videosphere.js";
 import {
-  getRenderedHistory,
+  getChatHistory,
   setChatListener,
   setTranscriptListener,
 } from "./hud-mirror.js";
+import { askQuickQuestion } from "./chat.js";
 import { pttStopWasRecent } from "./push-to-talk.js";
 
 const HUD_CONFIG_PATH = "./ui/hud.json";
@@ -32,7 +34,8 @@ export class HudSystem extends createSystem({
   private muteText: UIKit.Text | null = null;
   private timeText: UIKit.Text | null = null;
   private vidButtons: UIKit.Text[] = [];
-  private chatText: UIKit.Text | null = null;
+  private chatScroll: UIKit.Container | null = null;
+  private progressFill: UIKit.Container | null = null;
   private transcriptText: UIKit.Text | null = null;
   private xrButton: UIKit.Text | null = null;
   private elapsedSinceUpdate = 0;
@@ -111,7 +114,8 @@ export class HudSystem extends createSystem({
       doc.getElementById("hud-vid2") as UIKit.Text,
       doc.getElementById("hud-vid3") as UIKit.Text,
     ];
-    this.chatText = doc.getElementById("hud-chat-text") as UIKit.Text;
+    this.chatScroll = doc.getElementById("hud-chat-scroll") as UIKit.Container;
+    this.progressFill = doc.getElementById("hud-progress-fill") as UIKit.Container;
     this.transcriptText = doc.getElementById("hud-transcript") as UIKit.Text;
     this.xrButton = doc.getElementById("xr-button") as UIKit.Text;
 
@@ -125,6 +129,25 @@ export class HudSystem extends createSystem({
     this.vidButtons.forEach((btn, i) =>
       btn?.addEventListener("click", () => this.guardedClick(() => switchVideo(i))),
     );
+
+    doc.getElementById("hud-back10")?.addEventListener("click", () =>
+      this.guardedClick(() => this.seekBy(-10)),
+    );
+    doc.getElementById("hud-fwd10")?.addEventListener("click", () =>
+      this.guardedClick(() => this.seekBy(10)),
+    );
+
+    // One-click common questions - no typing or voice needed with gloves on.
+    const QUICK_QUESTIONS: [string, string][] = [
+      ["hud-chip1", "How do I shut down the high-voltage system on an EV?"],
+      ["hud-chip2", "How should I respond to an EV battery fire?"],
+      ["hud-chip3", "Where are the safe cut points for extrication on an EV?"],
+    ];
+    for (const [id, q] of QUICK_QUESTIONS) {
+      doc.getElementById(id)?.addEventListener("click", () =>
+        this.guardedClick(() => askQuickQuestion(q)),
+      );
+    }
 
     this.xrButton?.addEventListener("click", () =>
       this.guardedClick(() => {
@@ -140,9 +163,10 @@ export class HudSystem extends createSystem({
     // History is empty at wire time, so the replay inside setChatListener never
     // chimes for past messages — only live "bot" answers do.
     setChatListener((role) => {
-      this.chatText?.setProperties({ text: getRenderedHistory() });
+      this.renderChatBubbles();
       if (role === "bot") this.playChime();
     });
+    this.renderChatBubbles(); // initial render (placeholder or replayed history)
     // hud-mirror merges the live + transient channels before calling this, so we
     // just render. Hide the element when empty so it reserves no blank line. (The
     // span is seeded with a placeholder in hud.uikitml so UIKit builds it as a
@@ -152,6 +176,71 @@ export class HudSystem extends createSystem({
     });
     // Start hidden — nothing to show until a voice/chat status arrives.
     this.transcriptText?.setProperties({ display: "none", text: "" });
+  }
+
+  // Rebuild the bubble list from scratch. Runs only when a message arrives
+  // (not per frame), and history is capped at 40, so rebuild-all is cheap
+  // and far simpler than diffing.
+  private renderChatBubbles() {
+    const scroll = this.chatScroll;
+    if (!scroll) return;
+    for (const child of [...scroll.children]) {
+      scroll.remove(child);
+      (child as unknown as { dispose?: () => void }).dispose?.();
+    }
+    const history = getChatHistory();
+    if (history.length === 0) {
+      const placeholder = new UIKit.Text({
+        text: "First Responder GPT - ask about EV emergency response.",
+        fontSize: 2,
+        color: "#94a3b8",
+      });
+      scroll.add(placeholder);
+      return;
+    }
+    for (const m of history) {
+      scroll.add(this.makeBubble(m.role, m.text));
+    }
+    // Layout is async; scroll to the newest message a frame later.
+    setTimeout(() => {
+      const max = scroll.maxScrollPosition.value;
+      scroll.scrollPosition.value = [0, max[1] ?? 0];
+    }, 50);
+  }
+
+  private makeBubble(role: "user" | "bot", text: string): UIKit.Container {
+    const isUser = role === "user";
+    const bubble = new UIKit.Container({
+      flexDirection: "column",
+      gap: 0.3,
+      maxWidth: "85%",
+      alignSelf: isUser ? "flex-end" : "flex-start",
+      backgroundColor: isUser ? "#1e3a8a" : "#334155",
+      borderRadius: 1.2,
+      padding: 1,
+      flexShrink: 0,
+    });
+    bubble.add(
+      new UIKit.Text({
+        text: isUser ? "You" : "First Responder GPT",
+        fontSize: 1.5,
+        color: isUser ? "#93c5fd" : "#94a3b8",
+      }),
+    );
+    bubble.add(
+      new UIKit.Text({
+        text,
+        fontSize: 2,
+        color: "#e2e8f0",
+      }),
+    );
+    return bubble;
+  }
+
+  private seekBy(seconds: number) {
+    const v = getActiveVideo();
+    if (!v || !v.duration || isNaN(v.duration)) return;
+    v.currentTime = Math.max(0, Math.min(v.duration, v.currentTime + seconds));
   }
 
   // Suppress the phantom click UIKit dispatches when a push-to-talk release
@@ -173,6 +262,17 @@ export class HudSystem extends createSystem({
 
   update(delta: number) {
     if (!this.hudDoc) return;
+
+    // Left-thumbstick scrolls the chat history (right hand is push-to-talk).
+    const left = this.input.xr.gamepads.left;
+    const axes = left?.getAxesValues(InputComponent.Thumbstick);
+    if (this.chatScroll && axes && Math.abs(axes.y) > 0.2) {
+      const pos = this.chatScroll.scrollPosition.value;
+      const max = this.chatScroll.maxScrollPosition.value[1] ?? 0;
+      const y = Math.max(0, Math.min(max, (pos[1] ?? 0) + axes.y * delta * 40));
+      this.chatScroll.scrollPosition.value = [pos[0] ?? 0, y];
+    }
+
     this.elapsedSinceUpdate += delta;
     if (this.elapsedSinceUpdate < 0.25) return;
     this.elapsedSinceUpdate = 0;
@@ -185,6 +285,8 @@ export class HudSystem extends createSystem({
       this.timeText?.setProperties({
         text: `${fmt(v.currentTime)} / ${fmt(v.duration)}`,
       });
+      const pct = Math.round((v.currentTime / v.duration) * 100);
+      this.progressFill?.setProperties({ width: `${pct}%` });
     }
     // Active-lecture highlight via the .hud-btn-active class (blue border+fill
     // from hud.uikitml). Only re-toggle on change, not every 0.25 s poll.
