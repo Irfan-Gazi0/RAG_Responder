@@ -1464,6 +1464,85 @@ row + progress bar cannot be exercised in the emulator anyway (CORS blocks the H
 
 ---
 
+## 2026-08-03 — In-VR Chat Box: Bubble Overflow Fixed, Glyph Count Bounded, Concurrent Sends Guarded
+
+**Status:** Committed (`336d04e`) and **DEPLOYED** to `/v2/` — the first v2 deploy since 06-08
+**Author:** Irfan Gazi (Claude Code assisted)
+
+Reported symptom: "in the VR the chat box gets weird and the app crashes." The n8n side
+was **not** the cause — the operator had resumed the Supabase instance backing
+`Postgres Chat Memory`, which closed out the 07-20 empty-200 finding below. Verified
+healthy across five live POSTs (200, 1391–2638 B, 6.8–24.3 s) before touching any code.
+
+**1. The layout defect — reproduced, root-caused, fixed.** `makeBubble` built a
+shrink-to-fit `UIKit.Container` with `maxWidth: "85%"` around an unsized `UIKit.Text`.
+Yoga clamps the container's *panel rect* to 85% but still measures the Text at its full
+unwrapped intrinsic width, so a long bot answer painted its glyphs **outside** the grey
+bubble background and past the scroll viewport's right edge. That is "gets weird."
+Fix: definite `width: "85%"` (not `maxWidth`) + `overflow: "hidden"` on the container,
+`width: "100%"` on both Text children, `wordBreak: "break-word"` on the body. Verified
+structurally rather than by eye — `scene_get_object_transform` gives bubble
+`globalScale[0]` 0.7629 vs scroll parent 0.9145 = 83%, left edges flush at −0.457, right
+edge 0.305 inside the 0.457 viewport.
+
+**2. No in-flight guard on the send path.** `sendMessage` disabled `sendBtn`, but the
+in-VR Quick-Ask chips and voice call it *directly* and bypass the button entirely. Two
+rapid ray-clicks fired two concurrent 24-second agent calls and rendered two duplicate
+user bubbles; the first completion's `setHudPending(false)` also cleared "Thinking..."
+while the second was still running. Now a module-level `inFlight` flag covers chips,
+voice, Enter and the button uniformly. Timeout raised 30 s → 60 s (measured answers run
+to 24 s; 30 s left no margin on headset WiFi and a mid-answer abort is its own weird
+state). `res.json()` replaced with `res.text()` + explicit `JSON.parse`, so a zero-byte
+body reads as "Assistant returned an empty response" instead of the raw
+*"Failed to execute 'json' on 'Response'"* the HUD showed in July.
+
+**3. Four crash mechanisms removed** — all regressions introduced by the 07-20 overhaul:
+
+- **Unbounded glyph count.** The overhaul deleted `getRenderedHistory()`'s 280-char
+  truncation *and* raised the history cap 4 → 40. At ~1800 plain-text chars per answer
+  that is ~80k live glyph instances sharing a Quest GPU with a 4K360 video texture; v1
+  never had this exposure. Now `MAX_BUBBLES = 6` — **nothing is truncated**, older turns
+  stay in `hud-mirror`'s history and in the DOM panel, they are simply not built as
+  geometry.
+- **O(n²) rebuild storm.** `setChatListener` replayed history by invoking the listener
+  once per message, and the listener ran a full teardown/rebuild of every bubble — while
+  `wireHud` *already* seeded itself from `getChatHistory()`. With 40 messages that is
+  1600 component constructions, 1600 `dispose()` calls in one synchronous burst, 40
+  queued `setTimeout`s and 20 simultaneous chimes. `eb2a6aa`'s catch-up wiring is what
+  made this path reachable; the code comment claiming "history is empty at wire time" no
+  longer held. Replay loop deleted.
+- **Full teardown/rebuild per message** in the steady state → incremental
+  `appendBubble()` over a self-tracked `bubbles[]` array, so removal can never touch a
+  child UIKit owns.
+- **NaN-poisoned scroll.** `Math.min(max, …)` in the thumbstick handler propagated NaN
+  into `scrollPosition` when `maxScrollPosition` was unmeasured; NaN in a transform takes
+  the renderer down. Both operands now `Number.isFinite`-guarded.
+
+**4. Crash self-reporting** (`index.ts`): `error`, `unhandledrejection` and
+`webglcontextlost` handlers log a `[fatal]` breadcrumb and flash it on the HUD, so the
+next headset failure names itself instead of needing a verbal report.
+
+**The crash itself was never reproduced.** Five real exchanges, concurrent sends and
+thumbstick scrolling produced zero JS exceptions beyond the known dev-server video CORS
+failure. The remaining mechanisms are Quest-only (GPU/memory pressure, `layers:true`
+quad-layer compositing) — neither of which IWER exercises. That is precisely why the
+breadcrumbs went in. `USE_WEBXR_LAYERS` (`index.ts:25`) stays `true`; it is the one-line
+A/B to flip first if the headset still dies.
+
+**Gotcha worth keeping:** UIKit `maxWidth` does **not** wrap child text. Use a definite
+`width`, and verify wrapping with `scene_get_object_transform` scale ratios — a
+screenshot at HUD distance is not conclusive.
+
+| File / target | Change |
+|---|---|
+| `portal/src/hud.ts` | `width`+`overflow:hidden` bubbles; `bubbles[]` tracking; `renderInitial()`/`appendBubble()`; `MAX_BUBBLES=6`; shared scroll timer; NaN guard |
+| `portal/src/hud-mirror.ts` | `setChatListener` no longer replays history through the listener |
+| `portal/src/chat.ts` | `inFlight` guard; 30 s → 60 s timeout; `text()`+`JSON.parse` with empty/unreadable-body messages |
+| `portal/src/index.ts` | `[fatal]` handlers: `error`, `unhandledrejection`, `webglcontextlost` |
+| — | **Deployed:** `index-DjOsp3E-.js`, invalidation `I265DGY1NKX15AJOY0PN136BUK`; new bundle confirmed *served*, not just uploaded |
+
+---
+
 ## 2026-08-03 — Branch Code Review (15 Findings) + Three Fixes: Chat Send-Lock, HLS Recovery, Stale CACHE_BUST
 
 Ran `/code-review` over the whole `meta-webvr` branch diff (9 commits, `42e24d2..336d04e`),
@@ -1552,10 +1631,11 @@ needs a decision on the new location plus four CLAUDE.md path updates.
 - [ ] **`toAscii()` degrades safety-critical answers on the headset (2026-08-03)** — `hud-mirror.ts` collapses `\s+` to single spaces (numbered shutdown procedures become one run-on paragraph) and strips `°`/`≥`/`≤`/`±`/`→` ("above 2,000 °F" → "above 2,000 F"). The DOM panel is correct; only the in-VR user sees the degraded text. Preserve newlines and transliterate the units the font atlas lacks
 - [ ] **Decide where the ingestion notebooks live (2026-08-03)** — working tree deletes `ingestion.ipynb` + `ingestion_transcript.ipynb` from the repo root with untracked copies in `Ingestions/`. Either `git add Ingestions/` and fix the four CLAUDE.md references (quick-start rows, project-layout block, the stale-`DOCS` open-issue note), or restore them. Currently uncommitted so nothing is lost
 - [ ] **Remaining 2026-08-03 review findings (lower severity)** — sticky "Transcribing..." on transcribe-webhook failure (`voice.ts`); `[]`/`{}` rendered as a chat answer (`chat.ts` empty-body guard); video/chat errors clobbering the shared `#error-banner`; `activatePanorama` not pausing the outgoing video; `hud.ts` stale `placeholder` on re-wire + unregistered listener cleanup; duplicate `marked.parse` in `hud-mirror.ts`
-- [ ] **Chat webhook returns empty 200s (2026-07-20)** — `POST` to the chat webhook answers HTTP 200 with a zero-byte body in ~2 s, breaking every client (v1, v2, and the eval runner). Workflow `S3uHJF57JAuA7bL0` is active with a correct Webhook/Respond pair, so the failure is upstream of the response node. Diagnose the LIVE workflow first (`n8n_sync.py --check`), per the 2026-06-22 lesson
-- [ ] **Deploy the 2026-07-20 HUD overhaul to `/v2/`** — `python3.10 deploy_portal_v2.py` from the repo root; needed before the changes are testable on a Quest. Best done after the webhook is fixed so the chat path can be validated in the same pass
-- [ ] **Verify the bot-role chat bubble renders** — blocked on the webhook; only the user-role branch was observed in the emulator
-- [ ] **IWSDK v2 Quest 3 in-headset shakedown** — load `https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html` directly (NOT via Streamlit iframe); validate HUD comfort distance, push-to-talk latency, trigger-vs-laser conflict. **Now also covers:** seek buttons + progress bar (untestable in the emulator — CORS blocks HLS) and thumbstick chat scrolling
+- [x] **Chat webhook returns empty 200s (2026-07-20)** — resolved 2026-08-03. Root cause was the paused Supabase instance behind `Postgres Chat Memory`: execution `854` showed `Webhook → success`, `Postgres Chat Memory → ERROR "connection cannot be established"`, `Router Agent → ERROR`, so `Respond to Webhook` never ran and n8n closed the request with a zero-byte body. Operator resumed Supabase; five live POSTs verified 200 / 1391–2638 B / 6.8–24.3 s. No workflow changes were needed — again a LIVE-side fault, not repo data
+- [x] **Deploy the 2026-07-20 HUD overhaul to `/v2/`** — done 2026-08-03 alongside the chat-box fix (`index-DjOsp3E-.js`, invalidation `I265DGY1NKX15AJOY0PN136BUK`); new bundle confirmed served
+- [x] **Verify the bot-role chat bubble renders** — done 2026-08-03; bot bubbles render and chime, and fixing their overflow was this session's main change
+- [ ] **Deploy the 2026-08-03 code-review fixes** — `f31db3c` (chat send-lock, HLS recovery) + `streamlit_app.py` `CACHE_BUST` bump are committed but **not** deployed; they landed after the `index-DjOsp3E-.js` push, so the live `/v2/` bundle predates them
+- [ ] **IWSDK v2 Quest 3 in-headset shakedown** — load `https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html` directly (NOT via Streamlit iframe); validate HUD comfort distance, push-to-talk latency, trigger-vs-laser conflict. **Now also covers:** seek buttons + progress bar (untestable in the emulator — CORS blocks HLS), thumbstick chat scrolling, and **the 2026-08-03 crash retest** — the chat-box overflow is fixed and four crash mechanisms are gone, but the crash was never reproducible in IWER. If it still dies, read the new `[fatal]` breadcrumbs (console + HUD flash) for the cause, then flip `USE_WEBXR_LAYERS = false` in `portal/src/index.ts:25` and retest
 - [ ] **IWSDK v2 cutover** — only after green shakedown: re-upload `portal/dist/index.html` as `inspector_portal.html` (per CLAUDE.md hard rule #2, never `copy_object`), bump CACHE_BUST, invalidate `/inspector_portal.html`
 - [ ] **Original A-Frame in-VR HUD shakedown** — superseded by IWSDK shakedown above if v2 cutover proceeds; otherwise still pending
 - [ ] **Full 360° video fix:** add mid (~2560×1280) + low (~1600×800) HLS renditions + master playlist, reusing existing 4K segments in place (plan: `~/.claude/plans/dreamy-kindling-lobster.md`)
