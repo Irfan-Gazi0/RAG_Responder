@@ -1464,6 +1464,82 @@ row + progress bar cannot be exercised in the emulator anyway (CORS blocks the H
 
 ---
 
+## 2026-08-03 — Branch Code Review (15 Findings) + Three Fixes: Chat Send-Lock, HLS Recovery, Stale CACHE_BUST
+
+Ran `/code-review` over the whole `meta-webvr` branch diff (9 commits, `42e24d2..336d04e`),
+covering `portal/src/*.ts`, `n8n_sync.py`, `run_eval.py`, `streamlit_app.py` and the
+working tree. **15 findings.** Fixed the three that directly gate the Quest shakedown;
+the rest are logged under Open Items rather than silently dropped.
+
+**1. `chat.ts` — the send-lock could brick chat until a page reload.** `inFlight = true`
+was set *outside* the `try`, with `addMessage()`, `addTyping()` and `setHudPending(true)`
+sitting between it and the `try`. All three reach into UIKit on the in-VR HUD — exactly
+the paths the 07-20/08-03 hardening commits suspect of throwing on a Quest. Any throw
+there skipped the `finally`, stranding `inFlight === true`: every later send then died at
+the guard with "Still answering the last question..." and the DOM Send button stayed
+disabled, with no indication why. All UIKit-touching setup now lives inside the `try`;
+`typingEl` is a `HTMLDivElement | null` declared above it and removed with `?.`. The
+`finally` was also reordered — `inFlight = false` and `sendBtn.disabled = false` run
+first, then `setHudPending(false)` inside its own try/catch, because a HUD throw *in the
+finally* would have recreated the identical lockout one level deeper.
+
+**2. `videosphere.ts` — the fatal-HLS handler defeated its own recovery.** Two defects in
+four lines. `hls.recoverMediaError()` was immediately followed by `videoEls[idx].pause()`,
+stopping the playback the recovery had just resumed and showing a failure banner anyway.
+And fatal `NETWORK_ERROR` — the common case on headset WiFi, the one the error message
+literally names ("check connection") — had **no retry at all** and left `hlsInstances[idx]`
+set, so a later `activatePanorama(idx)` returned early at the `if (hlsInstances[idx])`
+guard and waited forever on a `MANIFEST_PARSED` that could never fire. That lecture stayed
+unwatchable for the rest of the session. Now: NETWORK_ERROR → `startLoad()`, MEDIA_ERROR →
+`recoverMediaError()` with nothing after it, both bounded at 3 attempts per stream
+(`hlsRecoveries[]`, reset on every `FRAG_BUFFERED` so a long session can't accumulate its
+way into a false give-up). On giving up: `destroy()` + null the instance + clear
+`hlsReady[idx]`, so a retry rebuilds from scratch. Same state reset added to the
+native-HLS (Safari) branch.
+
+**3. `streamlit_app.py` — `CACHE_BUST` was stale.** Still `20260608a`, unchanged across
+the entire 9-commit branch, even though `portal/index.html` changed in it and Streamlit
+now embeds `/v2/index.html?v={CACHE_BUST}` as the default. Deploying without the bump
+reproduces the exact "I don't see my changes" failure the parked `/ship` skill exists to
+prevent. Now `20260803a`; the comment names v2 as the default embed instead of only the
+v1 files.
+
+Verified with `npx tsc --noEmit` (clean) and `npm run build` (succeeds,
+`dist/assets/index-DE6ISCbf.js`). **Not deployed** — deploys still gate on the Quest
+shakedown, same as 07-20.
+
+**Not fixed this session,** in rough severity order: `n8n_sync.py`'s `trim_settings()`
+silently resets live workflow settings on `--push --yes` (keeps only `executionOrder`,
+so a UI-configured `timezone`/`errorWorkflow`/`executionTimeout` is wiped by a
+prompt-only sync); `n8n_sync.py`'s doc key `video_transcript` can never match the live
+namespace `video_transcript_v2`, so tool descriptions may never push while `--check`
+still reports OVERALL PASS; `hud-mirror.ts`'s `toAscii()` collapses newlines and strips
+`°`/`≥`/`±`, so numbered shutdown procedures arrive on the headset as one run-on
+paragraph with units missing — degraded *only* for the user who can't see the DOM;
+`voice.ts` leaves a sticky "Transcribing..." on the HUD forever when the transcribe
+webhook fails; `chat.ts`'s empty-body guard still lets `[]`/`{}` render as the answer;
+video and chat errors clobber each other in the shared `#error-banner`; `activatePanorama`
+never pauses the outgoing video (overlapping audio + two concurrent 4K decodes);
+`hud.ts` never resets `this.placeholder` on re-wire and never registers its
+chat/transcript listeners for cleanup; `hud-mirror.ts` re-parses markdown `chat.ts`
+already parsed.
+
+**Repo hazard flagged, not resolved:** the working tree deletes `ingestion.ipynb` and
+`ingestion_transcript.ipynb` (2093 + 802 lines) and re-adds them only under an
+**untracked** `Ingestions/` directory. Committing that as-is removes the only documented
+PDF/transcript re-ingestion path from version control. Left uncommitted deliberately —
+needs a decision on the new location plus four CLAUDE.md path updates.
+
+| File / target | Change |
+|---|---|
+| `portal/src/chat.ts` | Send-lock moved inside `try`; nullable `typingEl`; `finally` reordered + HUD call isolated |
+| `portal/src/videosphere.ts` | Real NETWORK/MEDIA recovery, bounded at 3 with `FRAG_BUFFERED` reset, teardown + state reset on give-up; native-HLS branch reset too |
+| `streamlit_app.py` | `CACHE_BUST` `20260608a` → `20260803a`; comment now names `v2/index.html` |
+| — | **Not deployed.** 12 of 15 findings remain open (see above + Open Items) |
+| `progress.md` | This entry |
+
+---
+
 ## Next Steps / Open Items
 
 - [x] **Import + activate `n8n_transcribe_webhook.json`** — done; live endpoint verified (`{"text":"Beep."}`)
@@ -1471,6 +1547,11 @@ row + progress bar cannot be exercised in the emulator anyway (CORS blocks the H
 - [x] **IWSDK v2 dev-server shakedown** — done 2026-06-01: IWER pass verified boot, follower-HUD comfort/lazy-follow, ray-click lecture switch. 360° video (dev CORS) + push-to-talk (no mic) are Quest-only tests
 - [x] **Streamlit default → v2 IWSDK** — done 2026-06-08: tab1 embeds `/v2/index.html`, `?portal=v1` fallback; VR-module placeholder tab removed (deploy branch `feature/streamlit-landing-page`)
 - [x] **Desktop/touch drag-to-look for the v2 360° videosphere** — done 2026-06-08 (`DesktopLookSystem`); verified live via Playwright (`index-231veDSM.js`)
+- [ ] **`n8n_sync.py --push` is unsafe to run (2026-08-03)** — `trim_settings()` keeps only `executionOrder` and PUTs that, so a prompt-only sync silently wipes any UI-configured `timezone` / `errorWorkflow` / `executionTimeout` / `saveDataErrorExecution` on `S3uHJF57JAuA7bL0`. Preserve the live settings dict instead of trimming it. `--check` is unaffected and still safe
+- [ ] **`n8n_sync.py` tool descriptions may never push (2026-08-03)** — doc key `video_transcript` (parsed from the `###` header) can't match the live namespace `video_transcript_v2`, and node names with hyphens (`ford_mach-e_2026`) don't match doc keys (`ford_mach_e_2026`). Silent skip, no warning, and `check_invariants` never verifies descriptions so `--check` still reports OVERALL PASS. Add a warn-on-unmatched path
+- [ ] **`toAscii()` degrades safety-critical answers on the headset (2026-08-03)** — `hud-mirror.ts` collapses `\s+` to single spaces (numbered shutdown procedures become one run-on paragraph) and strips `°`/`≥`/`≤`/`±`/`→` ("above 2,000 °F" → "above 2,000 F"). The DOM panel is correct; only the in-VR user sees the degraded text. Preserve newlines and transliterate the units the font atlas lacks
+- [ ] **Decide where the ingestion notebooks live (2026-08-03)** — working tree deletes `ingestion.ipynb` + `ingestion_transcript.ipynb` from the repo root with untracked copies in `Ingestions/`. Either `git add Ingestions/` and fix the four CLAUDE.md references (quick-start rows, project-layout block, the stale-`DOCS` open-issue note), or restore them. Currently uncommitted so nothing is lost
+- [ ] **Remaining 2026-08-03 review findings (lower severity)** — sticky "Transcribing..." on transcribe-webhook failure (`voice.ts`); `[]`/`{}` rendered as a chat answer (`chat.ts` empty-body guard); video/chat errors clobbering the shared `#error-banner`; `activatePanorama` not pausing the outgoing video; `hud.ts` stale `placeholder` on re-wire + unregistered listener cleanup; duplicate `marked.parse` in `hud-mirror.ts`
 - [ ] **Chat webhook returns empty 200s (2026-07-20)** — `POST` to the chat webhook answers HTTP 200 with a zero-byte body in ~2 s, breaking every client (v1, v2, and the eval runner). Workflow `S3uHJF57JAuA7bL0` is active with a correct Webhook/Respond pair, so the failure is upstream of the response node. Diagnose the LIVE workflow first (`n8n_sync.py --check`), per the 2026-06-22 lesson
 - [ ] **Deploy the 2026-07-20 HUD overhaul to `/v2/`** — `python3.10 deploy_portal_v2.py` from the repo root; needed before the changes are testable on a Quest. Best done after the webhook is fixed so the chat path can be validated in the same pass
 - [ ] **Verify the bot-role chat bubble renders** — blocked on the webhook; only the user-role branch was observed in the emulator

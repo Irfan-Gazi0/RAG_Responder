@@ -40,14 +40,14 @@
     "semantic_hash": "8aeccfe2e1df1e5c0b26c2e8e746fee1"
   },
   "portal/.iwsdk/runtime/launch.json": {
-    "mtime": 1780321905.1369789,
-    "ast_hash": "9ad3ad07534d29d72b5fdb284576e9e3",
-    "semantic_hash": "9ad3ad07534d29d72b5fdb284576e9e3"
+    "mtime": 1785736490.294965,
+    "ast_hash": "ba8a6ae8653c240489103969c002998f",
+    "semantic_hash": ""
   },
   "portal/.iwsdk/runtime/session.json": {
-    "mtime": 1780408903.7497904,
-    "ast_hash": "e4d84d45ed87543cfed6d04c6102bce1",
-    "semantic_hash": "e4d84d45ed87543cfed6d04c6102bce1"
+    "mtime": 1785769516.7829208,
+    "ast_hash": "646472dad2c225fa1057a79a4cc8477f",
+    "semantic_hash": ""
   },
   "portal/.mcp.json": {
     "mtime": 1779678288.2432704,
@@ -65,29 +65,29 @@
     "semantic_hash": "e37c5a82df1289a643f854c3e676f7fa"
   },
   "portal/public/ui/hud.json": {
-    "mtime": 1782744771.9337287,
-    "ast_hash": "af6364e4f8369dc9c39f4888446fdebd",
-    "semantic_hash": "af6364e4f8369dc9c39f4888446fdebd"
+    "mtime": 1785740254.148641,
+    "ast_hash": "a092ab81175031b6b205059c0a41e50f",
+    "semantic_hash": ""
   },
   "portal/src/chat.ts": {
-    "mtime": 1780321759.1495347,
-    "ast_hash": "a9c06ee4851132a0249be06f295c7722",
-    "semantic_hash": "a9c06ee4851132a0249be06f295c7722"
+    "mtime": 1785740204.718601,
+    "ast_hash": "3904fa89cc9460ef5a701ca9787b80a6",
+    "semantic_hash": ""
   },
   "portal/src/hud-mirror.ts": {
-    "mtime": 1780321991.040216,
-    "ast_hash": "ad2bfde425b0a1621f3b5536ed7e54d6",
-    "semantic_hash": "ad2bfde425b0a1621f3b5536ed7e54d6"
+    "mtime": 1785738176.1827142,
+    "ast_hash": "75cbc1153e89de90df86016be571132a",
+    "semantic_hash": ""
   },
   "portal/src/hud.ts": {
-    "mtime": 1780321986.8902047,
-    "ast_hash": "cf095cb7771d776a4840885d90ced0b7",
-    "semantic_hash": "cf095cb7771d776a4840885d90ced0b7"
+    "mtime": 1785738166.3900347,
+    "ast_hash": "9f76d842ced950a53b593c1c4f03df2a",
+    "semantic_hash": ""
   },
   "portal/src/index.ts": {
-    "mtime": 1780934092.0560074,
-    "ast_hash": "57d90d9a00fcca4c275bda17452caabb",
-    "semantic_hash": "57d90d9a00fcca4c275bda17452caabb"
+    "mtime": 1785738229.513927,
+    "ast_hash": "570ebe3bb768c8fb2d24aeb9793dc620",
+    "semantic_hash": ""
   },
   "portal/src/look-controls.ts": {
     "mtime": 1780934092.0560074,
@@ -95,19 +95,19 @@
     "semantic_hash": "800a52f0a0dc673d03a28bc7ac52eb96"
   },
   "portal/src/push-to-talk.ts": {
-    "mtime": 1780321843.6337988,
-    "ast_hash": "089c980492972a4b9048bf3f17270421",
-    "semantic_hash": "089c980492972a4b9048bf3f17270421"
+    "mtime": 1783343478.5638068,
+    "ast_hash": "337a060d1cb602f2a6d8350608c41ddb",
+    "semantic_hash": ""
   },
   "portal/src/videosphere.ts": {
-    "mtime": 1779678942.8185968,
-    "ast_hash": "b32f0d42a4fb243584bb5a68ca502166",
-    "semantic_hash": "b32f0d42a4fb243584bb5a68ca502166"
+    "mtime": 1785740234.6316276,
+    "ast_hash": "f3f5b2003758a2223f3412d21432f80f",
+    "semantic_hash": ""
   },
   "portal/src/voice.ts": {
-    "mtime": 1780325459.2755563,
-    "ast_hash": "68073bea7be4eb8d320c4ea0f44ed517",
-    "semantic_hash": "68073bea7be4eb8d320c4ea0f44ed517"
+    "mtime": 1783343630.1091232,
+    "ast_hash": "96121d1f9ccfab14341d47ad09f08bd7",
+    "semantic_hash": ""
   },
   "portal/tsconfig.json": {
     "mtime": 1779678200.377318,
@@ -125,8 +125,8 @@
     "semantic_hash": ""
   },
   "streamlit_app.py": {
-    "mtime": 1782744961.4071486,
-    "ast_hash": "c2cb7fe66aa1cadf5fae11e843c69b9d",
+    "mtime": 1785740239.7776313,
+    "ast_hash": "71653233f7b1205c5f933454998bccfb",
     "semantic_hash": ""
   },
   "transcribe_videos.py": {
@@ -299,19 +299,14 @@
     "ast_hash": "b48f521e405dcbea187905d9057a4494",
     "semantic_hash": "b48f521e405dcbea187905d9057a4494"
   },
-  "apply.md": {
-    "mtime": 1782744961.4001484,
-    "ast_hash": "85a62292e884fd96f6517e2eae0ab86c",
-    "semantic_hash": "85a62292e884fd96f6517e2eae0ab86c"
-  },
   "chat_panel.html": {
     "mtime": 1779104447.3538222,
     "ast_hash": "1b2169da16b8f1f2c6eaaa9f3fa85b42",
     "semantic_hash": "1b2169da16b8f1f2c6eaaa9f3fa85b42"
   },
   "n8n_router_config.md": {
-    "mtime": 1782760305.8535507,
-    "ast_hash": "c64478911e71cfdde6fc69a76c26184c",
+    "mtime": 1783338456.5520496,
+    "ast_hash": "008e131b0e00dce686c464a18e6b1ec9",
     "semantic_hash": ""
   },
   "portal/.claude/agents/iwsdk-project-code-reviewer.md": {
@@ -365,8 +360,8 @@
     "semantic_hash": ""
   },
   "progress.md": {
-    "mtime": 1782746291.147348,
-    "ast_hash": "9f7354e1fe9e4c7015a029bd3dff07d6",
+    "mtime": 1785770215.1936924,
+    "ast_hash": "883fd75abf941200ea22d1255371ed12",
     "semantic_hash": ""
   },
   "vehicle_docs/EmergencyResponseGuide-Ford-Lightning-2026.pdf": {
@@ -485,19 +480,9 @@
     "semantic_hash": "299430eff9c309d7e3dc6da03c56d880"
   },
   "EV_responder_QA_comparison.md": {
-    "mtime": 1782744961.4001484,
+    "mtime": 1783338513.1001017,
     "ast_hash": "2d998bc7b877bf66792af042f66b109b",
     "semantic_hash": ""
-  },
-  "baseline_results.md": {
-    "mtime": 1782744961.4001484,
-    "ast_hash": "f45518b2a96e79c8cc3f16f9a3d27c7f",
-    "semantic_hash": "f45518b2a96e79c8cc3f16f9a3d27c7f"
-  },
-  "postfix_results.md": {
-    "mtime": 1782744961.4071486,
-    "ast_hash": "fc79f06dfbcfec525137122ac2040b2a",
-    "semantic_hash": "fc79f06dfbcfec525137122ac2040b2a"
   },
   "portal/public/audio/chime.mp3": {
     "mtime": 1780321649.5521586,
@@ -525,13 +510,28 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1782745113.6469278,
-    "ast_hash": "53d12bd1c543d7cb35d0f0e8130b35c6",
+    "mtime": 1783288599.6577291,
+    "ast_hash": "eae53f58bb4410aef963de55517b9941",
     "semantic_hash": ""
   },
   "portal/CLAUDE.md": {
     "mtime": 1783283712.376867,
     "ast_hash": "8f0b6df7a6e69d15bb33a489b2551e8f",
+    "semantic_hash": ""
+  },
+  "portal/.iwsdk/reference/state.json": {
+    "mtime": 1784523495.7838705,
+    "ast_hash": "258342e2b0859f10642fe1dd83e17e57",
+    "semantic_hash": ""
+  },
+  "portal/plan.md": {
+    "mtime": 1784642876.6677125,
+    "ast_hash": "42d1d3c33787a6c75779ae3c869f8d5d",
+    "semantic_hash": ""
+  },
+  "portal/plan2.md": {
+    "mtime": 1784559266.9066303,
+    "ast_hash": "45f93d240bf896b36c54d787f6269c4c",
     "semantic_hash": ""
   }
 }
