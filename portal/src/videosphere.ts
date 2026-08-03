@@ -62,6 +62,12 @@ const hlsInstances: (Hls | true | null)[] = [null, null, null];
 const hlsReady: boolean[] = [false, false, false];
 const hlsSupported = Hls.isSupported();
 
+// hls.js recovers in place from most fatal errors, but an endless recover loop
+// on a genuinely dead stream is worse than failing. Bounded per stream, reset
+// on every successfully buffered fragment so a long session doesn't accumulate.
+const hlsRecoveries: number[] = [0, 0, 0];
+const MAX_HLS_RECOVERIES = 3;
+
 export function getActiveVideo(): HTMLVideoElement | null {
   return activeVideo;
 }
@@ -129,9 +135,39 @@ function ensureHls(idx: number, onReady?: () => void) {
       hlsReady[idx] = true;
       onReady?.();
     });
+    hls.on(Hls.Events.FRAG_BUFFERED, () => {
+      hlsRecoveries[idx] = 0;
+    });
     hls.on(Hls.Events.ERROR, (_evt, data) => {
       if (!data.fatal) return;
-      if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
+
+      if (hlsRecoveries[idx] < MAX_HLS_RECOVERIES) {
+        hlsRecoveries[idx]++;
+        // A fatal NETWORK_ERROR is the common case on headset WiFi and is
+        // retryable — startLoad() resumes from the current position.
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+          flashHudStatus("Video stalled - reconnecting...");
+          hls.startLoad();
+          return;
+        }
+        // recoverMediaError() re-attaches and resumes playback on its own; do
+        // NOT pause here or the recovery is undone by the line after it.
+        if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          flashHudStatus("Video glitched - recovering...");
+          hls.recoverMediaError();
+          return;
+        }
+      }
+
+      // Out of retries (or an unrecoverable type): tear the instance down and
+      // clear the cached state. Without this reset a later activatePanorama(idx)
+      // returns early at the `if (hlsInstances[idx])` guard and waits on a
+      // MANIFEST_PARSED that can never fire, so the lecture stays dead for the
+      // rest of the session and only a page reload brings it back.
+      hls.destroy();
+      hlsInstances[idx] = null;
+      hlsReady[idx] = false;
+      hlsRecoveries[idx] = 0;
       videoEls[idx].pause();
       flashHudStatus("Video failed to load - check connection.");
       showErrorBanner("Video failed to load - check connection.");
@@ -148,7 +184,12 @@ function ensureHls(idx: number, onReady?: () => void) {
       { once: true },
     );
     v.addEventListener("error", () => {
+      // Same reset as the hls.js path: let a later activatePanorama(idx) re-attach
+      // the source instead of short-circuiting on a stale hlsInstances entry.
       v.pause();
+      v.removeAttribute("src");
+      hlsInstances[idx] = null;
+      hlsReady[idx] = false;
       flashHudStatus("Video failed to load - check connection.");
       showErrorBanner("Video failed to load - check connection.");
     });

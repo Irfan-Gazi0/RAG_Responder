@@ -93,22 +93,28 @@ export async function sendMessage(overrideText?: string) {
     return;
   }
   inFlight = true;
-
-  errorEl.style.display = "none";
-  if (!overrideText) inputEl.value = "";
-  autoGrow();
   sendBtn.disabled = true;
-
-  addMessage("user", question);
-  const typingEl = addTyping();
-  setHudPending(true); // mirror "Thinking…" into the in-VR HUD
 
   // Measured answers run 7-25 s (14 Pinecone tools at topK=10 behind a Sonnet
   // router), so 30 s left no margin on headset WiFi.
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 60000);
 
+  // Declared out here, assigned inside the try: addMessage() and setHudPending()
+  // reach into UIKit on the in-VR HUD, and a throw there before the try would
+  // skip the finally and strand inFlight === true — every later send then dies
+  // at the guard above and the Send button stays disabled until a page reload.
+  let typingEl: HTMLDivElement | null = null;
+
   try {
+    errorEl.style.display = "none";
+    if (!overrideText) inputEl.value = "";
+    autoGrow();
+
+    addMessage("user", question);
+    typingEl = addTyping();
+    setHudPending(true); // mirror "Thinking…" into the in-VR HUD
+
     const res = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -116,7 +122,7 @@ export async function sendMessage(overrideText?: string) {
       signal: controller.signal,
     });
 
-    typingEl.remove();
+    typingEl?.remove();
 
     // Read as text first: when the n8n agent errors before its Respond node, the
     // webhook answers 200 with a ZERO-BYTE body, and res.json() then throws
@@ -152,7 +158,7 @@ export async function sendMessage(overrideText?: string) {
     addMessage("bot", answer);
   } catch (err) {
     console.error("[chat] sendMessage failed:", err); // breadcrumb for on-device debugging
-    typingEl.remove();
+    typingEl?.remove();
     errorEl.style.display = "block";
     errorEl.textContent = `⚠ ${(err as Error).message}`;
     if ((err as Error).name === "AbortError") {
@@ -161,11 +167,18 @@ export async function sendMessage(overrideText?: string) {
       flashHudStatus("Chat error: " + (err as Error).message);
     }
   } finally {
+    // Order matters: reset the send-lock and the button before touching the HUD,
+    // and swallow HUD failures. A throw out of setHudPending() here would leave
+    // whatever follows it unexecuted — same lockout, one level deeper.
     clearTimeout(timeout);
     inFlight = false;
-    setHudPending(false);
     sendBtn.disabled = false;
     inputEl.focus();
+    try {
+      setHudPending(false);
+    } catch (hudErr) {
+      console.error("[chat] setHudPending(false) failed:", hudErr);
+    }
   }
 }
 

@@ -1,11 +1,12 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-# Bump this whenever inspector_portal.html / chat_panel.html change on S3.
+# Bump this whenever the embedded HTML changes on S3 — v2/index.html (the
+# default), inspector_portal.html, or chat_panel.html.
 # It changes the iframe URL's cache key so browsers can't serve a stale copy
 # (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
 # which a CloudFront invalidation does NOT clear).
-CACHE_BUST = "20260608a"
+CACHE_BUST = "20260803a"
 
 # v2 (IWSDK build) is now the default embedded portal — it lives under /v2/ as a
 # multi-file bundle and replaces the old A-Frame v1 (inspector_portal.html).
