@@ -78,9 +78,21 @@ function parseN8nResponse(data: unknown): string {
   return String(data);
 }
 
+// One request at a time. `sendBtn.disabled` only ever guarded the DOM button —
+// the in-VR Quick-Ask chips and voice call sendMessage() directly, so a gloved
+// double-tap on a chip fired two concurrent 25 s agent calls and rendered two
+// duplicate user bubbles in the HUD.
+let inFlight = false;
+
 export async function sendMessage(overrideText?: string) {
   const question = (overrideText ?? inputEl.value).trim();
   if (!question) return;
+
+  if (inFlight) {
+    flashHudStatus("Still answering the last question...");
+    return;
+  }
+  inFlight = true;
 
   errorEl.style.display = "none";
   if (!overrideText) inputEl.value = "";
@@ -91,8 +103,10 @@ export async function sendMessage(overrideText?: string) {
   const typingEl = addTyping();
   setHudPending(true); // mirror "Thinking…" into the in-VR HUD
 
+  // Measured answers run 7-25 s (14 Pinecone tools at topK=10 behind a Sonnet
+  // router), so 30 s left no margin on headset WiFi.
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30000);
+  const timeout = setTimeout(() => controller.abort(), 60000);
 
   try {
     const res = await fetch(WEBHOOK_URL, {
@@ -104,12 +118,36 @@ export async function sendMessage(overrideText?: string) {
 
     typingEl.remove();
 
+    // Read as text first: when the n8n agent errors before its Respond node, the
+    // webhook answers 200 with a ZERO-BYTE body, and res.json() then throws
+    // "Unexpected end of JSON input" — which is what the VR HUD showed the user.
+    const raw = await res.text();
+
     if (!res.ok) {
-      const detail = await res.json().catch(() => ({}));
-      throw new Error(detail.message || detail.detail || `Webhook error ${res.status}`);
+      let detail: Record<string, unknown> = {};
+      try {
+        detail = JSON.parse(raw);
+      } catch {
+        /* non-JSON error body */
+      }
+      throw new Error(
+        (detail.message as string) ||
+          (detail.detail as string) ||
+          `Webhook error ${res.status}`,
+      );
     }
 
-    const data = await res.json();
+    if (!raw.trim()) {
+      throw new Error("Assistant returned an empty response - please try again.");
+    }
+
+    let data: unknown;
+    try {
+      data = JSON.parse(raw);
+    } catch {
+      throw new Error("Assistant returned an unreadable response - please try again.");
+    }
+
     const answer = parseN8nResponse(data);
     addMessage("bot", answer);
   } catch (err) {
@@ -124,6 +162,7 @@ export async function sendMessage(overrideText?: string) {
     }
   } finally {
     clearTimeout(timeout);
+    inFlight = false;
     setHudPending(false);
     sendBtn.disabled = false;
     inputEl.focus();

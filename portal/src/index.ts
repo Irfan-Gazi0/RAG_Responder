@@ -13,6 +13,19 @@ import { initVideosphere } from "./videosphere.js";
 import { HudSystem } from "./hud.js";
 import { PushToTalkSystem } from "./push-to-talk.js";
 import { DesktopLookSystem } from "./look-controls.js";
+import { flashHudStatus } from "./hud-mirror.js";
+
+// On a Quest there is no console to look at, so a hard failure just reads as
+// "the app crashed". Surface it two ways: a [fatal] breadcrumb for the next
+// remote-debug session, and a HUD flash so the person wearing the headset can
+// report what actually died instead of describing the symptom.
+window.addEventListener("error", (e) => {
+  console.error("[fatal] uncaught error:", e.message, e.filename, e.lineno);
+  flashHudStatus("Error: " + e.message, 8000);
+});
+window.addEventListener("unhandledrejection", (e) => {
+  console.error("[fatal] unhandled rejection:", e.reason);
+});
 
 initChatBindings();
 initVoiceBindings();
@@ -38,6 +51,17 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
     environmentRaycast: false,
   },
 }).then((world) => {
+  // GPU-side death is the leading hypothesis for the Quest crash (glyph instance
+  // buffers + a 4K360 video texture). A lost context is silent otherwise: the
+  // canvas simply stops updating.
+  world.renderer.domElement.addEventListener("webglcontextlost", (e) => {
+    console.error("[fatal] WebGL context lost", e);
+    flashHudStatus("Graphics context lost - reload required.", 15000);
+  });
+  world.renderer.domElement.addEventListener("webglcontextrestored", () => {
+    console.error("[fatal] WebGL context restored");
+  });
+
   initVideosphere(world);
 
   const hudEntity = world

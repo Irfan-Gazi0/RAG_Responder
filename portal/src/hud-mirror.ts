@@ -41,10 +41,12 @@ function pushMerged() {
   transcriptListener?.(toAscii(transientText || liveText));
 }
 
+// Live messages only. A late-mounting HUD seeds itself from getChatHistory()
+// instead of having history replayed through the listener: the HUD rebuilds its
+// bubble list per listener call, so replaying N messages meant N full rebuilds
+// (O(n^2) component churn) plus one answer chime per past bot message.
 export function setChatListener(fn: ChatListener | null) {
   chatListener = fn;
-  // Replay history so a late-mounting HUD shows existing exchanges.
-  if (fn) for (const m of chatHistory) fn(m.role, m.text);
 }
 
 export function setTranscriptListener(fn: TranscriptListener | null) {

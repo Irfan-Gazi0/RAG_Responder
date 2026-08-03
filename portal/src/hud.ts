@@ -44,6 +44,18 @@ export class HudSystem extends createSystem({
   private chimeAudio: Entity | null = null;
   private loggedFirstBubble = false;
 
+  // Bubbles we created, in display order. We track them ourselves instead of
+  // walking scroll.children so removal can never touch anything UIKit owns.
+  private bubbles: UIKit.Container[] = [];
+  private placeholder: UIKit.Text | null = null;
+  private scrollTimer: ReturnType<typeof setTimeout> | null = null;
+
+  // Each bot answer is ~1800 plain-text chars ≈ 1800 live glyph instances. On a
+  // Quest that budget is shared with the 4K360 video texture, so the HUD renders
+  // only the most recent exchanges. Older turns stay in hud-mirror's history and
+  // in the DOM chat panel — nothing is truncated, just not built as geometry.
+  private static readonly MAX_BUBBLES = 6;
+
   init() {
     // Non-positional UI sounds: a click to confirm button presses and a chime
     // when an AI answer lands (the user may be looking away at the scene).
@@ -173,19 +185,20 @@ export class HudSystem extends createSystem({
     );
 
     // Register listeners so chat/voice modules can push updates into the HUD.
-    // History is empty at wire time, so the replay inside setChatListener never
-    // chimes for past messages — only live "bot" answers do.
-    setChatListener((role) => {
+    // The listener now handles LIVE messages only — renderInitial() below seeds
+    // the list from existing history, so nothing replays through here and past
+    // bot answers can't fire a burst of chimes.
+    setChatListener((role, text) => {
       // Breadcrumb: proves the DOM->HUD chat bridge reached the HUD on device
       // (symptom B is "bubbles never render in VR"). Logged once to avoid spam.
       if (!this.loggedFirstBubble) {
         console.log("[hud] first chat bubble render, role =", role);
         this.loggedFirstBubble = true;
       }
-      this.renderChatBubbles();
+      this.appendBubble(role, text);
       if (role === "bot") this.playChime();
     });
-    this.renderChatBubbles(); // initial render (placeholder or replayed history)
+    this.renderInitial(); // placeholder, or the tail of any existing history
     // hud-mirror merges the live + transient channels before calling this, so we
     // just render. Hide the element when empty so it reserves no blank line. (The
     // span is seeded with a placeholder in hud.uikitml so UIKit builds it as a
@@ -202,53 +215,103 @@ export class HudSystem extends createSystem({
     console.log("[hud] wireHud complete - buttons + chat listener wired");
   }
 
-  // Rebuild the bubble list from scratch. Runs only when a message arrives
-  // (not per frame), and history is capped at 40, so rebuild-all is cheap
-  // and far simpler than diffing.
-  private renderChatBubbles() {
+  // Build the list once at wire time from whatever history already exists.
+  // Steady-state updates go through appendBubble(), not through here — a full
+  // rebuild per message is O(n^2) allocation churn and was a prime suspect for
+  // the on-device crash.
+  private renderInitial() {
     const scroll = this.chatScroll;
     if (!scroll) return;
-    for (const child of [...scroll.children]) {
-      scroll.remove(child);
-      (child as unknown as { dispose?: () => void }).dispose?.();
+
+    for (const bubble of this.bubbles) {
+      scroll.remove(bubble);
+      bubble.dispose();
     }
+    this.bubbles.length = 0;
+
     const history = getChatHistory();
-    if (history.length === 0) {
-      const placeholder = new UIKit.Text({
-        text: "First Responder GPT - ask about EV emergency response.",
-        fontSize: 2,
-        color: "#94a3b8",
-      });
-      scroll.add(placeholder);
+    const recent = history.slice(-HudSystem.MAX_BUBBLES);
+    if (recent.length === 0) {
+      this.showPlaceholder();
       return;
     }
-    for (const m of history) {
-      scroll.add(this.makeBubble(m.role, m.text));
+    for (const m of recent) this.appendBubble(m.role, m.text);
+  }
+
+  // Add exactly one bubble and retire the oldest once over the cap.
+  private appendBubble(role: "user" | "bot", text: string) {
+    const scroll = this.chatScroll;
+    if (!scroll) return;
+
+    if (this.placeholder) {
+      scroll.remove(this.placeholder);
+      this.placeholder.dispose();
+      this.placeholder = null;
     }
-    // Layout is async; scroll to the newest message a frame later.
-    setTimeout(() => {
-      const max = scroll.maxScrollPosition.value;
-      scroll.scrollPosition.value = [0, max[1] ?? 0];
+
+    const bubble = this.makeBubble(role, text);
+    scroll.add(bubble);
+    this.bubbles.push(bubble);
+
+    while (this.bubbles.length > HudSystem.MAX_BUBBLES) {
+      const oldest = this.bubbles.shift()!;
+      scroll.remove(oldest);
+      oldest.dispose();
+    }
+
+    this.scrollToBottomSoon();
+  }
+
+  private showPlaceholder() {
+    const scroll = this.chatScroll;
+    if (!scroll || this.placeholder) return;
+    this.placeholder = new UIKit.Text({
+      text: "First Responder GPT - ask about EV emergency response.",
+      fontSize: 2,
+      color: "#94a3b8",
+      width: "100%",
+    });
+    scroll.add(this.placeholder);
+  }
+
+  // Layout is async, so scrolling to the newest message has to wait a beat. One
+  // shared timer: a burst of messages re-arms it instead of queueing N timers.
+  private scrollToBottomSoon() {
+    if (this.scrollTimer) clearTimeout(this.scrollTimer);
+    this.scrollTimer = setTimeout(() => {
+      this.scrollTimer = null;
+      const scroll = this.chatScroll;
+      if (!scroll) return;
+      const maxY = scroll.maxScrollPosition.value[1];
+      if (!Number.isFinite(maxY)) return;
+      scroll.scrollPosition.value = [0, maxY as number];
     }, 50);
   }
 
   private makeBubble(role: "user" | "bot", text: string): UIKit.Container {
     const isUser = role === "user";
+    // `width` (definite), NOT `maxWidth`: with a shrink-to-fit container the
+    // panel rect honours the cap but Yoga still measures the Text at its full
+    // unwrapped width, so glyphs paint outside the bubble and past the scroll
+    // viewport. A definite width gives the Text something to wrap against, and
+    // overflow:hidden makes the clip non-negotiable.
     const bubble = new UIKit.Container({
       flexDirection: "column",
       gap: 0.3,
-      maxWidth: "85%",
+      width: "85%",
       alignSelf: isUser ? "flex-end" : "flex-start",
       backgroundColor: isUser ? "#1e3a8a" : "#334155",
       borderRadius: 1.2,
       padding: 1,
       flexShrink: 0,
+      overflow: "hidden",
     });
     bubble.add(
       new UIKit.Text({
         text: isUser ? "You" : "First Responder GPT",
         fontSize: 1.5,
         color: isUser ? "#93c5fd" : "#94a3b8",
+        width: "100%",
       }),
     );
     bubble.add(
@@ -256,6 +319,8 @@ export class HudSystem extends createSystem({
         text,
         fontSize: 2,
         color: "#e2e8f0",
+        width: "100%",
+        wordBreak: "break-word",
       }),
     );
     return bubble;
@@ -292,9 +357,14 @@ export class HudSystem extends createSystem({
     const axes = left?.getAxesValues(InputComponent.Thumbstick);
     if (this.chatScroll && axes && Math.abs(axes.y) > 0.2) {
       const pos = this.chatScroll.scrollPosition.value;
-      const max = this.chatScroll.maxScrollPosition.value[1] ?? 0;
-      const y = Math.max(0, Math.min(max, (pos[1] ?? 0) + axes.y * delta * 40));
-      this.chatScroll.scrollPosition.value = [pos[0] ?? 0, y];
+      const max = this.chatScroll.maxScrollPosition.value[1];
+      const cur = pos[1];
+      // Bail unless both are real numbers: NaN here writes NaN into the scroll
+      // signal, which poisons the panel's transform and takes the renderer down.
+      if (Number.isFinite(max) && Number.isFinite(cur)) {
+        const y = Math.max(0, Math.min(max as number, (cur as number) + axes.y * delta * 40));
+        this.chatScroll.scrollPosition.value = [pos[0] ?? 0, y];
+      }
     }
 
     this.elapsedSinceUpdate += delta;
