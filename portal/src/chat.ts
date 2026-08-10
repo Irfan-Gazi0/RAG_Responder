@@ -1,5 +1,11 @@
 import { marked } from "marked";
-import { mirrorToHud, setHudPending, flashHudStatus } from "./hud-mirror.js";
+import {
+  flashHudStatus,
+  isImmersive,
+  mirrorToHud,
+  setHudPending,
+} from "./hud-mirror.js";
+import { crumb } from "./breadcrumbs.js";
 
 const WEBHOOK_URL =
   "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1";
@@ -155,9 +161,14 @@ export async function sendMessage(overrideText?: string) {
     }
 
     const answer = parseN8nResponse(data);
+    // The crash lands between here and the bubble appearing in VR, so record the
+    // payload size first: if this is the last persisted crumb, the answer render
+    // is confirmed as the trigger and we know how big the input was.
+    crumb("chat", `answer received bytes=${raw.length} chars=${answer.length}`);
     addMessage("bot", answer);
+    crumb("chat", "answer rendered");
   } catch (err) {
-    console.error("[chat] sendMessage failed:", err); // breadcrumb for on-device debugging
+    crumb("chat", "sendMessage failed:", err as Error);
     typingEl?.remove();
     errorEl.style.display = "block";
     errorEl.textContent = `⚠ ${(err as Error).message}`;
@@ -173,11 +184,11 @@ export async function sendMessage(overrideText?: string) {
     clearTimeout(timeout);
     inFlight = false;
     sendBtn.disabled = false;
-    inputEl.focus();
+    focusInput();
     try {
       setHudPending(false);
     } catch (hudErr) {
-      console.error("[chat] setHudPending(false) failed:", hudErr);
+      crumb("chat", "setHudPending(false) failed:", hudErr as Error);
     }
   }
 }
@@ -189,6 +200,48 @@ export function askQuickQuestion(question: string) {
 
 export function setInputValue(text: string) {
   inputEl.value = text;
+}
+
+/**
+ * Focus the composer — but NEVER while an immersive session is active.
+ *
+ * THIS IS THE "the browser closed on me when the answer was generated" CRASH.
+ * Confirmed 2026-08-10 from `adb logcat` on a real Quest 3, not inferred:
+ *
+ *   FATAL EXCEPTION: main
+ *   Process: com.oculus.browser, PID: 9087
+ *   Caused by: java.lang.IllegalStateException:
+ *       You need to use a Theme.AppCompat theme (or descendant) with this activity.
+ *     at gu.setContentView(chromium-OculusBrowser.apk-stable-570200647:8)
+ *     at android.app.Dialog.show(Dialog.java:325)
+ *     at com.oculus.browser.VrShellDelegate.showOverlayKeyboard(...:91)
+ *   ...4.5 s later:
+ *   I Process : Sending signal. PID: 9087 SIG: 9
+ *
+ * Focusing a text input inside a WebXR session makes the Meta Quest Browser
+ * open its VR overlay keyboard, and that keyboard throws while inflating its own
+ * dialog. The throw is uncaught on the browser's main Looper, so Android's
+ * default handler SIGKILLs the process. **The whole browser dies — not just the
+ * tab, and there is no reload.** Nothing in JS can catch or recover from it;
+ * `window.onerror` never fires, which is exactly why every previous fix attempt
+ * (bubble overflow, MAX_BUBBLES, glyph budget, WebXR layers) missed it.
+ *
+ * This is a Meta Quest Browser bug (build 570200647), not a bug in this portal.
+ * We can only avoid triggering it.
+ *
+ * The call site that fired it was `sendMessage()`'s finally block, which ran
+ * this unconditionally the moment an answer finished rendering — hence the
+ * symptom being reproducible on *every* in-VR question.
+ *
+ * Skipping it in VR costs nothing: the DOM composer is invisible in an immersive
+ * session (the UIKit HUD is the UI), so there is no focus for the user to gain.
+ */
+export function focusInput() {
+  if (isImmersive()) {
+    crumb("chat", "focus() skipped in XR - Quest overlay-keyboard crash guard");
+    return;
+  }
+  inputEl.focus();
 }
 
 export function initChatBindings() {

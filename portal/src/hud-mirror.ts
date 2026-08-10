@@ -11,6 +11,21 @@ let transcriptListener: TranscriptListener | null = null;
 
 const chatHistory: { role: "user" | "bot"; text: string }[] = [];
 
+// Whether an immersive (VR) session is currently active. HudSystem keeps this in
+// sync from world.visibilityState. chat.ts reads it to suppress DOM textarea
+// focus, which hard-kills the Meta Quest Browser — see focusInput() in chat.ts
+// for the full crash trace. Kept here rather than plumbed through `world` so the
+// vanilla-JS chat/voice modules can read it without an ECS dependency.
+let immersive = false;
+
+export function setImmersive(value: boolean) {
+  immersive = value;
+}
+
+export function isImmersive(): boolean {
+  return immersive;
+}
+
 // ---------------------------------------------------------------------------
 // Two logical channels rendered into the single #hud-transcript element:
 //   live      — sticky status: voice "Listening..."/"Recording...", "Thinking..."

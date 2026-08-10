@@ -1619,6 +1619,107 @@ needs a decision on the new location plus four CLAUDE.md path updates.
 
 ---
 
+## 2026-08-10 — The Quest "browser closed on me" Crash: It Was `inputEl.focus()` Opening the VR Overlay Keyboard (Found via `adb logcat`, Not Inference)
+
+**The crash is fixed, and for the first time it was actually *observed* rather than
+guessed at.** Three sessions of hypothesis-driven fixes (bubble overflow, `MAX_BUBBLES`,
+glyph budget, WebXR quad layers, GPU-memory exhaustion) all missed, because every one of
+them assumed a JS- or GPU-level failure. It was neither.
+
+### Root cause
+
+`adb logcat -b crash` on the real Quest 3, at the moment the user reproduced it:
+
+```
+08-10 10:14:55.524  FATAL EXCEPTION: main
+  Process: com.oculus.browser, PID: 9087
+  Caused by: java.lang.IllegalStateException:
+      You need to use a Theme.AppCompat theme (or descendant) with this activity.
+    at gu.setContentView(chromium-OculusBrowser.apk-stable-570200647:8)
+    at android.app.Dialog.show(Dialog.java:325)
+    at com.oculus.browser.VrShellDelegate.showOverlayKeyboard(...:91)
+08-10 10:14:59.978  I Process       : Sending signal. PID: 9087 SIG: 9
+08-10 10:15:00.071  I ActivityManager: Process com.oculus.browser (pid 9087) has died: fg +50 FGS
+```
+
+Focusing a DOM text input during a WebXR session makes the Meta Quest Browser open its VR
+overlay keyboard; that keyboard throws while inflating its own dialog; the throw is
+uncaught on the browser's Android **main Looper**, so Android's default handler SIGKILLs
+the process. **The entire browser dies — not the tab. No reload, no recovery.** This is a
+Meta Quest Browser bug (build `570200647`), not portal code. We can only avoid tripping it.
+
+Our trigger: `chat.ts` ran `inputEl.focus()` **unconditionally in `sendMessage()`'s
+`finally` block** — i.e. the instant every answer finished rendering. That is exactly the
+reported symptom ("when the answer was generated the browser closed on me"), and exactly
+why it reproduced on *every* in-VR question.
+
+**Why nothing in the app ever saw it:** `window.onerror` never fires, no
+`webglcontextlost`, no console output. The failure is one layer below anything JavaScript
+can observe. The localStorage breadcrumb system built for this hunt could not have caught
+it either — a point worth remembering next time.
+
+### Fix
+
+`focusInput()` in `chat.ts` gates focus on `isImmersive()`; `voice.ts`'s two focus calls
+route through the same helper so the whole bug class is gone. `isImmersive` is fed by
+**two independent sources** — `HudSystem`'s `world.visibilityState` subscription *and*
+`renderer.xr` `sessionstart`/`sessionend` in `index.ts` — deliberately redundant, because
+getting this one flag wrong kills the browser. Skipping focus in VR costs nothing: the DOM
+composer is invisible in an immersive session.
+
+### Verified, both directions
+
+- **User retest on-headset:** answer rendered and was readable; browser survived.
+- **Device log:** the full 105,419-line capture spans 10:03 → 10:38 and contains
+  **exactly one** `FATAL EXCEPTION` — the original pre-fix one at 10:15:00. The browser
+  restarted at 10:18 and ran to the end of the capture with **zero** further
+  `com.oculus.browser ... has died` records.
+
+### Also this session
+
+**Meta VR CLI (`metavr`, formerly `hzdb`) removed from `portal/.mcp.json`** — it hard-gates
+on `linux-x64` (`supported: darwin-arm64, darwin-x64, win32-x64`) and had been **silently
+failing to start on every launch for months**; no `mcp__hzdb__*` tool was ever actually
+available here. Replaced in `portal/CLAUDE.md` with the plain-`adb` equivalents table and
+the `chrome://inspect#devices` path. `adb` is `/usr/lib/android-sdk/platform-tools/adb`
+(Debian 28.0.2, from `apt install adb`). Note the split: **DevTools shows what the page
+did; logcat shows what killed it.** A sleeping Quest exposes no DevTools socket at all —
+the headset must be awake for a renderer to exist.
+
+**In-VR chat scrolling fixed.** All three existing paths failed the user for different
+reasons: UIKit drag-to-scroll needs the trigger held while sweeping the controller (fights
+push-to-talk, imprecise with gloves); the left thumbstick worked but nothing on screen
+advertised it and it dies entirely under hand tracking; and auto-scroll fired once at
+50 ms, while a long answer is still wrapping — so it landed short of the real bottom.
+Added `^ Up` / `v Down` / `Latest` buttons on the panel riding the same click path as the
+quick-ask chips, made auto-scroll retry 4× over ~500 ms, and funnelled every scroll path
+through one clamped helper. The old thumbstick code would have thrown on a null
+`scrollPosition`, and read the "not yet overflowing" `undefined` max as a silent dead end.
+Verified in IWER: ray-clicked a chip, got a real answer, confirmed auto-scroll hit bottom,
+then `^ Up` paged back and the thumbstick paged forward. Zero console errors.
+
+**Diagnostics stripped** now that the cause is known: `src/flags.ts` deleted (`?layers`,
+`?video`, `?maxlevel`, `?hudchat` gone), the amber on-page breadcrumb panel removed, the
+per-bubble GPU-counter pair reduced to one line. Kept the silent `crumb()` ring buffer —
+it costs nothing and is the only trail that survives a tab death; read it with
+`frCrumbs()` over `adb` + `chrome://inspect`.
+
+| File / target | Change |
+|---|---|
+| `portal/src/chat.ts` | `focusInput()` guard + the full logcat trace as its doc comment; `finally` now calls it |
+| `portal/src/voice.ts` | Both `inputEl.focus()` calls routed through `focusInput()` |
+| `portal/src/hud-mirror.ts` | `setImmersive()` / `isImmersive()` shared flag |
+| `portal/src/index.ts` | `sessionstart`/`sessionend` as a second independent source for the flag; flags + crumb-panel wiring removed |
+| `portal/src/hud.ts` | `scrollChatBy` / `scrollChatToBottom` / `chatPageUnits` helpers; scroll buttons wired; retrying auto-scroll |
+| `portal/ui/hud.uikitml` | `^ Up` / `v Down` / `Latest` row; hint now names the left stick |
+| `portal/src/breadcrumbs.ts` | **New** (from the hunt); on-page panel stripped, `frCrumbs()` console inspector kept |
+| `portal/src/videosphere.ts` | `?maxlevel` pin removed; ABR levels still logged once per lecture |
+| `portal/src/flags.ts` | **Deleted** |
+| `portal/vite.config.ts` | `/videos` → CloudFront dev proxy (makes HLS same-origin so the LAN dev server can reproduce headset conditions) |
+| Deploy | `index-BuzlsTkp.js`, invalidation `IBYLNB4E9K2VJN4SJQGKWTJ94O`; served hash + new `ui/hud.json` both confirmed live |
+
+---
+
 ## Next Steps / Open Items
 
 - [x] **Import + activate `n8n_transcribe_webhook.json`** — done; live endpoint verified (`{"text":"Beep."}`)
@@ -1634,8 +1735,10 @@ needs a decision on the new location plus four CLAUDE.md path updates.
 - [x] **Chat webhook returns empty 200s (2026-07-20)** — resolved 2026-08-03. Root cause was the paused Supabase instance behind `Postgres Chat Memory`: execution `854` showed `Webhook → success`, `Postgres Chat Memory → ERROR "connection cannot be established"`, `Router Agent → ERROR`, so `Respond to Webhook` never ran and n8n closed the request with a zero-byte body. Operator resumed Supabase; five live POSTs verified 200 / 1391–2638 B / 6.8–24.3 s. No workflow changes were needed — again a LIVE-side fault, not repo data
 - [x] **Deploy the 2026-07-20 HUD overhaul to `/v2/`** — done 2026-08-03 alongside the chat-box fix (`index-DjOsp3E-.js`, invalidation `I265DGY1NKX15AJOY0PN136BUK`); new bundle confirmed served
 - [x] **Verify the bot-role chat bubble renders** — done 2026-08-03; bot bubbles render and chime, and fixing their overflow was this session's main change
-- [ ] **Deploy the 2026-08-03 code-review fixes** — `f31db3c` (chat send-lock, HLS recovery) + `streamlit_app.py` `CACHE_BUST` bump are committed but **not** deployed; they landed after the `index-DjOsp3E-.js` push, so the live `/v2/` bundle predates them
-- [ ] **IWSDK v2 Quest 3 in-headset shakedown** — load `https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html` directly (NOT via Streamlit iframe); validate HUD comfort distance, push-to-talk latency, trigger-vs-laser conflict. **Now also covers:** seek buttons + progress bar (untestable in the emulator — CORS blocks HLS), thumbstick chat scrolling, and **the 2026-08-03 crash retest** — the chat-box overflow is fixed and four crash mechanisms are gone, but the crash was never reproducible in IWER. If it still dies, read the new `[fatal]` breadcrumbs (console + HUD flash) for the cause, then flip `USE_WEBXR_LAYERS = false` in `portal/src/index.ts:25` and retest
+- [x] **Deploy the 2026-08-03 code-review fixes** — done 2026-08-10; `f31db3c` (chat send-lock, HLS recovery) shipped inside `index-BuzlsTkp.js`. `streamlit_app.py` `CACHE_BUST` was already bumped to `20260803a`
+- [x] **The in-VR answer-render crash** — fixed and confirmed 2026-08-10 (overlay-keyboard focus; see entry above). Superseded the whole `USE_WEBXR_LAYERS` / GPU-budget line of inquiry — layers are back on permanently
+- [ ] **IWSDK v2 Quest 3 in-headset shakedown (remainder)** — load `https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html` directly (NOT via Streamlit iframe). Crash retest and in-VR chat scrolling are now **done**; still unvalidated on device: HUD comfort distance, push-to-talk latency, trigger-vs-laser conflict, and the seek buttons + progress bar (untestable in IWER — CORS blocks HLS, though the new `/videos` dev proxy makes the LAN dev server a viable substitute)
+- [ ] **Quest memory pressure — observed, not diagnosed (2026-08-10)** — during the crash capture, `lowmemorykiller` was culling background apps (whatsapp, documentsui, systemutilities) at adj 975→945 and a renderer logged `Received critical onTrimMemory`. The browser itself was never lmk-killed and `VrApi` reported `Free=2979MB`, so this was **not** the crash cause — but it is real, and it is the most likely candidate if a *different* failure mode shows up later. Trim the Havok WASM (~2 MB, `physics: false` yet still bundled) and the 4K video texture before chasing anything exotic
 - [ ] **IWSDK v2 cutover** — only after green shakedown: re-upload `portal/dist/index.html` as `inspector_portal.html` (per CLAUDE.md hard rule #2, never `copy_object`), bump CACHE_BUST, invalidate `/inspector_portal.html`
 - [ ] **Original A-Frame in-VR HUD shakedown** — superseded by IWSDK shakedown above if v2 cutover proceeds; otherwise still pending
 - [ ] **Full 360° video fix:** add mid (~2560×1280) + low (~1600×800) HLS renditions + master playlist, reusing existing 4K segments in place (plan: `~/.claude/plans/dreamy-kindling-lobster.md`)

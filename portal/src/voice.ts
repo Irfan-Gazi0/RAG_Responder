@@ -1,4 +1,4 @@
-import { sendMessage, setInputValue } from "./chat.js";
+import { focusInput, sendMessage, setInputValue } from "./chat.js";
 import { setHudTranscript, flashHudStatus } from "./hud-mirror.js";
 
 // Fallback transcription endpoint used when the browser lacks
@@ -142,7 +142,7 @@ function startSpeechRecognition(vrMode: boolean) {
     } else {
       micBtn.classList.remove("recording");
       micBtn.title = "Voice input";
-      inputEl.focus();
+      focusInput();
     }
   };
 
@@ -234,7 +234,7 @@ async function startMediaRecording(vrMode: boolean) {
         inputEl.style.height = "auto";
         inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
         micBtn.title = "Voice input";
-        inputEl.focus();
+        focusInput();
       }
     } catch (err) {
       showVoiceError(`⚠ Transcription failed: ${(err as Error).message}`, vrMode);

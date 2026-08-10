@@ -16,12 +16,44 @@ import { fmt, getActiveVideo, getCurrentVideoIdx, switchVideo } from "./videosph
 import {
   getChatHistory,
   setChatListener,
+  setImmersive,
   setTranscriptListener,
 } from "./hud-mirror.js";
 import { askQuickQuestion } from "./chat.js";
 import { pttStopWasRecent } from "./push-to-talk.js";
+import { crumb } from "./breadcrumbs.js";
 
 const HUD_CONFIG_PATH = "./ui/hud.json";
+
+/**
+ * GPU/heap counters, injected from index.ts once the renderer exists. The
+ * leading crash hypothesis is that building an answer's glyphs pushes the tab
+ * past its GPU budget, so we sample right before and after each bubble is
+ * added — if the crash is resource exhaustion, the last surviving breadcrumb
+ * shows the climb.
+ */
+type RendererProbe = () => {
+  geometries: number;
+  textures: number;
+  triangles: number;
+  heapMB: number;
+};
+
+let rendererProbe: RendererProbe | null = null;
+
+export function setRendererProbe(probe: RendererProbe) {
+  rendererProbe = probe;
+}
+
+function probeString(): string {
+  if (!rendererProbe) return "probe=none";
+  try {
+    const p = rendererProbe();
+    return `geom=${p.geometries} tex=${p.textures} tris=${p.triangles} heap=${p.heapMB}MB`;
+  } catch (e) {
+    return "probe=failed " + String(e);
+  }
+}
 
 export class HudSystem extends createSystem({
   hudPanel: {
@@ -105,6 +137,10 @@ export class HudSystem extends createSystem({
     this.cleanupFuncs.push(
       this.world.visibilityState.subscribe((state) => {
         const inXR = state !== VisibilityState.NonImmersive;
+        // Publish session state to the vanilla-JS modules. chat.ts gates DOM
+        // textarea focus on this — focusing it in VR kills the whole Quest
+        // Browser process (see focusInput() in chat.ts).
+        setImmersive(inXR);
         for (const entity of this.queries.hudPanel.entities) {
           if (entity.object3D) entity.object3D.visible = inXR;
         }
@@ -162,6 +198,22 @@ export class HudSystem extends createSystem({
       this.guardedClick(() => this.seekBy(10)),
     );
 
+    // Chat scroll controls. UIKit does support drag-to-scroll, but in VR that
+    // means holding the trigger and sweeping the controller across the panel —
+    // which collides with push-to-talk on the right hand and is imprecise with
+    // gloves on. The left thumbstick (see update()) also scrolls, but it is
+    // invisible in the UI and dies entirely when the user switches to hand
+    // tracking. These buttons ride the same click path as the quick-ask chips.
+    doc.getElementById("hud-scroll-up")?.addEventListener("click", () =>
+      this.guardedClick(() => this.scrollChatBy(-this.chatPageUnits())),
+    );
+    doc.getElementById("hud-scroll-down")?.addEventListener("click", () =>
+      this.guardedClick(() => this.scrollChatBy(this.chatPageUnits())),
+    );
+    doc.getElementById("hud-scroll-latest")?.addEventListener("click", () =>
+      this.guardedClick(() => this.scrollChatToBottom()),
+    );
+
     // One-click common questions - no typing or voice needed with gloves on.
     const QUICK_QUESTIONS: [string, string][] = [
       ["hud-chip1", "How do I shut down the high-voltage system on an EV?"],
@@ -189,10 +241,10 @@ export class HudSystem extends createSystem({
     // the list from existing history, so nothing replays through here and past
     // bot answers can't fire a burst of chimes.
     setChatListener((role, text) => {
-      // Breadcrumb: proves the DOM->HUD chat bridge reached the HUD on device
-      // (symptom B is "bubbles never render in VR"). Logged once to avoid spam.
+      // Proves the DOM->HUD chat bridge reached the HUD on device (symptom B is
+      // "bubbles never render in VR"). Crumbed once to avoid spam.
       if (!this.loggedFirstBubble) {
-        console.log("[hud] first chat bubble render, role =", role);
+        crumb("hud", "first chat bubble render, role =", role);
         this.loggedFirstBubble = true;
       }
       this.appendBubble(role, text);
@@ -209,10 +261,10 @@ export class HudSystem extends createSystem({
     // Start hidden — nothing to show until a voice/chat status arrives.
     this.transcriptText?.setProperties({ display: "none", text: "" });
 
-    // Breadcrumb: proves wireHud ran on device. If this line never appears in
-    // the Quest console, buttons are dead (A) and no chat listener is attached
-    // (B) — the single root cause in plan2.md's working hypothesis.
-    console.log("[hud] wireHud complete - buttons + chat listener wired");
+    // Proves wireHud ran on device. If this never appears, buttons are dead (A)
+    // and no chat listener is attached (B) — the single root cause in plan2.md's
+    // working hypothesis.
+    crumb("hud", "wireHud complete - buttons + chat listener wired", probeString());
   }
 
   // Build the list once at wire time from whatever history already exists.
@@ -242,6 +294,8 @@ export class HudSystem extends createSystem({
   private appendBubble(role: "user" | "bot", text: string) {
     const scroll = this.chatScroll;
     if (!scroll) return;
+
+    crumb("hud", `bubble+ role=${role} chars=${text.length} ${probeString()}`);
 
     if (this.placeholder) {
       scroll.remove(this.placeholder);
@@ -274,18 +328,56 @@ export class HudSystem extends createSystem({
     scroll.add(this.placeholder);
   }
 
-  // Layout is async, so scrolling to the newest message has to wait a beat. One
-  // shared timer: a burst of messages re-arms it instead of queueing N timers.
+  // Every scroll path funnels through here — thumbstick, the on-panel buttons,
+  // and the auto-scroll after a new bubble — so the clamping and the null
+  // handling exist in exactly one place.
+  //
+  // `maxScrollPosition[1]` is *undefined*, not 0, until the content actually
+  // overflows the viewport. That is "nothing to scroll", not an error, so bail
+  // quietly. Reading it as a number and doing the arithmetic anyway would write
+  // NaN into the scroll signal, which poisons the panel's transform.
+  private scrollChatBy(units: number) {
+    const scroll = this.chatScroll;
+    if (!scroll) return;
+    const max = scroll.maxScrollPosition.value[1];
+    if (!Number.isFinite(max)) return;
+    const pos = scroll.scrollPosition.value ?? [0, 0];
+    const cur = Number.isFinite(pos[1]) ? (pos[1] as number) : 0;
+    scroll.scrollPosition.value = [
+      pos[0] ?? 0,
+      Math.max(0, Math.min(max as number, cur + units)),
+    ];
+  }
+
+  private scrollChatToBottom() {
+    const scroll = this.chatScroll;
+    if (!scroll) return;
+    const max = scroll.maxScrollPosition.value[1];
+    if (!Number.isFinite(max)) return;
+    const pos = scroll.scrollPosition.value ?? [0, 0];
+    scroll.scrollPosition.value = [pos[0] ?? 0, max as number];
+  }
+
+  // One button press moves ~80% of a viewport, so there is always overlap to
+  // read against. `size` is undefined until the first layout; 26 is the
+  // .chat-scroll height from hud.uikitml.
+  private chatPageUnits(): number {
+    const h = this.chatScroll?.size.value?.[1];
+    return Number.isFinite(h) ? (h as number) * 0.8 : 20;
+  }
+
+  // Layout is async and a long answer keeps wrapping over several frames, so the
+  // max scroll position is still growing when the first attempt lands — one shot
+  // stops short of the actual bottom. Re-run a few times. One shared timer: a
+  // burst of messages re-arms it instead of queueing N chains.
   private scrollToBottomSoon() {
     if (this.scrollTimer) clearTimeout(this.scrollTimer);
-    this.scrollTimer = setTimeout(() => {
-      this.scrollTimer = null;
-      const scroll = this.chatScroll;
-      if (!scroll) return;
-      const maxY = scroll.maxScrollPosition.value[1];
-      if (!Number.isFinite(maxY)) return;
-      scroll.scrollPosition.value = [0, maxY as number];
-    }, 50);
+    let attempts = 0;
+    const tick = () => {
+      this.scrollChatToBottom();
+      this.scrollTimer = ++attempts < 4 ? setTimeout(tick, 150) : null;
+    };
+    this.scrollTimer = setTimeout(tick, 50);
   }
 
   private makeBubble(role: "user" | "bot", text: string): UIKit.Container {
@@ -353,18 +445,10 @@ export class HudSystem extends createSystem({
     if (!this.hudDoc) return;
 
     // Left-thumbstick scrolls the chat history (right hand is push-to-talk).
-    const left = this.input.xr.gamepads.left;
-    const axes = left?.getAxesValues(InputComponent.Thumbstick);
-    if (this.chatScroll && axes && Math.abs(axes.y) > 0.2) {
-      const pos = this.chatScroll.scrollPosition.value;
-      const max = this.chatScroll.maxScrollPosition.value[1];
-      const cur = pos[1];
-      // Bail unless both are real numbers: NaN here writes NaN into the scroll
-      // signal, which poisons the panel's transform and takes the renderer down.
-      if (Number.isFinite(max) && Number.isFinite(cur)) {
-        const y = Math.max(0, Math.min(max as number, (cur as number) + axes.y * delta * 40));
-        this.chatScroll.scrollPosition.value = [pos[0] ?? 0, y];
-      }
+    // Unavailable under hand tracking — that is what the on-panel buttons cover.
+    const axes = this.input.xr.gamepads.left?.getAxesValues(InputComponent.Thumbstick);
+    if (axes && Math.abs(axes.y) > 0.2) {
+      this.scrollChatBy(axes.y * delta * 40);
     }
 
     this.elapsedSinceUpdate += delta;

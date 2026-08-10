@@ -10,31 +10,56 @@ import {
 import { initChatBindings } from "./chat.js";
 import { initVoiceBindings } from "./voice.js";
 import { initVideosphere } from "./videosphere.js";
-import { HudSystem } from "./hud.js";
+import { HudSystem, setRendererProbe } from "./hud.js";
 import { PushToTalkSystem } from "./push-to-talk.js";
 import { DesktopLookSystem } from "./look-controls.js";
-import { flashHudStatus } from "./hud-mirror.js";
+import { flashHudStatus, setImmersive } from "./hud-mirror.js";
+import { archivePreviousRun, crumb, installCrumbsInspector } from "./breadcrumbs.js";
+
+// Rotate the previous run's breadcrumbs into the archive BEFORE anything else
+// can log, so run boundaries stay clean. This is a silent forensic buffer now —
+// read it with `frCrumbs()` from a console (on a Quest, via chrome://inspect).
+archivePreviousRun();
+installCrumbsInspector();
+crumb("boot", navigator.userAgent);
 
 // On a Quest there is no console to look at, so a hard failure just reads as
-// "the app crashed". Surface it two ways: a [fatal] breadcrumb for the next
-// remote-debug session, and a HUD flash so the person wearing the headset can
+// "the app crashed". Surface it two ways: a breadcrumb (persisted, so it
+// survives the tab dying) and a HUD flash so the person wearing the headset can
 // report what actually died instead of describing the symptom.
+//
+// The guard is load-bearing, not defensive padding. flashHudStatus() reaches
+// into UIKit via the transcript listener; if that throws, the exception escapes
+// this listener and the browser reports it right back to 'error' -> this handler
+// runs again -> unbounded recursion -> the renderer hangs and the tab is killed,
+// with nothing logged. That is one of the shapes the reported crash can take.
+let inErrorHandler = false;
 window.addEventListener("error", (e) => {
-  console.error("[fatal] uncaught error:", e.message, e.filename, e.lineno);
-  flashHudStatus("Error: " + e.message, 8000);
+  if (inErrorHandler) return;
+  inErrorHandler = true;
+  try {
+    crumb("fatal", "uncaught error:", e.message, `${e.filename}:${e.lineno}`);
+    try {
+      flashHudStatus("Error: " + e.message, 8000);
+    } catch {
+      /* HUD not up (or is itself the thing that died) - the crumb is the record */
+    }
+  } finally {
+    inErrorHandler = false;
+  }
 });
 window.addEventListener("unhandledrejection", (e) => {
-  console.error("[fatal] unhandled rejection:", e.reason);
+  crumb("fatal", "unhandled rejection:", e.reason);
 });
 
 initChatBindings();
 initVoiceBindings();
 
-// layers:true promotes the HUD panel to a WebXR quad layer on the Quest (not in
-// the IWER emulator). Suspected (plan2.md H4) of the panel rendering but not
-// repainting new chat bubbles on device. If Phase-1 shows the bubble meshes in
-// the tree but nothing visible/updating on the headset, flip this to false and
-// re-test on the Quest — one-line A/B.
+// Promotes the HUD panel to a WebXR quad layer on the Quest (ignored by the IWER
+// emulator): the panel is composited at native resolution instead of being
+// resampled through the eye buffer, which is what keeps small HUD text legible.
+// Was briefly suspected in the answer-render crash and cleared — that was the
+// Quest Browser's overlay keyboard (see focusInput() in chat.ts).
 const USE_WEBXR_LAYERS = true;
 
 World.create(document.getElementById("scene-container") as HTMLDivElement, {
@@ -55,11 +80,40 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
   // buffers + a 4K360 video texture). A lost context is silent otherwise: the
   // canvas simply stops updating.
   world.renderer.domElement.addEventListener("webglcontextlost", (e) => {
-    console.error("[fatal] WebGL context lost", e);
+    crumb("fatal", "WebGL context lost", (e as Event).type);
     flashHudStatus("Graphics context lost - reload required.", 15000);
   });
   world.renderer.domElement.addEventListener("webglcontextrestored", () => {
-    console.error("[fatal] WebGL context restored");
+    crumb("fatal", "WebGL context restored");
+  });
+
+  // Second, INDEPENDENT source of truth for the in-XR flag. HudSystem also sets
+  // it from world.visibilityState, but getting this wrong kills the entire Meta
+  // Quest Browser process (see focusInput() in chat.ts), so the guard does not
+  // hang off a single subscription that a HUD init failure could silently take
+  // out. These come straight off the WebXR session lifecycle.
+  world.renderer.xr.addEventListener("sessionstart", () => {
+    setImmersive(true);
+    crumb("xr", "session start");
+  });
+  world.renderer.xr.addEventListener("sessionend", () => {
+    setImmersive(false);
+    crumb("xr", "session end");
+  });
+
+  // The renderer is the only handle on GPU-side resource counts, and the crash
+  // hypothesis is a GPU budget blowout. Hand it to the HUD so appendBubble can
+  // record textures/geometries at the exact moment an answer is built.
+  setRendererProbe(() => {
+    const mem = world.renderer.info.memory;
+    const heap = (performance as unknown as { memory?: { usedJSHeapSize: number } })
+      .memory?.usedJSHeapSize;
+    return {
+      geometries: mem.geometries,
+      textures: mem.textures,
+      triangles: world.renderer.info.render.triangles,
+      heapMB: heap ? Math.round(heap / 1048576) : -1,
+    };
   });
 
   initVideosphere(world);

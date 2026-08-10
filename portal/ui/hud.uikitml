@@ -117,6 +117,34 @@
     padding-right: 1;
   }
 
+  .scroll-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1;
+  }
+
+  /* Explicit scroll controls. UIKit's drag-to-scroll needs a held trigger dragged
+     across the panel, which fights push-to-talk and is unusable with gloves; the
+     left thumbstick works but nothing on screen advertises it. These use the same
+     click path as the chips, which is proven on device. */
+  .hud-scrollbtn {
+    flex-grow: 1;
+    padding: 0.7;
+    background-color: #0f172a;
+    border-color: #334155;
+    border-width: 0.1;
+    border-radius: 1;
+    color: #cbd5e1;
+    font-size: 1.7;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .hud-scrollbtn:hover {
+    background-color: #334155;
+    border-color: #64748b;
+  }
+
   .chat-transcript {
     color: #3b82f6;
     font-size: 2;
@@ -175,8 +203,13 @@
       <button id="hud-chip3" class="hud-chip">Where to cut</button>
     </div>
     <div id="hud-chat-scroll" class="chat-scroll"></div>
+    <div class="scroll-row">
+      <button id="hud-scroll-up" class="hud-scrollbtn">^ Up</button>
+      <button id="hud-scroll-down" class="hud-scrollbtn">v Down</button>
+      <button id="hud-scroll-latest" class="hud-scrollbtn">Latest</button>
+    </div>
     <span id="hud-transcript" class="chat-transcript">-</span>
-    <span id="hud-hint" class="chat-hint">Hold RIGHT TRIGGER or PINCH to speak</span>
+    <span id="hud-hint" class="chat-hint">Hold RIGHT TRIGGER or PINCH to speak - LEFT STICK scrolls chat</span>
   </div>
 
   <button id="xr-button">Exit VR</button>
