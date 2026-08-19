@@ -1747,3 +1747,93 @@ it costs nothing and is the only trail that survives a tab death; read it with
 - [ ] Decide whether to retire `video_transcript` namespace post-evaluation
 - [ ] Consider adding chapter markers to `video_metadata.json` for finer-grained citations
 - [ ] Portal UI: surface `chunk_start_seconds` from responses to auto-seek the 360° video player to the cited moment
+
+---
+
+## 2026-08-18 — 3D-EVs Tab Fix (dead viewer host) + Standalone WebXR Splat Viewer
+
+**Status:** Shipped and deployed; **not yet visually verified** (see caveat)
+**Author:** Irfan Gazi
+
+### Root cause: the 3D-EVs tab was iframing a 404
+
+`streamlit_app.py` pointed at `https://alistairwstbrk.github.io/splat-site/`,
+which now returns **404**. The Hugging Face `.ply` it referenced still served
+fine (200) — only the renderer host died. Because the feature was a single
+third-party URL with no fallback and no error surface, the tab just rendered an
+empty iframe. Swapped to the replacement repo,
+`https://alistairwstbrk.github.io/DOE-Training/` (200), which still honours the
+same `?url=` parameter (`main.js:178`), so it was a drop-in host swap. It is a
+strict superset of the old viewer: 38 scans behind category/model/camera
+dropdowns, a guided walkthrough, and 3D annotations already authored with
+first-responder content (a 12V-battery pin covering HV contactor/airbag
+disconnect). No `CACHE_BUST` bump — nothing on S3 changed.
+
+### New: `splat-vr/` — WebXR walkaround of the car scans
+
+Standalone Vite + three + `@sparkjsdev/spark` page, deployed to
+`…/splat-vr/index.html`, linked (never iframed) from tab 2. Spark's `SparkXr`
+supplies the Enter-VR button, `local-floor` reference space, hand tracking and
+thumbstick locomotion, so "walk around the car" came largely for free. Uses
+plain `three@0.181`, not super-three — no IWSDK, so no duplicate-Three hazard.
+
+**Feasibility numbers that drove the design** (measured, not assumed):
+
+| Scan set | Splats | .ply size | VR-viable? |
+|---|---|---|---|
+| Cropped ("New Scans") | 100K–200K | 23–47 MB | ✅ used |
+| Uncropped | 560K | 138 MB | borderline |
+| Mipmap | 3.0M | 170 MB | ❌ 4–6× over budget |
+
+Spark states a WebXR budget of 500–750K splats (`SparkRenderer.d.ts:159`).
+
+**Self-hosted the models.** Converted the 4 cropped scans `.ply → .spz` via
+`@playcanvas/splat-transform` (`scripts/convert_splats.sh`): 23–47 MB → 1.9–3.9 MB,
+~12× smaller, splat counts verified identical. Now served same-origin from our
+own CloudFront instead of depending on a third party — the exact failure mode
+that broke this tab in the first place.
+
+**Calibration was derived, not eyeballed.** `scripts/analyze_splats.py` decodes
+the SPZ positions directly and measures each scan. All four are Y-down (hence the
+baseline `FLIP_X`), and each sits at an arbitrary yaw — `equinox-hood-open` was
+132° off, producing a near-square 1.03:1 bounding box. After the PCA-derived yaw
+correction all four measure 2.24–2.49 length:width, i.e. car-shaped (~2.5), and
+each lands exactly on its manufacturer length. `equinox-hood-closed` also needed
+a −0.48 m ground correction because stray splats sit below the real floor.
+
+### Gotchas worth remembering
+
+1. **`--spz-version 3` is load-bearing.** `splat-transform` writes SPZ v4 by
+   default; Spark throws `Unsupported SPZ version` above v3. A v4 file opens fine
+   elsewhere and fails only at runtime in the headset.
+2. **The `.ply` cache must live outside `public/`.** Vite copies `publicDir` into
+   `dist/` verbatim — the first build shipped 139 MB of source scans (155 MB dist).
+   Moved to `splat-vr/.splat-src/`; `deploy_splat_vr.py` now hard-fails on any
+   `.ply` in `dist/`.
+3. **`SparkXr.updateControllers()` moves `camera.parent`** — the camera must be
+   inside a rig `Group` or locomotion throws on the first thumbstick input.
+4. **`three@0.181` ships no types**; `@types/three` is required.
+
+### Verified
+
+- DOE-Training viewer + `models.json` + `main.js` all 200
+- 4 × `.spz`: SPZ magic OK, **version 3**, splat counts match source exactly
+- `npx tsc --noEmit` clean; `npm run build` clean; dist 16 MB (was 155 MB pre-fix)
+- Dev server serves page, module graph and all 4 models
+- Deployed to `s3://…/splat-vr/`; CloudFront invalidation `I6DNKF3W6OQVYDO86UWYJ1FB9V`
+- Live `index.html` references the exact hashed bundle just built
+  (`index-DvCrRSN8.js`); live `.spz` byte-identical to local and parses as v3
+
+### NOT verified — first job next session
+
+**Nothing has been rendered in a browser.** The Chrome extension was not
+connected during this session, so the desktop render, the Enter-VR button and the
+calibration are all unconfirmed. The maths agreeing is not the car looking right.
+
+- [ ] `https://localhost:8082/?dev=1` — confirm all 4 scans upright, grounded, correctly sized
+- [ ] Confirm tab 2 renders the Equinox (the old host failed *silently* — check pixels)
+- [ ] Quest 3 at `…/splat-vr/index.html` **directly** (not the Streamlit iframe,
+      which withholds `xr-spatial-tracking`): Enter VR, scale believability,
+      thumbstick lap around the car, frame drops
+- [ ] Check whether each scan's captured ground plane visually fights the `GridHelper`
+- [ ] `git push` so Streamlit Cloud picks up the tab-2 fix

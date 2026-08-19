@@ -42,3 +42,9 @@ graphify-out/.graphify_root
 
 # run_eval.py cache (regenerable, keyed by router-config hash)
 eval_results/.cache/
+
+# splat-vr: build output, converted models and the .ply download cache.
+# All regenerable — `bash scripts/convert_splats.sh` then `npm run build`.
+splat-vr/dist/
+splat-vr/public/models/*.spz
+splat-vr/.splat-src/

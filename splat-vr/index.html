@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>EV Scan - VR Walkaround</title>
+    <style>
+      :root {
+        --bg: #0f172a; --panel: #1e293b; --border: #334155;
+        --text: #e2e8f0; --muted: #94a3b8; --accent: #ef4444;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); }
+      body {
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+      canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+
+      .overlay {
+        position: fixed; top: 16px; left: 16px; z-index: 10;
+        background: rgba(30, 41, 59, 0.92);
+        border: 1px solid var(--border); border-radius: 12px;
+        padding: 14px 16px; max-width: 320px;
+        backdrop-filter: blur(8px);
+      }
+      .overlay h1 { font-size: 15px; margin: 0 0 10px; font-weight: 700; }
+      .overlay label { display: block; font-size: 12px; color: var(--muted); margin: 0 0 5px; }
+      select {
+        width: 100%; padding: 8px 10px; border-radius: 8px;
+        background: #0f172a; color: var(--text);
+        border: 1px solid var(--border); font-size: 13px;
+      }
+      .hint { font-size: 11px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+      .hint b { color: var(--text); font-weight: 600; }
+
+      #status {
+        position: fixed; bottom: 16px; left: 16px; z-index: 10;
+        background: rgba(30, 41, 59, 0.92);
+        border: 1px solid var(--border); border-radius: 10px;
+        padding: 9px 14px; font-size: 12px; color: var(--muted);
+      }
+      #status.error { color: #fca5a5; border-color: var(--accent); }
+
+      /* Dev calibration panel, ?dev=1 only */
+      #dev {
+        position: fixed; top: 16px; right: 16px; z-index: 10;
+        background: rgba(30, 41, 59, 0.95);
+        border: 1px dashed #64748b; border-radius: 12px;
+        padding: 14px 16px; width: 265px; display: none;
+      }
+      #dev h2 { font-size: 12px; margin: 0 0 10px; color: #fbbf24; letter-spacing: .04em; }
+      #dev .row { margin-bottom: 9px; }
+      #dev .row label {
+        display: flex; justify-content: space-between;
+        font-size: 11px; color: var(--muted); margin-bottom: 3px;
+      }
+      #dev .row label span { color: #4ade80; font-variant-numeric: tabular-nums; }
+      #dev input[type=range] { width: 100%; accent-color: var(--accent); }
+      #dev button {
+        width: 100%; padding: 8px; margin-top: 6px; cursor: pointer;
+        background: var(--accent); color: #fff; font-weight: 600; font-size: 12px;
+        border: none; border-radius: 8px;
+      }
+      #dev button.secondary { background: #334155; }
+      #dev textarea {
+        width: 100%; margin-top: 8px; font-family: ui-monospace, monospace;
+        font-size: 10px; background: #0f172a; color: var(--text);
+        border: 1px solid var(--border); border-radius: 6px; padding: 6px;
+        resize: vertical;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <div class="overlay" id="ui">
+      <h1>&#128663; EV Scan &mdash; VR Walkaround</h1>
+      <label for="modelSelect">Vehicle scan</label>
+      <select id="modelSelect"></select>
+      <div class="hint">
+        <b>Desktop:</b> drag to look, scroll to zoom, WASD to move.<br />
+        <b>Headset:</b> tap <b>Enter VR</b>, then use the thumbstick to walk around
+        the vehicle.
+      </div>
+    </div>
+
+    <div id="status">Loading&hellip;</div>
+
+    <div id="dev">
+      <h2>CALIBRATION (?dev=1)</h2>
+      <div class="row">
+        <label for="rotX">Rotate X <span id="rotXv">0&deg;</span></label>
+        <input type="range" id="rotX" min="-180" max="180" step="0.1" value="0" />
+      </div>
+      <div class="row">
+        <label for="rotY">Rotate Y <span id="rotYv">0&deg;</span></label>
+        <input type="range" id="rotY" min="-180" max="180" step="0.1" value="0" />
+      </div>
+      <div class="row">
+        <label for="rotZ">Rotate Z <span id="rotZv">0&deg;</span></label>
+        <input type="range" id="rotZ" min="-180" max="180" step="0.1" value="0" />
+      </div>
+      <div class="row">
+        <label for="scaleMul">Scale &times; <span id="scaleMulv">1.00</span></label>
+        <input type="range" id="scaleMul" min="0.2" max="3" step="0.001" value="1" />
+      </div>
+      <div class="row">
+        <label for="yOff">Y offset <span id="yOffv">0.00 m</span></label>
+        <input type="range" id="yOff" min="-2" max="2" step="0.001" value="0" />
+      </div>
+      <button id="copyBtn">Copy calibration JSON</button>
+      <button id="resetBtn" class="secondary">Reset</button>
+      <textarea id="devOut" rows="5" readonly></textarea>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

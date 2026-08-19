@@ -18,7 +18,22 @@ if _USE_V1:
 else:
     PORTAL_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html?v={CACHE_BUST}"
 CHAT_URL   = f"https://d1ni7nkjr0eveg.cloudfront.net/chat_panel.html?v={CACHE_BUST}"
-SPLAT_URL  = "https://alistairwstbrk.github.io/splat-site/?url=https://huggingface.co/datasets/AlistairWstbrk/splats/resolve/main/3DGS%20.ply%20New%20Vehicle%20Scans/Equinox%20Hood%20Open%20(New)(Cropped).ply"
+
+# 3D Gaussian-splat viewer. Third-party: github.com/AlistairWstbrk/DOE-Training on
+# GitHub Pages, rendering .ply scans hosted on Hugging Face. Replaced the old
+# `splat-site` host on 2026-08-18 after it started returning 404 (the tab rendered
+# an empty iframe with no error — verify pixels, not just HTTP, after changing this).
+# ?url= preloads one scan; the viewer's own category/model dropdowns switch scans.
+SPLAT_VIEWER = "https://alistairwstbrk.github.io/DOE-Training/"
+SPLAT_PLY = (
+    "https://huggingface.co/datasets/AlistairWstbrk/splats/resolve/main/"
+    "3DGS%20.ply%20New%20Vehicle%20Scans/Equinox%20Hood%20Open%20(New)(Cropped).ply"
+)
+SPLAT_URL = f"{SPLAT_VIEWER}?url={SPLAT_PLY}"
+
+# Standalone WebXR splat viewer (Spark). VR cannot work inside components.iframe()
+# because Streamlit withholds `xr-spatial-tracking`, so this is linked, not embedded.
+SPLAT_VR_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/splat-vr/index.html?v={CACHE_BUST}"
 
 st.set_page_config(
     page_title="RAG Responder Hub",
@@ -116,6 +131,10 @@ with tab2:
     st.markdown(
         "Inspect high-fidelity Gaussian-splatting 3D scans of the vehicle, with the AI "
         "assistant alongside for procedure questions."
+    )
+    st.caption(
+        f"🥽 Using a VR headset? [Open the car scene in VR]({SPLAT_VR_URL}), "
+        "then tap **Enter VR** to walk around the vehicle."
     )
     viewer_col, chat_col = st.columns([2, 1])
     with viewer_col:
