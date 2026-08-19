@@ -38,6 +38,15 @@ measures each scan:
              floor against a robust 1st-percentile ground and emits the
              correction (equinox-hood-closed is 0.48 m out).
 
+LIMITATION: the scale this emits is only a starting point. It is derived from
+the bounding box, which includes however much surrounding ground each crop
+captured, so it rendered the Equinoxes ~30% undersized and the Blazers ~10%
+oversized. The scaleMultiplier values actually in models.ts were corrected
+empirically afterwards by rendering each scan headlessly at a known camera,
+segmenting the white bodywork from the tan ground, and solving for the on-screen
+length. Re-run that check after re-converting rather than pasting scale blind;
+rotation and yOffset from here are reliable.
+
 The transform here mirrors main.ts exactly (q = calibration * FLIP_X, then scale
 from max(size.x, size.z)); if that math changes, change it here too.
 """

@@ -135,10 +135,32 @@ function fitToGround(splat: SplatMesh) {
     -center.z * scale,
   );
 
+  // Expose the fitted world-space dimensions so a headless render check can
+  // assert the car is actually the size it claims to be, rather than eyeballing
+  // a screenshot. Read via page.evaluate(() => window.__diag).
+  (window as unknown as { __diag: unknown }).__diag = {
+    key: currentConfig.key,
+    lengthM: +(size.x * scale).toFixed(3),
+    widthM: +(size.z * scale).toFixed(3),
+    heightM: +(size.y * scale).toFixed(3),
+    targetLengthM: currentConfig.lengthMeters,
+    scale: +scale.toFixed(4),
+    groundY: +(carRig.position.y + box.min.y * scale).toFixed(3),
+  };
+
   if (DEV) updateDevOutput(size, scale);
 }
 
-async function loadModel(cfg: ModelConfig) {
+/**
+ * Monotonic token so an out-of-order load cannot clobber a newer one. Switching
+ * scans quickly used to leave the previous car on screen (or nothing at all):
+ * the outgoing mesh was disposed and the incoming one added to the scene before
+ * it had finished decoding, so whichever async load resolved last won.
+ */
+let loadToken = 0;
+
+function loadModel(cfg: ModelConfig) {
+  const token = ++loadToken;
   currentConfig = cfg;
   overrides = {
     rotation: [...cfg.rotation] as [number, number, number],
@@ -147,30 +169,37 @@ async function loadModel(cfg: ModelConfig) {
   };
   if (DEV) syncSlidersFromOverrides();
 
-  if (currentSplat) {
-    carRig.remove(currentSplat);
-    currentSplat.dispose();
-    currentSplat = null;
-  }
-
   setStatus(`Loading ${cfg.label}...`);
 
-  const splat = new SplatMesh({
+  // Keep the outgoing scan visible until the incoming one is decoded, then swap
+  // in one step and dispose the old mesh. Adding an uninitialized SplatMesh to
+  // the scene is what confused the renderer before.
+  new SplatMesh({
     url: `./models/${cfg.key}.spz`,
     onProgress: (event: ProgressEvent) => {
+      if (token !== loadToken) return;
       if (event.lengthComputable && event.total > 0) {
         const pct = Math.round((event.loaded / event.total) * 100);
         setStatus(`Loading ${cfg.label}... ${pct}%`);
       }
     },
     onLoad: (mesh: SplatMesh) => {
+      if (token !== loadToken) {
+        // A newer selection already won; drop this one's GPU resources.
+        mesh.dispose();
+        return;
+      }
+      const previous = currentSplat;
+      currentSplat = mesh;
+      carRig.add(mesh);
       fitToGround(mesh);
+      if (previous) {
+        carRig.remove(previous);
+        previous.dispose();
+      }
       setStatus(`${cfg.label} - ready.`);
     },
   });
-
-  currentSplat = splat;
-  carRig.add(splat);
 }
 
 // --- model picker ---------------------------------------------------------
@@ -182,7 +211,7 @@ for (const m of MODELS) {
 }
 modelSelect.value = currentConfig.key;
 modelSelect.addEventListener("change", () => {
-  void loadModel(findModel(modelSelect.value));
+  loadModel(findModel(modelSelect.value));
 });
 
 // --- desktop controls -----------------------------------------------------
@@ -322,4 +351,4 @@ window.addEventListener("unhandledrejection", (e) =>
   setStatus(`Error: ${(e.reason as Error)?.message ?? String(e.reason)}`, true),
 );
 
-void loadModel(currentConfig);
+loadModel(currentConfig);
