@@ -45,6 +45,15 @@ export type ModelConfig = {
   scaleMultiplier: number;
   /** Metres to nudge vertically after grounding. */
   yOffset: number;
+  /**
+   * Base colour of the floor this scan was captured on, so the synthetic ground
+   * in ground.ts blends into the captured ground patch instead of ending at a
+   * visible seam. Measured as the median of the warm (red-dominant) pixels in a
+   * real render, which separates the captured concrete from the blue-dominant
+   * background and grid and from the white bodywork. An earlier pass that keyed
+   * only on brightness let background bleed in and read every scan ~25% too dark.
+   */
+  groundColor: string;
 };
 
 export const MODELS: ModelConfig[] = [
@@ -55,6 +64,7 @@ export const MODELS: ModelConfig[] = [
     rotation: [0, -132.4, 0],
     scaleMultiplier: 1.565,
     yOffset: -0.052,
+    groundColor: "#57493d",
   },
   {
     key: "equinox-hood-closed",
@@ -63,6 +73,7 @@ export const MODELS: ModelConfig[] = [
     rotation: [0, -111.0, 0],
     scaleMultiplier: 1.387,
     yOffset: -0.596,
+    groundColor: "#5c4f3d",
   },
   {
     key: "blazer-hood-open",
@@ -71,6 +82,7 @@ export const MODELS: ModelConfig[] = [
     rotation: [0, -89.8, 0],
     scaleMultiplier: 1.087,
     yOffset: -0.019,
+    groundColor: "#6d5d49",
   },
   {
     key: "blazer-hood-closed",
@@ -79,6 +91,7 @@ export const MODELS: ModelConfig[] = [
     rotation: [0, 179.1, 0],
     scaleMultiplier: 1.007,
     yOffset: -0.12,
+    groundColor: "#504941",
   },
 ];
 

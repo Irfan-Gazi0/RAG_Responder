@@ -1837,3 +1837,85 @@ calibration are all unconfirmed. The maths agreeing is not the car looking right
       thumbstick lap around the car, frame drops
 - [ ] Check whether each scan's captured ground plane visually fights the `GridHelper`
 - [ ] `git push` so Streamlit Cloud picks up the tab-2 fix
+
+---
+
+## 2026-08-19 — splat-vr on the Quest 3: ground blending, comfort locomotion, in-VR controls panel
+
+First session with the headset actually connected. The 2026-08-18 "nothing has
+been rendered in a browser" gap is closed: all four scans were viewed on device
+and the operator confirmed **scale ("I like the car size") and locomotion speed
+("walk is comfortable")** — so `models.ts` calibration and Spark's default
+`moveSpeed` both stand. Three things came out of the test.
+
+### 1. The GridHelper had to go (`splat-vr/src/ground.ts`, new)
+
+The grid read as a videogame floor under a photoreal car; the seam where the
+scan's captured concrete met the glowing lines was the most obviously fake thing
+in the scene. Replaced with a 16 m disc: base colour sampled per scan, procedural
+concrete mottling, and a radial alpha fade (RGBA vertex colours on a
+`RingGeometry`) so it never ends in a hard circle. The grid survives as `?grid=1`
+for alignment work.
+
+Two bugs found *after* it was written, both only visible in a render:
+
+- **Canvas colour space.** A 2D canvas is an sRGB buffer, but three's `Color`
+  stores components in the *working* space (linear-sRGB). `color.r * 255` writes
+  a linear value as an sRGB byte — `#443e3b` lands as `rgb(14,12,11)` instead of
+  `rgb(68,62,59)`, ~4.8× too dark. Every blotch and speckle was painted near
+  black, so the "concrete" rendered as dark lumpy tarmac. Fixed by routing every
+  canvas colour through `getRGB(target, SRGBColorSpace)` and passing
+  `SRGBColorSpace` to both `getHSL` and `setHSL`.
+- **The `groundColor` measurements were ~25% too dark.** The first classifier
+  keyed on brightness and let dark background bleed into the median. The captured
+  concrete is *warm* and the background and grid are *blue-dominant*, so keying on
+  `r > b` separates them cleanly. Re-measured off the pre-`ground.ts` renders,
+  which contain no synthetic floor to confuse the classifier.
+
+### 2. Comfort locomotion (`splat-vr/src/vr-input.ts`, new)
+
+Spark's built-in controller mapping conflicts with the conventions the operator
+supplied on four points (move on the wrong stick, smooth-only turning, no
+vignette, no handedness). All four `SparkXrControllers` getters are overridden:
+left stick walks, right stick turns, **snap turn 45° by default** with hysteresis,
+smooth turn available, vignette while moving, dominant-hand swap. Settings persist
+in `localStorage` and are merged over defaults so an old blob cannot zero a speed.
+
+`moveSpeed` is exposed as a **getter** closing over the live settings object — a
+snapshot would have made the walk-speed slider silently inert.
+
+**The Quest Menu (≡) button is captured by the system shell** and has no
+`xr-standard` index, so the panel toggle is on **B/Y**, not ≡.
+
+### 3. In-VR controls panel (`splat-vr/src/help-panel.ts`, new)
+
+World-locked canvas panel with minimise/maximise, listing every control, plus
+turn-style and vignette toggles so comfort can be changed without removing the
+headset. Shown automatically on first entry (`splatvr.seenControls.v1`).
+Hit-testing raycasts to the mesh and converts `inter.uv` to canvas pixels.
+
+### Harness rot caught (`scripts/render_check.mjs`)
+
+The check FAILed all four scans at ~7.1 m vs ~4.8 m. Not a scale regression: the
+new comfort UI made the DOM overlay taller, and its light text fell outside the
+hard-coded exclusion rectangles, so the panel was measured as bodywork. The
+rectangles are gone — the overlays are now `display: none`d before the shot, which
+cannot rot the same way. All four scans measure exactly as before the change
+(+3.5% / +1.6% / −1.5% / −0.8%).
+
+### Verified
+
+- `npx tsc --noEmit` clean; `npm run build` clean
+- `render_check.mjs` — 4/4 PASS, no page errors, no 4xx
+- Renders inspected by eye: captured pad and synthetic floor are hard to tell
+  apart, no seam, no grid
+- Deployed `index-CTRLmPUt.js`; live `index.html` references it, the corrected
+  `#6d5d49` is present in the served bundle, all 4 `.spz` still 200
+
+### Still to confirm on device
+
+- [ ] Ground blend at eye height and at grazing angles (mottling can shimmer under
+      reprojection in a way a desktop screenshot cannot show)
+- [ ] Snap turn feel, vignette strength, dominant-hand swap
+- [ ] Controls panel: readability at 1.6 m, minimise/maximise, on-panel toggles
+- [ ] A full lap for frame drops with the panel open

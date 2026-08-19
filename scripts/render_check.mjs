@@ -82,6 +82,20 @@ for (const key of Object.keys(TARGET)) {
   }
   await page.waitForTimeout(SETTLE_MS);
 
+  // Hide the DOM chrome before the shot. The measurement segments white pixels,
+  // and the overlays' light text (#e2e8f0) reads as bodywork. This used to be
+  // handled by excluding fixed screen rectangles, which silently rotted the
+  // moment the comfort settings made the left panel taller - every scan then
+  // measured ~7.1 m instead of ~4.8 m. Hiding the elements cannot rot.
+  await page.evaluate(() => {
+    for (const id of ["ui", "dev", "status"]) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = "none";
+    }
+    // Spark injects its own Enter VR button; it is not inside #ui.
+    for (const b of document.querySelectorAll("body > button")) b.style.display = "none";
+  });
+
   const shot = join(outDir, `${key}.png`);
   await page.screenshot({ path: shot });
   shots.push({ key, shot, target: TARGET[key], status, problems });
@@ -103,8 +117,6 @@ for j in jobs:
     cols = [0] * W
     for y in range(H):
         for x in range(W):
-            if x < 340 and y < 200: continue      # controls panel
-            if x < 300 and y > H - 70: continue   # status pill
             r, g, b = px[x, y]
             mx, mn = max(r, g, b), min(r, g, b)
             if mn > 135 and mx - mn < 42:         # white bodywork, not tan ground

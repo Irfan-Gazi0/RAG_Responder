@@ -21,6 +21,9 @@ import {
 } from "three";
 import { SparkControls, SparkRenderer, SparkXr, SplatMesh } from "@sparkjsdev/spark";
 import { DEFAULT_MODEL_KEY, findModel, MODELS, type ModelConfig } from "./models";
+import { Ground } from "./ground";
+import { HelpPanel } from "./help-panel";
+import { loadComfort, saveComfort, VrInput, type ComfortSettings } from "./vr-input";
 
 const params = new URLSearchParams(location.search);
 const DEV = params.get("dev") === "1";
@@ -64,10 +67,17 @@ scene.add(playerRig);
 const spark = new SparkRenderer({ renderer });
 scene.add(spark);
 
-// Ground plane. Not decoration: a fixed ground reference is the main thing that
-// keeps smooth stick locomotion from inducing sim sickness, and it shows the
-// user where the calibrated floor actually is.
+// Ground. Not decoration: a fixed ground reference is the main thing that keeps
+// smooth stick locomotion from inducing sim sickness, and it shows the user
+// where the calibrated floor actually is. Tinted to match the scan's own
+// captured floor so the two blend rather than meeting at a seam - see ground.ts.
+const ground = new Ground(findModel(params.get("model") ?? DEFAULT_MODEL_KEY).groundColor);
+scene.add(ground.mesh);
+
+// Kept as an opt-in alignment aid (?grid=1): useful when checking that a scan is
+// actually centred and square-on, distracting the rest of the time.
 const grid = new GridHelper(24, 24, 0x475569, 0x1e293b);
+grid.visible = params.get("grid") === "1";
 scene.add(grid);
 
 // --- model loading --------------------------------------------------------
@@ -138,11 +148,17 @@ function fitToGround(splat: SplatMesh) {
   // Expose the fitted world-space dimensions so a headless render check can
   // assert the car is actually the size it claims to be, rather than eyeballing
   // a screenshot. Read via page.evaluate(() => window.__diag).
+  //
+  // These are BOUNDING BOX dimensions, and the box includes however much
+  // surrounding ground each crop captured - bboxLengthM reads ~7.5 m for a 4.79 m
+  // car, which looks like a bug and is not one. The car's own length is only
+  // recoverable by measuring the bodywork in a render (scripts/render_check.mjs);
+  // the names carry the bbox prefix so nobody reads these as vehicle dimensions.
   (window as unknown as { __diag: unknown }).__diag = {
     key: currentConfig.key,
-    lengthM: +(size.x * scale).toFixed(3),
-    widthM: +(size.z * scale).toFixed(3),
-    heightM: +(size.y * scale).toFixed(3),
+    bboxLengthM: +(size.x * scale).toFixed(3),
+    bboxWidthM: +(size.z * scale).toFixed(3),
+    bboxHeightM: +(size.y * scale).toFixed(3),
     targetLengthM: currentConfig.lengthMeters,
     scale: +scale.toFixed(4),
     groundY: +(carRig.position.y + box.min.y * scale).toFixed(3),
@@ -193,6 +209,8 @@ function loadModel(cfg: ModelConfig) {
       currentSplat = mesh;
       carRig.add(mesh);
       fitToGround(mesh);
+      // Each scan was shot on a slightly different floor, so retint with it.
+      ground.setColor(cfg.groundColor);
       if (previous) {
         carRig.remove(previous);
         previous.dispose();
@@ -221,22 +239,63 @@ const controls = new SparkControls({ canvas });
 
 // --- WebXR ----------------------------------------------------------------
 // SparkXr renders its own Enter VR button and owns session lifecycle, reference
-// space, hand tracking and thumbstick locomotion.
+// space and hand tracking. Controller bindings are NOT Spark's defaults: see
+// vr-input.ts for why all four getters are overridden.
+let comfort: ComfortSettings = loadComfort();
+
+const vrInput = new VrInput({ renderer, playerRig, camera, settings: comfort });
+const helpPanel = new HelpPanel(comfort);
+// Parented to the rig so the panel travels with the user rather than being left
+// behind the moment they walk to the far side of the car.
+playerRig.add(helpPanel.group);
+
+/** Single place that keeps input, panel and DOM in agreement. */
+function applyComfort(patch: Partial<ComfortSettings>) {
+  comfort = { ...comfort, ...patch };
+  vrInput.settings = comfort;
+  saveComfort(comfort);
+  helpPanel.setSettings(comfort);
+  syncComfortInputs();
+}
+
+vrInput.onButton((e) => {
+  if (e === "togglePanel") helpPanel.toggle(camera, playerRig);
+  else if (e === "accept") {
+    // A/X presses whatever the pointer is already resting on, so the panel is
+    // usable without having to hold the ray perfectly steady on a trigger pull.
+    for (const c of vrInput.controllers) {
+      const hit = helpPanel.hitTest(c);
+      if (hit) {
+        const patch = helpPanel.activate(hit);
+        if (patch) applyComfort(patch);
+        break;
+      }
+    }
+  }
+});
+
+// Trigger press -> press the panel button under that controller's ray.
+for (const ctrl of vrInput.controllers) {
+  ctrl.addEventListener("selectstart", () => {
+    const hit = helpPanel.hitTest(ctrl);
+    if (!hit) return;
+    const patch = helpPanel.activate(hit);
+    if (patch) applyComfort(patch);
+  });
+}
+
+/** Show the panel automatically the first time someone enters VR. */
+const SEEN_KEY = "splatvr.seenControls.v1";
+
 const sparkXr = new SparkXr({
   renderer,
   mode: "vr",
   button: true,
-  // local-floor puts y=0 at the user's real floor, so the grid and the car's
+  // local-floor puts y=0 at the user's real floor, so the ground and the car's
   // wheels line up with the room they are standing in.
   referenceSpaceType: "local-floor",
   enableHands: true,
-  controllers: {
-    // Deliberately conservative: fast smooth locomotion is the main trigger for
-    // sim sickness, and this is a walk-around-a-car scene, not a traversal game.
-    moveSpeed: 1.2,
-    rotateSpeed: 2.5,
-    moveHeading: true,
-  },
+  controllers: vrInput.sparkConfig(),
   onEnterXr: () => {
     uiEl.style.display = "none";
     devEl.style.display = "none";
@@ -245,6 +304,23 @@ const sparkXr = new SparkXr({
     // desktop camera happened to have drifted to.
     playerRig.position.set(0, 0, 4.5);
     playerRig.quaternion.identity();
+    vrInput.setVisible(true);
+
+    // First-timers get the full panel; after that it opens minimised so it is
+    // present but not in the way.
+    let seen = false;
+    try {
+      seen = localStorage.getItem(SEEN_KEY) === "1";
+    } catch {
+      /* private browsing */
+    }
+    helpPanel.show(camera, playerRig);
+    if (seen) helpPanel.toggle(camera, playerRig); // -> minimised
+    try {
+      localStorage.setItem(SEEN_KEY, "1");
+    } catch {
+      /* private browsing */
+    }
   },
   onExitXr: () => {
     uiEl.style.display = "";
@@ -252,6 +328,8 @@ const sparkXr = new SparkXr({
     if (DEV) devEl.style.display = "block";
     playerRig.position.set(0, 0, 0);
     playerRig.quaternion.identity();
+    vrInput.setVisible(false);
+    helpPanel.hide();
   },
   onReady: (supported: boolean) => {
     if (!supported) {
@@ -259,6 +337,44 @@ const sparkXr = new SparkXr({
     }
   },
 });
+
+// --- comfort settings UI --------------------------------------------------
+// Mirrored between the desktop panel and the in-VR panel: whichever surface the
+// user reaches for, both stay in step (applyComfort is the single writer).
+const turnStyleEl = el<HTMLSelectElement>("turnStyle");
+const snapDegreesEl = el<HTMLSelectElement>("snapDegrees");
+const moveSpeedEl = el<HTMLInputElement>("moveSpeed");
+const dominantHandEl = el<HTMLSelectElement>("dominantHand");
+const vignetteEl = el<HTMLInputElement>("vignette");
+
+function syncComfortInputs() {
+  turnStyleEl.value = comfort.turnStyle;
+  snapDegreesEl.value = String(comfort.snapDegrees);
+  moveSpeedEl.value = String(comfort.moveSpeed);
+  dominantHandEl.value = comfort.dominantHand;
+  vignetteEl.checked = comfort.vignette;
+  el("moveSpeedv").textContent = `${comfort.moveSpeed.toFixed(1)} m/s`;
+  // Snap angle is meaningless while smooth turning is selected.
+  snapDegreesEl.disabled = comfort.turnStyle !== "snap";
+}
+
+turnStyleEl.addEventListener("change", () =>
+  applyComfort({ turnStyle: turnStyleEl.value as ComfortSettings["turnStyle"] }),
+);
+snapDegreesEl.addEventListener("change", () =>
+  applyComfort({ snapDegrees: Number(snapDegreesEl.value) }),
+);
+moveSpeedEl.addEventListener("input", () =>
+  applyComfort({ moveSpeed: Number(moveSpeedEl.value) }),
+);
+dominantHandEl.addEventListener("change", () =>
+  applyComfort({ dominantHand: dominantHandEl.value as ComfortSettings["dominantHand"] }),
+);
+vignetteEl.addEventListener("change", () =>
+  applyComfort({ vignette: vignetteEl.checked }),
+);
+
+syncComfortInputs();
 
 // --- dev calibration panel ------------------------------------------------
 const SLIDER_IDS = ["rotX", "rotY", "rotZ", "scaleMul", "yOff"] as const;
@@ -329,11 +445,22 @@ if (DEV) {
 }
 
 // --- loop -----------------------------------------------------------------
-renderer.setAnimationLoop(() => {
+let lastFrame = 0;
+
+renderer.setAnimationLoop((time: number) => {
+  // Snap turn and the vignette ramp are both time-based, and Spark does not hand
+  // out its delta, so track our own. Clamped because a backgrounded tab or a
+  // headset taken off produces a huge first delta that would otherwise fling the
+  // user across the scene on resume.
+  const dt = lastFrame ? Math.min((time - lastFrame) / 1000, 0.1) : 0;
+  lastFrame = time;
+
   if (renderer.xr.isPresenting) {
-    // Thumbstick walk/turn. Moves camera.parent (playerRig), pivoting turns
-    // around the user's actual head position.
+    // Movement only: Spark's rotate path is disabled in vr-input's config
+    // because snap turn is discrete. Moves camera.parent (playerRig).
     sparkXr.updateControllers(camera);
+    // Turning, buttons and vignette.
+    vrInput.update(dt);
   } else {
     controls.update(camera);
   }
