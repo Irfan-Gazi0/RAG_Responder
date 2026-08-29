@@ -17,7 +17,10 @@
 # (3.0M splats) variants blow past Spark's stated WebXR budget of 500-750K.
 #
 # Usage:  bash scripts/convert_splats.sh
-# Output: splat-vr/models/*.spz   (gitignored - regenerable build artifacts)
+# Output: splat-vr/public/models/*.spz   (gitignored - regenerable build artifacts)
+#         Vite copies publicDir into dist/ verbatim, which is what puts them
+#         on CloudFront; the .ply inputs stay in splat-vr/.splat-src/ so that
+#         copy cannot ship 139 MB of source scans.
 
 set -euo pipefail
 

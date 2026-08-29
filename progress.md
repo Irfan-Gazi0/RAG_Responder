@@ -1919,3 +1919,109 @@ cannot rot the same way. All four scans measure exactly as before the change
 - [ ] Snap turn feel, vignette strength, dominant-hand swap
 - [ ] Controls panel: readability at 1.6 m, minimise/maximise, on-panel toggles
 - [ ] A full lap for frame drops with the panel open
+
+---
+
+## 2026-08-29 — bugs.md sweep: ship the stale VR build, fix transcript routing
+
+**Status:** P0-1/2/3 closed, P1 and P2 closed, one new data gap found and documented
+**Author:** Irfan Gazi
+
+Executed the plan in `bugs.md` end to end. The through-line of that report — four
+green guards hiding three shipped defects — held up, and the two biggest items were
+invisible precisely because nothing verified them.
+
+### P0-2 — the live splat-vr build was five days behind source (SHIPPED)
+
+The 2026-08-24 session's work (hazard markers, hand tracking, the 6DoF diagnostic
+panel) was built and never deployed, so the standing "read the tracking panel on
+device" instruction pointed at a build that did not contain the panel. Rebuilt and
+deployed: `assets/index-DiyKDYwI.js`, verified live by feature-probing the served
+bundle for `UNCONFIRMED PLACEMENT`, `palmsign`, `head travel` and
+`frameBufferScaleFactor` — all four now present, all four previously absent.
+
+### P0-1 — the in-VR controls panel faced 180° away (fixed + guarded)
+
+`help-panel.ts` fed `Object3D.lookAt` a rig-local point; `lookAt` takes world space,
+so the error was exactly the rig's translation, and `onEnterXr` recentres the rig
+immediately before showing the panel. `MeshBasicMaterial` is `FrontSide`, so from
+behind the panel drew nothing and its raycast missed. `vr_check.mjs` was structurally
+blind to it — `probeSurface()` steps along the panel's own normal and lands on the
+front face whichever way it points. New `__vr.panelFacing()` seam plus an assertion
+that fails on the old code.
+
+### P0-3 — transcript routing was mis-scoped to the Mach-E (fixed live)
+
+Three reinforcing causes in workflow `S3uHJF57JAuA7bL0`: the tool description called
+a vehicle-agnostic instructor lecture "the Mach-E 2026 training videos", the system
+message repeated the scope error and gated the tool behind the Mach-E path, and
+STEP 1 gated everything on identifying a vehicle — so "what did the instructor say"
+routed to generic model knowledge. Video 0 was also absent from the content map and
+the citation map. All fixed in `n8n_router_config.md` and pushed.
+
+**Measured, ids 61–75: PASS 1 → 3, FAIL 6 → 3.** The refusal shapes are gone;
+answers now open "**EV First Responder Training**" and cite Video 0 by label.
+
+### Two things `bugs.md` did not know
+
+1. **`n8n_sync.py --push` had never applied a tool description.** These are
+   `mode: retrieve-as-tool` nodes whose description lives at
+   `parameters.toolDescription`; the push wrote `parameters.description`, which n8n
+   ignores. It printed "description: updated for X" on all 14 nodes every run and
+   changed nothing. Fixed, plus a 5th invariant that checks descriptions against §2 —
+   which immediately caught two more silent drifts: `chevrolet_blazer_ev_2024` was
+   live as *"Use this tool to answer location and diagram questions about the
+   chevrolet_blazer_ev_2024"* (its own namespace string, no vehicle name, procedural
+   questions excluded), and `ford_mach_e_2026` was a pre-2026-06-22 draft.
+
+2. **Video 0 was never ingested into Pinecone.** `video_transcript_v2` holds 435
+   vectors covering only Videos 1 and 2. `bugs.md` concluded ingestion was fine by
+   quoting `Talk/*_segments.json` — the local transcript, not the index. The file
+   exists (1874 segments, Ashland line at t=1790.76); none of it is in the namespace.
+   So the residual failures (J2929 id 66, Ashland id 70) are a DATA gap, not a prompt
+   gap: the router now correctly reaches for the corpus and truthfully reports the
+   chunks are not there. **Next: Run All on `Ingestions/ingestion_transcript.ipynb`.**
+   Not run here — it is a production data write and was not in the plan.
+
+### P1 / P2
+
+- Both deploy scripts now re-fetch the live `index.html`, assert it references the
+  local `dist/` bundle hash (with retries for an in-flight invalidation) and exit
+  non-zero otherwise. `--upload --invalidate-only` is an argparse error, not a silent
+  no-op that still printed success. Font MIME types corrected to `font/woff(2)`.
+- `analyze_splats.py` printed "Paste into models.ts" over values that regress scale
+  by −28%…+11%; output is now split into a paste-this block (`rotation`) and an
+  explicit do-not-paste block, with the measured table in the docstring.
+- `run_eval.py` auto-suffixes a narrower same-day run instead of clobbering a wider
+  report.
+- Teleport was impossible while ducked (the arc only lands on a descending crossing
+  of the floor plane, and ducking puts the hand below it — in hand mode teleport is
+  the only locomotion). It now traces against the player's own foot plane, so the
+  same gesture throws the same distance crouched or upright.
+- `?hazards=0` was persisted into the comfort object, permanently disabling hazard
+  markers for anyone who opened the render-check URL. Per-load override now.
+- `updateVrSurfaces()` used a hardcoded 1/90 instead of `dt` (±33% off at 72/120 Hz);
+  the tracking preflight false-alarmed on a correctly-permitted frame; hazard markers
+  existed only on the driver's side (symmetric ones are mirrored now, still
+  `verified: false`); dead code removed.
+- `inspector_portal.html` was missing from the repo while still served live as the v1
+  fallback. Recovered from CloudFront (43,507 bytes, byte-identical) and committed —
+  the live v1 portal had no source of truth.
+- Env docs corrected: `jq` IS installed, `python3.11` is NOT, and the ingestion deps
+  live under `python3.10`. Ingestion notebooks committed at their real
+  `Ingestions/` paths.
+
+### Verification
+
+`npx tsc --noEmit` clean · `vr_check.mjs` **61/61** (was 51, +10 new assertions) ·
+`render_check.mjs` 4/4, every scan within 3.5% · `n8n_sync.py --check` 5/5 invariants ·
+30 live webhook calls, 0 errors · deploy verified against the live edge.
+
+### Known-bad, carried forward
+
+The Ashland question reproducibly returns an empty body or a literal
+`Calling video_transcript"> <invoke name=…>` string instead of an answer. Other
+transcript and vehicle questions answered cleanly in the same probe run, so it is
+question-specific — consistent with the agent exhausting `maxIterations=10` hunting
+for unindexed content. Re-test after the Video 0 ingestion before treating it as a
+separate bug.

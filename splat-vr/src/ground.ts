@@ -125,9 +125,11 @@ export class Ground {
   readonly mesh: Mesh;
   private readonly material: MeshBasicMaterial;
   private texture: CanvasTexture;
+  private color: string;
 
   constructor(color: string) {
     const base = new Color(color);
+    this.color = color;
     this.texture = makeGroundTexture(base);
     this.texture.repeat.set((OUTER * 2) / TILE_METRES, (OUTER * 2) / TILE_METRES);
 
@@ -168,6 +170,11 @@ export class Ground {
 
   /** Re-tint when a different scan (with a different captured floor) loads. */
   setColor(color: string) {
+    // Regenerating the tile means 90 gradient blotches and 5200 speckles on a
+    // 512px canvas. loadModel() calls this on every load including the first,
+    // where the constructor has already built exactly this texture.
+    if (color === this.color) return;
+    this.color = color;
     const tex = makeGroundTexture(new Color(color));
     tex.repeat.copy(this.texture.repeat);
     this.material.map = tex;
@@ -176,8 +183,30 @@ export class Ground {
     this.texture = tex;
   }
 
-  setVisible(v: boolean) {
-    this.mesh.visible = v;
+  /**
+   * Fade the floor out as the viewer's eyes drop below it.
+   *
+   * The rise/duck axis exists so you can get your head under the sills and look
+   * along an undercarriage - but the disc is DoubleSide, so from underneath it
+   * becomes an opaque concrete ceiling between you and the very thing you ducked
+   * down to see. Rather than hard-hiding it (which pops, and takes away the
+   * ground reference that stops smooth locomotion inducing sickness at the exact
+   * moment the view is most disorienting), it ramps off over the last few
+   * centimetres of the descent and back on as you rise.
+   *
+   * @param headY  The viewer's eye height in world metres.
+   */
+  setSubfloorFade(headY: number) {
+    // Fully solid at eye level and above; gone by the time the eyes are a
+    // hand's width under. The band is short because anywhere inside it the
+    // floor is edge-on and barely drawn anyway.
+    const FADE_TOP = 0.12;
+    const FADE_BOTTOM = -0.08;
+    const t = (headY - FADE_BOTTOM) / (FADE_TOP - FADE_BOTTOM);
+    const opacity = Math.min(1, Math.max(0, t));
+    if (Math.abs(this.material.opacity - opacity) < 0.002) return;
+    this.material.opacity = opacity;
+    this.mesh.visible = opacity > 0.01;
   }
 
   dispose() {

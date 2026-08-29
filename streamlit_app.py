@@ -136,6 +136,14 @@ with tab2:
         f"🥽 Using a VR headset? [Open the car scene in VR]({SPLAT_VR_URL}), "
         "then tap **Enter VR** to walk around the vehicle."
     )
+    # The desktop viewer pulls a 43.6 MB .ply from Hugging Face and shows a red
+    # placeholder cube meanwhile, with no progress of its own — it reads as broken
+    # for ~15 s. Nothing to fix in this repo (that viewer is a third-party URL),
+    # so say so rather than let people conclude the tab is dead.
+    st.caption(
+        "⏳ The 3D scan is a large download — the viewer shows a placeholder for "
+        "roughly 15 seconds on first load before the vehicle appears."
+    )
     viewer_col, chat_col = st.columns([2, 1])
     with viewer_col:
         components.iframe(SPLAT_URL, height=750, scrolling=True)

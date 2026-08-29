@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>EV Scan - VR Walkaround</title>
+    <!--
+      Inline so there is no second request and nothing extra to deploy. Without
+      it every load - local and on CloudFront - takes a 404 for /favicon.ico.
+    -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Cpath d='M5 20h22M8 20v3M24 20v3' stroke='%237dd3fc' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M7 20l3-7h12l3 7z' fill='%237dd3fc'/%3E%3C/svg%3E"
+    />
     <style>
       :root {
         --bg: #0f172a; --panel: #1e293b; --border: #334155;
@@ -95,12 +103,19 @@
       <select id="modelSelect"></select>
       <div class="hint">
         <b>Desktop:</b> drag to look, scroll to zoom, WASD to move.<br />
-        <b>Headset:</b> tap <b>Enter VR</b>, then <b>left stick</b> to walk,
+        <b>Headset:</b> tap <b>Enter VR</b>, then <b>left stick</b> to move,
         <b>right stick</b> to turn. Press <b>B</b>/<b>Y</b> for the controls panel.
+        Sticks swap if you set Handedness to left-handed.
       </div>
 
       <div class="comfort">
         <div class="comfort-title">VR COMFORT</div>
+        <label for="movementStyle">Movement</label>
+        <select id="movementStyle">
+          <option value="walk">Walk (thumbstick)</option>
+          <option value="teleport">Teleport &mdash; most comfortable</option>
+        </select>
+
         <label for="turnStyle">Turning</label>
         <select id="turnStyle">
           <option value="snap">Snap turn (recommended)</option>
@@ -126,6 +141,26 @@
         <label class="check">
           <input type="checkbox" id="vignette" checked />
           Vignette while moving
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="verticalMove" checked />
+          Rise / duck on the turn stick
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="hotspotsOn" checked />
+          Hazard &amp; cut-point markers
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="controllerHints" checked />
+          Controller hint labels
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="haptics" checked />
+          Controller vibration
         </label>
       </div>
     </div>
@@ -157,6 +192,32 @@
       <button id="copyBtn">Copy calibration JSON</button>
       <button id="resetBtn" class="secondary">Reset</button>
       <textarea id="devOut" rows="5" readonly></textarea>
+
+      <h2>HAZARD PLACEMENT (?dev=1)</h2>
+      <div class="row">
+        <label for="hsSelect">Marker</label>
+        <select id="hsSelect"></select>
+      </div>
+      <div class="row">
+        <label for="hsX">Forward (+ = nose) <span id="hsXv">0.00 m</span></label>
+        <input type="range" id="hsX" min="-2.6" max="2.6" step="0.01" value="0" />
+      </div>
+      <div class="row">
+        <label for="hsY">Up <span id="hsYv">0.00 m</span></label>
+        <input type="range" id="hsY" min="0" max="2.2" step="0.01" value="0" />
+      </div>
+      <div class="row">
+        <label for="hsZ">Driver side (+ = left) <span id="hsZv">0.00 m</span></label>
+        <input type="range" id="hsZ" min="-1.2" max="1.2" step="0.01" value="0" />
+      </div>
+      <div class="row">
+        <label for="hsCx">Vehicle centre X / Z</label>
+        <input type="range" id="hsCx" min="-1.5" max="1.5" step="0.01" value="0" />
+        <input type="range" id="hsCz" min="-1.5" max="1.5" step="0.01" value="0" />
+      </div>
+      <button id="hsCenter" class="secondary">Apply vehicle centre</button>
+      <button id="hsCopy">Copy hazard JSON</button>
+      <textarea id="hsOut" rows="6" readonly></textarea>
     </div>
 
     <script type="module" src="/src/main.ts"></script>

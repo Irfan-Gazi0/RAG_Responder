@@ -23,6 +23,13 @@ Usage:
   python3 run_eval.py --cache              # skip ids already run for this config
   python3 run_eval.py --out /tmp/eval.md   # override output markdown path
 
+The default output path is eval_results/<date>.md. A run that covers FEWER
+questions than a report already sitting at that path is auto-suffixed
+(eval_results/<date>.sampleN.md) rather than overwriting it: a 3-question triage
+silently destroying the day's 90-question baseline is not recoverable, and the
+only evidence it happened is a "Questions run: 3" line nobody reads until later.
+An explicit --out always wins.
+
 The router-config hash (sha256 of n8n_router_config.md) tags every cache file so
 results from a different live prompt/config never get reused.
 """
@@ -303,6 +310,39 @@ def build_report(results, chash, run_ts):
     return "\n".join(lines)
 
 
+QUESTIONS_RUN_RE = re.compile(r"^- \*\*Questions run:\*\*\s*(\d+)", re.MULTILINE)
+
+
+def existing_question_count(path: Path):
+    """How many questions the report already at `path` covered, or None."""
+    if not path.is_file():
+        return None
+    m = QUESTIONS_RUN_RE.search(path.read_text(encoding="utf-8", errors="replace"))
+    return int(m.group(1)) if m else None
+
+
+def default_out_path(results: list, run_ts) -> Path:
+    """eval_results/<date>.md, unless that would shrink an existing report.
+
+    A narrower run (a --sample or an --ids band) gets its own suffixed file
+    instead of overwriting a broader one. A run at least as wide as what is
+    there may overwrite: re-running the full set is how a baseline is refreshed.
+    """
+    base = RESULTS_DIR / f"{run_ts:%Y-%m-%d}.md"
+    previous = existing_question_count(base)
+    if previous is None or len(results) >= previous:
+        return base
+    for suffix in (f".sample{len(results)}", *(f".sample{len(results)}.{i}" for i in range(2, 100))):
+        candidate = RESULTS_DIR / f"{run_ts:%Y-%m-%d}{suffix}.md"
+        if not candidate.exists():
+            print(
+                f"ℹ️  {base.name} already holds a {previous}-question run; "
+                f"writing this {len(results)}-question run to {candidate.name} instead."
+            )
+            return candidate
+    return base
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Automated eval runner for the First Responder RAG chatbot."
@@ -388,7 +428,7 @@ def main():
     save_cache(chash, cache)
 
     report = build_report(results, chash, run_ts)
-    out_path = Path(args.out) if args.out else RESULTS_DIR / f"{run_ts:%Y-%m-%d}.md"
+    out_path = Path(args.out) if args.out else default_out_path(results, run_ts)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(report, encoding="utf-8")
 

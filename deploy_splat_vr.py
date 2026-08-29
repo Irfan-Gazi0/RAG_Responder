@@ -17,15 +17,23 @@ Usage:
   python3.10 deploy_splat_vr.py --invalidate-only
   python3.10 deploy_splat_vr.py --skip-models    # code only, leave .spz in place
 
+Every path ends by re-fetching the live index.html and asserting it references
+the same hashed bundle as the local dist/. A deploy that cannot be seen from the
+edge is not a deploy — the live viewer sat five days behind source (bugs.md P0-2)
+precisely because this script printed a success line it had not earned.
+
 Run from the repo root, not splat-vr/.
 """
 
 import argparse
 import mimetypes
 import os
+import re
 import sys
 import time
 from pathlib import Path
+from urllib.error import URLError
+from urllib.request import Request, urlopen
 
 import boto3
 from dotenv import load_dotenv
@@ -50,8 +58,8 @@ EXT_CONTENT_TYPE = {
     ".png": "image/png",
     ".jpg": "image/jpeg",
     ".svg": "image/svg+xml",
-    ".woff": "font-woff",
-    ".woff2": "font-woff2",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2",
     # Gaussian-splat payloads. mimetypes.guess_type does not know these on Linux
     # and would fall through to a bare octet-stream with no explicit intent.
     ".spz": "application/octet-stream",
@@ -124,6 +132,62 @@ def upload_dist(s3, skip_models: bool):
         print(f"  ✅ {key}  [{ctype}, {ccontrol}, {fp.stat().st_size / 1024:.1f} KB]")
 
 
+LIVE_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/{PREFIX}index.html"
+
+# Vite writes <script type="module" src="./assets/index-<hash>.js">. The hash
+# changes on every rebuild, which is exactly what makes it a deploy fingerprint.
+ASSET_RE = re.compile(r"assets/[A-Za-z0-9._-]+\.js")
+
+
+def local_bundles() -> set:
+    """The hashed JS bundles the freshly-built local index.html references."""
+    index = DIST_DIR / "index.html"
+    if not index.is_file():
+        print(f"❌ {index} does not exist — run `cd splat-vr && npm run build` first.")
+        sys.exit(1)
+    names = set(ASSET_RE.findall(index.read_text(encoding="utf-8", errors="replace")))
+    if not names:
+        print(f"❌ No assets/*.js reference found in {index} — cannot verify the deploy.")
+        sys.exit(1)
+    return names
+
+
+def verify_live(expected: set, attempts: int = 6, delay: int = 10) -> None:
+    """Re-fetch the live page and assert the edge serves this build.
+
+    index.html is uploaded `no-cache, must-revalidate`, so CloudFront revalidates
+    against the origin and this normally passes on the first try; the retries
+    cover an invalidation that is still in progress.
+    """
+    print(f"🔎 Verifying {LIVE_URL} serves {', '.join(sorted(expected))} …")
+    served = set()
+    for attempt in range(1, attempts + 1):
+        try:
+            req = Request(
+                LIVE_URL,
+                headers={"Cache-Control": "no-cache", "Pragma": "no-cache", "User-Agent": "deploy-verify"},
+            )
+            with urlopen(req, timeout=20) as resp:
+                if resp.status != 200:
+                    raise URLError(f"HTTP {resp.status}")
+                html = resp.read().decode("utf-8", errors="replace")
+            served = set(ASSET_RE.findall(html))
+            if expected <= served:
+                print(f"  ✅ Live bundle matches dist/ ({', '.join(sorted(served))})")
+                return
+            print(f"  … attempt {attempt}/{attempts}: edge still serving {sorted(served) or 'no bundle'}")
+        except (URLError, OSError) as exc:
+            print(f"  … attempt {attempt}/{attempts}: {exc}")
+        if attempt < attempts:
+            time.sleep(delay)
+
+    print("❌ Deploy verification FAILED.")
+    print(f"   expected: {sorted(expected)}")
+    print(f"   served:   {sorted(served) or '(none)'}")
+    print("   The upload or the invalidation did not take. Do NOT treat this as deployed.")
+    sys.exit(1)
+
+
 def invalidate_cloudfront():
     cf = boto3.client(
         "cloudfront",
@@ -150,6 +214,13 @@ def main():
     parser.add_argument("--skip-models", action="store_true", help="Skip models/ (code-only redeploy)")
     args = parser.parse_args()
 
+    # --upload means "skip invalidation" and --invalidate-only means "skip
+    # upload"; together they meant "do nothing", and still printed success.
+    if args.upload and args.invalidate_only:
+        parser.error("--upload and --invalidate-only are mutually exclusive (together they do nothing)")
+    if args.invalidate_only and args.skip_models:
+        parser.error("--skip-models has no effect with --invalidate-only (nothing is uploaded)")
+
     s3 = boto3.client(
         "s3",
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
@@ -157,13 +228,18 @@ def main():
         region_name=REGION,
     )
 
+    expected = local_bundles()
+
     if not args.invalidate_only:
         upload_dist(s3, args.skip_models)
     if not args.upload:
         invalidate_cloudfront()
 
-    url = f"https://d1ni7nkjr0eveg.cloudfront.net/{PREFIX}index.html"
-    print(f"\n🚀 Done. Splat VR viewer live at: {url}")
+    # Exits non-zero if the edge is not serving this build — the success line
+    # below is only reached once that has been proven.
+    verify_live(expected)
+
+    print(f"\n🚀 Done. Splat VR viewer live at: {LIVE_URL}")
     print("   Test VR on the headset at that URL directly — NOT through the")
     print("   Streamlit tab, whose iframe withholds xr-spatial-tracking.")
 

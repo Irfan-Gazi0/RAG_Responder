@@ -12,13 +12,21 @@ Usage:
   python3.10 deploy_portal_v2.py            # full deploy: upload + invalidate
   python3.10 deploy_portal_v2.py --upload   # upload only
   python3.10 deploy_portal_v2.py --invalidate-only
+
+Every path ends by re-fetching the live index.html and asserting it references
+the same hashed bundle as the local dist/. The success line is not printed until
+that passes — an unverified deploy is how splat-vr sat five days behind source.
 """
 
 import argparse
 import mimetypes
 import os
+import re
 import sys
+import time
 from pathlib import Path
+from urllib.error import URLError
+from urllib.request import Request, urlopen
 
 import boto3
 from dotenv import load_dotenv
@@ -43,8 +51,8 @@ EXT_CONTENT_TYPE = {
     ".png": "image/png",
     ".jpg": "image/jpeg",
     ".svg": "image/svg+xml",
-    ".woff": "font-woff",
-    ".woff2": "font-woff2",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2",
 }
 
 
@@ -97,6 +105,62 @@ def upload_dist(s3):
         print(f"  ✅ {key}  [{ctype}, {ccontrol}, {size_kb:.1f} KB]")
 
 
+LIVE_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/{PREFIX}index.html"
+
+# Vite writes <script type="module" src="./assets/index-<hash>.js">. The hash
+# changes on every rebuild, which is exactly what makes it a deploy fingerprint.
+ASSET_RE = re.compile(r"assets/[A-Za-z0-9._-]+\.js")
+
+
+def local_bundles() -> set:
+    """The hashed JS bundles the freshly-built local index.html references."""
+    index = DIST_DIR / "index.html"
+    if not index.is_file():
+        print(f"❌ {index} does not exist — run `cd portal && npm run build` first.")
+        sys.exit(1)
+    names = set(ASSET_RE.findall(index.read_text(encoding="utf-8", errors="replace")))
+    if not names:
+        print(f"❌ No assets/*.js reference found in {index} — cannot verify the deploy.")
+        sys.exit(1)
+    return names
+
+
+def verify_live(expected: set, attempts: int = 6, delay: int = 10) -> None:
+    """Re-fetch the live page and assert the edge serves this build.
+
+    index.html is uploaded `no-cache, must-revalidate`, so CloudFront revalidates
+    against the origin and this normally passes on the first try; the retries
+    cover an invalidation that is still in progress.
+    """
+    print(f"🔎 Verifying {LIVE_URL} serves {', '.join(sorted(expected))} …")
+    served = set()
+    for attempt in range(1, attempts + 1):
+        try:
+            req = Request(
+                LIVE_URL,
+                headers={"Cache-Control": "no-cache", "Pragma": "no-cache", "User-Agent": "deploy-verify"},
+            )
+            with urlopen(req, timeout=20) as resp:
+                if resp.status != 200:
+                    raise URLError(f"HTTP {resp.status}")
+                html = resp.read().decode("utf-8", errors="replace")
+            served = set(ASSET_RE.findall(html))
+            if expected <= served:
+                print(f"  ✅ Live bundle matches dist/ ({', '.join(sorted(served))})")
+                return
+            print(f"  … attempt {attempt}/{attempts}: edge still serving {sorted(served) or 'no bundle'}")
+        except (URLError, OSError) as exc:
+            print(f"  … attempt {attempt}/{attempts}: {exc}")
+        if attempt < attempts:
+            time.sleep(delay)
+
+    print("❌ Deploy verification FAILED.")
+    print(f"   expected: {sorted(expected)}")
+    print(f"   served:   {sorted(served) or '(none)'}")
+    print("   The upload or the invalidation did not take. Do NOT treat this as deployed.")
+    sys.exit(1)
+
+
 def invalidate_cloudfront():
     cf = boto3.client(
         "cloudfront",
@@ -104,8 +168,6 @@ def invalidate_cloudfront():
         aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
     )
     paths = [f"/{PREFIX}*"]
-    import time
-
     caller_ref = f"v2-deploy-{int(time.time())}"
     print(f"🌐 Invalidating CloudFront {CLOUDFRONT_DIST_ID} paths: {paths}")
     resp = cf.create_invalidation(
@@ -124,6 +186,11 @@ def main():
     parser.add_argument("--invalidate-only", action="store_true", help="Invalidate CloudFront only (skip upload)")
     args = parser.parse_args()
 
+    # --upload means "skip invalidation" and --invalidate-only means "skip
+    # upload"; together they meant "do nothing", and still printed success.
+    if args.upload and args.invalidate_only:
+        parser.error("--upload and --invalidate-only are mutually exclusive (together they do nothing)")
+
     s3 = boto3.client(
         "s3",
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
@@ -131,12 +198,18 @@ def main():
         region_name=REGION,
     )
 
+    expected = local_bundles()
+
     if not args.invalidate_only:
         upload_dist(s3)
     if not args.upload:
         invalidate_cloudfront()
 
-    print(f"\n🚀 Done. Portal v2 live at: https://d1ni7nkjr0eveg.cloudfront.net/{PREFIX}index.html")
+    # Exits non-zero if the edge is not serving this build — the success line
+    # below is only reached once that has been proven.
+    verify_live(expected)
+
+    print(f"\n🚀 Done. Portal v2 live at: {LIVE_URL}")
 
 
 if __name__ == "__main__":

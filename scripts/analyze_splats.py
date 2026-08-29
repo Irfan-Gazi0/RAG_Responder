@@ -38,14 +38,25 @@ measures each scan:
              floor against a robust 1st-percentile ground and emits the
              correction (equinox-hood-closed is 0.48 m out).
 
-LIMITATION: the scale this emits is only a starting point. It is derived from
-the bounding box, which includes however much surrounding ground each crop
-captured, so it rendered the Equinoxes ~30% undersized and the Blazers ~10%
-oversized. The scaleMultiplier values actually in models.ts were corrected
-empirically afterwards by rendering each scan headlessly at a known camera,
-segmenting the white bodywork from the tan ground, and solving for the on-screen
-length. Re-run that check after re-converting rather than pasting scale blind;
-rotation and yOffset from here are reliable.
+LIMITATION: only `rotation` is safe to paste. `scaleMultiplier` and `yOffset`
+are both derived from the bounding box, which includes however much surrounding
+ground each crop captured, so they are starting estimates and nothing more. The
+values actually in models.ts were corrected empirically afterwards by rendering
+each scan headlessly at a known camera, segmenting the white bodywork from the
+tan ground, and solving for the on-screen length.
+
+Measured 2026-08-29, pasting this script's scale over the tuned values:
+
+    equinox-hood-open    1.123 vs 1.565 tuned   -28%
+    equinox-hood-closed  1.126 vs 1.387 tuned   -19%
+    blazer-hood-open     1.210 vs 1.087 tuned   +11%
+    blazer-hood-closed   1.075 vs 1.007 tuned    +7%
+
+yOffset diverges the same way (equinox-hood-closed: -0.484 here, -0.596 tuned;
+blazer-hood-closed: -0.128 here, -0.120 tuned). The output below is
+therefore split into a paste-this block and a do-not-paste block; re-derive scale
+with `node scripts/render_check.mjs https://localhost:8082/`, which measures the
+on-screen vehicle length directly.
 
 The transform here mirrors main.ts exactly (q = calibration * FLIP_X, then scale
 from max(size.x, size.z)); if that math changes, change it here too.
@@ -175,8 +186,25 @@ def main() -> int:
         print(f"No .spz in {MODELS_DIR} - run scripts/convert_splats.sh first.", file=sys.stderr)
         return 1
     results = {p.stem: analyze(p) for p in files}
-    print("Paste into splat-vr/src/models.ts:")
-    print(json.dumps(results, indent=2))
+
+    # Split deliberately. A single "Paste into models.ts:" block over all three
+    # fields is an instruction to regress the calibration by -28%..+11% - see the
+    # table in the module docstring.
+    print("PASTE THIS into splat-vr/src/models.ts - derived analytically, reliable:")
+    print(json.dumps({k: {"rotation": v["rotation"]} for k, v in results.items()}, indent=2))
+    print()
+    print("STARTING ESTIMATE ONLY - do NOT paste over the tuned values in models.ts:")
+    print(json.dumps(
+        {k: {"scaleMultiplier": v["scaleMultiplier"], "yOffset": v["yOffset"]}
+         for k, v in results.items()},
+        indent=2,
+    ))
+    print()
+    print("  Both come from a bounding box that includes each crop's captured tarmac.")
+    print("  Re-derive scale empirically instead:")
+    print("      cd splat-vr && npm run dev")
+    print("      node scripts/render_check.mjs https://localhost:8082/")
+    print("  and keep the tuned models.ts values unless that check fails.")
     return 0
 
 

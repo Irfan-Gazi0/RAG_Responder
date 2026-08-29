@@ -30,15 +30,46 @@
  * camera, segment the white bodywork from the tan ground, measure the on-screen
  * length in metres and solve for the correction. All four now land within 3.5%
  * of their real length (the Equinox hood-open residual is the raised hood
- * widening the silhouette). Rotation and yOffset remain as derived.
+ * widening the silhouette). Rotation is exactly as derived; yOffset was nudged
+ * on two scans (equinox-hood-closed -0.484 -> -0.596, blazer-hood-closed
+ * -0.128 -> -0.120) for the same reason - the bbox floor it comes from is a
+ * property of the crop, not of the car.
+ *
+ * So scripts/analyze_splats.py is a source for `rotation` and a starting point
+ * for the other two. It prints them under separate headings for that reason;
+ * re-derive scale with scripts/render_check.mjs rather than pasting it.
  *
  * Verified rendering correctly on desktop; NOT yet confirmed in a headset.
  */
+import type { VehicleId } from "./hotspots-data";
+
 export type ModelConfig = {
   key: string;
   label: string;
   /** Manufacturer overall length in metres - the auto-fit scales the scan to this. */
   lengthMeters: number;
+  /** Manufacturer overall width and height, metres. Reference for hotspot placement. */
+  widthMeters: number;
+  heightMeters: number;
+  /** Whose hazard set this scan shows. Both scans of a vehicle share one set. */
+  vehicle: VehicleId;
+  /**
+   * Degrees about Y mapping the canonical vehicle frame (+X = nose) onto this
+   * fitted scan. Determined by rendering each scan from the default desktop
+   * camera - which looks along -Z, so screen-right is world +X - and reading off
+   * which way the nose points: both Equinox scans face -X (180 deg), both
+   * Blazers face +X (0 deg). See hotspots-data.ts for the frame definition.
+   */
+  vehicleYaw: number;
+  /**
+   * Metres [dx, dz] from the fitted BOUNDING BOX centre to the actual vehicle
+   * centre. fitToGround centres the bbox, and the bbox includes however much
+   * surrounding tarmac each crop captured, so the two are not the same point.
+   * Measured by segmenting the white bodywork out of a headless render: all four
+   * land within 5 cm in X, so these start at zero and exist to be tuned in the
+   * ?dev=1 hotspot pane once someone checks them across the car's width.
+   */
+  centerOffset: [number, number];
   /** Euler XYZ in degrees, applied before the auto-fit. Found via ?dev=1. */
   rotation: [number, number, number];
   /** Fudge factor on the derived scale, for scans whose bbox includes stray splats. */
@@ -61,6 +92,11 @@ export const MODELS: ModelConfig[] = [
     key: "equinox-hood-open",
     label: "Chevrolet Equinox EV (Hood Open)",
     lengthMeters: 4.79,
+    widthMeters: 1.89,
+    heightMeters: 1.64,
+    vehicle: "equinox-ev-2024",
+    vehicleYaw: 180,
+    centerOffset: [0, 0],
     rotation: [0, -132.4, 0],
     scaleMultiplier: 1.565,
     yOffset: -0.052,
@@ -70,6 +106,11 @@ export const MODELS: ModelConfig[] = [
     key: "equinox-hood-closed",
     label: "Chevrolet Equinox EV (Hood Closed)",
     lengthMeters: 4.79,
+    widthMeters: 1.89,
+    heightMeters: 1.64,
+    vehicle: "equinox-ev-2024",
+    vehicleYaw: 180,
+    centerOffset: [0, 0],
     rotation: [0, -111.0, 0],
     scaleMultiplier: 1.387,
     yOffset: -0.596,
@@ -79,6 +120,11 @@ export const MODELS: ModelConfig[] = [
     key: "blazer-hood-open",
     label: "Chevrolet Blazer EV (Hood Open)",
     lengthMeters: 4.92,
+    widthMeters: 1.95,
+    heightMeters: 1.68,
+    vehicle: "blazer-ev-2024",
+    vehicleYaw: 0,
+    centerOffset: [0, 0],
     rotation: [0, -89.8, 0],
     scaleMultiplier: 1.087,
     yOffset: -0.019,
@@ -88,6 +134,11 @@ export const MODELS: ModelConfig[] = [
     key: "blazer-hood-closed",
     label: "Chevrolet Blazer EV (Hood Closed)",
     lengthMeters: 4.92,
+    widthMeters: 1.95,
+    heightMeters: 1.68,
+    vehicle: "blazer-ev-2024",
+    vehicleYaw: 0,
+    centerOffset: [0, 0],
     rotation: [0, 179.1, 0],
     scaleMultiplier: 1.007,
     yOffset: -0.12,

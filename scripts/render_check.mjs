@@ -71,7 +71,11 @@ for (const key of Object.keys(TARGET)) {
   page.on("pageerror", (e) => problems.push(`pageerror: ${e.message}`));
   page.on("response", (r) => { if (r.status() >= 400 && !r.url().endsWith("favicon.ico")) problems.push(`${r.status()} ${r.url()}`); });
 
-  await page.goto(`${BASE}?model=${key}`, { waitUntil: "load", timeout: 90000 });
+  // hazards=0: this check segments white bodywork to measure the vehicle, and
+  // the hazard markers are part of the scene. None of them currently reaches
+  // past the silhouette, but a future one placed at the nose would be measured
+  // as car and would read as a mis-scale that is not there.
+  await page.goto(`${BASE}?model=${key}&hazards=0`, { waitUntil: "load", timeout: 90000 });
 
   let status = "";
   const deadline = Date.now() + 90000;

@@ -48,3 +48,6 @@ eval_results/.cache/
 splat-vr/dist/
 splat-vr/public/models/*.spz
 splat-vr/.splat-src/
+
+# graphify curated-graph backups (one dated dir per rebuild, regenerable)
+graphify-out/20*/

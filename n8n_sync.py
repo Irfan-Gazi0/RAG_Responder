@@ -11,6 +11,15 @@ Invariants checked (all READ-ONLY under --check):
   3. maxIterations == 10 on the Router Agent node
   4. Live systemMessage matches section 1 of n8n_router_config.md (sha256 of
      whitespace-normalized text; unified diff printed on mismatch)
+  5. Live tool descriptions match section 2 of n8n_router_config.md
+
+Invariant 5 was added 2026-08-29 after finding that --push had never actually
+applied a tool description. These are `mode: retrieve-as-tool` nodes, whose
+description lives at `parameters.toolDescription`; the push wrote
+`parameters.description`, which n8n ignores for this node type. It reported
+"description: updated for X" on all 14 nodes every run, and changed nothing.
+The tool description IS the routing prompt, so that was the one field where
+silent drift was guaranteed to go unnoticed.
 
 n8n public API: GET/PUT {base}/workflows/{id} with X-N8N-API-KEY header.
 Reads N8N_API_KEY from the repo-root .env (same .env-loading pattern as
@@ -233,7 +242,7 @@ def get_max_iterations(agent_node: dict):
 
 # --- Invariant checks (READ-ONLY) --------------------------------------------
 
-def check_invariants(workflow: dict, doc_system_message: str) -> bool:
+def check_invariants(workflow: dict, doc_system_message: str, doc_tool_desc: dict) -> bool:
     nodes = workflow.get("nodes", [])
     all_pass = True
 
@@ -320,6 +329,26 @@ def check_invariants(workflow: dict, doc_system_message: str) -> bool:
     print(f"  => Invariant 4: {pass_tag() if inv4_ok else fail_tag()}")
     all_pass = all_pass and inv4_ok
 
+    # --- Invariant 5: tool descriptions match section 2 ---
+    # The tool description IS the routing prompt: the agent picks a tool by
+    # reading it. A corpus mis-described there mis-routes every question that
+    # depends on it, and nothing else in this file would notice.
+    print("\nInvariant 5 — live tool descriptions match n8n_router_config.md section 2")
+    inv5_ok = True
+    for n in pine:
+        key = doc_key_for(n, doc_tool_desc)
+        if key is None:
+            print(f"  {fail_tag()} {n.get('name', '?'):<32} no section-2 block for this node")
+            inv5_ok = False
+            continue
+        live = get_tool_description(n)
+        ok = normalize_text(live or "") == normalize_text(doc_tool_desc[key])
+        inv5_ok = inv5_ok and ok
+        print(f"  {pass_tag() if ok else fail_tag()} {n.get('name', '?'):<32} "
+              f"[{_description_field(n)}] {'matches' if ok else 'DRIFTED'}")
+    print(f"  => Invariant 5: {pass_tag() if inv5_ok else fail_tag()}")
+    all_pass = all_pass and inv5_ok
+
     print("\n" + "=" * 72)
     print(f"OVERALL: {pass_tag() if all_pass else fail_tag()}")
     print("=" * 72)
@@ -340,18 +369,48 @@ def trim_settings(settings: dict) -> dict:
     return out
 
 
-def _tool_node_namespace(node: dict) -> str | None:
-    """Best-effort map a Pinecone tool node to its namespace key so we can match
-    it to a doc description. Uses the pineconeNamespace param if present, else
-    the node name lowercased with spaces→underscores."""
+def _tool_node_keys(node: dict) -> list:
+    """Doc-key candidates for a Pinecone tool node, best first.
+
+    The live nodes carry the namespace at `parameters.options.pineconeNamespace`
+    (not `parameters.pineconeNamespace`), and the transcript node's namespace is
+    `video_transcript_v2` while the doc block is headed `video_transcript` — so
+    try the namespace, then the node name. Every other node has the two equal.
+    """
     params = node.get("parameters", {})
-    ns = params.get("pineconeNamespace")
-    if isinstance(ns, dict):
-        ns = ns.get("value")
-    if isinstance(ns, str) and ns.strip():
-        return ns.strip()
-    name = node.get("name", "")
-    return name.strip().lower().replace(" ", "_") or None
+    keys = []
+    for ns in (params.get("options", {}) or {}).get("pineconeNamespace"), params.get("pineconeNamespace"):
+        if isinstance(ns, dict):
+            ns = ns.get("value")
+        if isinstance(ns, str) and ns.strip():
+            keys.append(ns.strip())
+    name = node.get("name", "").strip().lower().replace(" ", "_")
+    if name:
+        keys.append(name)
+    return keys
+
+
+def doc_key_for(node: dict, doc_tool_desc: dict) -> str | None:
+    """The section-2 block that governs this node, or None if it has no block."""
+    for k in _tool_node_keys(node):
+        if k in doc_tool_desc:
+            return k
+    return None
+
+
+def _description_field(node: dict) -> str:
+    """Where THIS node type keeps its tool description.
+
+    `retrieve-as-tool` mode puts it at parameters.toolDescription. Writing
+    parameters.description on such a node is accepted by the API and ignored by
+    n8n - which is exactly how 14 tool descriptions went unpushed.
+    """
+    mode = node.get("parameters", {}).get("mode")
+    return "toolDescription" if mode == "retrieve-as-tool" else "description"
+
+
+def get_tool_description(node: dict) -> str | None:
+    return node.get("parameters", {}).get(_description_field(node))
 
 
 def plan_push(workflow: dict, doc_system_message: str, doc_tool_desc: dict) -> tuple[dict, list]:
@@ -391,13 +450,17 @@ def plan_push(workflow: dict, doc_system_message: str, doc_tool_desc: dict) -> t
         if params.get("topK") != EXPECTED_TOPK:
             changes.append(f"topK: {params.get('topK')} -> {EXPECTED_TOPK} ({n.get('name')})")
             params["topK"] = EXPECTED_TOPK
-        ns = _tool_node_namespace(n)
-        if ns and ns in doc_tool_desc:
-            cur_desc = params.get("description") or n.get("description")
-            if normalize_text(cur_desc or "") != normalize_text(doc_tool_desc[ns]):
-                # n8n tool description lives at parameters.description for tool nodes.
-                params["description"] = doc_tool_desc[ns]
-                changes.append(f"description: updated for {ns}")
+        key = doc_key_for(n, doc_tool_desc)
+        if key:
+            field = _description_field(n)
+            cur_desc = params.get(field)
+            if normalize_text(cur_desc or "") != normalize_text(doc_tool_desc[key]):
+                params[field] = doc_tool_desc[key]
+                changes.append(f"{field}: updated for {key} ({n.get('name')})")
+            # Clean up the dead field earlier versions of this script wrote.
+            if field != "description" and "description" in params:
+                params.pop("description")
+                changes.append(f"description: removed dead field on {n.get('name')}")
 
     body = {
         "name": workflow.get("name"),
@@ -442,7 +505,8 @@ def do_check(api_key: str) -> int:
     workflow = get_workflow(api_key)
     md = _read_config_md()
     doc_msg = extract_doc_system_message(md)
-    ok = check_invariants(workflow, doc_msg)
+    doc_tool_desc = extract_doc_tool_descriptions(md)
+    ok = check_invariants(workflow, doc_msg, doc_tool_desc)
     return 0 if ok else 1
 
 
