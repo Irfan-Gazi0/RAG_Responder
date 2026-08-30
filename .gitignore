@@ -34,13 +34,21 @@ env/
 .AppleDouble
 .LSOverride
 
-# graphify — machine-local interpreter paths + regenerable extraction cache
-# (the graph outputs graph.json/graph.html/GRAPH_REPORT.md are committed).
-# `**/` because there is a second graph at portal/graphify-out/; a bare
-# `graphify-out/cache/` is anchored to this file's directory and misses it.
+# graphify — machine-local interpreter paths + regenerable extraction cache.
+# `**/` because a bare `graphify-out/cache/` is anchored to this file's
+# directory and would miss any nested graph.
 **/graphify-out/cache/
 **/graphify-out/.graphify_python
 **/graphify-out/.graphify_root
+
+# The portal's own graph is dev tooling, not website content — it is
+# regenerable with `graphify update portal/` and has no business in a branch
+# that Streamlit Cloud clones on every deploy. (The ROOT graphify-out/ stays
+# tracked; it predates this and CLAUDE.md's graphify section points at it.)
+portal/graphify-out/
+
+# Internal planning scratch — not shipped, not reviewed.
+portal/plan2.md
 
 # run_eval.py cache (regenerable, keyed by router-config hash)
 eval_results/.cache/
