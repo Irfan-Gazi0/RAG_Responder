@@ -1,0 +1,26 @@
+# graphify scan excludes (gitignore syntax).
+#
+# NB: the presence of this file at the repo root makes graphify use IT instead of
+# the root .gitignore for the top-level scan, so the large/secret excludes that
+# matter are mirrored here. Keep in sync with .gitignore for anything graphify
+# should never index.
+
+# --- Vendored skill trees: pollute the code graph with skill-doc nodes ---
+# (queries like "deployment workflow" were returning n8n skill-doc sections
+#  instead of project code — see Workflow Improvement review, 2026-07-05)
+.claude/skills/
+.agents/skills/
+portal/.claude/skills/
+
+# --- Large raw media (66 GB): must never be indexed ---
+# Not in graphify's hardcoded skip list, so mirror the .gitignore rule here.
+360/
+
+# --- Regenerable / local (most are also in graphify's built-in skip set) ---
+node_modules/
+venv/
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+graphify-out/
+.env

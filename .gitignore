@@ -33,3 +33,28 @@ env/
 .DS_Store
 .AppleDouble
 .LSOverride
+
+# graphify — machine-local interpreter paths + regenerable extraction cache
+# (the graph outputs graph.json/graph.html/GRAPH_REPORT.md are committed).
+# `**/` because there is a second graph at portal/graphify-out/; a bare
+# `graphify-out/cache/` is anchored to this file's directory and misses it.
+**/graphify-out/cache/
+**/graphify-out/.graphify_python
+**/graphify-out/.graphify_root
+
+# run_eval.py cache (regenerable, keyed by router-config hash)
+eval_results/.cache/
+
+# splat-vr: build output, converted models and the .ply download cache.
+# All regenerable — `bash scripts/convert_splats.sh` then `npm run build`.
+splat-vr/dist/
+splat-vr/public/models/*.spz
+splat-vr/.splat-src/
+
+# graphify curated-graph backups (one dated dir per rebuild, regenerable)
+**/graphify-out/20*/
+
+# Skills vendored into .claude/skills as symlinks into this machine's
+# site-packages — committing one ships a dangling link to every other checkout
+# (and to Streamlit Cloud). The skill comes from the installed package instead.
+.claude/skills/developing-with-streamlit

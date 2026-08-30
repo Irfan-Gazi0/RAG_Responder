@@ -1,5 +1,5 @@
-import { sendMessage, setInputValue } from "./chat.js";
-import { setHudTranscript } from "./hud-mirror.js";
+import { focusInput, sendMessage, setInputValue } from "./chat.js";
+import { setHudTranscript, flashHudStatus } from "./hud-mirror.js";
 
 // Fallback transcription endpoint used when the browser lacks
 // SpeechRecognition. The Meta Quest Browser has NO native speech-to-text, so this
@@ -136,11 +136,13 @@ function startSpeechRecognition(vrMode: boolean) {
       if (lastTranscript) {
         setInputValue(lastTranscript);
         sendMessage();
+      } else {
+        flashHudStatus("Didn't catch that - try again.");
       }
     } else {
       micBtn.classList.remove("recording");
       micBtn.title = "Voice input";
-      inputEl.focus();
+      focusInput();
     }
   };
 
@@ -194,7 +196,13 @@ async function startMediaRecording(vrMode: boolean) {
   };
 
   mediaRecorder.onerror = (e) => {
-    showVoiceError(`⚠ Recorder error: ${(e as ErrorEvent).message || "unknown"}`, vrMode);
+    isRecording = false;
+    activeMode = null;
+    mediaStream?.getTracks().forEach((t) => t.stop());
+    mediaStream = null;
+    mediaRecorder = null;
+    setHudTranscript("");
+    showVoiceError(`Recorder error: ${(e as ErrorEvent).message || "unknown"}`, vrMode);
   };
 
   mediaRecorder.onstop = async () => {
@@ -218,13 +226,15 @@ async function startMediaRecording(vrMode: boolean) {
         if (text) {
           setInputValue(text);
           sendMessage();
+        } else {
+          flashHudStatus("Didn't catch that - try again.");
         }
       } else {
         inputEl.value = [baseText, text].filter(Boolean).join(" ");
         inputEl.style.height = "auto";
         inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
         micBtn.title = "Voice input";
-        inputEl.focus();
+        focusInput();
       }
     } catch (err) {
       showVoiceError(`⚠ Transcription failed: ${(err as Error).message}`, vrMode);
@@ -270,7 +280,7 @@ async function transcribeBlob(blob: Blob): Promise<string> {
 
 function showVoiceError(msg: string, vrMode: boolean) {
   if (vrMode) {
-    setHudTranscript(msg);
+    flashHudStatus(msg);
   } else {
     errorEl.style.display = "block";
     errorEl.textContent = msg;

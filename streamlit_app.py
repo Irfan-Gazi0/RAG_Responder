@@ -1,11 +1,12 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-# Bump this whenever inspector_portal.html / chat_panel.html change on S3.
+# Bump this whenever the embedded HTML changes on S3 — v2/index.html (the
+# default), inspector_portal.html, or chat_panel.html.
 # It changes the iframe URL's cache key so browsers can't serve a stale copy
 # (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
 # which a CloudFront invalidation does NOT clear).
-CACHE_BUST = "20260608a"
+CACHE_BUST = "20260830a"
 
 # v2 (IWSDK build) is now the default embedded portal — it lives under /v2/ as a
 # multi-file bundle and replaces the old A-Frame v1 (inspector_portal.html).
@@ -17,7 +18,22 @@ if _USE_V1:
 else:
     PORTAL_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/v2/index.html?v={CACHE_BUST}"
 CHAT_URL   = f"https://d1ni7nkjr0eveg.cloudfront.net/chat_panel.html?v={CACHE_BUST}"
-SPLAT_URL  = "https://alistairwstbrk.github.io/splat-site/?url=https://huggingface.co/datasets/AlistairWstbrk/splats/resolve/main/3DGS%20.ply%20New%20Vehicle%20Scans/Equinox%20Hood%20Open%20(New)(Cropped).ply"
+
+# 3D Gaussian-splat viewer. Third-party: github.com/AlistairWstbrk/DOE-Training on
+# GitHub Pages, rendering .ply scans hosted on Hugging Face. Replaced the old
+# `splat-site` host on 2026-08-18 after it started returning 404 (the tab rendered
+# an empty iframe with no error — verify pixels, not just HTTP, after changing this).
+# ?url= preloads one scan; the viewer's own category/model dropdowns switch scans.
+SPLAT_VIEWER = "https://alistairwstbrk.github.io/DOE-Training/"
+SPLAT_PLY = (
+    "https://huggingface.co/datasets/AlistairWstbrk/splats/resolve/main/"
+    "3DGS%20.ply%20New%20Vehicle%20Scans/Equinox%20Hood%20Open%20(New)(Cropped).ply"
+)
+SPLAT_URL = f"{SPLAT_VIEWER}?url={SPLAT_PLY}"
+
+# Standalone WebXR splat viewer (Spark). VR cannot work inside components.iframe()
+# because Streamlit withholds `xr-spatial-tracking`, so this is linked, not embedded.
+SPLAT_VR_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/splat-vr/index.html?v={CACHE_BUST}"
 
 st.set_page_config(
     page_title="RAG Responder Hub",
@@ -116,6 +132,18 @@ with tab2:
     st.markdown(
         "Inspect high-fidelity Gaussian-splatting 3D scans of the vehicle, with the AI "
         "assistant alongside for procedure questions."
+    )
+    st.caption(
+        f"🥽 Using a VR headset? [Open the car scene in VR]({SPLAT_VR_URL}), "
+        "then tap **Enter VR** to walk around the vehicle."
+    )
+    # The desktop viewer pulls a 43.6 MB .ply from Hugging Face and shows a red
+    # placeholder cube meanwhile, with no progress of its own — it reads as broken
+    # for ~15 s. Nothing to fix in this repo (that viewer is a third-party URL),
+    # so say so rather than let people conclude the tab is dead.
+    st.caption(
+        "⏳ The 3D scan is a large download — the viewer shows a placeholder for "
+        "roughly 15 seconds on first load before the vehicle appears."
     )
     viewer_col, chat_col = st.columns([2, 1])
     with viewer_col:

@@ -1,0 +1,97 @@
+{
+  ".claude/settings.json": {
+    "mtime": 1779678200.391318,
+    "ast_hash": "8aeccfe2e1df1e5c0b26c2e8e746fee1",
+    "semantic_hash": ""
+  },
+  ".vscode/extensions.json": {
+    "mtime": 1779678200.169318,
+    "ast_hash": "202633963d7c3f154e44e15534249a8e",
+    "semantic_hash": ""
+  },
+  "package.json": {
+    "mtime": 1779679480.7042994,
+    "ast_hash": "e37c5a82df1289a643f854c3e676f7fa",
+    "semantic_hash": ""
+  },
+  "src/chat.ts": {
+    "mtime": 1780321759.1495347,
+    "ast_hash": "a9c06ee4851132a0249be06f295c7722",
+    "semantic_hash": ""
+  },
+  "src/hud-mirror.ts": {
+    "mtime": 1780321991.040216,
+    "ast_hash": "ad2bfde425b0a1621f3b5536ed7e54d6",
+    "semantic_hash": ""
+  },
+  "src/hud.ts": {
+    "mtime": 1780321986.8902047,
+    "ast_hash": "cf095cb7771d776a4840885d90ced0b7",
+    "semantic_hash": ""
+  },
+  "src/index.ts": {
+    "mtime": 1780934092.0560074,
+    "ast_hash": "57d90d9a00fcca4c275bda17452caabb",
+    "semantic_hash": ""
+  },
+  "src/look-controls.ts": {
+    "mtime": 1780934092.0560074,
+    "ast_hash": "800a52f0a0dc673d03a28bc7ac52eb96",
+    "semantic_hash": ""
+  },
+  "src/push-to-talk.ts": {
+    "mtime": 1780321843.6337988,
+    "ast_hash": "089c980492972a4b9048bf3f17270421",
+    "semantic_hash": ""
+  },
+  "src/videosphere.ts": {
+    "mtime": 1779678942.8185968,
+    "ast_hash": "b32f0d42a4fb243584bb5a68ca502166",
+    "semantic_hash": ""
+  },
+  "src/voice.ts": {
+    "mtime": 1780325459.2755563,
+    "ast_hash": "68073bea7be4eb8d320c4ea0f44ed517",
+    "semantic_hash": ""
+  },
+  "tsconfig.json": {
+    "mtime": 1779678200.377318,
+    "ast_hash": "77dfe9f8093a5708521a85771d70d674",
+    "semantic_hash": ""
+  },
+  "vite.config.ts": {
+    "mtime": 1779679491.1971428,
+    "ast_hash": "48577ffd005e178afc12aa94a3010ea5",
+    "semantic_hash": ""
+  },
+  ".claude/agents/iwsdk-project-code-reviewer.md": {
+    "mtime": 1779678200.390318,
+    "ast_hash": "af60b98ddbd7db8d1f27c3996fb08eeb",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1783283712.376867,
+    "ast_hash": "8f0b6df7a6e69d15bb33a489b2551e8f",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1783283675.1368666,
+    "ast_hash": "e633e6cc528212a5c7e7bbdf7490d505",
+    "semantic_hash": ""
+  },
+  "index.html": {
+    "mtime": 1782853827.7930467,
+    "ast_hash": "0960db2884f369c2f6f8d4dcae576a42",
+    "semantic_hash": ""
+  },
+  "public/audio/chime.mp3": {
+    "mtime": 1780321649.5521586,
+    "ast_hash": "2604c337924221172fe74f1c9c7dec5e",
+    "semantic_hash": ""
+  },
+  "public/audio/click.mp3": {
+    "mtime": 1780321649.5121584,
+    "ast_hash": "2d8b108a9d45b6f132f885f9ac167451",
+    "semantic_hash": ""
+  }
+}

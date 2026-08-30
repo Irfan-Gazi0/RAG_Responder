@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>EV Scan - VR Walkaround</title>
+    <!--
+      Inline so there is no second request and nothing extra to deploy. Without
+      it every load - local and on CloudFront - takes a 404 for /favicon.ico.
+    -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Cpath d='M5 20h22M8 20v3M24 20v3' stroke='%237dd3fc' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M7 20l3-7h12l3 7z' fill='%237dd3fc'/%3E%3C/svg%3E"
+    />
+    <style>
+      :root {
+        --bg: #0f172a; --panel: #1e293b; --border: #334155;
+        --text: #e2e8f0; --muted: #94a3b8; --accent: #ef4444;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); }
+      body {
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+      canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+
+      .overlay {
+        position: fixed; top: 16px; left: 16px; z-index: 10;
+        background: rgba(30, 41, 59, 0.92);
+        border: 1px solid var(--border); border-radius: 12px;
+        padding: 14px 16px; max-width: 320px;
+        backdrop-filter: blur(8px);
+      }
+      .overlay h1 { font-size: 15px; margin: 0 0 10px; font-weight: 700; }
+      .overlay label { display: block; font-size: 12px; color: var(--muted); margin: 0 0 5px; }
+      select {
+        width: 100%; padding: 8px 10px; border-radius: 8px;
+        background: #0f172a; color: var(--text);
+        border: 1px solid var(--border); font-size: 13px;
+      }
+      .hint { font-size: 11px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
+      .hint b { color: var(--text); font-weight: 600; }
+
+      .comfort { margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--border); }
+      .comfort-title {
+        font-size: 10px; font-weight: 700; letter-spacing: .08em;
+        color: #7dd3fc; margin-bottom: 8px;
+      }
+      .comfort label { margin-top: 8px; }
+      .comfort label:first-of-type { margin-top: 0; }
+      .comfort label span { color: #4ade80; font-variant-numeric: tabular-nums; float: right; }
+      .comfort input[type=range] { width: 100%; accent-color: #7dd3fc; }
+      .comfort label.check {
+        display: flex; align-items: center; gap: 7px;
+        color: var(--text); font-size: 12px; margin-top: 10px; cursor: pointer;
+      }
+      .comfort label.check input { accent-color: #7dd3fc; }
+
+      #status {
+        position: fixed; bottom: 16px; left: 16px; z-index: 10;
+        background: rgba(30, 41, 59, 0.92);
+        border: 1px solid var(--border); border-radius: 10px;
+        padding: 9px 14px; font-size: 12px; color: var(--muted);
+      }
+      #status.error { color: #fca5a5; border-color: var(--accent); }
+
+      /* Dev calibration panel, ?dev=1 only */
+      #dev {
+        position: fixed; top: 16px; right: 16px; z-index: 10;
+        background: rgba(30, 41, 59, 0.95);
+        border: 1px dashed #64748b; border-radius: 12px;
+        padding: 14px 16px; width: 265px; display: none;
+      }
+      #dev h2 { font-size: 12px; margin: 0 0 10px; color: #fbbf24; letter-spacing: .04em; }
+      #dev .row { margin-bottom: 9px; }
+      #dev .row label {
+        display: flex; justify-content: space-between;
+        font-size: 11px; color: var(--muted); margin-bottom: 3px;
+      }
+      #dev .row label span { color: #4ade80; font-variant-numeric: tabular-nums; }
+      #dev input[type=range] { width: 100%; accent-color: var(--accent); }
+      #dev button {
+        width: 100%; padding: 8px; margin-top: 6px; cursor: pointer;
+        background: var(--accent); color: #fff; font-weight: 600; font-size: 12px;
+        border: none; border-radius: 8px;
+      }
+      #dev button.secondary { background: #334155; }
+      #dev textarea {
+        width: 100%; margin-top: 8px; font-family: ui-monospace, monospace;
+        font-size: 10px; background: #0f172a; color: var(--text);
+        border: 1px solid var(--border); border-radius: 6px; padding: 6px;
+        resize: vertical;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <div class="overlay" id="ui">
+      <h1>&#128663; EV Scan &mdash; VR Walkaround</h1>
+      <label for="modelSelect">Vehicle scan</label>
+      <select id="modelSelect"></select>
+      <div class="hint">
+        <b>Desktop:</b> drag to look, scroll to zoom, WASD to move.<br />
+        <b>Headset:</b> tap <b>Enter VR</b>, then <b>left stick</b> to move,
+        <b>right stick</b> to turn. Press <b>B</b>/<b>Y</b> for the controls panel.
+        Sticks swap if you set Handedness to left-handed.
+      </div>
+
+      <div class="comfort">
+        <div class="comfort-title">VR COMFORT</div>
+        <label for="movementStyle">Movement</label>
+        <select id="movementStyle">
+          <option value="walk">Walk (thumbstick)</option>
+          <option value="teleport">Teleport &mdash; most comfortable</option>
+        </select>
+
+        <label for="turnStyle">Turning</label>
+        <select id="turnStyle">
+          <option value="snap">Snap turn (recommended)</option>
+          <option value="smooth">Smooth turn</option>
+        </select>
+
+        <label for="snapDegrees">Snap angle</label>
+        <select id="snapDegrees">
+          <option value="30">30&deg; &mdash; gentler</option>
+          <option value="45">45&deg;</option>
+          <option value="60">60&deg; &mdash; fewer presses</option>
+        </select>
+
+        <label for="moveSpeed">Walk speed <span id="moveSpeedv">1.2 m/s</span></label>
+        <input type="range" id="moveSpeed" min="0.4" max="3" step="0.1" value="1.2" />
+
+        <label for="dominantHand">Handedness</label>
+        <select id="dominantHand">
+          <option value="right">Right-handed (move = left stick)</option>
+          <option value="left">Left-handed (move = right stick)</option>
+        </select>
+
+        <label class="check">
+          <input type="checkbox" id="vignette" checked />
+          Vignette while moving
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="verticalMove" checked />
+          Rise / duck on the turn stick
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="hotspotsOn" checked />
+          Hazard &amp; cut-point markers
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="controllerHints" checked />
+          Controller hint labels
+        </label>
+
+        <label class="check">
+          <input type="checkbox" id="haptics" checked />
+          Controller vibration
+        </label>
+      </div>
+    </div>
+
+    <div id="status">Loading&hellip;</div>
+
+    <div id="dev">
+      <h2>CALIBRATION (?dev=1)</h2>
+      <div class="row">
+        <label for="rotX">Rotate X <span id="rotXv">0&deg;</span></label>
+        <input type="range" id="rotX" min="-180" max="180" step="0.1" value="0" />
+      </div>
+      <div class="row">
+        <label for="rotY">Rotate Y <span id="rotYv">0&deg;</span></label>
+        <input type="range" id="rotY" min="-180" max="180" step="0.1" value="0" />
+      </div>
+      <div class="row">
+        <label for="rotZ">Rotate Z <span id="rotZv">0&deg;</span></label>
+        <input type="range" id="rotZ" min="-180" max="180" step="0.1" value="0" />
+      </div>
+      <div class="row">
+        <label for="scaleMul">Scale &times; <span id="scaleMulv">1.00</span></label>
+        <input type="range" id="scaleMul" min="0.2" max="3" step="0.001" value="1" />
+      </div>
+      <div class="row">
+        <label for="yOff">Y offset <span id="yOffv">0.00 m</span></label>
+        <input type="range" id="yOff" min="-2" max="2" step="0.001" value="0" />
+      </div>
+      <button id="copyBtn">Copy calibration JSON</button>
+      <button id="resetBtn" class="secondary">Reset</button>
+      <textarea id="devOut" rows="5" readonly></textarea>
+
+      <h2>HAZARD PLACEMENT (?dev=1)</h2>
+      <div class="row">
+        <label for="hsSelect">Marker</label>
+        <select id="hsSelect"></select>
+      </div>
+      <div class="row">
+        <label for="hsX">Forward (+ = nose) <span id="hsXv">0.00 m</span></label>
+        <input type="range" id="hsX" min="-2.6" max="2.6" step="0.01" value="0" />
+      </div>
+      <div class="row">
+        <label for="hsY">Up <span id="hsYv">0.00 m</span></label>
+        <input type="range" id="hsY" min="0" max="2.2" step="0.01" value="0" />
+      </div>
+      <div class="row">
+        <label for="hsZ">Driver side (+ = left) <span id="hsZv">0.00 m</span></label>
+        <input type="range" id="hsZ" min="-1.2" max="1.2" step="0.01" value="0" />
+      </div>
+      <div class="row">
+        <label for="hsCx">Vehicle centre X / Z</label>
+        <input type="range" id="hsCx" min="-1.5" max="1.5" step="0.01" value="0" />
+        <input type="range" id="hsCz" min="-1.5" max="1.5" step="0.01" value="0" />
+      </div>
+      <button id="hsCenter" class="secondary">Apply vehicle centre</button>
+      <button id="hsCopy">Copy hazard JSON</button>
+      <textarea id="hsOut" rows="6" readonly></textarea>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

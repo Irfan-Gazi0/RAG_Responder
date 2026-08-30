@@ -9,6 +9,8 @@ import {
   World,
 } from "@iwsdk/core";
 import Hls from "hls.js";
+import { flashHudStatus } from "./hud-mirror.js";
+import { crumb } from "./breadcrumbs.js";
 
 export interface LectureConfig {
   src: string;
@@ -16,9 +18,22 @@ export interface LectureConfig {
   summary: string;
 }
 
+// CloudFront serves the HLS with NO Access-Control-Allow-Origin header, and the
+// videosphere needs `crossOrigin = "anonymous"` (a tainted video can't be
+// uploaded as a WebGL texture). Same-origin on `/v2/` so production is fine, but
+// from localhost or the LAN dev server every request is cross-origin and the
+// video simply never loads — which is why the Quest crash, whose repro has video
+// playing, has never been reproducible off CloudFront.
+//
+// In dev we therefore go through the Vite proxy (see vite.config.ts) so the
+// stream is same-origin again. Production keeps the absolute URL untouched.
+const VIDEO_BASE = import.meta.env.DEV
+  ? "/videos"
+  : "https://d1ni7nkjr0eveg.cloudfront.net/videos";
+
 export const VIDEOS: LectureConfig[] = [
   {
-    src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_110210_00_007_009/index.m3u8",
+    src: `${VIDEO_BASE}/VID_20250912_110210_00_007_009/index.m3u8`,
     label: "First Part",
     summary:
       "<strong>First Part — EV emergency-response fundamentals.</strong> " +
@@ -30,7 +45,7 @@ export const VIDEOS: LectureConfig[] = [
       "tool-free cut loops.",
   },
   {
-    src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_122900_00_010_012/index.m3u8",
+    src: `${VIDEO_BASE}/VID_20250912_122900_00_010_012/index.m3u8`,
     label: "Second Part",
     summary:
       "<strong>Second Part — Charging system &amp; HV battery hardware.</strong> " +
@@ -40,7 +55,7 @@ export const VIDEOS: LectureConfig[] = [
       "thermal-transfer material that keeps them cool.",
   },
   {
-    src: "https://d1ni7nkjr0eveg.cloudfront.net/videos/VID_20250912_134205_00_013_014/index.m3u8",
+    src: `${VIDEO_BASE}/VID_20250912_134205_00_013_014/index.m3u8`,
     label: "Third Part",
     summary:
       "<strong>Third Part — Battery fire response &amp; disconnects.</strong> " +
@@ -61,11 +76,25 @@ const hlsInstances: (Hls | true | null)[] = [null, null, null];
 const hlsReady: boolean[] = [false, false, false];
 const hlsSupported = Hls.isSupported();
 
+// hls.js recovers in place from most fatal errors, but an endless recover loop
+// on a genuinely dead stream is worse than failing. Bounded per stream, reset
+// on every successfully buffered fragment so a long session doesn't accumulate.
+const hlsRecoveries: number[] = [0, 0, 0];
+const MAX_HLS_RECOVERIES = 3;
+
 export function getActiveVideo(): HTMLVideoElement | null {
   return activeVideo;
 }
 export function getCurrentVideoIdx(): number {
   return currentVideoIdx;
+}
+
+function showErrorBanner(msg: string) {
+  const el = document.getElementById("error-banner");
+  if (el) {
+    el.style.display = "block";
+    el.textContent = msg;
+  }
 }
 
 function fmt(s: number): string {
@@ -108,6 +137,13 @@ function ensureHls(idx: number, onReady?: () => void) {
   const v = videoEls[idx];
   if (hlsSupported) {
     const hls = new Hls({
+      // NB: `capLevelToPlayerSize` sizes the cap from the media element's
+      // rendered box, but ours is `display:none` (it feeds a VideoTexture on a
+      // 100 m sphere, it is never laid out). So this cap is meaningless here and
+      // ABR is free to pick the 14.8 Mbps 3840x2160 rendition on good WiFi —
+      // ~33 MP of decode + texture sharing the tab's GPU budget with the HUD.
+      // ?maxlevel=low|mid|high pins it instead, which is the sharpest single
+      // lever we have for testing the memory-exhaustion hypothesis on-device.
       capLevelToPlayerSize: true,
       capLevelOnFPSDrop: true,
       maxBufferLength: 20,
@@ -117,8 +153,57 @@ function ensureHls(idx: number, onReady?: () => void) {
     hls.loadSource(src);
     hls.attachMedia(v);
     hls.once(Hls.Events.MANIFEST_PARSED, () => {
+      crumb(
+        "video",
+        `lecture${idx} levels=${hls.levels.map((l) => l.height).join("/")} ABR=auto`,
+      );
       hlsReady[idx] = true;
       onReady?.();
+    });
+    hls.on(Hls.Events.FRAG_BUFFERED, () => {
+      hlsRecoveries[idx] = 0;
+    });
+    // Which rendition is ACTUALLY playing, not just which are on offer. On the
+    // LAN dev server the laptop relays video over the same WiFi radio it serves
+    // the Quest on, so ABR can quietly settle on 900p — and a baseline that
+    // never reached 4K would look like "no crash" for entirely the wrong reason.
+    hls.on(Hls.Events.LEVEL_SWITCHED, (_e, data) => {
+      const lvl = hls.levels[data.level];
+      if (lvl) crumb("video", `lecture${idx} now playing ${lvl.width}x${lvl.height}`);
+    });
+    hls.on(Hls.Events.ERROR, (_evt, data) => {
+      if (!data.fatal) return;
+
+      if (hlsRecoveries[idx] < MAX_HLS_RECOVERIES) {
+        hlsRecoveries[idx]++;
+        // A fatal NETWORK_ERROR is the common case on headset WiFi and is
+        // retryable — startLoad() resumes from the current position.
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+          flashHudStatus("Video stalled - reconnecting...");
+          hls.startLoad();
+          return;
+        }
+        // recoverMediaError() re-attaches and resumes playback on its own; do
+        // NOT pause here or the recovery is undone by the line after it.
+        if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          flashHudStatus("Video glitched - recovering...");
+          hls.recoverMediaError();
+          return;
+        }
+      }
+
+      // Out of retries (or an unrecoverable type): tear the instance down and
+      // clear the cached state. Without this reset a later activatePanorama(idx)
+      // returns early at the `if (hlsInstances[idx])` guard and waits on a
+      // MANIFEST_PARSED that can never fire, so the lecture stays dead for the
+      // rest of the session and only a page reload brings it back.
+      hls.destroy();
+      hlsInstances[idx] = null;
+      hlsReady[idx] = false;
+      hlsRecoveries[idx] = 0;
+      videoEls[idx].pause();
+      flashHudStatus("Video failed to load - check connection.");
+      showErrorBanner("Video failed to load - check connection.");
     });
   } else if (v.canPlayType("application/vnd.apple.mpegurl")) {
     v.src = src;
@@ -131,12 +216,33 @@ function ensureHls(idx: number, onReady?: () => void) {
       },
       { once: true },
     );
+    v.addEventListener("error", () => {
+      // Same reset as the hls.js path: let a later activatePanorama(idx) re-attach
+      // the source instead of short-circuiting on a stale hlsInstances entry.
+      v.pause();
+      v.removeAttribute("src");
+      hlsInstances[idx] = null;
+      hlsReady[idx] = false;
+      flashHudStatus("Video failed to load - check connection.");
+      showErrorBanner("Video failed to load - check connection.");
+    });
   }
 }
 
 export function activatePanorama(idx: number) {
+  const prevMuted = activeVideo?.muted ?? false;
+
+  // Pause whatever we're switching away from. Without this the outgoing element
+  // keeps decoding: its HLS instance is still attached and buffering, so two or
+  // three 4K decoders can run at once with their audio overlapping. Not the
+  // cause of the reported crash (the user never switched lectures) but it is the
+  // same class of failure, one tap away.
+  if (activeVideo && activeVideo !== videoEls[idx]) {
+    activeVideo.pause();
+  }
+
   activeVideo = videoEls[idx];
-  activeVideo.muted = false;
+  activeVideo.muted = prevMuted;
   updateMuteButton();
   if (sphereMaterial) {
     sphereMaterial.map = videoTextures[idx];

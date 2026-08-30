@@ -4,6 +4,7 @@ import {
   createSystem,
   type Entity,
   eq,
+  InputComponent,
   PanelDocument,
   PanelUI,
   PlaybackMode,
@@ -13,13 +14,46 @@ import {
 } from "@iwsdk/core";
 import { fmt, getActiveVideo, getCurrentVideoIdx, switchVideo } from "./videosphere.js";
 import {
-  getRenderedHistory,
+  getChatHistory,
   setChatListener,
-  setPendingListener,
+  setImmersive,
   setTranscriptListener,
 } from "./hud-mirror.js";
+import { askQuickQuestion } from "./chat.js";
+import { pttStopWasRecent } from "./push-to-talk.js";
+import { crumb } from "./breadcrumbs.js";
 
 const HUD_CONFIG_PATH = "./ui/hud.json";
+
+/**
+ * GPU/heap counters, injected from index.ts once the renderer exists. The
+ * leading crash hypothesis is that building an answer's glyphs pushes the tab
+ * past its GPU budget, so we sample right before and after each bubble is
+ * added — if the crash is resource exhaustion, the last surviving breadcrumb
+ * shows the climb.
+ */
+type RendererProbe = () => {
+  geometries: number;
+  textures: number;
+  triangles: number;
+  heapMB: number;
+};
+
+let rendererProbe: RendererProbe | null = null;
+
+export function setRendererProbe(probe: RendererProbe) {
+  rendererProbe = probe;
+}
+
+function probeString(): string {
+  if (!rendererProbe) return "probe=none";
+  try {
+    const p = rendererProbe();
+    return `geom=${p.geometries} tex=${p.textures} tris=${p.triangles} heap=${p.heapMB}MB`;
+  } catch (e) {
+    return "probe=failed " + String(e);
+  }
+}
 
 export class HudSystem extends createSystem({
   hudPanel: {
@@ -32,13 +66,27 @@ export class HudSystem extends createSystem({
   private muteText: UIKit.Text | null = null;
   private timeText: UIKit.Text | null = null;
   private vidButtons: UIKit.Text[] = [];
-  private chatText: UIKit.Text | null = null;
+  private chatScroll: UIKit.Container | null = null;
+  private progressFill: UIKit.Container | null = null;
   private transcriptText: UIKit.Text | null = null;
   private xrButton: UIKit.Text | null = null;
   private elapsedSinceUpdate = 0;
-  private pending = false;
+  private lastActiveIdx = -1;
   private clickAudio: Entity | null = null;
   private chimeAudio: Entity | null = null;
+  private loggedFirstBubble = false;
+
+  // Bubbles we created, in display order. We track them ourselves instead of
+  // walking scroll.children so removal can never touch anything UIKit owns.
+  private bubbles: UIKit.Container[] = [];
+  private placeholder: UIKit.Text | null = null;
+  private scrollTimer: ReturnType<typeof setTimeout> | null = null;
+
+  // Each bot answer is ~1800 plain-text chars ≈ 1800 live glyph instances. On a
+  // Quest that budget is shared with the 4K360 video texture, so the HUD renders
+  // only the most recent exchanges. Older turns stay in hud-mirror's history and
+  // in the DOM chat panel — nothing is truncated, just not built as geometry.
+  private static readonly MAX_BUBBLES = 6;
 
   init() {
     // Non-positional UI sounds: a click to confirm button presses and a chime
@@ -64,12 +112,15 @@ export class HudSystem extends createSystem({
     AudioUtils.preload(this.clickAudio);
     AudioUtils.preload(this.chimeAudio);
 
-    this.queries.hudPanel.subscribe("qualify", (entity) => {
-      const document = PanelDocument.data.document[entity.index] as UIKitDocument;
-      if (!document) return;
-      this.hudDoc = document;
-      this.wireHud();
-    });
+    // elics 'qualify' fires only on FUTURE transitions. The panel adds
+    // PanelDocument asynchronously (after the hud.json fetch), so it *usually*
+    // qualifies after this subscribe runs — but the ordering is timing-dependent
+    // and can differ on device / behind CloudFront caching. If the panel already
+    // qualified, the event was missed and wireHud never runs → dead buttons AND
+    // a null chatListener (plan2.md H1, symptoms A + B). Subscribe for future
+    // transitions AND catch up on any entity that already matches.
+    this.queries.hudPanel.subscribe("qualify", (entity) => this.adopt(entity));
+    for (const entity of this.queries.hudPanel.entities) this.adopt(entity);
 
     // DOM Enter VR button → launchXR
     const enterBtn = window.document.getElementById("btn-enter-vr");
@@ -86,6 +137,10 @@ export class HudSystem extends createSystem({
     this.cleanupFuncs.push(
       this.world.visibilityState.subscribe((state) => {
         const inXR = state !== VisibilityState.NonImmersive;
+        // Publish session state to the vanilla-JS modules. chat.ts gates DOM
+        // textarea focus on this — focusing it in VR kills the whole Quest
+        // Browser process (see focusInput() in chat.ts).
+        setImmersive(inXR);
         for (const entity of this.queries.hudPanel.entities) {
           if (entity.object3D) entity.object3D.visible = inXR;
         }
@@ -97,6 +152,15 @@ export class HudSystem extends createSystem({
         }
       }),
     );
+  }
+
+  // Wire a HUD panel entity exactly once. Guarded so the qualify subscription
+  // and the init-time catch-up loop can't double-wire the same document.
+  private adopt(entity: Entity) {
+    const document = PanelDocument.data.document[entity.index] as UIKitDocument;
+    if (!document || this.hudDoc === document) return;
+    this.hudDoc = document;
+    this.wireHud();
   }
 
   private wireHud() {
@@ -111,52 +175,262 @@ export class HudSystem extends createSystem({
       doc.getElementById("hud-vid2") as UIKit.Text,
       doc.getElementById("hud-vid3") as UIKit.Text,
     ];
-    this.chatText = doc.getElementById("hud-chat-text") as UIKit.Text;
+    this.chatScroll = doc.getElementById("hud-chat-scroll") as UIKit.Container;
+    this.progressFill = doc.getElementById("hud-progress-fill") as UIKit.Container;
     this.transcriptText = doc.getElementById("hud-transcript") as UIKit.Text;
     this.xrButton = doc.getElementById("xr-button") as UIKit.Text;
 
     // HUD buttons proxy to DOM controls (re-uses existing playback/lecture logic)
-    this.playText?.addEventListener("click", () => {
-      this.playClick();
-      window.document.getElementById("btn-play")?.click();
-    });
-    this.muteText?.addEventListener("click", () => {
-      this.playClick();
-      window.document.getElementById("btn-mute")?.click();
-    });
+    this.playText?.addEventListener("click", () =>
+      this.guardedClick(() => window.document.getElementById("btn-play")?.click()),
+    );
+    this.muteText?.addEventListener("click", () =>
+      this.guardedClick(() => window.document.getElementById("btn-mute")?.click()),
+    );
     this.vidButtons.forEach((btn, i) =>
-      btn?.addEventListener("click", () => {
-        this.playClick();
-        switchVideo(i);
+      btn?.addEventListener("click", () => this.guardedClick(() => switchVideo(i))),
+    );
+
+    doc.getElementById("hud-back10")?.addEventListener("click", () =>
+      this.guardedClick(() => this.seekBy(-10)),
+    );
+    doc.getElementById("hud-fwd10")?.addEventListener("click", () =>
+      this.guardedClick(() => this.seekBy(10)),
+    );
+
+    // Chat scroll controls. UIKit does support drag-to-scroll, but in VR that
+    // means holding the trigger and sweeping the controller across the panel —
+    // which collides with push-to-talk on the right hand and is imprecise with
+    // gloves on. The left thumbstick (see update()) also scrolls, but it is
+    // invisible in the UI and dies entirely when the user switches to hand
+    // tracking. These buttons ride the same click path as the quick-ask chips.
+    doc.getElementById("hud-scroll-up")?.addEventListener("click", () =>
+      this.guardedClick(() => this.scrollChatBy(-this.chatPageUnits())),
+    );
+    doc.getElementById("hud-scroll-down")?.addEventListener("click", () =>
+      this.guardedClick(() => this.scrollChatBy(this.chatPageUnits())),
+    );
+    doc.getElementById("hud-scroll-latest")?.addEventListener("click", () =>
+      this.guardedClick(() => this.scrollChatToBottom()),
+    );
+
+    // One-click common questions - no typing or voice needed with gloves on.
+    const QUICK_QUESTIONS: [string, string][] = [
+      ["hud-chip1", "How do I shut down the high-voltage system on an EV?"],
+      ["hud-chip2", "How should I respond to an EV battery fire?"],
+      ["hud-chip3", "Where are the safe cut points for extrication on an EV?"],
+    ];
+    for (const [id, q] of QUICK_QUESTIONS) {
+      doc.getElementById(id)?.addEventListener("click", () =>
+        this.guardedClick(() => askQuickQuestion(q)),
+      );
+    }
+
+    this.xrButton?.addEventListener("click", () =>
+      this.guardedClick(() => {
+        if (this.world.visibilityState.value === VisibilityState.NonImmersive) {
+          this.world.launchXR();
+        } else {
+          this.world.exitXR();
+        }
       }),
     );
 
-    this.xrButton?.addEventListener("click", () => {
-      this.playClick();
-      if (this.world.visibilityState.value === VisibilityState.NonImmersive) {
-        this.world.launchXR();
-      } else {
-        this.world.exitXR();
-      }
-    });
-
     // Register listeners so chat/voice modules can push updates into the HUD.
-    // History is empty at wire time, so the replay inside setChatListener never
-    // chimes for past messages — only live "bot" answers do.
-    setChatListener((role) => {
-      this.chatText?.setProperties({ text: getRenderedHistory() });
+    // The listener now handles LIVE messages only — renderInitial() below seeds
+    // the list from existing history, so nothing replays through here and past
+    // bot answers can't fire a burst of chimes.
+    setChatListener((role, text) => {
+      // Proves the DOM->HUD chat bridge reached the HUD on device (symptom B is
+      // "bubbles never render in VR"). Crumbed once to avoid spam.
+      if (!this.loggedFirstBubble) {
+        crumb("hud", "first chat bubble render, role =", role);
+        this.loggedFirstBubble = true;
+      }
+      this.appendBubble(role, text);
       if (role === "bot") this.playChime();
     });
+    this.renderInitial(); // placeholder, or the tail of any existing history
+    // hud-mirror merges the live + transient channels before calling this, so we
+    // just render. Hide the element when empty so it reserves no blank line. (The
+    // span is seeded with a placeholder in hud.uikitml so UIKit builds it as a
+    // Text — an empty span compiles to a Container and ignores text updates.)
     setTranscriptListener((text) => {
-      // Don't let a stale transcript clobber the "Thinking…" indicator.
-      if (this.pending && !text) return;
-      this.transcriptText?.setProperties({ text });
+      this.transcriptText?.setProperties({ display: text ? "flex" : "none", text });
     });
-    setPendingListener((pending) => {
-      this.pending = pending;
-      // ASCII only — the UIKit font atlas has no emoji/ellipsis glyphs.
-      this.transcriptText?.setProperties({ text: pending ? "Thinking..." : "" });
+    // Start hidden — nothing to show until a voice/chat status arrives.
+    this.transcriptText?.setProperties({ display: "none", text: "" });
+
+    // Proves wireHud ran on device. If this never appears, buttons are dead (A)
+    // and no chat listener is attached (B) — the single root cause in plan2.md's
+    // working hypothesis.
+    crumb("hud", "wireHud complete - buttons + chat listener wired", probeString());
+  }
+
+  // Build the list once at wire time from whatever history already exists.
+  // Steady-state updates go through appendBubble(), not through here — a full
+  // rebuild per message is O(n^2) allocation churn and was a prime suspect for
+  // the on-device crash.
+  private renderInitial() {
+    const scroll = this.chatScroll;
+    if (!scroll) return;
+
+    for (const bubble of this.bubbles) {
+      scroll.remove(bubble);
+      bubble.dispose();
+    }
+    this.bubbles.length = 0;
+
+    const history = getChatHistory();
+    const recent = history.slice(-HudSystem.MAX_BUBBLES);
+    if (recent.length === 0) {
+      this.showPlaceholder();
+      return;
+    }
+    for (const m of recent) this.appendBubble(m.role, m.text);
+  }
+
+  // Add exactly one bubble and retire the oldest once over the cap.
+  private appendBubble(role: "user" | "bot", text: string) {
+    const scroll = this.chatScroll;
+    if (!scroll) return;
+
+    crumb("hud", `bubble+ role=${role} chars=${text.length} ${probeString()}`);
+
+    if (this.placeholder) {
+      scroll.remove(this.placeholder);
+      this.placeholder.dispose();
+      this.placeholder = null;
+    }
+
+    const bubble = this.makeBubble(role, text);
+    scroll.add(bubble);
+    this.bubbles.push(bubble);
+
+    while (this.bubbles.length > HudSystem.MAX_BUBBLES) {
+      const oldest = this.bubbles.shift()!;
+      scroll.remove(oldest);
+      oldest.dispose();
+    }
+
+    this.scrollToBottomSoon();
+  }
+
+  private showPlaceholder() {
+    const scroll = this.chatScroll;
+    if (!scroll || this.placeholder) return;
+    this.placeholder = new UIKit.Text({
+      text: "First Responder GPT - ask about EV emergency response.",
+      fontSize: 2,
+      color: "#94a3b8",
+      width: "100%",
     });
+    scroll.add(this.placeholder);
+  }
+
+  // Every scroll path funnels through here — thumbstick, the on-panel buttons,
+  // and the auto-scroll after a new bubble — so the clamping and the null
+  // handling exist in exactly one place.
+  //
+  // `maxScrollPosition[1]` is *undefined*, not 0, until the content actually
+  // overflows the viewport. That is "nothing to scroll", not an error, so bail
+  // quietly. Reading it as a number and doing the arithmetic anyway would write
+  // NaN into the scroll signal, which poisons the panel's transform.
+  private scrollChatBy(units: number) {
+    const scroll = this.chatScroll;
+    if (!scroll) return;
+    const max = scroll.maxScrollPosition.value[1];
+    if (!Number.isFinite(max)) return;
+    const pos = scroll.scrollPosition.value ?? [0, 0];
+    const cur = Number.isFinite(pos[1]) ? (pos[1] as number) : 0;
+    scroll.scrollPosition.value = [
+      pos[0] ?? 0,
+      Math.max(0, Math.min(max as number, cur + units)),
+    ];
+  }
+
+  private scrollChatToBottom() {
+    const scroll = this.chatScroll;
+    if (!scroll) return;
+    const max = scroll.maxScrollPosition.value[1];
+    if (!Number.isFinite(max)) return;
+    const pos = scroll.scrollPosition.value ?? [0, 0];
+    scroll.scrollPosition.value = [pos[0] ?? 0, max as number];
+  }
+
+  // One button press moves ~80% of a viewport, so there is always overlap to
+  // read against. `size` is undefined until the first layout; 26 is the
+  // .chat-scroll height from hud.uikitml.
+  private chatPageUnits(): number {
+    const h = this.chatScroll?.size.value?.[1];
+    return Number.isFinite(h) ? (h as number) * 0.8 : 20;
+  }
+
+  // Layout is async and a long answer keeps wrapping over several frames, so the
+  // max scroll position is still growing when the first attempt lands — one shot
+  // stops short of the actual bottom. Re-run a few times. One shared timer: a
+  // burst of messages re-arms it instead of queueing N chains.
+  private scrollToBottomSoon() {
+    if (this.scrollTimer) clearTimeout(this.scrollTimer);
+    let attempts = 0;
+    const tick = () => {
+      this.scrollChatToBottom();
+      this.scrollTimer = ++attempts < 4 ? setTimeout(tick, 150) : null;
+    };
+    this.scrollTimer = setTimeout(tick, 50);
+  }
+
+  private makeBubble(role: "user" | "bot", text: string): UIKit.Container {
+    const isUser = role === "user";
+    // `width` (definite), NOT `maxWidth`: with a shrink-to-fit container the
+    // panel rect honours the cap but Yoga still measures the Text at its full
+    // unwrapped width, so glyphs paint outside the bubble and past the scroll
+    // viewport. A definite width gives the Text something to wrap against, and
+    // overflow:hidden makes the clip non-negotiable.
+    const bubble = new UIKit.Container({
+      flexDirection: "column",
+      gap: 0.3,
+      width: "85%",
+      alignSelf: isUser ? "flex-end" : "flex-start",
+      backgroundColor: isUser ? "#1e3a8a" : "#334155",
+      borderRadius: 1.2,
+      padding: 1,
+      flexShrink: 0,
+      overflow: "hidden",
+    });
+    bubble.add(
+      new UIKit.Text({
+        text: isUser ? "You" : "First Responder GPT",
+        fontSize: 1.5,
+        color: isUser ? "#93c5fd" : "#94a3b8",
+        width: "100%",
+      }),
+    );
+    bubble.add(
+      new UIKit.Text({
+        text,
+        fontSize: 2,
+        color: "#e2e8f0",
+        width: "100%",
+        wordBreak: "break-word",
+      }),
+    );
+    return bubble;
+  }
+
+  private seekBy(seconds: number) {
+    const v = getActiveVideo();
+    if (!v || !v.duration || isNaN(v.duration)) return;
+    v.currentTime = Math.max(0, Math.min(v.duration, v.currentTime + seconds));
+  }
+
+  // Suppress the phantom click UIKit dispatches when a push-to-talk release
+  // happens with the laser over a HUD button. No playClick() on suppression so
+  // there's no stray click sound either.
+  private guardedClick(fn: () => void) {
+    if (pttStopWasRecent()) return;
+    this.playClick();
+    fn();
   }
 
   private playClick() {
@@ -169,6 +443,14 @@ export class HudSystem extends createSystem({
 
   update(delta: number) {
     if (!this.hudDoc) return;
+
+    // Left-thumbstick scrolls the chat history (right hand is push-to-talk).
+    // Unavailable under hand tracking — that is what the on-panel buttons cover.
+    const axes = this.input.xr.gamepads.left?.getAxesValues(InputComponent.Thumbstick);
+    if (axes && Math.abs(axes.y) > 0.2) {
+      this.scrollChatBy(axes.y * delta * 40);
+    }
+
     this.elapsedSinceUpdate += delta;
     if (this.elapsedSinceUpdate < 0.25) return;
     this.elapsedSinceUpdate = 0;
@@ -181,12 +463,22 @@ export class HudSystem extends createSystem({
       this.timeText?.setProperties({
         text: `${fmt(v.currentTime)} / ${fmt(v.duration)}`,
       });
+      const pct = Math.round((v.currentTime / v.duration) * 100);
+      this.progressFill?.setProperties({ width: `${pct}%` });
     }
+    // Active-lecture highlight via the .hud-btn-active class (blue border+fill
+    // from hud.uikitml). Only re-toggle on change, not every 0.25 s poll.
     const idx = getCurrentVideoIdx();
-    this.vidButtons.forEach((btn, i) => {
-      btn?.setProperties({
-        backgroundColor: i === idx ? "#1e3a8a" : "#1e293b",
+    if (idx !== this.lastActiveIdx) {
+      this.lastActiveIdx = idx;
+      this.vidButtons.forEach((btn, i) => {
+        if (!btn) return;
+        const active = i === idx;
+        const has = btn.classList.contains("hud-btn-active");
+        // Guard add/remove (UIKit's ClassList.remove warns on a missing class).
+        if (active && !has) btn.classList.add("hud-btn-active");
+        else if (!active && has) btn.classList.remove("hud-btn-active");
       });
-    });
+    }
   }
 }

@@ -1,0 +1,667 @@
+{
+  "Talk/VID_20250912_110210_00_007_009_segments.json": {
+    "mtime": 1779214828.1384897,
+    "ast_hash": "b5cf2ef5441d57fbabb9e09f214a8579",
+    "semantic_hash": "b5cf2ef5441d57fbabb9e09f214a8579"
+  },
+  "Talk/VID_20250912_122900_00_010_012_segments.json": {
+    "mtime": 1776704729.0,
+    "ast_hash": "510f39a660e696c9744896aa0804fb37",
+    "semantic_hash": "510f39a660e696c9744896aa0804fb37"
+  },
+  "Talk/VID_20250912_134205_00_013_014_segments.json": {
+    "mtime": 1776089545.0,
+    "ast_hash": "2d32456d3fb271873cccf41daa44ac31",
+    "semantic_hash": "2d32456d3fb271873cccf41daa44ac31"
+  },
+  "add_hls_ladder.py": {
+    "mtime": 1779213482.4053614,
+    "ast_hash": "4b0caab4b07298031e125414c54a217d",
+    "semantic_hash": "4b0caab4b07298031e125414c54a217d"
+  },
+  "deploy_portal_v2.py": {
+    "mtime": 1788041645.974101,
+    "ast_hash": "d5720cd3e85014c3827c4d96b4109fba",
+    "semantic_hash": ""
+  },
+  "eval_questions.json": {
+    "mtime": 1782744961.4001484,
+    "ast_hash": "2b4556f5e29ff31602d4fe31b8914b26",
+    "semantic_hash": "2b4556f5e29ff31602d4fe31b8914b26"
+  },
+  "n8n_transcribe_webhook.json": {
+    "mtime": 1780935907.4344969,
+    "ast_hash": "712e56535b7ccf799a241212e6418031",
+    "semantic_hash": "712e56535b7ccf799a241212e6418031"
+  },
+  "portal/.claude/settings.json": {
+    "mtime": 1779678200.391318,
+    "ast_hash": "8aeccfe2e1df1e5c0b26c2e8e746fee1",
+    "semantic_hash": "8aeccfe2e1df1e5c0b26c2e8e746fee1"
+  },
+  "portal/.iwsdk/runtime/launch.json": {
+    "mtime": 1787111590.8799756,
+    "ast_hash": "2679663fcdff9c7bcf1c474aff0b78eb",
+    "semantic_hash": ""
+  },
+  "portal/.iwsdk/runtime/session.json": {
+    "mtime": 1787111590.8779755,
+    "ast_hash": "1058c89d18b571d01405ec7452b5ed6a",
+    "semantic_hash": ""
+  },
+  "portal/.mcp.json": {
+    "mtime": 1786374304.0813885,
+    "ast_hash": "d7bbe74bbc04b8e25256ea54036343f9",
+    "semantic_hash": ""
+  },
+  "portal/.vscode/extensions.json": {
+    "mtime": 1779678200.169318,
+    "ast_hash": "202633963d7c3f154e44e15534249a8e",
+    "semantic_hash": "202633963d7c3f154e44e15534249a8e"
+  },
+  "portal/package.json": {
+    "mtime": 1779679480.7042994,
+    "ast_hash": "e37c5a82df1289a643f854c3e676f7fa",
+    "semantic_hash": "e37c5a82df1289a643f854c3e676f7fa"
+  },
+  "portal/public/ui/hud.json": {
+    "mtime": 1787111589.6749768,
+    "ast_hash": "f0ce8aad7f6546c69a7dfc27e2bff21c",
+    "semantic_hash": ""
+  },
+  "portal/src/chat.ts": {
+    "mtime": 1786375180.2324216,
+    "ast_hash": "0866d56a506a3ea742447bbe40860436",
+    "semantic_hash": ""
+  },
+  "portal/src/hud-mirror.ts": {
+    "mtime": 1786375142.183823,
+    "ast_hash": "0b6fe99f92ee51cd867cd62072e544d1",
+    "semantic_hash": ""
+  },
+  "portal/src/hud.ts": {
+    "mtime": 1786376041.237913,
+    "ast_hash": "da733071f42cb3d884849b99265b1f1d",
+    "semantic_hash": ""
+  },
+  "portal/src/index.ts": {
+    "mtime": 1786375904.947612,
+    "ast_hash": "f946c52ec15471d080fa7d5c54f5fc73",
+    "semantic_hash": ""
+  },
+  "portal/src/look-controls.ts": {
+    "mtime": 1780934092.0560074,
+    "ast_hash": "800a52f0a0dc673d03a28bc7ac52eb96",
+    "semantic_hash": "800a52f0a0dc673d03a28bc7ac52eb96"
+  },
+  "portal/src/push-to-talk.ts": {
+    "mtime": 1783343478.5638068,
+    "ast_hash": "337a060d1cb602f2a6d8350608c41ddb",
+    "semantic_hash": ""
+  },
+  "portal/src/videosphere.ts": {
+    "mtime": 1786376050.1088405,
+    "ast_hash": "12f6a78f06540a2c0bb01504e5f5caee",
+    "semantic_hash": ""
+  },
+  "portal/src/voice.ts": {
+    "mtime": 1786375216.750998,
+    "ast_hash": "5700db4ae4aa9273e40aed994f8cae6b",
+    "semantic_hash": ""
+  },
+  "portal/tsconfig.json": {
+    "mtime": 1785774284.1264489,
+    "ast_hash": "340ea89165e717c0879f4112f1e8869f",
+    "semantic_hash": ""
+  },
+  "portal/vite.config.ts": {
+    "mtime": 1785777054.3376753,
+    "ast_hash": "47d2fa0e54f784882f3aee5dca4f5a9c",
+    "semantic_hash": ""
+  },
+  "skills-lock.json": {
+    "mtime": 1782759523.1992657,
+    "ast_hash": "463bcd464863f0fbb7b7819b8e7d580d",
+    "semantic_hash": ""
+  },
+  "streamlit_app.py": {
+    "mtime": 1788042600.4509792,
+    "ast_hash": "c4cb5a63501d77fd60bd200eedf49125",
+    "semantic_hash": ""
+  },
+  "transcribe_videos.py": {
+    "mtime": 1776699258.0,
+    "ast_hash": "27222d46d55a9c2372a74015924b26f0",
+    "semantic_hash": "27222d46d55a9c2372a74015924b26f0"
+  },
+  "upload_to_s3.py": {
+    "mtime": 1777862399.0,
+    "ast_hash": "cab3ab245d9399912c85327733a3cb7f",
+    "semantic_hash": "cab3ab245d9399912c85327733a3cb7f"
+  },
+  "video_metadata.json": {
+    "mtime": 1779214906.3809116,
+    "ast_hash": "939bc0dc472c642b9755ca77a83b0a66",
+    "semantic_hash": "939bc0dc472c642b9755ca77a83b0a66"
+  },
+  ".claude/skills/hz-immersive-designer/SKILL.md": {
+    "mtime": 1779731128.5625327,
+    "ast_hash": "67bb0e1a6356c9ff92d4c41dc0f9a508",
+    "semantic_hash": "67bb0e1a6356c9ff92d4c41dc0f9a508"
+  },
+  ".claude/skills/hz-immersive-designer/references/accessibility.md": {
+    "mtime": 1779731128.5625327,
+    "ast_hash": "c57138a61fdcff45853efde786f2f355",
+    "semantic_hash": "c57138a61fdcff45853efde786f2f355"
+  },
+  ".claude/skills/hz-immersive-designer/references/comfort-guidelines.md": {
+    "mtime": 1779731128.5625327,
+    "ast_hash": "b3ecc67da10564b92e8dbb31e30cfdf1",
+    "semantic_hash": "b3ecc67da10564b92e8dbb31e30cfdf1"
+  },
+  ".claude/skills/hz-immersive-designer/references/interaction-patterns.md": {
+    "mtime": 1779731128.5625327,
+    "ast_hash": "17ed31995b819744e91a721983976710",
+    "semantic_hash": "17ed31995b819744e91a721983976710"
+  },
+  ".claude/skills/hz-immersive-designer/references/spatial-layout.md": {
+    "mtime": 1779731128.5625327,
+    "ast_hash": "342764fa54eb7110962d7f21e40cb958",
+    "semantic_hash": "342764fa54eb7110962d7f21e40cb958"
+  },
+  ".claude/skills/hz-iwsdk-webxr/SKILL.md": {
+    "mtime": 1779731157.6155362,
+    "ast_hash": "f752059044d2d60257275e6277ad8857",
+    "semantic_hash": "f752059044d2d60257275e6277ad8857"
+  },
+  ".claude/skills/hz-iwsdk-webxr/references/ai-assisted-development.md": {
+    "mtime": 1779731157.6155362,
+    "ast_hash": "f7df0a317e5663cb3ea28f6aa9f9adef",
+    "semantic_hash": "f7df0a317e5663cb3ea28f6aa9f9adef"
+  },
+  ".claude/skills/hz-iwsdk-webxr/references/ecs-architecture.md": {
+    "mtime": 1779731157.6155362,
+    "ast_hash": "7290c0c1caeaa7ef0c1ced30092b3b30",
+    "semantic_hash": "7290c0c1caeaa7ef0c1ced30092b3b30"
+  },
+  ".claude/skills/hz-iwsdk-webxr/references/input-handling.md": {
+    "mtime": 1779731157.6155362,
+    "ast_hash": "a0e9725c2267f75689e019ba4e4fb526",
+    "semantic_hash": "a0e9725c2267f75689e019ba4e4fb526"
+  },
+  ".claude/skills/hz-iwsdk-webxr/references/performance-tips.md": {
+    "mtime": 1779731157.6155362,
+    "ast_hash": "8716b567e44830040aacc58a3596073c",
+    "semantic_hash": "8716b567e44830040aacc58a3596073c"
+  },
+  ".claude/skills/hz-iwsdk-webxr/references/spatial-ui.md": {
+    "mtime": 1779731157.6155362,
+    "ast_hash": "07fd98b78e4354577a3848c2da068941",
+    "semantic_hash": "07fd98b78e4354577a3848c2da068941"
+  },
+  ".claude/skills/n8n-agents/CHAT_AGENT_PATTERNS.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "b8e1e54a4b1d4508419453f1137199f1",
+    "semantic_hash": "b8e1e54a4b1d4508419453f1137199f1"
+  },
+  ".claude/skills/n8n-agents/EXAMPLES.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "724bd5d6d8c7febc99405a51a41bb2d6",
+    "semantic_hash": "724bd5d6d8c7febc99405a51a41bb2d6"
+  },
+  ".claude/skills/n8n-agents/HUMAN_REVIEW.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "f3fbf9aae478a0e72457886f337b8299",
+    "semantic_hash": "f3fbf9aae478a0e72457886f337b8299"
+  },
+  ".claude/skills/n8n-agents/MEMORY.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "91f6c6bdcce10d3c10f2440febb0e731",
+    "semantic_hash": "91f6c6bdcce10d3c10f2440febb0e731"
+  },
+  ".claude/skills/n8n-agents/RAG.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "05a37abc24082b418a7d319ee63d707e",
+    "semantic_hash": "05a37abc24082b418a7d319ee63d707e"
+  },
+  ".claude/skills/n8n-agents/README.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "747e6e34e0eb155770c843b0908c61ca",
+    "semantic_hash": "747e6e34e0eb155770c843b0908c61ca"
+  },
+  ".claude/skills/n8n-agents/SKILL.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "1fb3d32fb92266461c496907f6e91073",
+    "semantic_hash": "1fb3d32fb92266461c496907f6e91073"
+  },
+  ".claude/skills/n8n-agents/SOURCE.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "5e5afbc25cae3a87ed2f5e25a8cb9677",
+    "semantic_hash": "5e5afbc25cae3a87ed2f5e25a8cb9677"
+  },
+  ".claude/skills/n8n-agents/STRUCTURED_OUTPUT.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "2cb11ab75edb9608e3ed85c981580733",
+    "semantic_hash": "2cb11ab75edb9608e3ed85c981580733"
+  },
+  ".claude/skills/n8n-agents/SUBWORKFLOW_AS_TOOL.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "d576d9ff313b20126a414c117382eac8",
+    "semantic_hash": "d576d9ff313b20126a414c117382eac8"
+  },
+  ".claude/skills/n8n-agents/SYSTEM_PROMPT.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "00f217af217c5e0e8aa145234682cc3c",
+    "semantic_hash": "00f217af217c5e0e8aa145234682cc3c"
+  },
+  ".claude/skills/n8n-agents/TOOLS.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "38a9844d2f041655a9f8aeb32b72101f",
+    "semantic_hash": "38a9844d2f041655a9f8aeb32b72101f"
+  },
+  ".claude/skills/n8n-workflow-patterns/README.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "c01017d9170dbcb8c89135d05b246a72",
+    "semantic_hash": "c01017d9170dbcb8c89135d05b246a72"
+  },
+  ".claude/skills/n8n-workflow-patterns/SKILL.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "93977e907bb81b67a07f58233eef0372",
+    "semantic_hash": "93977e907bb81b67a07f58233eef0372"
+  },
+  ".claude/skills/n8n-workflow-patterns/SOURCE.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "a99f2a8fba82e63d0fa95f990e0d3cdf",
+    "semantic_hash": "a99f2a8fba82e63d0fa95f990e0d3cdf"
+  },
+  ".claude/skills/n8n-workflow-patterns/ai_agent_workflow.md": {
+    "mtime": 1782744961.3991485,
+    "ast_hash": "7fb30f4b260f756b3af8dd7b141adaf4",
+    "semantic_hash": "7fb30f4b260f756b3af8dd7b141adaf4"
+  },
+  ".claude/skills/n8n-workflow-patterns/database_operations.md": {
+    "mtime": 1782744961.4001484,
+    "ast_hash": "3c010366a261429362c5969a6f0d9b81",
+    "semantic_hash": "3c010366a261429362c5969a6f0d9b81"
+  },
+  ".claude/skills/n8n-workflow-patterns/http_api_integration.md": {
+    "mtime": 1782744961.4001484,
+    "ast_hash": "981efe93eb6a317de1bcfbcd5e53942b",
+    "semantic_hash": "981efe93eb6a317de1bcfbcd5e53942b"
+  },
+  ".claude/skills/n8n-workflow-patterns/scheduled_tasks.md": {
+    "mtime": 1782744961.4001484,
+    "ast_hash": "28cd4be45889fa33f83ee903b728e0a3",
+    "semantic_hash": "28cd4be45889fa33f83ee903b728e0a3"
+  },
+  ".claude/skills/n8n-workflow-patterns/webhook_processing.md": {
+    "mtime": 1782744961.4001484,
+    "ast_hash": "b48f521e405dcbea187905d9057a4494",
+    "semantic_hash": "b48f521e405dcbea187905d9057a4494"
+  },
+  "chat_panel.html": {
+    "mtime": 1779104447.3538222,
+    "ast_hash": "1b2169da16b8f1f2c6eaaa9f3fa85b42",
+    "semantic_hash": "1b2169da16b8f1f2c6eaaa9f3fa85b42"
+  },
+  "n8n_router_config.md": {
+    "mtime": 1788042406.0975573,
+    "ast_hash": "0227c67b244b1ccbe888d51a43e74c82",
+    "semantic_hash": ""
+  },
+  "portal/.claude/agents/iwsdk-project-code-reviewer.md": {
+    "mtime": 1779678200.390318,
+    "ast_hash": "af60b98ddbd7db8d1f27c3996fb08eeb",
+    "semantic_hash": "af60b98ddbd7db8d1f27c3996fb08eeb"
+  },
+  "portal/.claude/skills/iwsdk-debug/SKILL.md": {
+    "mtime": 1779678200.392318,
+    "ast_hash": "b2f00baa96c0d3c3c5a85f2d767d12e5",
+    "semantic_hash": "b2f00baa96c0d3c3c5a85f2d767d12e5"
+  },
+  "portal/.claude/skills/iwsdk-depth-occlusion/SKILL.md": {
+    "mtime": 1779678200.393318,
+    "ast_hash": "e551dbfbfde0c6c71717a63a1bfa62d6",
+    "semantic_hash": "e551dbfbfde0c6c71717a63a1bfa62d6"
+  },
+  "portal/.claude/skills/iwsdk-grab/SKILL.md": {
+    "mtime": 1779678200.393318,
+    "ast_hash": "fa06f02c148654a538a72a7f9a93c5c6",
+    "semantic_hash": "fa06f02c148654a538a72a7f9a93c5c6"
+  },
+  "portal/.claude/skills/iwsdk-physics/SKILL.md": {
+    "mtime": 1779678200.3943179,
+    "ast_hash": "3d0c2026f8be2766543e4b9b847d0f74",
+    "semantic_hash": "3d0c2026f8be2766543e4b9b847d0f74"
+  },
+  "portal/.claude/skills/iwsdk-planner/SKILL.md": {
+    "mtime": 1779678200.395318,
+    "ast_hash": "e6d2cc8f6217d2769c61626488ddb9f5",
+    "semantic_hash": "e6d2cc8f6217d2769c61626488ddb9f5"
+  },
+  "portal/.claude/skills/iwsdk-ray/SKILL.md": {
+    "mtime": 1779678200.396318,
+    "ast_hash": "519595368b2f718da7c311c172c47db0",
+    "semantic_hash": "519595368b2f718da7c311c172c47db0"
+  },
+  "portal/.claude/skills/iwsdk-ui/SKILL.md": {
+    "mtime": 1779678200.397318,
+    "ast_hash": "5831b59fcd28597e50760447c2ff98d7",
+    "semantic_hash": "5831b59fcd28597e50760447c2ff98d7"
+  },
+  "portal/README.md": {
+    "mtime": 1783283675.1368666,
+    "ast_hash": "e633e6cc528212a5c7e7bbdf7490d505",
+    "semantic_hash": ""
+  },
+  "portal/index.html": {
+    "mtime": 1782853827.7930467,
+    "ast_hash": "0960db2884f369c2f6f8d4dcae576a42",
+    "semantic_hash": ""
+  },
+  "progress.md": {
+    "mtime": 1787167468.1540277,
+    "ast_hash": "7eb3f3a4e27c86e746145485cee0df2f",
+    "semantic_hash": ""
+  },
+  "vehicle_docs/EmergencyResponseGuide-Ford-Lightning-2026.pdf": {
+    "mtime": 1782744961.4281487,
+    "ast_hash": "9e5da2120c2c536027bcbd400cf0db90",
+    "semantic_hash": "9e5da2120c2c536027bcbd400cf0db90"
+  },
+  "vehicle_docs/EmergencyResponseGuide-Ford-Mach-E-2026.pdf": {
+    "mtime": 1782744961.4441488,
+    "ast_hash": "d50734fc558cab2f83eecff1bf2f001e",
+    "semantic_hash": "d50734fc558cab2f83eecff1bf2f001e"
+  },
+  "vehicle_docs/EmergencyResponseGuide-GM-Brightdrop-Zevo_400_600-2022-2024.pdf": {
+    "mtime": 1782744961.4531488,
+    "ast_hash": "b7f57a7c2d494b3ee13466c8f2666e6e",
+    "semantic_hash": "b7f57a7c2d494b3ee13466c8f2666e6e"
+  },
+  "vehicle_docs/EmergencyResponseGuide-Nissan-Ariya-2026.pdf": {
+    "mtime": 1782744961.4701488,
+    "ast_hash": "f22f1e0358f273359b78539452450b1c",
+    "semantic_hash": "f22f1e0358f273359b78539452450b1c"
+  },
+  "vehicle_docs/EmergencyResponseGuide-Tesla-Model_S-2021.pdf": {
+    "mtime": 1782744961.496149,
+    "ast_hash": "bf6a39118bf508cbe208e3618b89d9e7",
+    "semantic_hash": "bf6a39118bf508cbe208e3618b89d9e7"
+  },
+  "vehicle_docs/EmergencyResponseGuide-Volkswagen2025(ID.4).pdf": {
+    "mtime": 1782744961.5311491,
+    "ast_hash": "b6bd1f967a4e1a3f140b782bc3254c3a",
+    "semantic_hash": "b6bd1f967a4e1a3f140b782bc3254c3a"
+  },
+  "vehicle_docs/EmergencyResponseGuide-r1t-en-us-20251219_BEV_1.pdf": {
+    "mtime": 1782744961.5331492,
+    "ast_hash": "37093c3834ff1e630879b23d7dfbd1c4",
+    "semantic_hash": "37093c3834ff1e630879b23d7dfbd1c4"
+  },
+  "vehicle_docs/EmergencyResponseGuideChevroletBlazerEV_SUV_2024_5d_Electric_EN_ERG_3GN-23101.pdf": {
+    "mtime": 1782744961.5401492,
+    "ast_hash": "ec28affd4802862586b2336b428c15b4",
+    "semantic_hash": "ec28affd4802862586b2336b428c15b4"
+  },
+  "vehicle_docs/EmergencyResponseGuideChevroletEquinoxEVSUV20245dElectricENERG3GN23105.pdf": {
+    "mtime": 1782744961.5461493,
+    "ast_hash": "cd16be8ed9e9de38a51bc1c2998c4aa2",
+    "semantic_hash": "cd16be8ed9e9de38a51bc1c2998c4aa2"
+  },
+  "vehicle_docs/EmergencyResponseGuide_Cadillac_Lyriq_2023-.pdf": {
+    "mtime": 1782744961.5511494,
+    "ast_hash": "7ae99a38b0e2e6959998762e37bf7b1d",
+    "semantic_hash": "7ae99a38b0e2e6959998762e37bf7b1d"
+  },
+  "vehicle_docs/EmergencyResponseGuide_Chevrolet_Bolt_EV_2022-2023.pdf": {
+    "mtime": 1782744961.5561495,
+    "ast_hash": "1586f8e2bb1c507b72c26b31194890e3",
+    "semantic_hash": "1586f8e2bb1c507b72c26b31194890e3"
+  },
+  "vehicle_docs/EmergencyResponseGuide_Hyundai-IONIQ_5-2025.pdf": {
+    "mtime": 1782744961.5691495,
+    "ast_hash": "13ed394abc4b9e143eab64b08f956f21",
+    "semantic_hash": "13ed394abc4b9e143eab64b08f956f21"
+  },
+  "vehicle_docs/RescueSheet-BMW-iX3-2027_BEV_1.pdf": {
+    "mtime": 1782744961.6021497,
+    "ast_hash": "dc691a395f8fda5ab7b59fb99d4be55d",
+    "semantic_hash": "dc691a395f8fda5ab7b59fb99d4be55d"
+  },
+  "vehicle_docs/RescueSheet-Ford-Lightning-2026.pdf": {
+    "mtime": 1782744961.6061497,
+    "ast_hash": "2d69270459bdddc0d2b611ba873302ec",
+    "semantic_hash": "2d69270459bdddc0d2b611ba873302ec"
+  },
+  "vehicle_docs/RescueSheet-Ford-Mach-E-2026.pdf": {
+    "mtime": 1782744961.6101496,
+    "ast_hash": "731f69413ba5f18b3a4cdb2e1e068d4d",
+    "semantic_hash": "731f69413ba5f18b3a4cdb2e1e068d4d"
+  },
+  "vehicle_docs/RescueSheet-GM-Brightdrop-Zevo_600-2023-2024.pdf": {
+    "mtime": 1782744961.6141498,
+    "ast_hash": "8ba7b45265331bd06d828348c17eeaeb",
+    "semantic_hash": "8ba7b45265331bd06d828348c17eeaeb"
+  },
+  "vehicle_docs/RescueSheet-Hyundai-IONIQ_5-2025.pdf": {
+    "mtime": 1782744961.6171498,
+    "ast_hash": "5f966db4024e98b0822a932354b5008a",
+    "semantic_hash": "5f966db4024e98b0822a932354b5008a"
+  },
+  "vehicle_docs/RescueSheet-Tesla-Model_S-2021.pdf": {
+    "mtime": 1782744961.6281497,
+    "ast_hash": "2d8998ec7aeb8b2f58420e74e2622342",
+    "semantic_hash": "2d8998ec7aeb8b2f58420e74e2622342"
+  },
+  "vehicle_docs/RescueSheet-Volkswagen-ID4-2025.pdf": {
+    "mtime": 1782744961.6301498,
+    "ast_hash": "94b0a85e0e16224d1cb90ce594f628f8",
+    "semantic_hash": "94b0a85e0e16224d1cb90ce594f628f8"
+  },
+  "vehicle_docs/RescueSheet-r1t-en-us-20251219_BEV_1.pdf": {
+    "mtime": 1782744961.6371498,
+    "ast_hash": "573c78f74817de488af109eefa49b5a3",
+    "semantic_hash": "573c78f74817de488af109eefa49b5a3"
+  },
+  "vehicle_docs/RescueSheetChevroletEquinoxEVSUV20245dElectricEN3GN23105.pdf": {
+    "mtime": 1782744961.64115,
+    "ast_hash": "2b61e0cbedad6fab750d57039a3ec89a",
+    "semantic_hash": "2b61e0cbedad6fab750d57039a3ec89a"
+  },
+  "vehicle_docs/RescueSheetChevrolet_BlazerEV_SUV_2024_5d_Electric_EN_3GN-23101.pdf": {
+    "mtime": 1782744961.64515,
+    "ast_hash": "866ca50ec7b87ca773a9046688fda09b",
+    "semantic_hash": "866ca50ec7b87ca773a9046688fda09b"
+  },
+  "vehicle_docs/RescueSheet_Cadillac_Lyriq_2023-.pdf": {
+    "mtime": 1782744961.64915,
+    "ast_hash": "299430eff9c309d7e3dc6da03c56d880",
+    "semantic_hash": "299430eff9c309d7e3dc6da03c56d880"
+  },
+  "EV_responder_QA_comparison.md": {
+    "mtime": 1783338513.1001017,
+    "ast_hash": "2d998bc7b877bf66792af042f66b109b",
+    "semantic_hash": ""
+  },
+  "portal/public/audio/chime.mp3": {
+    "mtime": 1780321649.5521586,
+    "ast_hash": "2604c337924221172fe74f1c9c7dec5e",
+    "semantic_hash": "2604c337924221172fe74f1c9c7dec5e"
+  },
+  "portal/public/audio/click.mp3": {
+    "mtime": 1780321649.5121584,
+    "ast_hash": "2d8b108a9d45b6f132f885f9ac167451",
+    "semantic_hash": "2d8b108a9d45b6f132f885f9ac167451"
+  },
+  ".claude/settings.local.json": {
+    "mtime": 1783283543.9288633,
+    "ast_hash": "68f4d1312599f8794de22fec8373b09f",
+    "semantic_hash": ""
+  },
+  "n8n_sync.py": {
+    "mtime": 1788042339.6403925,
+    "ast_hash": "5e456c8ad89c3a9793fe0438e90f477f",
+    "semantic_hash": ""
+  },
+  "run_eval.py": {
+    "mtime": 1788042439.8866365,
+    "ast_hash": "2072d5f3e717d61a9dfd0a576e1f710a",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1788042664.6551032,
+    "ast_hash": "c0a75c35f6e685f433915514a4dc7569",
+    "semantic_hash": ""
+  },
+  "portal/CLAUDE.md": {
+    "mtime": 1786374326.061296,
+    "ast_hash": "0964cf3a7719ed370b75d445e77af882",
+    "semantic_hash": ""
+  },
+  "portal/.iwsdk/reference/state.json": {
+    "mtime": 1784523495.7838705,
+    "ast_hash": "258342e2b0859f10642fe1dd83e17e57",
+    "semantic_hash": ""
+  },
+  "portal/plan.md": {
+    "mtime": 1784642876.6677125,
+    "ast_hash": "42d1d3c33787a6c75779ae3c869f8d5d",
+    "semantic_hash": ""
+  },
+  "portal/plan2.md": {
+    "mtime": 1784559266.9066303,
+    "ast_hash": "45f93d240bf896b36c54d787f6269c4c",
+    "semantic_hash": ""
+  },
+  "portal/src/breadcrumbs.ts": {
+    "mtime": 1786375955.88821,
+    "ast_hash": "fc592a8e3299d0cb9e681320f8e89b3c",
+    "semantic_hash": ""
+  },
+  "deploy_splat_vr.py": {
+    "mtime": 1788041626.9181037,
+    "ast_hash": "969a5f9f67436298716c0fbe48ca4ba7",
+    "semantic_hash": ""
+  },
+  "scripts/analyze_splats.py": {
+    "mtime": 1788042488.0137448,
+    "ast_hash": "b4a576d644f575b23e0553f64c61a343",
+    "semantic_hash": ""
+  },
+  "scripts/convert_splats.sh": {
+    "mtime": 1788042517.5038087,
+    "ast_hash": "11918086de23ad90c9feecaee33199e8",
+    "semantic_hash": ""
+  },
+  "scripts/render_check.mjs": {
+    "mtime": 1787588916.2113488,
+    "ast_hash": "e3923536d2e119a635fda35d55e66091",
+    "semantic_hash": ""
+  },
+  "splat-vr/package.json": {
+    "mtime": 1787114278.5660129,
+    "ast_hash": "0fe9a7f10a25e44559e26b6f6d7e1caf",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/controller-hints.ts": {
+    "mtime": 1787588679.7061138,
+    "ast_hash": "079b753c7fb60212ca1e0fc0e62cc0d5",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/ground.ts": {
+    "mtime": 1788041803.2221048,
+    "ast_hash": "9c497a47427761e0baa9be8ac36119b0",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/help-panel.ts": {
+    "mtime": 1788036134.9140906,
+    "ast_hash": "4a81d28de296fcff9cc0a5b43b49e726",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/main.ts": {
+    "mtime": 1788041874.7321193,
+    "ast_hash": "165670f2559f848e08ff5098cd66647d",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/models.ts": {
+    "mtime": 1788042488.0137448,
+    "ast_hash": "365d7dd79c0aed7e96aee4fb4c64a9a8",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/teleport.ts": {
+    "mtime": 1788042071.9551907,
+    "ast_hash": "bc83ae68341fdf9265912db8d842ab1e",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/vr-input.ts": {
+    "mtime": 1788041803.2221048,
+    "ast_hash": "7b59c45c7bdf4e372c1bbc446c89cb2f",
+    "semantic_hash": ""
+  },
+  "splat-vr/tsconfig.json": {
+    "mtime": 1787114096.663692,
+    "ast_hash": "b8d61e5721b4de58c36082a9ca0299dd",
+    "semantic_hash": ""
+  },
+  "splat-vr/vite.config.ts": {
+    "mtime": 1787114094.368528,
+    "ast_hash": "2f1378e8cf740212bbf1326e7abb6a8b",
+    "semantic_hash": ""
+  },
+  "splat-vr/index.html": {
+    "mtime": 1787588661.5349085,
+    "ast_hash": "751af11214e1a92e966a4e5263bb7e24",
+    "semantic_hash": ""
+  },
+  "scripts/vr_check.mjs": {
+    "mtime": 1788042086.0911973,
+    "ast_hash": "865dc08a702d41219ab0845a9fdbe14e",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/canvas-ui.ts": {
+    "mtime": 1787587715.3701801,
+    "ast_hash": "cce9eaddd38421877d610b6dbf0e0f3f",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/hand-input.ts": {
+    "mtime": 1788041842.9821122,
+    "ast_hash": "9e9d24bc675d916fff29c3f870c0d018",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/hotspot-card.ts": {
+    "mtime": 1787589241.0037997,
+    "ast_hash": "8462845f8ed67fbb3d539ae084a40dac",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/hotspots-data.ts": {
+    "mtime": 1788041766.0641003,
+    "ast_hash": "5904a4333e673772782c3d0125d71694",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/hotspots.ts": {
+    "mtime": 1787588001.5442824,
+    "ast_hash": "62033e6295a5ad8c4ff3a93265038dc2",
+    "semantic_hash": ""
+  },
+  "splat-vr/src/tracking.ts": {
+    "mtime": 1788041803.2221048,
+    "ast_hash": "0b32cac098f8461a65d66db6d33dfc74",
+    "semantic_hash": ""
+  },
+  "bugs.md": {
+    "mtime": 1788036439.3070471,
+    "ast_hash": "31e47402ff54e54ad05612824e79484b",
+    "semantic_hash": ""
+  },
+  "eval_results/2026-08-29.md": {
+    "mtime": 1788035690.925092,
+    "ast_hash": "2d950dcdf2c83ea8483466e380bf49b0",
+    "semantic_hash": ""
+  },
+  "inspector_portal.html": {
+    "mtime": 1788042580.76094,
+    "ast_hash": "23ac5550e3c9583f23bb7e9647d259b6",
+    "semantic_hash": ""
+  }
+}
