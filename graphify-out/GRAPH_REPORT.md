@@ -1,16 +1,15 @@
-# Graph Report - RAG_Responder  (2026-08-29)
+# Graph Report - .  (2026-08-30)
 
 ## Corpus Check
-- 66 files · ~219,199 words
-- Verdict: corpus is large enough that graph structure adds value.
+- cluster-only mode — file stats not available
 
 ## Summary
-- 1114 nodes · 1596 edges · 89 communities (76 shown, 13 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 93 edges (avg confidence: 0.84)
+- 1096 nodes · 1575 edges · 84 communities (72 shown, 12 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 89 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `58eb02a1`
+- Built from commit: `f5b5d2d8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -56,22 +55,18 @@
 - [[_COMMUNITY_Community 38|Community 38]]
 - [[_COMMUNITY_Community 39|Community 39]]
 - [[_COMMUNITY_Community 40|Community 40]]
-- [[_COMMUNITY_Community 41|Community 41]]
 - [[_COMMUNITY_Community 42|Community 42]]
-- [[_COMMUNITY_Community 43|Community 43]]
 - [[_COMMUNITY_Community 44|Community 44]]
 - [[_COMMUNITY_Community 45|Community 45]]
 - [[_COMMUNITY_Community 46|Community 46]]
 - [[_COMMUNITY_Community 47|Community 47]]
 - [[_COMMUNITY_Community 48|Community 48]]
 - [[_COMMUNITY_Community 49|Community 49]]
-- [[_COMMUNITY_Community 50|Community 50]]
 - [[_COMMUNITY_Community 51|Community 51]]
 - [[_COMMUNITY_Community 52|Community 52]]
 - [[_COMMUNITY_Community 53|Community 53]]
 - [[_COMMUNITY_Community 54|Community 54]]
 - [[_COMMUNITY_Community 55|Community 55]]
-- [[_COMMUNITY_Community 56|Community 56]]
 - [[_COMMUNITY_Community 58|Community 58]]
 - [[_COMMUNITY_Community 59|Community 59]]
 - [[_COMMUNITY_Community 60|Community 60]]
@@ -79,7 +74,6 @@
 - [[_COMMUNITY_Community 62|Community 62]]
 - [[_COMMUNITY_Community 63|Community 63]]
 - [[_COMMUNITY_Community 64|Community 64]]
-- [[_COMMUNITY_Community 65|Community 65]]
 - [[_COMMUNITY_Community 66|Community 66]]
 - [[_COMMUNITY_Community 67|Community 67]]
 - [[_COMMUNITY_Community 68|Community 68]]
@@ -118,20 +112,20 @@
 
 ## Surprising Connections (you probably didn't know these)
 - `chat_panel.startRecognition (Web Speech)` --semantically_similar_to--> `n8n transcribe-audio webhook`  [INFERRED] [semantically similar]
-  chat_panel.html → n8n_transcribe_webhook.json
+  apps/v1/chat_panel.html → ops/n8n_transcribe_webhook.json
 - `volkswagen_id4_2025` --references--> `Fire Suppression / Li-Ion Battery Fire Guidance`  [INFERRED]
-  n8n_router_config.md → vehicle_docs/EmergencyResponseGuide-Nissan-Ariya-2026.pdf
+  ops/n8n_router_config.md → ingestion/data/vehicle_docs/EmergencyResponseGuide-Nissan-Ariya-2026.pdf
 - `volkswagen_id4_2025` --references--> `High Voltage Battery Pack`  [INFERRED]
-  n8n_router_config.md → vehicle_docs/EmergencyResponseGuide-Nissan-Ariya-2026.pdf
+  ops/n8n_router_config.md → ingestion/data/vehicle_docs/EmergencyResponseGuide-Nissan-Ariya-2026.pdf
 - `volkswagen_id4_2025` --references--> `High Voltage Disconnect / Service Disconnect`  [INFERRED]
-  n8n_router_config.md → vehicle_docs/EmergencyResponseGuide-Nissan-Ariya-2026.pdf
-- `First Responder GPT Router Agent` --references--> `eval_questions.json (Transcript+PDF QA set)`  [INFERRED]
-  n8n_router_config.md → eval_questions.json
+  ops/n8n_router_config.md → ingestion/data/vehicle_docs/EmergencyResponseGuide-Nissan-Ariya-2026.pdf
+- `Per-vehicle Pinecone tool descriptions` --references--> `Cable cut location / no-cut HV cables`  [INFERRED]
+  ops/n8n_router_config.md → ingestion/data/vehicle_docs/RescueSheet_Cadillac_Lyriq_2023-.pdf
 
 ## Import Cycles
 - None detected.
 
-## Communities (89 total, 13 thin omitted)
+## Communities (84 total, 12 thin omitted)
 
 ### Community 0 - "Chat & Voice Frontend"
 Cohesion: 0.15
@@ -166,8 +160,8 @@ Cohesion: 0.25
 Nodes (8): HUD chat surface (history/transcript/hint), HUD mute button (#hud-mute), Push-to-talk hint (hold right trigger or pinch to speak), HUD play/pause button (#hud-play), HUD playback row (play/mute/video-select/time), In-VR HUD root panel (hud.json), HUD video select buttons (#hud-vid1/2/3), HUD Enter XR button (#xr-button)
 
 ### Community 8 - "Router Fix & Eval Results"
-Cohesion: 0.18
-Nodes (11): DesktopLookSystem (drag-to-look on world.camera), Project Progress Log, eval_questions.json (90 ground-truth QA pairs), Body-Locked Lazy-Follow HUD (IWSDK Follower), inspector_portal.html v1 (A-Frame 360 portal), IWSDK v2 Portal (Meta Immersive Web SDK migration), n8n Workflow S3uHJF57JAuA7bL0, Pinecone Index ford-mache-erg (per-vehicle namespaces) (+3 more)
+Cohesion: 0.33
+Nodes (5): C, HandRig, HintItem, HintSpec, LAYOUT
 
 ### Community 9 - "n8n MCP Node Config"
 Cohesion: 0.12
@@ -210,12 +204,12 @@ Cohesion: 0.40
 Nodes (5): 2026-08-10 — The Quest "browser closed on me" Crash: It Was `inputEl.focus()` Opening the VR Overlay Keyboard (Found via `adb logcat`, Not Inference), Also this session, Fix, Root cause, Verified, both directions
 
 ### Community 24 - "Community 24"
-Cohesion: 0.13
-Nodes (16): CanvasSurface, fitText(), hitAt(), makeCanvasSurface(), Rect, roundRect(), bindingRows(), Hit (+8 more)
+Cohesion: 0.12
+Nodes (14): CanvasSurface, fitText(), hitAt(), makeCanvasSurface(), Rect, Hit, InputMode, PanelAction (+6 more)
 
 ### Community 25 - "Community 25"
-Cohesion: 0.06
-Nodes (24): ControllerHints, HandRig, HintItem, HintSpec, LAYOUT, HandEvent, HandInput, HandSpace (+16 more)
+Cohesion: 0.07
+Nodes (19): ControllerHints, HandEvent, HandInput, HandSpace, JOINTS, TrackedJoint, AX, BTN (+11 more)
 
 ### Community 26 - "Community 26"
 Cohesion: 0.09
@@ -262,8 +256,8 @@ Cohesion: 0.18
 Nodes (10): Agents Available, Debugging Missing Features, IWSDK Project - Claude Code Configuration, `iwsdk-project-code-reviewer`, Meta Spatial Editor, mse-agent, Planning Rule, Project Structure (+2 more)
 
 ### Community 38 - "Community 38"
-Cohesion: 0.14
-Nodes (14): 2. Per-Namespace Pinecone Tool Descriptions, bmw_ix3_2027, cadillac_lyriq_2023, chevrolet_blazer_ev_2024, chevrolet_bolt_ev_2022_2023, chevrolet_equinox_ev_2024, ford_lightning_2026, ford_mach_e_2026 (+6 more)
+Cohesion: 0.05
+Nodes (45): 1. Router Agent — System Message, 2. Per-Namespace Pinecone Tool Descriptions, bmw_ix3_2027, cadillac_lyriq_2023, chevrolet_blazer_ev_2024, chevrolet_bolt_ev_2022_2023, chevrolet_equinox_ev_2024, ford_lightning_2026 (+37 more)
 
 ### Community 39 - "Community 39"
 Cohesion: 0.36
@@ -273,17 +267,9 @@ Nodes (10): chatHistory, ChatListener, mdToPlain(), mirrorToHud(), pushMerged(),
 Cohesion: 0.36
 Nodes (9): ndarray, analyze(), is_y_down(), load_positions(), main(), Path, Cross-section area shrinks toward the roof; rising area means Y-down., Decode splat centres from an SPZ file (24-bit fixed point, gzipped). (+1 more)
 
-### Community 41 - "Community 41"
-Cohesion: 0.29
-Nodes (10): Claude Opus 4.8 Router Model (lmChatAnthropic), OpenAI text-embedding-3-small Embeddings (1536-dim), Per-Vehicle Pinecone Retrieval Tools (vectorStorePinecone), Router Agent (First Responder GPT), topK = 10 Retrieval Depth Fix, video_transcript Tool (Mach-E 360 training narration), Router Upgrade (topK 4 to 10, Opus 4.8, de-contradicted prompt), Professor's Accuracy Report (identical/hedged answers) (+2 more)
-
 ### Community 42 - "Community 42"
 Cohesion: 0.31
 Nodes (5): css(), Ground, makeGroundTexture(), mulberry32(), _srgb
-
-### Community 43 - "Community 43"
-Cohesion: 0.25
-Nodes (9): EV First-Responder Q&A Comparison (webhook vs graphify), Generic Deferral Policy (no model-specific answer without make/model/year), graphify Knowledge Graph (graph.json BFS traversal), n8n RAG Chat Webhook (live chat workflow), Vehicle-Naming Determines Grounded vs Deferred Answer, Never Mix Data Across Vehicles, STEP 1 Identify-the-Vehicle Routing Rule, Router Agent System Message (+1 more)
 
 ### Community 44 - "Community 44"
 Cohesion: 0.25
@@ -309,10 +295,6 @@ Nodes (6): { chromium }, outDir, require, res, shots, TARGET
 Cohesion: 0.33
 Nodes (6): 2026-08-18 — 3D-EVs Tab Fix (dead viewer host) + Standalone WebXR Splat Viewer, Gotchas worth remembering, New: `splat-vr/` — WebXR walkaround of the car scans, NOT verified — first job next session, Root cause: the 3D-EVs tab was iframing a 404, Verified
 
-### Community 50 - "Community 50"
-Cohesion: 0.67
-Nodes (3): 1. Router Agent — System Message, n8n Router Agent — Multi-Vehicle Config, n8n Router Agent Multi-Vehicle Config
-
 ### Community 51 - "Community 51"
 Cohesion: 0.50
 Nodes (4): Browser 3D With First-Class XR, Critical Best Practices, Feature Configuration (CRITICAL!), VR Performance Context
@@ -329,10 +311,6 @@ Nodes (9): applyComfort(), hazardsVisible(), pressAt(), pressHotspot(), pressPan
 Cohesion: 0.50
 Nodes (3): findModel(), ModelConfig, MODELS
 
-### Community 56 - "Community 56"
-Cohesion: 1.00
-Nodes (3): Baseline (before-fix) Chatbot Responses, Named-Supported-Vehicle Wrongly Treated as Unidentified, Router Non-Determinism (same question, opposite outcome)
-
 ### Community 59 - "Community 59"
 Cohesion: 0.15
 Nodes (15): chat_panel.html (First Responder GPT), chat_panel.sendMessage, chat_panel.startRecognition (Web Speech), eval_questions.json (Transcript+PDF QA set), n8n chat webhook (a7782f7b), First Responder GPT Router Agent, n8n transcribe-audio webhook, main() (+7 more)
@@ -340,6 +318,10 @@ Nodes (15): chat_panel.html (First Responder GPT), chat_panel.sendMessage, chat_
 ### Community 60 - "Community 60"
 Cohesion: 0.25
 Nodes (5): { chromium }, consoleErrors, EXPECTED_ACTIONS, require, results
+
+### Community 61 - "Community 61"
+Cohesion: 0.18
+Nodes (4): roundRect(), bindingRows(), HelpPanel, ComfortSettings
 
 ### Community 62 - "Community 62"
 Cohesion: 0.12
@@ -349,13 +331,9 @@ Nodes (16): 2026-04-16 — Initial Commit, 2026-05-04 — Chatbox Added to Gauss
 Cohesion: 0.50
 Nodes (4): IWER dev runtime launch config (port 8081, dev:runtime), IWER Quest emulator runtime, IWER emulator session state (agent mode, browser disconnected), portal .claude settings (IWSDK MCP tool allowlist)
 
-### Community 65 - "Community 65"
-Cohesion: 0.15
-Nodes (12): bugs.md — full-module sweep, 2026-08-29, P0-1 — The in-VR controls panel renders as nothing (FIXED), P0-2 — The live splat-vr deployment is five days behind the source, P0-3 — RAG: the transcript corpus is mis-scoped to the Mach-E, P1-4 — Deploy scripts declare victory without checking, P1-5 — `analyze_splats.py` tells you to paste values that regress scale, P1-6 — The documented ingestion path points at files that are gone, P1-7 — `run_eval.py` clobbers a same-day full run (+4 more)
-
 ### Community 67 - "Community 67"
-Cohesion: 0.17
-Nodes (13): C, ACCENT, DRIVER_SIDE, HOTSPOTS, hotspotsFor(), MIRROR_NOTES, mirrorToPassengerSide(), Severity (+5 more)
+Cohesion: 0.19
+Nodes (12): ACCENT, DRIVER_SIDE, HOTSPOTS, hotspotsFor(), MIRROR_NOTES, mirrorToPassengerSide(), Severity, SYMMETRIC (+4 more)
 
 ### Community 69 - "Community 69"
 Cohesion: 0.25
@@ -434,21 +412,21 @@ Cohesion: 0.50
 Nodes (3): Develop / build, First Responder Portal — v2 (IWSDK), Layout (flat — one module per concern, no starter-template scaffold)
 
 ## Knowledge Gaps
-- **503 isolated node(s):** `name`, `version`, `private`, `type`, `dev` (+498 more)
+- **491 isolated node(s):** `name`, `version`, `private`, `type`, `dev` (+486 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Hotspots` connect `Community 64` to `Community 67`, `Community 29`?**
+- **Why does `Hotspots` connect `Community 64` to `Community 67`, `Community 68`, `Community 29`?**
   _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Why does `Tracking` connect `Community 66` to `Community 29`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Why does `VrInput` connect `Community 28` to `Community 25`, `Community 29`?**
   _High betweenness centrality (0.011) - this node is a cross-community bridge._
 - **What connects `Encode one rendition into out_dir/index.m3u8 + seg*.ts. Idempotent.`, `Peak BANDWIDTH (bits/s) = max(segment_bytes * 8 / segment_duration).`, `Upload every file in var_dir -> videos/<stem>/<tier>/<name>.` to the rest of the system?**
-  _540 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _528 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Chat & Voice Frontend` be split into smaller, more focused modules?**
   _Cohesion score 0.14855072463768115 - nodes in this community are weakly interconnected._
 - **Should `HUD & Videosphere Rendering` be split into smaller, more focused modules?**

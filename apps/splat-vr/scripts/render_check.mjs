@@ -34,7 +34,7 @@ import { createRequire } from "node:module";
 
 const require = createRequire(import.meta.url);
 const { chromium } = require(
-  new URL("../portal/node_modules/playwright-core/index.js", import.meta.url).pathname,
+  new URL("../../portal/node_modules/playwright-core/index.js", import.meta.url).pathname,
 );
 
 const BASE = process.argv[2] ?? "https://d1ni7nkjr0eveg.cloudfront.net/splat-vr/index.html";

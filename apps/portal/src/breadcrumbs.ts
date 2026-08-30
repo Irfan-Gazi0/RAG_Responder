@@ -10,7 +10,7 @@
 //     localhost (`activation: localhost`), so a Quest browsing the LAN dev
 //     server never pipes its console anywhere — the dev-server log shows only
 //     the plugin's own headless browser. Read the trail with `frCrumbs()` over
-//     `adb` + chrome://inspect instead (portal/CLAUDE.md).
+//     `adb` + chrome://inspect instead (apps/portal/CLAUDE.md).
 //
 // Runs are ARCHIVED rather than overwritten. The earlier version kept a single
 // "previous run" slot, so two reloads after a crash silently destroyed the
@@ -148,7 +148,7 @@ export function archivePreviousRun(): ArchivedRun[] {
 /**
  * Console helper: `frCrumbs()` dumps this run plus the archive, `frCrumbs.clear()`
  * wipes it. On a Quest the console is reachable over `adb` + chrome://inspect —
- * see portal/CLAUDE.md. The on-page amber panel this module used to render was
+ * see apps/portal/CLAUDE.md. The on-page amber panel this module used to render was
  * removed once the crash was identified; the buffer itself stays because it is
  * free and it is the only trail that survives the tab dying.
  */

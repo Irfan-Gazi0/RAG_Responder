@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Convert the cropped Gaussian-splat vehicle scans from .ply to .spz for the
-# WebXR viewer in splat-vr/.
+# WebXR viewer in apps/splat-vr/.
 #
 # Why .spz: the source .ply files are 23-47 MB each. A Quest pulling that over
 # wifi on every load is painful, and hosting them ourselves on CloudFront (same
@@ -16,19 +16,19 @@
 # Only the *cropped* scans are used. The uncropped (560K splats) and mipmap
 # (3.0M splats) variants blow past Spark's stated WebXR budget of 500-750K.
 #
-# Usage:  bash scripts/convert_splats.sh
-# Output: splat-vr/public/models/*.spz   (gitignored - regenerable build artifacts)
+# Usage:  bash apps/splat-vr/scripts/convert_splats.sh
+# Output: apps/splat-vr/public/models/*.spz   (gitignored - regenerable build artifacts)
 #         Vite copies publicDir into dist/ verbatim, which is what puts them
-#         on CloudFront; the .ply inputs stay in splat-vr/.splat-src/ so that
+#         on CloudFront; the .ply inputs stay in apps/splat-vr/.splat-src/ so that
 #         copy cannot ship 139 MB of source scans.
 
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-OUT_DIR="$REPO_ROOT/splat-vr/public/models"
+APP_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+OUT_DIR="$APP_ROOT/public/models"
 # Keep the .ply download cache OUTSIDE public/ - Vite copies publicDir into
 # dist/ verbatim, so a cache in there ships 139 MB of source scans to S3.
-SRC_DIR="$REPO_ROOT/splat-vr/.splat-src"
+SRC_DIR="$APP_ROOT/.splat-src"
 
 HF_BASE="https://huggingface.co/datasets/AlistairWstbrk/splats/resolve/main/3DGS%20.ply%20New%20Vehicle%20Scans"
 

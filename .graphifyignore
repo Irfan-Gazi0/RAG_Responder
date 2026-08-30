@@ -10,7 +10,7 @@
 #  instead of project code — see Workflow Improvement review, 2026-07-05)
 .claude/skills/
 .agents/skills/
-portal/.claude/skills/
+apps/portal/.claude/skills/
 
 # --- Large raw media (66 GB): must never be indexed ---
 # Not in graphify's hardcoded skip list, so mirror the .gitignore rule here.

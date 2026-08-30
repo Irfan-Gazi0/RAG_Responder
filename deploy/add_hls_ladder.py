@@ -38,9 +38,10 @@ from pathlib import Path
 import boto3
 from dotenv import load_dotenv
 
-load_dotenv()
+REPO_ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(str(REPO_ROOT / ".env"))
 
-VIDEOS_DIR = Path(__file__).parent / "360"
+VIDEOS_DIR = REPO_ROOT / "360"
 BUCKET = os.getenv("AWS_S3_BUCKET")
 REGION = os.getenv("AWS_DEFAULT_REGION", "us-east-1")
 CLOUDFRONT_DIST_ID = "E2FCJOSZVLDA5W"

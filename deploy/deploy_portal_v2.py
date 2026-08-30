@@ -1,5 +1,5 @@
 """
-Deploy the IWSDK portal v2 (portal/dist/) to S3 + invalidate CloudFront.
+Deploy the IWSDK portal v2 (apps/portal/dist/) to S3 + invalidate CloudFront.
 
 The IWSDK build is a multi-file bundle (index.html + hashed JS chunks + WASM)
 rather than a single HTML file, so we upload the whole tree under the `v2/`
@@ -31,13 +31,14 @@ from urllib.request import Request, urlopen
 import boto3
 from dotenv import load_dotenv
 
-load_dotenv(str(Path(__file__).parent / ".env"))
+REPO_ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(str(REPO_ROOT / ".env"))
 
 BUCKET = os.getenv("AWS_S3_BUCKET", "first-responder-training")
 REGION = os.getenv("AWS_DEFAULT_REGION", "us-east-2")
 CLOUDFRONT_DIST_ID = "E2FCJOSZVLDA5W"
 PREFIX = "v2/"
-DIST_DIR = Path(__file__).parent / "portal" / "dist"
+DIST_DIR = REPO_ROOT / "apps" / "portal" / "dist"
 
 EXT_CONTENT_TYPE = {
     ".html": "text/html",
@@ -79,7 +80,7 @@ def content_type_for(rel_path: str) -> str:
 
 def upload_dist(s3):
     if not DIST_DIR.is_dir():
-        print(f"❌ {DIST_DIR} does not exist — run `cd portal && npm run build` first.")
+        print(f"❌ {DIST_DIR} does not exist — run `cd apps/portal && npm run build` first.")
         sys.exit(1)
 
     files = [p for p in DIST_DIR.rglob("*") if p.is_file()]
@@ -116,7 +117,7 @@ def local_bundles() -> set:
     """The hashed JS bundles the freshly-built local index.html references."""
     index = DIST_DIR / "index.html"
     if not index.is_file():
-        print(f"❌ {index} does not exist — run `cd portal && npm run build` first.")
+        print(f"❌ {index} does not exist — run `cd apps/portal && npm run build` first.")
         sys.exit(1)
     names = set(ASSET_RE.findall(index.read_text(encoding="utf-8", errors="replace")))
     if not names:

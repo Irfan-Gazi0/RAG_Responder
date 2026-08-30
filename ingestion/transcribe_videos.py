@@ -2,7 +2,7 @@
 transcribe_videos.py
 ====================
 Transcribes all .mp4 files in 360/ using local OpenAI Whisper.
-Outputs one *_segments.json per video to Talk/.
+Outputs one *_segments.json per video to ingestion/data/Talk/.
 
 Prerequisites (run once):
     brew install ffmpeg
@@ -22,8 +22,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
-VIDEOS_DIR = Path(__file__).parent / "360"
-OUTPUT_DIR = Path(__file__).parent / "Talk"
+REPO_ROOT  = Path(__file__).resolve().parents[1]
+VIDEOS_DIR = REPO_ROOT / "360"
+OUTPUT_DIR = Path(__file__).resolve().parent / "data" / "Talk"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 # ── Args ──────────────────────────────────────────────────────────────────────

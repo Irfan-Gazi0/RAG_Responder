@@ -1,6 +1,6 @@
 #!/usr/bin/env python3.10
 """
-Derive the per-model calibration constants in splat-vr/src/models.ts.
+Derive the per-model calibration constants in src/models.ts.
 
 Run with python3.10 (it has numpy; bare python3 does not - same rule as the
 deploy scripts).
@@ -70,7 +70,7 @@ import sys
 
 import numpy as np
 
-MODELS_DIR = pathlib.Path(__file__).resolve().parent.parent / "splat-vr" / "public" / "models"
+MODELS_DIR = pathlib.Path(__file__).resolve().parents[1] / "public" / "models"
 
 # Manufacturer overall length, metres. Must match lengthMeters in models.ts.
 LENGTH_M = {
@@ -190,7 +190,7 @@ def main() -> int:
     # Split deliberately. A single "Paste into models.ts:" block over all three
     # fields is an instruction to regress the calibration by -28%..+11% - see the
     # table in the module docstring.
-    print("PASTE THIS into splat-vr/src/models.ts - derived analytically, reliable:")
+    print("PASTE THIS into src/models.ts - derived analytically, reliable:")
     print(json.dumps({k: {"rotation": v["rotation"]} for k, v in results.items()}, indent=2))
     print()
     print("STARTING ESTIMATE ONLY - do NOT paste over the tuned values in models.ts:")
@@ -202,7 +202,7 @@ def main() -> int:
     print()
     print("  Both come from a bounding box that includes each crop's captured tarmac.")
     print("  Re-derive scale empirically instead:")
-    print("      cd splat-vr && npm run dev")
+    print("      cd apps/splat-vr && npm run dev")
     print("      node scripts/render_check.mjs https://localhost:8082/")
     print("  and keep the tuned models.ts values unless that check fails.")
     return 0

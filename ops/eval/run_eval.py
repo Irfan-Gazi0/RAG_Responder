@@ -3,7 +3,7 @@ Automated eval runner for the First Responder RAG chatbot.
 
 Fires each ground-truth question in eval_questions.json at the live n8n chat
 webhook, heuristically scores the model output against the expected answer via
-keyword overlap, and writes a dated triage markdown table under eval_results/.
+keyword overlap, and writes a dated triage markdown table under ops/eval/results/.
 
 This replaces the old hand-filled `baseline_results.md` / `postfix_results.md`
 workflow: instead of manually pasting Q/A pairs and eyeballing them, we batch
@@ -23,9 +23,9 @@ Usage:
   python3 run_eval.py --cache              # skip ids already run for this config
   python3 run_eval.py --out /tmp/eval.md   # override output markdown path
 
-The default output path is eval_results/<date>.md. A run that covers FEWER
+The default output path is ops/eval/results/<date>.md. A run that covers FEWER
 questions than a report already sitting at that path is auto-suffixed
-(eval_results/<date>.sampleN.md) rather than overwriting it: a 3-question triage
+(ops/eval/results/<date>.sampleN.md) rather than overwriting it: a 3-question triage
 silently destroying the day's 90-question baseline is not recoverable, and the
 only evidence it happened is a "Questions run: 3" line nobody reads until later.
 An explicit --out always wins.
@@ -48,13 +48,14 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv(str(Path(__file__).parent / ".env"))
+REPO_ROOT = Path(__file__).resolve().parents[2]
+load_dotenv(str(REPO_ROOT / ".env"))
 
-ROOT = Path(__file__).parent
+ROOT = Path(__file__).resolve().parent
 WEBHOOK_URL = "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1"
 EVAL_FILE = ROOT / "eval_questions.json"
-ROUTER_CONFIG_FILE = ROOT / "n8n_router_config.md"
-RESULTS_DIR = ROOT / "eval_results"
+ROUTER_CONFIG_FILE = REPO_ROOT / "ops" / "n8n_router_config.md"
+RESULTS_DIR = ROOT / "results"
 CACHE_DIR = RESULTS_DIR / ".cache"
 REQUEST_TIMEOUT = 120  # seconds
 
@@ -322,7 +323,7 @@ def existing_question_count(path: Path):
 
 
 def default_out_path(results: list, run_ts) -> Path:
-    """eval_results/<date>.md, unless that would shrink an existing report.
+    """ops/eval/results/<date>.md, unless that would shrink an existing report.
 
     A narrower run (a --sample or an --ids band) gets its own suffixed file
     instead of overwriting a broader one. A run at least as wide as what is

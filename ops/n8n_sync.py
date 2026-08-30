@@ -22,7 +22,7 @@ The tool description IS the routing prompt, so that was the one field where
 silent drift was guaranteed to go unnoticed.
 
 n8n public API: GET/PUT {base}/workflows/{id} with X-N8N-API-KEY header.
-Reads N8N_API_KEY from the repo-root .env (same .env-loading pattern as
+Reads N8N_API_KEY from the repo-root .env (resolved via __file__, any cwd) (same .env-loading pattern as
 deploy_portal_v2.py). Stdlib-only HTTP (urllib) — no requests / jq / aws CLI.
 
 NOTE: n8n_router_config.md's *header text* is stale (it says "Opus 4.8"), but
@@ -49,7 +49,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv(str(Path(__file__).parent / ".env"))
+REPO_ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(str(REPO_ROOT / ".env"))
 
 # --- Configuration / constants ------------------------------------------------
 

@@ -42,22 +42,22 @@ env/
 **/graphify-out/.graphify_root
 
 # The portal's own graph is dev tooling, not website content — it is
-# regenerable with `graphify update portal/` and has no business in a branch
+# regenerable with `graphify update apps/portal/` and has no business in a branch
 # that Streamlit Cloud clones on every deploy. (The ROOT graphify-out/ stays
 # tracked; it predates this and CLAUDE.md's graphify section points at it.)
-portal/graphify-out/
+apps/portal/graphify-out/
 
 # Internal planning scratch — not shipped, not reviewed.
-portal/plan2.md
+apps/portal/plan2.md
 
 # run_eval.py cache (regenerable, keyed by router-config hash)
-eval_results/.cache/
+ops/eval/results/.cache/
 
 # splat-vr: build output, converted models and the .ply download cache.
-# All regenerable — `bash scripts/convert_splats.sh` then `npm run build`.
-splat-vr/dist/
-splat-vr/public/models/*.spz
-splat-vr/.splat-src/
+# All regenerable — `bash apps/splat-vr/scripts/convert_splats.sh` then `npm run build`.
+apps/splat-vr/dist/
+apps/splat-vr/public/models/*.spz
+apps/splat-vr/.splat-src/
 
 # graphify curated-graph backups (one dated dir per rebuild, regenerable)
 **/graphify-out/20*/
@@ -66,3 +66,6 @@ splat-vr/.splat-src/
 # site-packages — committing one ships a dangling link to every other checkout
 # (and to Streamlit Cloud). The skill comes from the installed package instead.
 .claude/skills/developing-with-streamlit
+
+# Streamlit Cloud log dumps downloaded from the app dashboard
+logs-*.txt

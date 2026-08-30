@@ -1,5 +1,5 @@
 """
-Deploy the standalone WebXR splat viewer (splat-vr/dist/) to S3 + invalidate CloudFront.
+Deploy the standalone WebXR splat viewer (apps/splat-vr/dist/) to S3 + invalidate CloudFront.
 
 Same shape as deploy_portal_v2.py, different prefix. Per CLAUDE.md hard rules:
   - `aws` CLI is NOT installed — python3.10 + boto3 + dotenv only
@@ -22,7 +22,7 @@ the same hashed bundle as the local dist/. A deploy that cannot be seen from the
 edge is not a deploy — the live viewer sat five days behind source (bugs.md P0-2)
 precisely because this script printed a success line it had not earned.
 
-Run from the repo root, not splat-vr/.
+Runs from any cwd: .env and dist/ resolve from the repo root via __file__.
 """
 
 import argparse
@@ -38,13 +38,14 @@ from urllib.request import Request, urlopen
 import boto3
 from dotenv import load_dotenv
 
-load_dotenv(str(Path(__file__).parent / ".env"))
+REPO_ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(str(REPO_ROOT / ".env"))
 
 BUCKET = os.getenv("AWS_S3_BUCKET", "first-responder-training")
 REGION = os.getenv("AWS_DEFAULT_REGION", "us-east-2")
 CLOUDFRONT_DIST_ID = "E2FCJOSZVLDA5W"
 PREFIX = "splat-vr/"
-DIST_DIR = Path(__file__).parent / "splat-vr" / "dist"
+DIST_DIR = REPO_ROOT / "apps" / "splat-vr" / "dist"
 
 EXT_CONTENT_TYPE = {
     ".html": "text/html",
@@ -93,7 +94,7 @@ def content_type_for(rel_path: str) -> str:
 
 def upload_dist(s3, skip_models: bool):
     if not DIST_DIR.is_dir():
-        print(f"❌ {DIST_DIR} does not exist — run `cd splat-vr && npm run build` first.")
+        print(f"❌ {DIST_DIR} does not exist — run `cd apps/splat-vr && npm run build` first.")
         sys.exit(1)
 
     files = [p for p in DIST_DIR.rglob("*") if p.is_file()]
@@ -104,14 +105,14 @@ def upload_dist(s3, skip_models: bool):
         sys.exit(1)
 
     # The .ply download cache is 139 MB and must never reach S3. It lives in
-    # splat-vr/.splat-src/ precisely so Vite's publicDir copy cannot pick it up,
+    # apps/splat-vr/.splat-src/ precisely so Vite's publicDir copy cannot pick it up,
     # but assert here too — this shipped once already.
     strays = [p for p in files if p.suffix.lower() == ".ply"]
     if strays:
         print(f"❌ Refusing to upload {len(strays)} .ply source file(s) found in dist/:")
         for p in strays[:5]:
             print(f"     {p.relative_to(DIST_DIR)}")
-        print("   These are conversion inputs — they belong in splat-vr/.splat-src/.")
+        print("   These are conversion inputs — they belong in apps/splat-vr/.splat-src/.")
         sys.exit(1)
 
     total = sum(p.stat().st_size for p in files)
@@ -143,7 +144,7 @@ def local_bundles() -> set:
     """The hashed JS bundles the freshly-built local index.html references."""
     index = DIST_DIR / "index.html"
     if not index.is_file():
-        print(f"❌ {index} does not exist — run `cd splat-vr && npm run build` first.")
+        print(f"❌ {index} does not exist — run `cd apps/splat-vr && npm run build` first.")
         sys.exit(1)
     names = set(ASSET_RE.findall(index.read_text(encoding="utf-8", errors="replace")))
     if not names:

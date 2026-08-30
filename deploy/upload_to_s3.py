@@ -5,10 +5,11 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 # Load configuration from .env
-load_dotenv()
+REPO_ROOT = Path(__file__).resolve().parents[1]
+load_dotenv(str(REPO_ROOT / ".env"))
 
 # --- Configuration ---
-VIDEOS_DIR = Path(__file__).parent / "360"
+VIDEOS_DIR = REPO_ROOT / "360"
 BUCKET_NAME = os.getenv("AWS_S3_BUCKET")
 REGION = os.getenv("AWS_DEFAULT_REGION", "us-east-1")
 
