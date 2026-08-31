@@ -107,6 +107,9 @@ export class HandInput {
   private _v = new Vector3();
   private _q = new Quaternion();
   private _head = new Vector3();
+  /** Palm-gesture scratch; updatePalm runs per tracked hand per frame. */
+  private _toHead = new Vector3();
+  private _palm = new Vector3();
 
   constructor(opts: { renderer: WebGLRenderer; playerRig: Group; palmSign?: number }) {
     this.renderer = opts.renderer;
@@ -224,7 +227,7 @@ export class HandInput {
     if (!wrist) return;
 
     wrist.getWorldPosition(this._v);
-    const toHead = this._head.clone().sub(this._v);
+    const toHead = this._toHead.copy(this._head).sub(this._v);
     const distance = toHead.length();
     if (distance > PALM_MAX_DISTANCE || distance < 1e-4) {
       this.palmHeld[index] = 0;
@@ -233,7 +236,7 @@ export class HandInput {
     toHead.divideScalar(distance);
 
     wrist.getWorldQuaternion(this._q);
-    const palm = new Vector3(0, 0, this.palmSign).applyQuaternion(this._q).normalize();
+    const palm = this._palm.set(0, 0, this.palmSign).applyQuaternion(this._q).normalize();
     const facing = palm.dot(toHead);
 
     if (facing < PALM_DOT_OFF) {

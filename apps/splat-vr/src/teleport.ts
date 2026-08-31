@@ -95,6 +95,11 @@ export class Teleport {
   private _v = new Vector3();
   private _p = new Vector3();
   private _q = new Quaternion();
+  /** Trace scratch. aim() runs every frame an arc is up, controller or pinch. */
+  private _origin = new Vector3();
+  private _dir = new Vector3();
+  private _right = new Vector3();
+  private _step = new Vector3();
 
   /**
    * @param parent  World-space container for the arc and reticle. NOT the player
@@ -172,7 +177,7 @@ export class Teleport {
    * rotate the wrist.
    */
   aim(controller: Object3D, lateral: number, push: number) {
-    const origin = controller.getWorldPosition(this._v).clone();
+    const origin = controller.getWorldPosition(this._origin);
 
     // The arc is traced against the plane the player's own feet are on, not
     // world y = 0.
@@ -195,9 +200,9 @@ export class Teleport {
     origin.y = Math.max(origin.y, floorY + MIN_LAUNCH_Y);
     controller.getWorldQuaternion(this._q);
 
-    const dir = new Vector3(0, 0, -1).applyQuaternion(this._q);
+    const dir = this._dir.set(0, 0, -1).applyQuaternion(this._q);
     if (lateral !== 0) {
-      const right = new Vector3(1, 0, 0).applyQuaternion(this._q);
+      const right = this._right.set(1, 0, 0).applyQuaternion(this._q);
       dir.addScaledVector(right, lateral * 0.35).normalize();
     }
 
@@ -209,7 +214,7 @@ export class Teleport {
     this.parent.updateWorldMatrix(true, false);
     this.toLocal.copy(this.parent.matrixWorld).invert();
 
-    const p = origin.clone();
+    const p = this._step.copy(origin);
     let hit = false;
     let n = 0;
     this.writePoint(n++, p);
@@ -250,7 +255,9 @@ export class Teleport {
     this.reticle.position.copy(p).applyMatrix4(this.toLocal);
     this.reticle.visible = this.valid;
     this.arc.geometry.attributes.position.needsUpdate = true;
-    this.arc.geometry.computeBoundingSphere();
+    // No computeBoundingSphere: the arc is frustumCulled = false (see the
+    // constructor), so nothing ever reads the sphere - it was a full pass over
+    // 41 points every aiming frame to fill a field with no consumer.
     this.group.visible = true;
   }
 

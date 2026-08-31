@@ -9,9 +9,11 @@
  */
 import {
   Color,
+  DirectionalLight,
   Euler,
   GridHelper,
   Group,
+  HemisphereLight,
   MathUtils,
   Mesh,
   Object3D,
@@ -24,7 +26,8 @@ import {
 } from "three";
 import { SparkControls, SparkRenderer, SparkXr, SplatMesh } from "@sparkjsdev/spark";
 import { DEFAULT_MODEL_KEY, findModel, MODELS, type ModelConfig } from "./models";
-import { ControllerHints } from "./controller-hints";
+import { authoredAnchors, ControllerHints } from "./controller-hints";
+import { ControllerModels, probeControllerAssets } from "./controller-models";
 import { Ground } from "./ground";
 import { HelpPanel } from "./help-panel";
 import { HandInput } from "./hand-input";
@@ -34,6 +37,7 @@ import { Teleport } from "./teleport";
 import { Tracking } from "./tracking";
 import {
   flushComfort,
+  installComfortFlush,
   loadComfort,
   saveComfort,
   VrInput,
@@ -72,6 +76,18 @@ const renderer = new WebGLRenderer({ canvas, antialias: false });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.xr.enabled = true;
+// THE HEAD POSE THIS FRAME, NOT LAST FRAME.
+//
+// three syncs the user camera from the XR viewer pose inside render(), which
+// runs AFTER the animation-loop body - so every world-locked thing that
+// billboards to the head (hazard markers, the hotspot card, the hint pills), the
+// ground fade, the smooth-turn pivot and the tracking readout were all reading a
+// pose one frame stale. In the headset that is visible swim on every label as
+// you turn. Taking the sync over and running it at the top of the XR branch
+// costs nothing: WebXRManager has already computed the viewer pose and populated
+// cameraXR.cameras by the time our callback runs, and render() then skips its
+// own update because cameraAutoUpdate is false.
+renderer.xr.cameraAutoUpdate = false;
 
 const scene = new Scene();
 scene.background = new Color(0x0f172a);
@@ -85,6 +101,17 @@ camera.position.set(0, 1.6, 6);
 const playerRig = new Group();
 playerRig.add(camera);
 scene.add(playerRig);
+
+// The ONLY lit materials in this scene are the controller glTFs. Splats are
+// shaded by Spark's own shader, and every panel, marker, card, hand joint and
+// the ground are MeshBasicMaterial - so these two lights change nothing that was
+// on screen before. Without them the controller models render pure BLACK, which
+// is the exact trap hand-input.ts:115 documents and dodges by hand-rolling its
+// joint spheres. Do not remove them as "unused": grep first.
+scene.add(new HemisphereLight(0xdfe9f5, 0x2a3244, 2.2));
+const keyLight = new DirectionalLight(0xffffff, 1.6);
+keyLight.position.set(1, 2, 1);
+scene.add(keyLight);
 
 // maxStdDev is how far out each Gaussian is still drawn. Spark's own VR guidance
 // is to drop it from the default sqrt(8) to sqrt(5): perceptually near-identical,
@@ -122,11 +149,22 @@ const FLIP_X = new Quaternion().setFromEuler(new Euler(Math.PI, 0, 0));
 let currentSplat: SplatMesh | null = null;
 let currentConfig: ModelConfig = findModel(params.get("model") ?? DEFAULT_MODEL_KEY);
 
-/** Live values driven by the ?dev=1 sliders; seeded from the model registry. */
-let overrides: Pick<ModelConfig, "rotation" | "scaleMultiplier" | "yOffset"> = {
+/**
+ * Live values driven by the ?dev=1 sliders; seeded from the model registry.
+ *
+ * A COPY, deliberately. findModel returns the shared MODELS entry, so the
+ * vehicle-centre control used to assign straight into it and permanently rewrite
+ * the registry for the rest of the session - a scan re-selected later came back
+ * carrying someone's half-finished nudge.
+ */
+let overrides: Pick<
+  ModelConfig,
+  "rotation" | "scaleMultiplier" | "yOffset" | "centerOffset"
+> = {
   rotation: [0, 0, 0],
   scaleMultiplier: 1,
   yOffset: 0,
+  centerOffset: [0, 0],
 };
 
 /**
@@ -195,7 +233,7 @@ function fitToGround(splat: SplatMesh) {
   // ended up in. Re-placing them here rather than once at load is what keeps
   // them attached when a scan is re-calibrated - including live, from the dev
   // sliders above.
-  hotspots.place(currentConfig.vehicleYaw, currentConfig.centerOffset);
+  hotspots.place(currentConfig.vehicleYaw, overrides.centerOffset);
 
   if (DEV) updateDevOutput(size, scale);
 }
@@ -215,6 +253,7 @@ function loadModel(cfg: ModelConfig) {
     rotation: [...cfg.rotation] as [number, number, number],
     scaleMultiplier: cfg.scaleMultiplier,
     yOffset: cfg.yOffset,
+    centerOffset: [...cfg.centerOffset] as [number, number],
   };
   if (DEV) syncSlidersFromOverrides();
 
@@ -273,10 +312,25 @@ function loadModel(cfg: ModelConfig) {
   });
 }
 
+/**
+ * A page-level problem that outlives any single operation - currently only the
+ * tracking preflight warning. Held separately so clearing a transient error
+ * cannot clear it. See reportError.
+ */
+let preflight: string | null = null;
+
 /** Route a failure to both the desktop status bar and the in-VR panel. */
 function reportError(message: string | null) {
-  if (message) setStatus(message, true);
-  helpPanel.setError(message);
+  // `?? preflight` is load-bearing. The preflight warning - the one that says
+  // this page is not being granted positional tracking, i.e. the answer to "why
+  // does walking do nothing in the headset" - used to be destroyed twice over:
+  // loadModel's `setStatus("Loading ...")` cleared the DOM copy on the same tick
+  // it was raised, and its onLoad `reportError(null)` cleared the in-VR copy a
+  // second later. The single most important diagnostic in the app was guaranteed
+  // to be gone before anyone could read it.
+  const text = message ?? preflight;
+  if (text) setStatus(text, true);
+  helpPanel.setError(text);
 }
 
 // --- model picker ---------------------------------------------------------
@@ -301,6 +355,9 @@ const controls = new SparkControls({ canvas });
 // space and hand tracking. Controller bindings are NOT Spark's defaults: see
 // vr-input.ts for why all four getters are overridden.
 let comfort: ComfortSettings = loadComfort();
+// The debounced comfort write used to hook pagehide/visibilitychange as a side
+// effect of importing vr-input. Explicit now - see installComfortFlush.
+installComfortFlush();
 /**
  * ?hazards=0 forces the markers off for THIS PAGE LOAD ONLY.
  *
@@ -315,6 +372,17 @@ let comfort: ComfortSettings = loadComfort();
  */
 const HAZARDS_FORCED_OFF = params.get("hazards") === "0";
 
+/**
+ * `?controllers=0` - do not draw the held controllers.
+ *
+ * A URL override rather than a comfort-panel button on purpose: the panel's grid
+ * is asserted by vr_check as exactly eight entries in a fixed reading order, and
+ * a ninth would break two assertions to give an A/B switch that only matters on
+ * device. This is here so the render-scale trade can be measured with the models
+ * in and out on the same headset.
+ */
+const CONTROLLERS_ENABLED = params.get("controllers") !== "0";
+
 /** Stored preference, minus the URL override. The only thing that should reach
  * the marker layer. */
 function hazardsVisible(): boolean {
@@ -327,10 +395,20 @@ const helpPanel = new HelpPanel(comfort);
 // behind the moment they walk to the far side of the car.
 playerRig.add(helpPanel.group);
 
+// The controllers themselves. Constructed BEFORE the hints, which take it as a
+// dependency: the moment a controller glTF loads, every callout ring stops using
+// its eyeballed offset and moves onto the button node it names.
+const controllerModels = new ControllerModels({
+  renderer,
+  playerRig,
+  enabled: CONTROLLERS_ENABLED,
+  onProblem: (message) => reportError(message),
+});
+
 // Per-button callouts pinned to the controllers themselves. Complements the
 // panel: the panel is the reference list, these are the in-place labels.
 // Attaches its own grip spaces to the rig.
-const hints = new ControllerHints(renderer, playerRig, comfort);
+const hints = new ControllerHints(renderer, playerRig, comfort, controllerModels);
 vrInput.onUse((hand, control) => hints.markUsed(hand, control));
 
 // Teleport arc lives in world space (scene, not the rig) - it is aiming at a
@@ -635,6 +713,7 @@ const sparkXr = new SparkXr({
     recentre();
     vrInput.setVisible(true);
     handInput.setVisible(true);
+    controllerModels.setVisible(true);
     // Start measuring head travel from zero for this session - it is the number
     // that decides whether the reported "the headset does not move" is the
     // runtime or this app. See tracking.ts.
@@ -674,8 +753,25 @@ const sparkXr = new SparkXr({
     // finds here.
     camera.position.set(0, 1.6, 6);
     camera.quaternion.identity();
+    // ...and the PROJECTION, which the pose restore above missed. three's
+    // updateUserCamera overwrites fov, zoom, projectionMatrix and
+    // projectionMatrixInverse with the headset's asymmetric ~100-degree eye
+    // frustum on every presented frame, and never puts them back. So the desktop
+    // view came back through the headset's lens until some later resize happened
+    // to fix it - and worse, the desktop marker-picking path unprojects through
+    // projectionMatrixInverse, so clicking a hazard marker after a session aimed
+    // down the wrong ray. That click path is the only way hazard placement gets
+    // reviewed at all.
+    camera.fov = 60;
+    camera.zoom = 1;
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    // The panel tick accumulates across the session; leaving it part-full means
+    // the first tick of the next one fires early.
+    surfacesAt = 0;
     vrInput.setVisible(false);
     handInput.setVisible(false);
+    controllerModels.setVisible(false);
     helpPanel.hide();
     hints.hide();
     teleport.reset();
@@ -689,6 +785,12 @@ const sparkXr = new SparkXr({
   onReady: (supported: boolean) => {
     if (!supported) {
       setStatus("WebXR not available in this browser - desktop view only.");
+      // ...but do not bury the preflight warning under it. This fires
+      // asynchronously off navigator.xr.isSessionSupported, so it lands after
+      // the startup warning and would otherwise be the last word. reportError
+      // re-asserts the preflight if there is one and leaves the line above
+      // alone if there is not.
+      reportError(null);
     }
   },
 });
@@ -770,10 +872,8 @@ hotspots.setEnabled(hazardsVisible());
 // stripped, which in the headset presents as "walking does nothing" and looks
 // for all the world like a bug in this app. Reported on both surfaces, because
 // #status is hidden for the whole XR session.
-{
-  const warning = Tracking.preflightWarning();
-  if (warning) reportError(warning);
-}
+preflight = Tracking.preflightWarning();
+if (preflight) reportError(null);
 
 // --- dev calibration panel ------------------------------------------------
 const SLIDER_IDS = ["rotX", "rotY", "rotZ", "scaleMul", "yOff"] as const;
@@ -1055,11 +1155,43 @@ if (DEV) {
      * The probe is built here, where the panel's real pose and size are known,
      * so the check does not have to re-derive them.
      */
+    /**
+     * Light types in the scene. The controller glTFs are the only lit materials
+     * here, so these two lights look unused from every other angle - and the
+     * failure mode if someone tidies them away is not an error, it is a
+     * controller that renders pure BLACK in the headset. Paired with the probe's
+     * material list below, this is what makes that removable-looking code
+     * un-removable.
+     */
+    lights: () => {
+      const out: string[] = [];
+      scene.traverse((o) => {
+        if ((o as { isLight?: boolean }).isLight) out.push(o.type);
+      });
+      return out;
+    },
+
     panelHitUV(u: number, v: number) {
       return probeSurface(helpPanel.surface, u, v, (probe) =>
         helpPanel.hitTest(probe),
       );
     },
+
+    /**
+     * The controller models, as far as they can be seen without a headset.
+     *
+     * Nothing headless will ever produce an `inputsourceschange`, so the runtime
+     * path cannot be driven here. What CAN rot silently is everything upstream
+     * of it: the vendored asset path 404ing, an asset update renaming the button
+     * nodes the callouts anchor to, or the world->grip-local conversion picking
+     * up the wrong frame. Those are what this exposes, through the same
+     * constants and the same measureAnchors() the runtime uses.
+     */
+    controllers: async (hand: "left" | "right" = "right") => ({
+      ...(await probeControllerAssets(hand)),
+      authored: authoredAnchors(hand),
+      enabled: CONTROLLERS_ENABLED,
+    }),
   };
 
   const onSlide = () => {
@@ -1084,7 +1216,12 @@ if (DEV) {
   });
 
   el("resetBtn").addEventListener("click", () => {
-    overrides = { rotation: [0, 0, 0], scaleMultiplier: 1, yOffset: 0 };
+    overrides = {
+      rotation: [0, 0, 0],
+      scaleMultiplier: 1,
+      yOffset: 0,
+      centerOffset: [...currentConfig.centerOffset] as [number, number],
+    };
     syncSlidersFromOverrides();
     if (currentSplat) fitToGround(currentSplat);
   });
@@ -1108,11 +1245,11 @@ if (DEV) {
     // Nudging the vehicle centre, not the marker: if every marker is off by the
     // same amount in the same direction, it is centerOffset that is wrong and
     // moving them one at a time would bake the error into all nine.
-    currentConfig.centerOffset = [
+    overrides.centerOffset = [
       Number(el<HTMLInputElement>("hsCx").value),
       Number(el<HTMLInputElement>("hsCz").value),
     ];
-    hotspots.place(currentConfig.vehicleYaw, currentConfig.centerOffset);
+    hotspots.place(currentConfig.vehicleYaw, overrides.centerOffset);
     writeHotspotOutput();
   });
 }
@@ -1126,10 +1263,15 @@ function onHotspotSlide() {
     Number(el<HTMLInputElement>("hsZ").value),
   ];
   hotspots.setPosition(id, pos);
-  el("hsXv").textContent = `${pos[0].toFixed(2)} m`;
-  el("hsYv").textContent = `${pos[1].toFixed(2)} m`;
-  el("hsZv").textContent = `${pos[2].toFixed(2)} m`;
+  refreshHotspotLabels();
   writeHotspotOutput();
+}
+
+/** Readouts only - never writes back to the hotspot. See syncHotspotPane. */
+function refreshHotspotLabels() {
+  el("hsXv").textContent = `${Number(el<HTMLInputElement>("hsX").value).toFixed(2)} m`;
+  el("hsYv").textContent = `${Number(el<HTMLInputElement>("hsY").value).toFixed(2)} m`;
+  el("hsZv").textContent = `${Number(el<HTMLInputElement>("hsZ").value).toFixed(2)} m`;
 }
 
 /** Repopulate the pane after a model swap changes which hazard set is loaded. */
@@ -1150,9 +1292,15 @@ function syncHotspotPane() {
     el<HTMLInputElement>("hsY").value = String(h.pos[1]);
     el<HTMLInputElement>("hsZ").value = String(h.pos[2]);
   }
-  el<HTMLInputElement>("hsCx").value = String(currentConfig.centerOffset[0]);
-  el<HTMLInputElement>("hsCz").value = String(currentConfig.centerOffset[1]);
-  onHotspotSlide();
+  el<HTMLInputElement>("hsCx").value = String(overrides.centerOffset[0]);
+  el<HTMLInputElement>("hsCz").value = String(overrides.centerOffset[1]);
+  // Refresh the readouts WITHOUT going through onHotspotSlide. That reads the
+  // sliders back and writes them into the hotspot via setPosition, so a seeded
+  // position outside a slider's range was silently clamped and permanently
+  // rewritten before anyone touched a control - a data-loss bug with no visible
+  // symptom. Repopulating the pane is a read.
+  refreshHotspotLabels();
+  writeHotspotOutput();
 }
 
 /**
@@ -1178,7 +1326,7 @@ function writeHotspotOutput() {
   el<HTMLTextAreaElement>("hsOut").value =
     `// ${currentConfig.vehicle} - paste positions into HOTSPOTS in hotspots-data.ts\n` +
     `${rows.join("\n")}\n` +
-    `// models.ts ${currentConfig.key}: centerOffset: [${currentConfig.centerOffset[0]}, ${currentConfig.centerOffset[1]}]`;
+    `// models.ts ${currentConfig.key}: centerOffset: [${overrides.centerOffset[0]}, ${overrides.centerOffset[1]}]`;
 }
 
 // --- loop -----------------------------------------------------------------
@@ -1202,7 +1350,10 @@ const SURFACE_INTERVAL = 0.25;
 function updateVrSurfaces(dt: number) {
   surfacesAt += dt;
   if (surfacesAt < SURFACE_INTERVAL) return;
-  surfacesAt = 0;
+  // Subtract rather than zero: zeroing discards the overshoot, so the tick drifts
+  // late by up to a frame every time it fires. Guarded against a long stall
+  // (headset put down) turning into a burst of catch-up repaints.
+  surfacesAt = Math.min(surfacesAt - SURFACE_INTERVAL, SURFACE_INTERVAL);
 
   helpPanel.setMode(vrInput.inputMode);
 
@@ -1237,6 +1388,12 @@ renderer.setAnimationLoop((time: number) => {
   lastFrame = time;
 
   if (renderer.xr.isPresenting) {
+    // FIRST, before anything reads the head. renderer.xr.cameraAutoUpdate is off
+    // (see the renderer setup), so this is the one place the user camera is
+    // synced from this frame's viewer pose - which WebXRManager has already
+    // computed by the time this callback runs. Everything below billboards,
+    // pivots or measures against the head, and all of it used to be a frame late.
+    renderer.xr.updateCamera(camera);
     // Movement only: Spark's rotate path is disabled in vr-input's config
     // because snap turn is discrete. Moves camera.parent (playerRig).
     sparkXr.updateControllers(camera);
@@ -1245,6 +1402,10 @@ renderer.setAnimationLoop((time: number) => {
     // After vrInput, so a hint retired this frame fades from this frame, and so
     // the blink advances on the same frame the commit was emitted.
     hints.update(dt, camera);
+    // After the hints are constructed but order-independent of them: this is
+    // what detects a freshly-loaded glTF and hands the hints their measured
+    // button anchors.
+    controllerModels.update(dt);
     handInput.update(dt, camera);
     // A hand's arc has to be re-traced every frame from the live wrist pose -
     // unlike the stick gesture, which vrInput re-emits, a held pinch produces no
@@ -1270,8 +1431,17 @@ renderer.setAnimationLoop((time: number) => {
 });
 
 window.addEventListener("resize", () => {
+  // XR owns both the projection and the framebuffer while presenting. setSize
+  // already refuses (with a console warning that would fail vr_check's
+  // no-errors assertion), but camera.aspect/updateProjectionMatrix were
+  // unguarded and stomped the per-eye frustum three had just installed. Quest
+  // does fire viewport events during a session.
+  if (renderer.xr.isPresenting) return;
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
+  // Re-applied, not just set once at startup: dragging the window to a monitor
+  // with a different DPI otherwise leaves the renderer on the old ratio.
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 

@@ -26,8 +26,14 @@
  * X. Grip space is +Y out of the top face (thumbstick side), -Z along the
  * handle's forward axis, +X to the right - confirmed against the gripOffsetMatrix
  * in the WebXR device profile for oculus-touch-v3, which places the target ray
- * 45 deg below grip -Z. They are eyeballed to the hardware, not measured off a
- * model, so if a ring sits visibly off its button on device, tune LAYOUT.
+ * 45 deg below grip -Z.
+ *
+ * They were eyeballed to the hardware, because until controller-models.ts there
+ * was no model in the scene to measure against - and no way to SEE that a ring
+ * had drifted off its button, since the button was not drawn either. They are
+ * now the FALLBACK only: once a controller glTF loads, `reanchor()` moves each
+ * ring onto the real named node (`spec.node`) and the numbers below are used
+ * solely for the placeholder proxy and for headsets with no profile.
  */
 import {
   BufferGeometry,
@@ -48,6 +54,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
+import type { ControllerModels } from "./controller-models";
 import { C as PALETTE } from "./help-panel";
 import type { ComfortSettings, Handedness, VrControl } from "./vr-input";
 
@@ -64,7 +71,13 @@ const FADE_OUT = 3;
 
 type HintSpec = {
   control: VrControl;
-  /** Button centre, grip-local metres (right hand; X mirrored for left). */
+  /**
+   * The glTF node this ring belongs on, per hand. When a controller model is
+   * loaded the ring is MEASURED onto this node and `anchor` below is discarded;
+   * the names differ per hand only for the face buttons (A/B vs X/Y).
+   */
+  node: Record<Handedness, string>;
+  /** Fallback button centre, grip-local metres (right hand; X mirrored for left). */
   anchor: [number, number, number];
   /** X-rotation that lays the ring flat on the face this button lives on. */
   ringPitch: number;
@@ -72,11 +85,15 @@ type HintSpec = {
   card: [number, number, number];
 };
 
+/** RingGeometry lies in the XY plane, so its face normal is +Z. */
+const RING_FACE = new Vector3(0, 0, 1);
+
 const LAYOUT: HintSpec[] = [
   // Index trigger: on the front underside, so its ring faces forward-and-down
   // and the pill hangs off the nose of the controller.
   {
     control: "trigger",
+    node: { right: "trigger", left: "trigger" },
     anchor: [0, -0.012, -0.052],
     ringPitch: (Math.PI * 3) / 4,
     card: [0.115, 0.012, -0.118],
@@ -84,20 +101,42 @@ const LAYOUT: HintSpec[] = [
   // Thumbstick and the face buttons share the top face, normal +Y.
   {
     control: "stick",
+    node: { right: "thumbstick", left: "thumbstick" },
     anchor: [0, 0.026, -0.03],
     ringPitch: -Math.PI / 2,
     card: [0.152, 0.082, -0.04],
   },
   {
     control: "secondary",
+    node: { right: "b_button", left: "y_button" },
     anchor: [0.009, 0.023, 0.018],
     ringPitch: -Math.PI / 2,
     card: [0.115, 0.058, 0.072],
   },
 ];
 
+/**
+ * The authored fallback anchors, keyed by the glTF node each one stands in for.
+ *
+ * Exported for the headless check, which compares them against the positions
+ * measured off the real asset. They are guesses (see ANCHOR GEOMETRY above), so
+ * the assertion is "the same button, roughly" rather than an equality - but a
+ * conversion that has gone through the wrong frame lands metres away, not
+ * centimetres, and that is exactly what it has to catch.
+ */
+export function authoredAnchors(hand: Handedness): Record<string, [number, number, number]> {
+  const side = hand === "left" ? -1 : 1;
+  const out: Record<string, [number, number, number]> = {};
+  for (const spec of LAYOUT) {
+    out[spec.node[hand]] = [spec.anchor[0] * side, spec.anchor[1], spec.anchor[2]];
+  }
+  return out;
+}
+
 type HintItem = {
   control: VrControl;
+  /** glTF node name for this hand, used to re-anchor once a model loads. */
+  node: string;
   card: Mesh;
   ring: Mesh;
   line: Line;
@@ -128,9 +167,14 @@ export class ControllerHints {
     renderer: WebGLRenderer,
     playerRig: Group,
     private settings: ComfortSettings,
+    models?: ControllerModels,
   ) {
     this.rigs = { left: this.buildRig("left"), right: this.buildRig("right") };
     this.refreshLabels();
+
+    // The whole point of drawing the controller: once its glTF is up, every ring
+    // moves from an eyeballed offset onto the button node it names.
+    models?.onReady((hand) => this.reanchor(hand, models));
 
     // Grip spaces must hang off the player rig, like the ray spaces do, or the
     // hints would be left standing where the user started once they walk away.
@@ -182,7 +226,7 @@ export class ControllerHints {
       cardMesh.position.copy(card);
 
       const ringMesh = new Mesh(
-        new RingGeometry(0.0075, 0.0105, 24),
+        new RingGeometry(0.009, 0.0125, 24),
         new MeshBasicMaterial({
           color: PALETTE.accent,
           transparent: true,
@@ -221,6 +265,7 @@ export class ControllerHints {
 
       return {
         control: spec.control,
+        node: spec.node[hand],
         card: cardMesh,
         ring: ringMesh,
         line,
@@ -311,6 +356,40 @@ export class ControllerHints {
     ctx.fillText(item.label, 76, CARD_H / 2 + 2);
 
     item.tex.needsUpdate = true;
+  }
+
+  /**
+   * Move this hand's rings onto the measured buttons.
+   *
+   * Position always; ORIENTATION too when the asset can supply a normal. The
+   * authored `ringPitch` of -PI/2 lays the stick and face-button rings flat
+   * against grip +Y - straight up - but the measured normal says that face is
+   * tilted about 37 degrees forward, so the rings were sitting visibly proud of
+   * the buttons they circle. The trigger and squeeze are hinged, ship identical
+   * press extents and therefore no normal, and keep their authored pitch.
+   *
+   * The pill does NOT move. It is placed for READABILITY - clear of the hand,
+   * non-overlapping, angled off the controller's nose - and where a button is
+   * says nothing about where its label belongs. Only the leader line's tail
+   * follows the ring.
+   *
+   * Silent no-op for any node the asset does not carry, which is what keeps a
+   * partially-matching profile from wiping a good fallback.
+   */
+  private reanchor(hand: Handedness, models: ControllerModels) {
+    for (const item of this.rigs[hand].items) {
+      const anchor = models.buttonAnchor(hand, item.node);
+      if (!anchor) continue;
+      const { position, normal } = anchor;
+      item.ring.position.copy(position);
+      if (normal) {
+        // The ring's geometry lies in XY with its face along +Z.
+        item.ring.quaternion.setFromUnitVectors(RING_FACE, normal);
+      }
+      const pos = item.line.geometry.getAttribute("position");
+      pos.setXYZ(0, position.x, position.y, position.z);
+      pos.needsUpdate = true;
+    }
   }
 
   // --- attachment ---------------------------------------------------------

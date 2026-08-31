@@ -168,7 +168,16 @@ export function flushComfort() {
   pendingSave = undefined;
 }
 
-if (typeof window !== "undefined") {
+/**
+ * Wire the debounced comfort write to the page going away. Call once, from
+ * main.ts.
+ *
+ * Explicit rather than a module-level side effect on import: importing a type or
+ * a constant from this file used to silently register two window listeners, which
+ * is the kind of thing that makes a module impossible to test in isolation and
+ * impossible to reason about from its import site.
+ */
+export function installComfortFlush() {
   window.addEventListener("pagehide", flushComfort);
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") flushComfort();
@@ -260,6 +269,16 @@ export class VrInput {
   private vignetteOpacity = 0;
 
   private prevButtons = new Map<string, boolean>();
+
+  /**
+   * Scratch. getMove/getRotate are called once per frame by Spark and turnBy
+   * runs every frame of a smooth turn; all three used to allocate.
+   */
+  private _move = new Vector3();
+  private _rotate = new Vector3();
+  private _turnQuat = new Quaternion();
+  private _up = new Vector3();
+  private _pivot = new Vector3();
   private listeners: ((e: VrButtonEvent) => void)[] = [];
   private useListeners: ((hand: Handedness, control: VrControl) => void)[] = [];
   private teleListeners: ((e: TeleportEvent) => void)[] = [];
@@ -509,13 +528,20 @@ export class VrInput {
       getMove: (g: XrGamepads) => {
         // In teleport mode the same stick aims the arc, so Spark must not also
         // slide the rig - otherwise a teleport push walks you forward first.
-        if (this.settings.movementStyle === "teleport") return new Vector3();
+        // effectiveMovementStyle, not the stored preference: with tracked hands
+        // there is no stick to walk with whatever the user chose.
+        //
+        // Spark mutates whatever this returns (applyQuaternion, multiplyScalar)
+        // and calls it exactly once a frame, and every path below rewrites all
+        // three components, so a scratch vector is safe and saves an allocation
+        // per frame in each of these two callbacks.
+        if (this.effectiveMovementStyle === "teleport") return this._move.set(0, 0, 0);
         const pad = this.moveHand(g);
-        if (!pad || this.moveIsHand(g)) return new Vector3();
-        return new Vector3(dz(pad.axes[AX.x] ?? 0), 0, dz(pad.axes[AX.y] ?? 0));
+        if (!pad || this.moveIsHand(g)) return this._move.set(0, 0, 0);
+        return this._move.set(dz(pad.axes[AX.x] ?? 0), 0, dz(pad.axes[AX.y] ?? 0));
       },
       // Handled in update(); returning zero keeps Spark from also turning us.
-      getRotate: () => new Vector3(),
+      getRotate: () => this._rotate.set(0, 0, 0),
       getFast: () => false,
       getSlow: () => false,
     };
@@ -546,8 +572,8 @@ export class VrInput {
   /** Rotate the rig about the user's actual head, not the rig origin - turning
    * around a point you are not standing on feels like being swung on a rope. */
   private turnBy(radians: number) {
-    const quat = new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), radians);
-    const pivot = this.camera.getWorldPosition(new Vector3());
+    const quat = this._turnQuat.setFromAxisAngle(this._up.set(0, 1, 0), radians);
+    const pivot = this.camera.getWorldPosition(this._pivot);
     this.playerRig.parent?.worldToLocal(pivot);
     this.playerRig.position.sub(pivot).applyQuaternion(quat).add(pivot);
     this.playerRig.quaternion.premultiply(quat);
@@ -625,7 +651,7 @@ export class VrInput {
     // --- teleport aiming ---
     // Runs after turning so the arc drawn this frame reflects the orientation
     // the user is actually looking along.
-    if (this.settings.movementStyle === "teleport") {
+    if (this.effectiveMovementStyle === "teleport") {
       const pad = this.moveHand(g);
       const live = !!pad && !this.moveIsHand(g);
       const ax = live ? dz(pad.axes[AX.x] ?? 0) : 0;
@@ -680,7 +706,7 @@ export class VrInput {
     // when the user has chosen teleport precisely to avoid smooth motion.
     const movePad = this.moveHand(g);
     const walking =
-      this.settings.movementStyle === "walk" && movePad
+      this.effectiveMovementStyle === "walk" && movePad
         ? Math.hypot(dz(movePad.axes[AX.x] ?? 0), dz(movePad.axes[AX.y] ?? 0))
         : 0;
     const speed = Math.max(walking, smoothTurning ? Math.abs(tx) : 0, climbRate);

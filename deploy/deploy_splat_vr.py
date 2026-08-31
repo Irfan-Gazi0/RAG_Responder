@@ -63,6 +63,10 @@ EXT_CONTENT_TYPE = {
     ".woff2": "font/woff2",
     # Gaussian-splat payloads. mimetypes.guess_type does not know these on Linux
     # and would fall through to a bare octet-stream with no explicit intent.
+    # Controller models (webxr-input-profiles). mimetypes does not know .glb on
+    # Linux either, and a bare octet-stream works only because GLTFLoader sniffs
+    # the magic bytes - say what it is.
+    ".glb": "model/gltf-binary",
     ".spz": "application/octet-stream",
     ".ply": "application/octet-stream",
     ".splat": "application/octet-stream",
@@ -80,6 +84,12 @@ def cache_control_for(rel_path: str) -> str:
     # Re-converting a scan keeps the same filename, so that needs an explicit
     # invalidation (the --invalidate-only flag covers it).
     if rel_path.startswith("models/"):
+        return "public, max-age=31536000, immutable"
+    # Controller assets are version-pinned by scripts/fetch_controller_assets.sh
+    # and change only when that script is re-run, so re-fetching 450 KB of glTF
+    # on every page load would be pure waste. Same caveat as models/: filenames
+    # are stable, so a re-vendor needs an explicit --invalidate-only.
+    if rel_path.startswith("controllers/"):
         return "public, max-age=31536000, immutable"
     return "no-cache, must-revalidate"
 

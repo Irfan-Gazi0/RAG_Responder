@@ -209,9 +209,4 @@ export class Ground {
     this.mesh.visible = opacity > 0.01;
   }
 
-  dispose() {
-    this.texture.dispose();
-    this.material.dispose();
-    this.mesh.geometry.dispose();
-  }
 }

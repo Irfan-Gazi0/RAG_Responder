@@ -25,6 +25,7 @@
  */
 import {
   Group,
+  type Material,
   MathUtils,
   Object3D,
   PerspectiveCamera,
@@ -446,5 +447,6 @@ export class HotspotCard {
   dispose() {
     this.surface.tex.dispose();
     this.surface.mesh.geometry.dispose();
+    (this.surface.mesh.material as Material).dispose();
   }
 }

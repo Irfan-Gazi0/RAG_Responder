@@ -147,6 +147,8 @@ export class Hotspots {
 
   private _ray = new Ray();
   private _v = new Vector3();
+  private _v2 = new Vector3();
+  private _dir = new Vector3();
   private _q = new Quaternion();
   private time = 0;
 
@@ -258,7 +260,9 @@ export class Hotspots {
       m.mesh.quaternion.copy(this._q);
 
       // Facing test in world space: is the viewer on the outward side?
-      const toViewer = camPos.clone().sub(m.world);
+      // Scratch, not clone(): this runs per marker per frame and a dozen markers
+      // at 90 Hz was over a thousand throwaway Vector3 a second.
+      const toViewer = this._v2.copy(camPos).sub(m.world);
       const dist = toViewer.length();
       if (dist > 1e-5) toViewer.divideScalar(dist);
       const facing = toViewer.dot(m.normal);
@@ -292,9 +296,11 @@ export class Hotspots {
 
   private markerAt(controller: Object3D): Marker | null {
     if (!this.enabled || !this.markers.length) return null;
-    const origin = controller.getWorldPosition(new Vector3());
-    const dir = new Vector3(0, 0, -1)
-      .applyQuaternion(controller.getWorldQuaternion(new Quaternion()))
+    // Scratch throughout - setHover calls this for both controllers every frame.
+    const origin = controller.getWorldPosition(this._v2);
+    const dir = this._dir
+      .set(0, 0, -1)
+      .applyQuaternion(controller.getWorldQuaternion(this._q))
       .normalize();
     this._ray.set(origin, dir);
 
@@ -371,9 +377,4 @@ export class Hotspots {
     this.hovered = null;
   }
 
-  dispose() {
-    this.clear();
-    for (const t of this.textures.values()) t.dispose();
-    this.textures.clear();
-  }
 }

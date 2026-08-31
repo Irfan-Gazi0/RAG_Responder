@@ -505,7 +505,15 @@ check("input mode reports honestly with nothing connected", mode.mode === "none"
   });
   overridePage.on("pageerror", (e) => consoleErrors.push(`pageerror: ${e.message}`));
   await overridePage.goto(`${url}&hazards=0`, { waitUntil: "load", timeout: 90000 });
-  await overridePage.waitForFunction(() => !!window.__vr, null, { timeout: 30000 });
+  await overridePage.waitForFunction(() => !!window.__vr, null, { timeout: 60000 });
+  // Let the scan finish decoding before evaluating. Under the dev server a
+  // late dep-optimizer reload navigates the page out from under an in-flight
+  // evaluate() ("Execution context was destroyed"); #status settling is the
+  // signal that nothing further is loading.
+  await overridePage
+    .waitForFunction(() => /ready|Error/i.test(document.getElementById("status")?.textContent ?? ""),
+      null, { timeout: 60000 })
+    .catch(() => {});
 
   const hz = await overridePage.evaluate(async () => {
     const onLoad = window.__vr.hazards();
@@ -532,7 +540,166 @@ check("input mode reports honestly with nothing connected", mode.mode === "none"
     hz.after.visible === false, `visible=${hz.after.visible}`);
 }
 
-// --- 11. Nothing went wrong on the way -------------------------------------
+// --- 11. The controller models -------------------------------------------
+// Nothing headless will ever fire an inputsourceschange, so the runtime path
+// (grip -> XRControllerModelFactory -> glTF) cannot be driven from here. What
+// CAN rot without anyone noticing until they are in a headset is everything
+// upstream of it, and that is what this covers:
+//
+//   - the vendored asset path 404ing after a deploy or a Vite publicDir change,
+//   - an asset refresh renaming the button nodes the callouts anchor to,
+//   - measureAnchors reading the wrong thing off those nodes.
+//
+// The probe uses the runtime's own LOCAL_PATH, BUTTON_NODES and measureAnchors,
+// against a synthetic grip parked at a deliberately non-identity pose - a grip
+// at the origin would let a world-vs-local frame mix-up pass.
+{
+  const c = await page.evaluate(() => window.__vr.controllers("right"));
+  const cl = await page.evaluate(() => window.__vr.controllers("left"));
+  const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+
+  check("the vendored controller profile loads from our own origin",
+    c.error === null && c.profileId === "meta-quest-touch-plus",
+    c.error ?? `profileId=${c.profileId}, list=${JSON.stringify(c.profiles)}`);
+
+  check("the controller asset carries every button node the callouts anchor to",
+    c.error === null && c.missingNodes.length === 0,
+    `missing: ${c.missingNodes.join(", ") || "(none)"}`);
+
+  // THE ONE THAT MATTERS. Every button here is a mesh under an animation pivot
+  // placed so the child's transform cancels back to near the model origin, so
+  // reading the node's matrixWorld translation returns the SAME point for all
+  // of them - which stacks every callout ring in the middle of the controller
+  // while still landing a couple of centimetres from each eyeballed fallback.
+  // The drift assertion below passes that happily; only this one catches it.
+  {
+    const e = Object.entries(c.anchors);
+    let closest = { pair: "-", d: Infinity };
+    for (let i = 0; i < e.length; i++) {
+      for (let j = i + 1; j < e.length; j++) {
+        const d = dist(e[i][1], e[j][1]);
+        if (d < closest.d) closest = { pair: `${e[i][0]}/${e[j][0]}`, d };
+      }
+    }
+    check("each button measures to its own place on the controller",
+      e.length >= 4 && closest.d > 0.012,
+      `closest pair ${closest.pair} only ${(closest.d * 1000).toFixed(1)} mm apart`);
+  }
+
+  // The authored numbers are eyeballed, so this is "the same button, roughly".
+  // A conversion through the wrong frame is off by the grip's own translation -
+  // metres - which this catches with room to spare.
+  {
+    const drift = Object.entries(c.authored).map(([node, a]) => ({
+      node, d: c.anchors[node] ? dist(c.anchors[node], a) : Infinity,
+    }));
+    const worst = drift.reduce((w, x) => (x.d > w.d ? x : w), { node: "-", d: 0 });
+    check("measured anchors land on the buttons the fallback was aiming at",
+      c.error === null && worst.d < 0.06,
+      `worst: ${worst.node} off by ${worst.d.toFixed(3)} m`);
+  }
+
+  // The rings are oriented from the press extents: min-minus-max is the travel
+  // of the cap, so its negation is the surface normal. The thumbstick and the
+  // face buttons share one physical face, so their normals must agree - and
+  // that face is tilted ~37 degrees forward of grip +Y, which is the correction
+  // the hand-authored -PI/2 could not have known about.
+  {
+    const t = c.normals["thumbstick"];
+    const b = c.normals["b_button"];
+    const dot = t && b ? t[0] * b[0] + t[1] * b[1] + t[2] * b[2] : 0;
+    check("buttons on the same face agree on which way that face points",
+      dot > 0.99, t && b ? `dot=${dot.toFixed(4)}` : "no normal derived");
+    check("the top face is tilted forward of grip +Y, not straight up",
+      !!b && b[1] > 0.5 && b[1] < 0.95 && b[2] < -0.2,
+      b ? `normal=[${b.map((v) => v.toFixed(3)).join(", ")}]` : "none");
+  }
+
+  // Touch controllers are mirror images. A handedness slip in BUTTON_NODES or in
+  // the left/right asset choice shows up here and nowhere else headless.
+  {
+    const t = c.anchors["thumbstick"], tl = cl.anchors["thumbstick"];
+    check("the left controller mirrors the right",
+      !!t && !!tl && dist([-t[0], t[1], t[2]], tl) < 0.005,
+      t && tl ? `right=[${t.map((v) => v.toFixed(3))}] left=[${tl.map((v) => v.toFixed(3))}]` : "missing");
+  }
+
+  // The controller glTF is the only lit material in this whole scene, so the two
+  // lights main.ts adds for it look unused from every other angle. Tidy them
+  // away and nothing errors - the controllers simply render PURE BLACK in the
+  // headset, which is precisely the trap hand-input.ts sidestepped by
+  // hand-rolling its joint spheres out of MeshBasicMaterial. This is what makes
+  // that removable-looking code un-removable.
+  {
+    const lights = await page.evaluate(() => window.__vr.lights());
+    const lit = c.materials.filter((m) => m !== "MeshBasicMaterial");
+    check("the controller's lit materials have lights to be lit by",
+      lit.length > 0 && lights.length > 0,
+      `materials=${JSON.stringify(c.materials)} lights=${JSON.stringify(lights)}`);
+  }
+
+  check("the placeholder shown before the glTF lands is not empty",
+    c.proxyMeshes > 0, `${c.proxyMeshes} meshes`);
+}
+
+// --- 12. The preflight warning outlives the model load ---------------------
+// The tracking preflight - "this page is inside a frame, VR will be
+// orientation-only" - is the answer to the question this project keeps having to
+// re-ask in a headset, and it used to erase itself within a second of being
+// raised. loadModel's `setStatus("Loading ...")` cleared the DOM copy on the very
+// tick it was written, and its onLoad `reportError(null)` cleared the in-VR copy
+// once the scan decoded. Both surfaces were reliably blank by the time anyone
+// could look at them.
+//
+// Framed on purpose: an iframe with no `allow` entry is the condition that fires
+// the warning, and it is the same condition Streamlit's components.iframe()
+// creates - the reason splat-vr is linked rather than embedded.
+{
+  const framed = await browser.newPage({
+    viewport: { width: 900, height: 620 },
+    ignoreHTTPSErrors: true,
+  });
+  // Navigate first so setContent inherits the viewer's own origin; the frame has
+  // to be same-origin for the check to read #status out of it.
+  await framed.goto(url, { waitUntil: "load", timeout: 90000 });
+  // The permission has to be denied EXPLICITLY. A same-origin iframe inherits
+  // the default `self` allowlist and genuinely does have xr-spatial-tracking, so
+  // preflightWarning correctly stays quiet for it - that restraint is itself a
+  // deliberate fix (see tracking.ts). `allow="xr-spatial-tracking 'none'"`
+  // reproduces the cross-origin Streamlit case instead.
+  // domcontentloaded, not load: "load" waits on the whole 3.6 MB scan decoding
+  // inside the frame, under software rendering, alongside the page this check is
+  // already driving. The explicit waits below are the real gate.
+  await framed.setContent(
+    `<style>html,body,iframe{margin:0;border:0;width:100%;height:100%}</style>
+     <iframe src="${url}" allow="xr-spatial-tracking 'none'"></iframe>`,
+    { waitUntil: "domcontentloaded", timeout: 90000 },
+  );
+  const handle = await framed.waitForSelector("iframe", { timeout: 30000 });
+  const inner = await handle.contentFrame();
+  let status = "(no frame)";
+  if (inner) {
+    // Wait for the scan to finish, which is the point the clear used to happen.
+    await inner
+      .waitForFunction(
+        () => /ready|Error/i.test(document.getElementById("status")?.textContent ?? ""),
+        null,
+        { timeout: 120000 },
+      )
+      .catch(() => {});
+    status = await inner.evaluate(() => {
+      const el = document.getElementById("status");
+      return `${el?.className ?? ""}|${el?.textContent ?? ""}`;
+    });
+  }
+  await framed.close();
+
+  check("a framed page still says so after the scan has loaded",
+    /inside a frame|xr-spatial-tracking/i.test(status) && /error/.test(status),
+    status.slice(0, 160));
+}
+
+// --- 13. Nothing went wrong on the way -------------------------------------
 check("no console or network errors", consoleErrors.length === 0,
   [...new Set(consoleErrors)].slice(0, 4).join(" | "));
 
