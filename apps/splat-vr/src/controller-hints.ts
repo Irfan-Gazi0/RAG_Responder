@@ -1,156 +1,174 @@
 /**
- * Controller-attached instruction callouts - the YouTube-VR pattern.
+ * The on-controller legend: one panel per hand, and the buttons themselves lit.
  *
  * The world-locked CONTROLS panel (help-panel.ts) answers "what are the
- * bindings", but it does so as a list you have to read and then map onto a
- * device you cannot see. This answers the more immediate question - "what does
- * THIS button do" - by hanging a labelled pill in the air next to each control,
- * with a leader line down to a ring drawn around the button itself. The labels
- * ride the controller, so the answer is wherever your hand is.
+ * bindings", but it does so as a list you have to read and then map onto a device
+ * you cannot see. This answers the more immediate question - "what does THIS
+ * button do" - by lighting the three buttons that do something and naming them on
+ * a small legend that rides above the controller.
  *
- * Three design points worth keeping:
+ * WHAT THIS REPLACED, AND WHY
+ * ---------------------------
+ * It used to be three labelled pills per hand, each with a leader line down to a
+ * ring around its button. Two things were wrong with that:
  *
+ *   - THE RINGS WERE PROXIES FOR THE BUTTONS. Positioning, orienting and sizing a
+ *     ring so it sits convincingly on a button is work that can only be checked in
+ *     a headset, and it was all in service of pointing at something the model
+ *     already draws exactly. controller-models.ts now lights the button mesh
+ *     itself, which is correct by construction on any profile and cannot drift.
+ *
+ *   - THE PILLS OVERLAPPED EACH OTHER. They were 0.115 m wide with centres 0.111,
+ *     0.120 and 0.196 m apart, they billboarded INDEPENDENTLY, and they shared
+ *     renderOrder 950 with depthTest off. Sighting down the controller's own axis
+ *     - which is what you do every time you point at something and then glance at
+ *     your hand - projected the trigger and B/Y pills straight on top of one
+ *     another. One panel cannot overlap itself.
+ *
+ * WHY THE TEXT IS SDF AND NOT A CANVAS
+ * ------------------------------------
+ * A 2D canvas at this size is not short of resolution - the old pills carried 512
+ * px across 0.115 m, which is roughly twice the device pixels a Quest 3 actually
+ * spends on them at fbscale 0.8. The problem is the other end: a ~2x MINIFICATION
+ * with mipmaps disabled (canvas-ui.ts turns them off on purpose, because a
+ * world-locked panel is read at glancing angles and mipmapped text there is mush)
+ * aliases every glyph edge, and reprojection makes it shimmer. Signed-distance-field
+ * glyphs are resolution-independent, so the question stops being "which
+ * compromise". The panel's background chrome is still a canvas - it carries no
+ * text, so it can be mipmapped freely, which is what the new `filter` argument to
+ * makeCanvasSurface is for.
+ *
+ * THREE THINGS DELIBERATELY KEPT FROM THE OLD MODULE
+ * --------------------------------------------------
  *   - Parented to the GRIP space, not the target-ray space. Grip tracks the
  *     physical device (three's own docs: "use this space for visualizing 3D
- *     objects ... in the user's hand"); the ray space is tilted ~45 deg below
- *     the handle and is where the pointer line belongs, not the hardware.
- *   - The pills billboard toward the head but keep world up, so rolling your
- *     wrist re-aims the text at you instead of turning it upside down.
- *   - They are self-retiring. Each pill fades the first time you use the
- *     control it describes, and whatever is left fades on a timer, so the
- *     scene does not stay permanently annotated. B/Y (which opens the full
- *     panel) brings them all back.
+ *     objects ... in the user's hand"); the ray space is tilted ~45 deg below the
+ *     handle and is where the pointer line belongs, not the hardware.
+ *   - Screen-ALIGNED, not look-at-the-eye. A panel that merely faces the head
+ *     position still gets sheared and visibly rolled by the projection once it
+ *     sits off-axis - which is exactly where this lives, down at hand height.
+ *     Matching the head's orientation keeps the text flat-on and level in both
+ *     eyes no matter where the hand is.
+ *   - Self-retiring. A row greys out the first time you use the control it
+ *     describes, the panel leaves once all three are used or the timer runs out,
+ *     and B/Y brings it back. The scene does not stay permanently annotated.
  *
- * ANCHOR GEOMETRY: the offsets below are the Touch Plus / Touch v3 button
- * positions in grip space, in metres, for the RIGHT hand; the left hand mirrors
- * X. Grip space is +Y out of the top face (thumbstick side), -Z along the
- * handle's forward axis, +X to the right - confirmed against the gripOffsetMatrix
- * in the WebXR device profile for oculus-touch-v3, which places the target ray
- * 45 deg below grip -Z.
- *
- * They were eyeballed to the hardware, because until controller-models.ts there
- * was no model in the scene to measure against - and no way to SEE that a ring
- * had drifted off its button, since the button was not drawn either. They are
- * now the FALLBACK only: once a controller glTF loads, `reanchor()` moves each
- * ring onto the real named node (`spec.node`) and the numbers below are used
- * solely for the placeholder proxy and for headsets with no profile.
+ * ACCESSIBILITY: the glow alone would be colour-only feedback, which ~8% of male
+ * users cannot rely on. Every row therefore NAMES its physical control in text,
+ * and the capacitive-touch highlight (resting a thumb on the stick lights its row)
+ * is a second, non-colour channel carrying the same mapping the leader lines used
+ * to.
  */
 import {
-  BufferGeometry,
-  CanvasTexture,
-  Float32BufferAttribute,
+  CircleGeometry,
   Group,
-  Line,
-  LineBasicMaterial,
-  LinearFilter,
-  DoubleSide,
   Mesh,
   MeshBasicMaterial,
   PerspectiveCamera,
   PlaneGeometry,
   Quaternion,
-  RingGeometry,
-  SRGBColorSpace,
-  Vector3,
   WebGLRenderer,
 } from "three";
+import { Text } from "troika-three-text";
+import { C, makeCanvasSurface, roundRect, type CanvasSurface } from "./canvas-ui";
 import type { ControllerModels } from "./controller-models";
-import { C as PALETTE } from "./help-panel";
 import type { ComfortSettings, Handedness, VrControl } from "./vr-input";
 
-const CARD_W = 512;
-const CARD_H = 128;
-/** Pill width in metres; height follows the canvas aspect (~2.9 cm tall). */
-const CARD_METRES = 0.115;
+/**
+ * Vendored, never the CDN. troika defaults to fetching Roboto from a public host
+ * and, like XRControllerModelFactory's jsdelivr default, fails by quietly
+ * rendering nothing - the precise failure class this project keeps losing days
+ * to. Bold only: thick strokes survive a low pixels-per-degree budget better than
+ * regular, and one weight halves what ships.
+ */
+const FONT = "./fonts/LiberationSans-Bold.ttf";
 
-/** Seconds the untouched hints stay up before retiring themselves. */
+/**
+ * Em size in metres. Liberation Sans caps are ~0.72 em, so this is a ~9.4 mm cap
+ * height - about 1.2 degrees of arc at the 0.45 m a controller is typically held
+ * at, comfortably over the 1.0 degree floor for VR text. (The pills it replaces
+ * were 0.95 degrees at the same distance, i.e. marginally under it.)
+ * vr_check.mjs asserts this from troika's own laid-out metrics rather than from
+ * this constant, so a font swap cannot quietly shrink it.
+ */
+const FONT_SIZE = 0.0125;
+
+/** Row pitch and inner padding, metres. */
+const ROW_PITCH = 0.0195;
+const PAD_X = 0.011;
+const PAD_Y = 0.010;
+/** Dot radius and the gap between it and the text. */
+const DOT_R = 0.0035;
+const DOT_GAP = 0.009;
+
+/** Default height above the grip. Overridable with ?hintpos= - only a headset
+ *  can settle whether this clears the hand without covering the car. */
+const DEFAULT_Y = 0.105;
+const OFFSET_Z = -0.02;
+
+/** Seconds the untouched legend stays up before retiring itself. */
 const SHOW_SECONDS = 22;
-/** Fade rate; asymmetric so they appear promptly and leave gently. */
+/** Fade rate; asymmetric so it appears promptly and leaves gently. */
 const FADE_IN = 7;
 const FADE_OUT = 3;
 
-type HintSpec = {
+/** Standing brightness for a button nobody is touching, versus one they are. */
+const GLOW_IDLE = 0.35;
+const GLOW_TOUCHED = 1;
+
+/** Chrome canvas. No glyphs on it, so it can be mipmapped without going mushy. */
+const BG_W = 320;
+
+type RowSpec = {
   control: VrControl;
-  /**
-   * The glTF node this ring belongs on, per hand. When a controller model is
-   * loaded the ring is MEASURED onto this node and `anchor` below is discarded;
-   * the names differ per hand only for the face buttons (A/B vs X/Y).
-   */
+  /** The glTF button node this row lights, per hand. */
   node: Record<Handedness, string>;
-  /** Fallback button centre, grip-local metres (right hand; X mirrored for left). */
-  anchor: [number, number, number];
-  /** X-rotation that lays the ring flat on the face this button lives on. */
-  ringPitch: number;
-  /** Pill centre, grip-local metres (right hand; X mirrored for left). */
-  card: [number, number, number];
+  /** What the row calls the control. Named in TEXT so the glow is never the
+   *  only channel carrying the mapping. */
+  key: Record<Handedness, string>;
 };
 
-/** RingGeometry lies in the XY plane, so its face normal is +Z. */
-const RING_FACE = new Vector3(0, 0, 1);
-
-const LAYOUT: HintSpec[] = [
-  // Index trigger: on the front underside, so its ring faces forward-and-down
-  // and the pill hangs off the nose of the controller.
+const ROWS: RowSpec[] = [
   {
     control: "trigger",
     node: { right: "trigger", left: "trigger" },
-    anchor: [0, -0.012, -0.052],
-    ringPitch: (Math.PI * 3) / 4,
-    card: [0.115, 0.012, -0.118],
+    key: { right: "Trigger", left: "Trigger" },
   },
-  // Thumbstick and the face buttons share the top face, normal +Y.
   {
     control: "stick",
     node: { right: "thumbstick", left: "thumbstick" },
-    anchor: [0, 0.026, -0.03],
-    ringPitch: -Math.PI / 2,
-    card: [0.152, 0.082, -0.04],
+    key: { right: "Stick", left: "Stick" },
   },
   {
     control: "secondary",
     node: { right: "b_button", left: "y_button" },
-    anchor: [0.009, 0.023, 0.018],
-    ringPitch: -Math.PI / 2,
-    card: [0.115, 0.058, 0.072],
+    key: { right: "B", left: "Y" },
   },
 ];
 
-/**
- * The authored fallback anchors, keyed by the glTF node each one stands in for.
- *
- * Exported for the headless check, which compares them against the positions
- * measured off the real asset. They are guesses (see ANCHOR GEOMETRY above), so
- * the assertion is "the same button, roughly" rather than an equality - but a
- * conversion that has gone through the wrong frame lands metres away, not
- * centimetres, and that is exactly what it has to catch.
- */
-export function authoredAnchors(hand: Handedness): Record<string, [number, number, number]> {
-  const side = hand === "left" ? -1 : 1;
-  const out: Record<string, [number, number, number]> = {};
-  for (const spec of LAYOUT) {
-    out[spec.node[hand]] = [spec.anchor[0] * side, spec.anchor[1], spec.anchor[2]];
-  }
-  return out;
-}
-
-type HintItem = {
+type Row = {
   control: VrControl;
-  /** glTF node name for this hand, used to re-anchor once a model loads. */
   node: string;
-  card: Mesh;
-  ring: Mesh;
-  line: Line;
-  ctx: CanvasRenderingContext2D;
-  tex: CanvasTexture;
+  text: Text;
+  dot: Mesh;
   label: string;
-  alpha: number;
-  target: number;
+  /** Retired because the user has now used this control. */
+  used: boolean;
+  touched: boolean;
 };
 
 type HandRig = {
   hand: Handedness;
   group: Group;
-  items: HintItem[];
+  bg: CanvasSurface;
+  rows: Row[];
+  /** Panel size in metres, recomputed from troika's laid-out text. */
+  w: number;
+  h: number;
+  /** Fade state, per hand: the two panels say different things, so one hand
+   *  finishing its three controls must not take the other's away. */
+  alpha: number;
+  target: number;
 };
 
 export class ControllerHints {
@@ -162,22 +180,23 @@ export class ControllerHints {
   private remaining = 0;
   private camQuat = new Quaternion();
   private parentInv = new Quaternion();
+  private offsetY: number;
+  private anisotropy: number;
 
   constructor(
     renderer: WebGLRenderer,
     playerRig: Group,
     private settings: ComfortSettings,
-    models?: ControllerModels,
+    private models?: ControllerModels,
+    offsetY = DEFAULT_Y,
   ) {
+    this.offsetY = offsetY;
+    this.anisotropy = renderer.capabilities.getMaxAnisotropy();
     this.rigs = { left: this.buildRig("left"), right: this.buildRig("right") };
     this.refreshLabels();
 
-    // The whole point of drawing the controller: once its glTF is up, every ring
-    // moves from an eyeballed offset onto the button node it names.
-    models?.onReady((hand) => this.reanchor(hand, models));
-
     // Grip spaces must hang off the player rig, like the ray spaces do, or the
-    // hints would be left standing where the user started once they walk away.
+    // legend would be left standing where the user started once they walk away.
     for (let i = 0; i < 2; i++) {
       const grip = renderer.xr.getControllerGrip(i);
       playerRig.add(grip);
@@ -185,7 +204,7 @@ export class ControllerHints {
 
       grip.addEventListener("connected", (event) => {
         const src = event.data;
-        // Hand tracking has a grip space too, but no buttons to point at.
+        // Hand tracking has a grip space too, but no buttons to name.
         if (!src || src.hand) return;
         if (src.handedness !== "left" && src.handedness !== "right") return;
         this.attach(i, src.handedness);
@@ -197,87 +216,64 @@ export class ControllerHints {
   // --- construction -------------------------------------------------------
 
   private buildRig(hand: Handedness): HandRig {
-    const side = hand === "left" ? -1 : 1;
     const group = new Group();
     group.visible = false;
 
-    const items = LAYOUT.map((spec) => {
-      const anchor = new Vector3(spec.anchor[0] * side, spec.anchor[1], spec.anchor[2]);
-      const card = new Vector3(spec.card[0] * side, spec.card[1], spec.card[2]);
+    // Sized properly in layout(), once troika has told us how wide the longest
+    // row actually is. Guessing it from a per-character advance is exactly the
+    // kind of font-metric assumption that breaks on a font swap.
+    const bg = makeCanvasSurface(BG_W, 128, 0.2, 946, {
+      mipmaps: true,
+      anisotropy: this.anisotropy,
+    });
+    (bg.mesh.material as MeshBasicMaterial).opacity = 0;
+    group.add(bg.mesh);
 
-      const canvas = document.createElement("canvas");
-      canvas.width = CARD_W;
-      canvas.height = CARD_H;
-      const tex = new CanvasTexture(canvas);
-      tex.colorSpace = SRGBColorSpace;
-      tex.minFilter = LinearFilter; // no mipmaps - these are read head-on
+    const rows = ROWS.map((spec) => {
+      const text = new Text();
+      text.font = FONT;
+      text.fontSize = FONT_SIZE;
+      text.anchorX = "left";
+      text.anchorY = "middle";
+      text.color = C.text;
+      text.fillOpacity = 0;
+      // Assigning a base material is troika's documented way to control depth
+      // and blending; it derives its SDF shader from whatever it is given. The
+      // scan is a dense point cloud and would otherwise chew holes in the text.
+      text.material = new MeshBasicMaterial({
+        transparent: true,
+        depthTest: false,
+        depthWrite: false,
+      });
+      text.renderOrder = 948;
+      group.add(text);
 
-      const cardMesh = new Mesh(
-        new PlaneGeometry(CARD_METRES, (CARD_METRES * CARD_H) / CARD_W),
+      const dot = new Mesh(
+        bgDotGeometry(),
         new MeshBasicMaterial({
-          map: tex,
+          color: C.accent,
           transparent: true,
-          // The scan is a dense point cloud; without this the labels would be
-          // chewed up by whatever splats happen to be behind your hand.
           depthTest: false,
+          depthWrite: false,
           opacity: 0,
         }),
       );
-      cardMesh.position.copy(card);
-
-      const ringMesh = new Mesh(
-        new RingGeometry(0.009, 0.0125, 24),
-        new MeshBasicMaterial({
-          color: PALETTE.accent,
-          transparent: true,
-          depthTest: false,
-          opacity: 0,
-          // The trigger ring faces away from the wearer by construction, so a
-          // front-sided material would cull it exactly when it is wanted.
-          side: DoubleSide,
-        }),
-      );
-      ringMesh.position.copy(anchor);
-      ringMesh.rotation.x = spec.ringPitch;
-
-      const line = new Line(
-        new BufferGeometry().setAttribute(
-          "position",
-          new Float32BufferAttribute(
-            [anchor.x, anchor.y, anchor.z, card.x, card.y, card.z],
-            3,
-          ),
-        ),
-        new LineBasicMaterial({
-          color: PALETTE.accent,
-          transparent: true,
-          depthTest: false,
-          opacity: 0,
-        }),
-      );
-
-      // The pill draws last and is opaque, so the leader line visually stops at
-      // its edge with no need to shorten the segment.
-      line.renderOrder = 948;
-      ringMesh.renderOrder = 949;
-      cardMesh.renderOrder = 950;
-      group.add(line, ringMesh, cardMesh);
+      dot.renderOrder = 947;
+      group.add(dot);
 
       return {
         control: spec.control,
         node: spec.node[hand],
-        card: cardMesh,
-        ring: ringMesh,
-        line,
-        ctx: canvas.getContext("2d")!,
-        tex,
+        text,
+        dot,
         label: "",
-        alpha: 0,
-        target: 0,
-      } satisfies HintItem;
+        used: false,
+        touched: false,
+      } satisfies Row;
     });
 
-    return { hand, group, items };
+    group.position.set(0, this.offsetY, OFFSET_Z);
+    return { hand, group, bg, rows, w: 0.2, h: 0.075, alpha: 0, target: 0 };
   }
 
   // --- labels -------------------------------------------------------------
@@ -290,9 +286,9 @@ export class ControllerHints {
   private labelFor(hand: Handedness, control: VrControl): string {
     switch (control) {
       case "stick":
-        // The turn stick now does two things on two axes, and the callout is
-        // the only place a user finds out about the second one - the panel is
-        // minimised by default after the first session.
+        // The turn stick does two things on two axes, and this is the only place
+        // a user finds out about the second one - the panel is minimised by
+        // default after the first session.
         if (hand === this.settings.dominantHand) {
           return this.settings.verticalMove ? "Turn / rise" : "Turn";
         }
@@ -309,87 +305,80 @@ export class ControllerHints {
   }
 
   private refreshLabels() {
+    let dirty = false;
     for (const rig of [this.rigs.left, this.rigs.right]) {
-      for (const item of rig.items) {
-        const label = this.labelFor(rig.hand, item.control);
-        if (label === item.label) continue;
-        item.label = label;
-        this.drawCard(item);
-      }
+      rig.rows.forEach((row, i) => {
+        const label = `${ROWS[i].key[rig.hand]}  ${this.labelFor(rig.hand, row.control)}`;
+        if (label === row.label) return;
+        row.label = label;
+        row.text.text = label;
+        dirty = true;
+      });
     }
-  }
-
-  private drawCard(item: HintItem) {
-    const ctx = item.ctx;
-    ctx.clearRect(0, 0, CARD_W, CARD_H);
-
-    const r = 30;
-    ctx.beginPath();
-    ctx.moveTo(4 + r, 4);
-    ctx.arcTo(CARD_W - 4, 4, CARD_W - 4, CARD_H - 4, r);
-    ctx.arcTo(CARD_W - 4, CARD_H - 4, 4, CARD_H - 4, r);
-    ctx.arcTo(4, CARD_H - 4, 4, 4, r);
-    ctx.arcTo(4, 4, CARD_W - 4, 4, r);
-    ctx.closePath();
-    ctx.fillStyle = PALETTE.panel;
-    ctx.fill();
-    ctx.strokeStyle = PALETTE.accent;
-    ctx.lineWidth = 4;
-    ctx.stroke();
-
-    // Accent dot, echoing the ring down at the button end of the leader line.
-    ctx.beginPath();
-    ctx.arc(46, CARD_H / 2, 11, 0, Math.PI * 2);
-    ctx.fillStyle = PALETTE.accent;
-    ctx.fill();
-
-    // Shrink to fit rather than clip: these strings are localisable-ish and a
-    // truncated instruction is worse than a slightly smaller one.
-    let size = 46;
-    ctx.font = `600 ${size}px sans-serif`;
-    while (ctx.measureText(item.label).width > CARD_W - 110 && size > 26) {
-      size -= 2;
-      ctx.font = `600 ${size}px sans-serif`;
+    if (dirty) {
+      for (const rig of [this.rigs.left, this.rigs.right]) this.layout(rig);
     }
-    ctx.fillStyle = PALETTE.text;
-    ctx.textBaseline = "middle";
-    ctx.fillText(item.label, 76, CARD_H / 2 + 2);
-
-    item.tex.needsUpdate = true;
   }
 
   /**
-   * Move this hand's rings onto the measured buttons.
+   * Size the panel to the text, rather than the text to a guessed panel.
    *
-   * Position always; ORIENTATION too when the asset can supply a normal. The
-   * authored `ringPitch` of -PI/2 lays the stick and face-button rings flat
-   * against grip +Y - straight up - but the measured normal says that face is
-   * tilted about 37 degrees forward, so the rings were sitting visibly proud of
-   * the buttons they circle. The trigger and squeeze are hinged, ship identical
-   * press extents and therefore no normal, and keep their authored pitch.
-   *
-   * The pill does NOT move. It is placed for READABILITY - clear of the hand,
-   * non-overlapping, angled off the controller's nose - and where a button is
-   * says nothing about where its label belongs. Only the leader line's tail
-   * follows the ring.
-   *
-   * Silent no-op for any node the asset does not carry, which is what keeps a
-   * partially-matching profile from wiping a good fallback.
+   * troika lays out asynchronously, so every row is synced and the widest block
+   * measured before the background is drawn. Doing it the other way round means
+   * either a hardcoded per-character advance (wrong the moment the font changes)
+   * or a panel with slack in it.
    */
-  private reanchor(hand: Handedness, models: ControllerModels) {
-    for (const item of this.rigs[hand].items) {
-      const anchor = models.buttonAnchor(hand, item.node);
-      if (!anchor) continue;
-      const { position, normal } = anchor;
-      item.ring.position.copy(position);
-      if (normal) {
-        // The ring's geometry lies in XY with its face along +Z.
-        item.ring.quaternion.setFromUnitVectors(RING_FACE, normal);
-      }
-      const pos = item.line.geometry.getAttribute("position");
-      pos.setXYZ(0, position.x, position.y, position.z);
-      pos.needsUpdate = true;
+  private layout(rig: HandRig) {
+    let pending = rig.rows.length;
+    for (const row of rig.rows) {
+      row.text.sync(() => {
+        if (--pending > 0) return;
+
+        let widest = 0;
+        for (const r of rig.rows) {
+          const b = r.text.textRenderInfo?.blockBounds;
+          if (b) widest = Math.max(widest, b[2] - b[0]);
+        }
+
+        const textX = -0.5 * (widest + DOT_R * 2 + DOT_GAP) + DOT_R * 2 + DOT_GAP;
+        rig.w = widest + DOT_R * 2 + DOT_GAP + PAD_X * 2;
+        rig.h = rig.rows.length * ROW_PITCH + PAD_Y * 2;
+
+        rig.rows.forEach((r, i) => {
+          const y = ((rig.rows.length - 1) / 2 - i) * ROW_PITCH;
+          r.text.position.set(textX, y, 0.0004);
+          r.dot.position.set(textX - DOT_GAP - DOT_R, y, 0.0004);
+        });
+
+        this.drawBackground(rig);
+      });
     }
+  }
+
+  /**
+   * The chrome: a rounded panel with an accent edge, and nothing else.
+   *
+   * Redrawn at the panel's own aspect rather than stretched from a square, so
+   * the corner radius stays circular instead of going oval as the text length
+   * changes the width.
+   */
+  private drawBackground(rig: HandRig) {
+    const h = Math.max(1, Math.round((BG_W * rig.h) / rig.w));
+    if (rig.bg.canvas.height !== h) rig.bg.canvas.height = h;
+
+    const ctx = rig.bg.ctx;
+    ctx.clearRect(0, 0, BG_W, h);
+    const r = Math.min(BG_W, h) * 0.22;
+    roundRect(ctx, 3, 3, BG_W - 6, h - 6, r);
+    ctx.fillStyle = C.panel;
+    ctx.fill();
+    ctx.strokeStyle = C.panelEdge;
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    rig.bg.tex.needsUpdate = true;
+
+    rig.bg.mesh.geometry.dispose();
+    rig.bg.mesh.geometry = planeFor(rig.w, rig.h);
   }
 
   // --- attachment ---------------------------------------------------------
@@ -418,13 +407,14 @@ export class ControllerHints {
     else if (!wasEnabled) this.show();
   }
 
-  /** Bring every hint back and restart the retirement timer. */
+  /** Bring the legend back and restart the retirement timer. */
   show() {
     if (!this.settings.controllerHints) return;
     this.remaining = SHOW_SECONDS;
     for (const rig of [this.rigs.left, this.rigs.right]) {
       rig.group.visible = true;
-      for (const item of rig.items) item.target = 1;
+      rig.target = 1;
+      for (const row of rig.rows) row.used = false;
     }
   }
 
@@ -432,75 +422,139 @@ export class ControllerHints {
     this.remaining = 0;
     for (const rig of [this.rigs.left, this.rigs.right]) {
       rig.group.visible = false;
-      for (const item of rig.items) {
-        item.target = 0;
-        item.alpha = 0;
-        this.applyAlpha(item);
+      rig.target = 0;
+      rig.alpha = 0;
+      this.applyAlpha(rig);
+      for (const row of rig.rows) this.models?.setGlow(rig.hand, row.node, 0);
+    }
+  }
+
+  /**
+   * Grey out one row because the user just did the thing it describes, and
+   * retire the panel once every row has been used. Called on the rising edge
+   * only, so it does not race the B/Y press that re-shows it.
+   */
+  markUsed(hand: Handedness, control: VrControl) {
+    const rig = this.rigs[hand];
+    for (const row of rig.rows) {
+      if (row.control === control) row.used = true;
+    }
+    // Retires PER HAND. The two panels say different things - the sticks do
+    // different jobs - so a user who has worked through the right hand should
+    // not lose the left hand's instructions before reading them. It also means
+    // one connected controller can still retire on its own, rather than being
+    // held up waiting for a hand that will never report.
+    if (rig.rows.every((row) => row.used)) rig.target = 0;
+  }
+
+  /**
+   * `touched` is the capacitive state of each control, which on Touch hardware
+   * covers all three of the ones named here. It is what replaces the leader
+   * lines: rest a thumb on the stick and the stick's own row lights up, so the
+   * mapping needs no colour key and no line crossing the view.
+   */
+  update(
+    dt: number,
+    camera: PerspectiveCamera,
+    touched?: (hand: Handedness) => ReadonlySet<VrControl>,
+  ) {
+    if (this.remaining > 0) {
+      this.remaining -= dt;
+      if (this.remaining <= 0) {
+        for (const rig of [this.rigs.left, this.rigs.right]) rig.target = 0;
+      }
+    }
+
+    camera.getWorldQuaternion(this.camQuat);
+
+    for (const rig of [this.rigs.left, this.rigs.right]) {
+      if (!rig.group.visible) continue;
+
+      const k = rig.target > rig.alpha ? FADE_IN : FADE_OUT;
+      rig.alpha += (rig.target - rig.alpha) * Math.min(1, k * dt);
+      if (rig.alpha < 0.01 && rig.target === 0) rig.alpha = 0;
+
+      const live = touched?.(rig.hand);
+      for (const row of rig.rows) row.touched = live?.has(row.control) ?? false;
+
+      if (rig.alpha === 0 && rig.target === 0) {
+        rig.group.visible = false;
+        for (const row of rig.rows) this.models?.setGlow(rig.hand, row.node, 0);
+        continue;
+      }
+
+      // getWorldQuaternion refreshes the parent chain, so this picks up the grip
+      // pose written by the current XR frame rather than the last one.
+      rig.group.getWorldQuaternion(this.parentInv).invert();
+      // World orientation := head orientation, expressed in grip-local space, so
+      // wrist roll cannot tip the text over.
+      rig.group.quaternion.copy(this.parentInv).multiply(this.camQuat);
+
+      this.applyAlpha(rig);
+
+      for (const row of rig.rows) {
+        const level = row.used ? 0 : row.touched ? GLOW_TOUCHED : GLOW_IDLE;
+        this.models?.setGlow(rig.hand, row.node, level * rig.alpha);
       }
     }
   }
 
   /**
-   * Retire one hint because the user just did the thing it describes. Called on
-   * the rising edge only, so it does not race the B/Y press that re-shows them.
+   * What the headless check can measure of the legend without a headset.
+   *
+   * The numbers come from troika's OWN laid-out metrics, not from the constants
+   * above: the point is to catch a font that silently failed to load (troika
+   * falls back rather than throwing) or a metric change that quietly shrinks the
+   * text below the angular size a person can read at arm's length. Asserting
+   * FONT_SIZE against itself would prove nothing.
    */
-  markUsed(hand: Handedness, control: VrControl) {
-    for (const item of this.rigs[hand].items) {
-      if (item.control === control) item.target = 0;
-    }
+  metrics() {
+    const rig = this.rigs.right;
+    return {
+      font: FONT,
+      fontSize: FONT_SIZE,
+      panel: { w: rig.w, h: rig.h },
+      offsetY: this.offsetY,
+      rows: rig.rows.map((r) => {
+        const vb = r.text.textRenderInfo?.visibleBounds;
+        const bb = r.text.textRenderInfo?.blockBounds;
+        return {
+          label: r.label,
+          laidOut: !!bb,
+          width: bb ? bb[2] - bb[0] : 0,
+          inkHeight: vb ? vb[3] - vb[1] : 0,
+        };
+      }),
+    };
   }
 
-  update(dt: number, camera: PerspectiveCamera) {
-    if (this.remaining > 0) {
-      this.remaining -= dt;
-      if (this.remaining <= 0) {
-        for (const rig of [this.rigs.left, this.rigs.right]) {
-          for (const item of rig.items) item.target = 0;
-        }
-      }
-    }
-
-    // Screen-aligned, not look-at-the-eye. A pill that merely faces the head
-    // position still gets sheared and visibly rolled by the projection once it
-    // sits off-axis - which is exactly where these live, down at hand height.
-    // Matching the head's orientation keeps the text flat-on and level in both
-    // eyes no matter where the hand is.
-    camera.getWorldQuaternion(this.camQuat);
-
-    for (const rig of [this.rigs.left, this.rigs.right]) {
-      if (!rig.group.visible) continue;
-      let anyVisible = false;
-      // getWorldQuaternion refreshes the parent chain, so this picks up the
-      // grip pose written by the current XR frame rather than the last one.
-      rig.group.getWorldQuaternion(this.parentInv).invert();
-
-      for (const item of rig.items) {
-        const k = item.target > item.alpha ? FADE_IN : FADE_OUT;
-        item.alpha += (item.target - item.alpha) * Math.min(1, k * dt);
-        if (item.alpha < 0.01) item.alpha = 0;
-        // Fading IN counts as visible even at alpha 0: the first frame after
-        // show() can carry dt 0, and retiring the group on that frame would
-        // hide the hints forever.
-        if (item.alpha > 0 || item.target > 0) {
-          anyVisible = true;
-          // World orientation := head orientation, expressed in grip-local
-          // space, so wrist roll cannot tip the text over.
-          item.card.quaternion.copy(this.parentInv).multiply(this.camQuat);
-        }
-        this.applyAlpha(item);
-      }
-
-      if (!anyVisible) rig.group.visible = false;
+  private applyAlpha(rig: HandRig) {
+    const a = rig.alpha;
+    (rig.bg.mesh.material as MeshBasicMaterial).opacity = a * 0.92;
+    rig.bg.mesh.visible = a > 0;
+    for (const row of rig.rows) {
+      // A used row stays legible but stops competing for attention; a touched
+      // one takes the accent so the pairing with the lit button is unmissable.
+      row.text.color = row.used ? C.dim : row.touched ? C.accent : C.text;
+      row.text.fillOpacity = a * (row.used ? 0.45 : 1);
+      row.text.visible = a > 0;
+      const dm = row.dot.material as MeshBasicMaterial;
+      dm.opacity = a * (row.used ? 0.25 : row.touched ? 1 : 0.7);
+      row.dot.visible = a > 0;
+      row.dot.scale.setScalar(row.touched ? 1.35 : 1);
     }
   }
+}
 
-  private applyAlpha(item: HintItem) {
-    const a = item.alpha;
-    (item.card.material as MeshBasicMaterial).opacity = a;
-    (item.ring.material as MeshBasicMaterial).opacity = a * 0.9;
-    (item.line.material as LineBasicMaterial).opacity = a * 0.55;
-    item.card.visible = a > 0;
-    item.ring.visible = a > 0;
-    item.line.visible = a > 0;
-  }
+// --- small shared geometry --------------------------------------------------
+
+/** One circle for all six dots, rather than six identical geometries. */
+let DOT_GEO: CircleGeometry | null = null;
+function bgDotGeometry(): CircleGeometry {
+  if (!DOT_GEO) DOT_GEO = new CircleGeometry(DOT_R, 16);
+  return DOT_GEO;
+}
+
+function planeFor(w: number, h: number): PlaneGeometry {
+  return new PlaneGeometry(w, h);
 }

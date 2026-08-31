@@ -61,6 +61,9 @@ EXT_CONTENT_TYPE = {
     ".svg": "image/svg+xml",
     ".woff": "font/woff",
     ".woff2": "font/woff2",
+    # The SDF text font (troika). mimetypes on Linux answers font/sfnt, which is
+    # correct-but-vague; say ttf so a CDN or browser cannot second-guess it.
+    ".ttf": "font/ttf",
     # Gaussian-splat payloads. mimetypes.guess_type does not know these on Linux
     # and would fall through to a bare octet-stream with no explicit intent.
     # Controller models (webxr-input-profiles). mimetypes does not know .glb on
@@ -90,6 +93,11 @@ def cache_control_for(rel_path: str) -> str:
     # on every page load would be pure waste. Same caveat as models/: filenames
     # are stable, so a re-vendor needs an explicit --invalidate-only.
     if rel_path.startswith("controllers/"):
+        return "public, max-age=31536000, immutable"
+    # The vendored SDF font is version-pinned the same way, and troika blocks
+    # text rendering on it - re-fetching 137 KB on every load in a headset is
+    # exactly the wrong place to spend a round trip.
+    if rel_path.startswith("fonts/"):
         return "public, max-age=31536000, immutable"
     return "no-cache, must-revalidate"
 

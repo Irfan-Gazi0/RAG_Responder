@@ -540,89 +540,67 @@ check("input mode reports honestly with nothing connected", mode.mode === "none"
     hz.after.visible === false, `visible=${hz.after.visible}`);
 }
 
-// --- 11. The controller models -------------------------------------------
+// --- 11. The controller models and the button glow ------------------------
 // Nothing headless will ever fire an inputsourceschange, so the runtime path
 // (grip -> XRControllerModelFactory -> glTF) cannot be driven from here. What
 // CAN rot without anyone noticing until they are in a headset is everything
 // upstream of it, and that is what this covers:
 //
 //   - the vendored asset path 404ing after a deploy or a Vite publicDir change,
-//   - an asset refresh renaming the button nodes the callouts anchor to,
-//   - measureAnchors reading the wrong thing off those nodes.
+//   - an asset refresh renaming or emptying the button nodes the legend lights,
+//   - registerGlow lighting the WHOLE CONTROLLER instead of one button.
 //
-// The probe uses the runtime's own LOCAL_PATH, BUTTON_NODES and measureAnchors,
-// against a synthetic grip parked at a deliberately non-identity pose - a grip
-// at the origin would let a world-vs-local frame mix-up pass.
+// The probe uses the runtime's own LOCAL_PATH, BUTTON_NODES, registerGlow and
+// applyGlow, so a pass is evidence about the real path rather than about a
+// parallel implementation of it.
 {
   const c = await page.evaluate(() => window.__vr.controllers("right"));
-  const cl = await page.evaluate(() => window.__vr.controllers("left"));
-  const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 
   check("the vendored controller profile loads from our own origin",
     c.error === null && c.profileId === "meta-quest-touch-plus",
     c.error ?? `profileId=${c.profileId}, list=${JSON.stringify(c.profiles)}`);
 
-  check("the controller asset carries every button node the callouts anchor to",
+  check("the controller asset carries every button node the legend names",
     c.error === null && c.missingNodes.length === 0,
     `missing: ${c.missingNodes.join(", ") || "(none)"}`);
 
-  // THE ONE THAT MATTERS. Every button here is a mesh under an animation pivot
-  // placed so the child's transform cancels back to near the model origin, so
-  // reading the node's matrixWorld translation returns the SAME point for all
-  // of them - which stacks every callout ring in the middle of the controller
-  // while still landing a couple of centimetres from each eyeballed fallback.
-  // The drift assertion below passes that happily; only this one catches it.
-  {
-    const e = Object.entries(c.anchors);
-    let closest = { pair: "-", d: Infinity };
-    for (let i = 0; i < e.length; i++) {
-      for (let j = i + 1; j < e.length; j++) {
-        const d = dist(e[i][1], e[j][1]);
-        if (d < closest.d) closest = { pair: `${e[i][0]}/${e[j][0]}`, d };
-      }
-    }
-    check("each button measures to its own place on the controller",
-      e.length >= 4 && closest.d > 0.012,
-      `closest pair ${closest.pair} only ${(closest.d * 1000).toFixed(1)} mm apart`);
-  }
+  // A node can survive a rename and still be the wrong thing: the asset hangs
+  // every button under an animation pivot, and a pivot resolves by name while
+  // carrying no geometry at all. Lighting one is a silent no-op.
+  check("every named button node resolves to real geometry",
+    c.error === null && c.emptyNodes.length === 0,
+    `no drawable geometry: ${c.emptyNodes.join(", ") || "(none)"}`);
 
-  // The authored numbers are eyeballed, so this is "the same button, roughly".
-  // A conversion through the wrong frame is off by the grip's own translation -
-  // metres - which this catches with room to spare.
-  {
-    const drift = Object.entries(c.authored).map(([node, a]) => ({
-      node, d: c.anchors[node] ? dist(c.anchors[node], a) : Infinity,
-    }));
-    const worst = drift.reduce((w, x) => (x.d > w.d ? x : w), { node: "-", d: 0 });
-    check("measured anchors land on the buttons the fallback was aiming at",
-      c.error === null && worst.d < 0.06,
-      `worst: ${worst.node} off by ${worst.d.toFixed(3)} m`);
-  }
+  // THE ONE THAT MATTERS. All six meshes in this glTF reference material index
+  // 0, so after load they share ONE MeshStandardMaterial instance. Setting
+  // .emissive on mesh.material therefore lights the entire controller - which
+  // looks like a deliberate styling choice rather than a bug, and would ship.
+  // registerGlow clones per button; this is what proves it did.
+  check("each lit button owns its material rather than sharing one",
+    c.error === null && c.glowNodes > 0 && c.distinctMaterials === c.glowNodes,
+    `${c.glowNodes} buttons but ${c.distinctMaterials} distinct materials`);
 
-  // The rings are oriented from the press extents: min-minus-max is the travel
-  // of the cap, so its negation is the surface normal. The thumbstick and the
-  // face buttons share one physical face, so their normals must agree - and
-  // that face is tilted ~37 degrees forward of grip +Y, which is the correction
-  // the hand-authored -PI/2 could not have known about.
-  {
-    const t = c.normals["thumbstick"];
-    const b = c.normals["b_button"];
-    const dot = t && b ? t[0] * b[0] + t[1] * b[1] + t[2] * b[2] : 0;
-    check("buttons on the same face agree on which way that face points",
-      dot > 0.99, t && b ? `dot=${dot.toFixed(4)}` : "no normal derived");
-    check("the top face is tilted forward of grip +Y, not straight up",
-      !!b && b[1] > 0.5 && b[1] < 0.95 && b[2] < -0.2,
-      b ? `normal=[${b.map((v) => v.toFixed(3)).join(", ")}]` : "none");
-  }
+  check("lighting one button leaves the controller body dark",
+    c.error === null && c.bodyUnlit === true,
+    `bodyUnlit=${c.bodyUnlit}`);
 
-  // Touch controllers are mirror images. A handedness slip in BUTTON_NODES or in
-  // the left/right asset choice shows up here and nowhere else headless.
-  {
-    const t = c.anchors["thumbstick"], tl = cl.anchors["thumbstick"];
-    check("the left controller mirrors the right",
-      !!t && !!tl && dist([-t[0], t[1], t[2]], tl) < 0.005,
-      t && tl ? `right=[${t.map((v) => v.toFixed(3))}] left=[${tl.map((v) => v.toFixed(3))}]` : "missing");
-  }
+  check("the glow actually moves between off and full",
+    c.error === null && c.glowOff === 0 && c.glowOn > 0.5,
+    `off=${c.glowOff} on=${c.glowOn}`);
+
+  // The placeholder is what is in your hand when no profile matches the headset,
+  // and it is the ONLY path with no glTF to fall back on. Its bumps are named
+  // for the same nodes so the identical glow code runs on it - which is what
+  // finally retired the eyeballed ring offsets this module used to carry.
+  check("the placeholder shown before the glTF lands is not empty",
+    c.proxyMeshes > 0, `${c.proxyMeshes} meshes`);
+
+  check("the placeholder carries lightable bumps for all three named buttons",
+    c.proxyBumps.length === 3 &&
+      c.proxyBumps.includes("trigger") &&
+      c.proxyBumps.includes("thumbstick") &&
+      c.proxyBumps.includes("b_button"),
+    `bumps=${JSON.stringify(c.proxyBumps)}`);
 
   // The controller glTF is the only lit material in this whole scene, so the two
   // lights main.ts adds for it look unused from every other angle. Tidy them
@@ -637,9 +615,56 @@ check("input mode reports honestly with nothing connected", mode.mode === "none"
       lit.length > 0 && lights.length > 0,
       `materials=${JSON.stringify(c.materials)} lights=${JSON.stringify(lights)}`);
   }
+}
 
-  check("the placeholder shown before the glTF lands is not empty",
-    c.proxyMeshes > 0, `${c.proxyMeshes} meshes`);
+// --- 11b. The legend is actually readable at hand distance -----------------
+// The hazard card taught this lesson expensively: every assertion about it
+// raycast the quad, which works perfectly at any distance, so the one thing
+// nobody measured was whether the text subtended enough arc to READ. Same trap
+// here, so measure it up front - and measure it from troika's own laid-out
+// metrics, not from the constant in the source, because a font that fails to
+// load falls back silently rather than throwing.
+{
+  const HOLD = 0.45; // metres, roughly where a controller sits from the eyes
+  const h = await page.evaluate(() => window.__vr.hints());
+  const deg = (metres) => (Math.atan2(metres, HOLD) * 180) / Math.PI;
+
+  check("the legend font is vendored, not fetched from a CDN",
+    /^\.\/fonts\//.test(h.font), `font=${h.font}`);
+
+  check("every legend row lays out with real glyph metrics",
+    h.rows.length === 3 && h.rows.every((r) => r.laidOut && r.width > 0 && r.inkHeight > 0),
+    JSON.stringify(h.rows));
+
+  // Ink height spans cap-to-descender on these strings, so it should land near
+  // the em size. Far outside that band means the vendored font did not load and
+  // troika silently substituted something else.
+  {
+    const ratios = h.rows.map((r) => r.inkHeight / h.fontSize);
+    const bad = ratios.filter((r) => r < 0.6 || r > 1.25);
+    check("laid-out glyphs match the em size the layout was designed around",
+      bad.length === 0, `inkHeight/fontSize = ${ratios.map((r) => r.toFixed(2)).join(", ")}`);
+  }
+
+  // The comfort floor for VR text is 1.0 degree of arc on the CAP height. Caps
+  // are ~0.72 em in this face, so the em has to clear ~1.39 degrees. The pills
+  // this replaced measured 0.95 degrees, i.e. marginally under.
+  check("legend text clears the 1.0 degree cap-height floor at hand distance",
+    deg(h.fontSize * 0.72) >= 1.0,
+    `cap subtends ${deg(h.fontSize * 0.72).toFixed(2)} deg at ${HOLD} m`);
+
+  // A legend that covers the buttons it is describing defeats the whole point:
+  // the glow has to stay visible underneath it. Every button on the Touch top
+  // face, and every bump on the placeholder, sits below 0.05 m in grip space.
+  check("the legend hangs clear of the buttons it names",
+    h.offsetY - h.panel.h / 2 >= 0.05,
+    `bottom edge at ${(h.offsetY - h.panel.h / 2).toFixed(3)} m above the grip`);
+
+  // Panels wider than ~50 degrees stop being glanceable. This one is sized to
+  // its own text, so a longer label silently inflates it.
+  check("the legend stays inside a glanceable angular width",
+    deg(h.panel.w / 2) * 2 <= 40,
+    `${(deg(h.panel.w / 2) * 2).toFixed(1)} deg wide (${h.panel.w.toFixed(3)} m)`);
 }
 
 // --- 12. The preflight warning outlives the model load ---------------------
@@ -661,7 +686,20 @@ check("input mode reports honestly with nothing connected", mode.mode === "none"
   });
   // Navigate first so setContent inherits the viewer's own origin; the frame has
   // to be same-origin for the check to read #status out of it.
-  await framed.goto(url, { waitUntil: "load", timeout: 90000 });
+  //
+  // A TINY same-origin FILE, not the viewer. All this navigation buys is the
+  // origin, and loading the whole app to get it cost ~60 s of this check's
+  // runtime plus a second live WebGL context (three's renderer, and since the
+  // legend went SDF, troika's glyph generator too) for a page that is then
+  // immediately replaced by setContent. Three simultaneous viewers under
+  // SwiftShader is enough to stall the outer page's layout, and the failure
+  // surfaces here as the iframe below never becoming visible - which reads as a
+  // broken assertion rather than as resource exhaustion in the harness.
+  // profilesList.json is 86 bytes and ships in both dev and dist.
+  await framed.goto(`${BASE}controllers/profilesList.json`, {
+    waitUntil: "domcontentloaded",
+    timeout: 30000,
+  });
   // The permission has to be denied EXPLICITLY. A same-origin iframe inherits
   // the default `self` allowlist and genuinely does have xr-spatial-tracking, so
   // preflightWarning correctly stays quiet for it - that restraint is itself a

@@ -1,5 +1,6 @@
 /**
- * The controllers you are actually holding, rendered in the scene.
+ * The controllers you are actually holding, rendered in the scene - and lit up
+ * on the buttons that do something.
  *
  * Why this exists
  * ---------------
@@ -9,13 +10,6 @@
  * not drawn. Every other VR app renders the controller, and the absence is the
  * kind of thing that reads as "the tracking is broken" rather than "the model is
  * missing".
- *
- * It also makes the guidance honest. controller-hints.ts anchors its rings at
- * offsets that its own comment describes as "eyeballed to the hardware, not
- * measured off a model" - because there was no model to measure. There is one
- * now, and the glTF carries NAMED BUTTON NODES (`trigger`, `thumbstick`,
- * `a_button`/`x_button`, `b_button`/`y_button`, `squeeze`, `thumbrest`), so
- * `measureAnchors()` below turns those guesses into measurements.
  *
  * The two reasons this was skipped before, and what is done about each
  * ------------------------------------------------------------------
@@ -32,8 +26,27 @@
  *    single MeshStandardMaterial (`controllerMATphongRT`, one baseColorTexture),
  *    so with no lights it renders pure black - which is exactly why
  *    hand-input.ts hand-rolls its joint spheres out of MeshBasicMaterial. main.ts
- *    now adds a hemisphere + key light; they touch nothing else in the scene,
- *    because the controller glTFs are the only lit materials in it.
+ *    adds a hemisphere + key light; they touch nothing else in the scene, because
+ *    the controller glTFs are the only lit materials in it.
+ *
+ * WHY THE BUTTONS GLOW RATHER THAN WEARING RINGS
+ * ----------------------------------------------
+ * This module used to hand controller-hints.ts a MEASURED position and surface
+ * normal for each button, so it could park a ring around one. That worked, but a
+ * ring is a proxy for the thing it circles: it has to be positioned, oriented,
+ * sized, and kept from sinking into the bodywork, and every one of those is a
+ * chance to be slightly wrong on hardware nobody has tested. The buttons are
+ * already modelled, already exactly where they are, and already the right shape.
+ * Lighting the actual mesh is correct by construction on any profile, needs no
+ * offsets and no normals, and cannot drift.
+ *
+ * THE TRAP, and it is a good one: the Touch Plus glTF carries six separate button
+ * meshes but they ALL reference material index 0 - after load, ONE shared
+ * MeshStandardMaterial instance. Setting `.emissive` on `mesh.material` lights up
+ * the ENTIRE CONTROLLER, which looks like a deliberate design choice rather than
+ * a bug and would be very easy to ship. Every glowable mesh therefore gets its
+ * own `material.clone()` first. Same shader program, so the cost is nil; the
+ * headless check asserts the three are distinct instances.
  *
  * Parented to the GRIP space, not the target ray: the grip is the pose of the
  * held device itself, and the profile's asset is authored in exactly that frame.
@@ -41,18 +54,20 @@
  * one per input-source slot - so both modules see the identical Object3D.
  */
 import {
-  Box3,
   CapsuleGeometry,
+  Color,
   CylinderGeometry,
   Group,
+  Material,
   Mesh,
   MeshBasicMaterial,
   Object3D,
-  Vector3,
+  SphereGeometry,
   type WebGLRenderer,
 } from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { XRControllerModelFactory } from "three/addons/webxr/XRControllerModelFactory.js";
+import { C } from "./canvas-ui";
 import type { Handedness } from "./vr-input";
 
 /** Vendored profiles, relative to the page (vite base is "./"). */
@@ -71,126 +86,120 @@ const CDN_PATH =
 const MODEL_TIMEOUT = 8;
 
 /**
- * The glTF nodes the callouts anchor to, and where to find each one's press
- * extents.
- *
- * `node` holds the button's mesh. `extents` is the prefix of the
- * `<extents>_pressed_min` / `_pressed_max` pair that the profile's visual
- * response interpolates between - which, for a button that presses straight in,
- * is a free and exact surface normal (see measureAnchors). The prefix is spelled
- * out rather than derived because it is `xr_standard_thumbstick` for the stick
- * and a bare `a_button` for the face buttons, and guessing that from the node
- * name is the kind of rule that silently stops matching on the next asset
- * refresh.
- *
- * Both hands are listed because the face buttons differ (A/B right, X/Y left)
- * while trigger, squeeze and thumbstick share their names.
- *
- * NO `thumbrest`: the profile declares the component and the asset carries
- * `thumbrest_pressed_*`, but there is no bare `thumbrest` node to anchor to. A
- * name absent from the asset yields no measurement and the caller keeps its
- * authored fallback - and the headless check asserts this list is fully
- * satisfied, so a permanently-missing entry would mask a genuinely renamed one.
+ * How hard a highlighted button burns. `emissiveIntensity` scales the emissive
+ * colour, and the base texture under it is nearly black, so this is close to the
+ * whole signal - 1.6 reads clearly at hand distance without blooming into a
+ * shapeless blob that hides which button it is sitting on.
  */
-export type ButtonNode = { node: string; extents: string };
+const GLOW_MAX = 1.6;
 
-export const BUTTON_NODES: Record<Handedness, readonly ButtonNode[]> = {
-  right: [
-    { node: "trigger", extents: "xr_standard_trigger" },
-    { node: "squeeze", extents: "xr_standard_squeeze" },
-    { node: "thumbstick", extents: "xr_standard_thumbstick" },
-    { node: "a_button", extents: "a_button" },
-    { node: "b_button", extents: "b_button" },
-  ],
-  left: [
-    { node: "trigger", extents: "xr_standard_trigger" },
-    { node: "squeeze", extents: "xr_standard_squeeze" },
-    { node: "thumbstick", extents: "xr_standard_thumbstick" },
-    { node: "x_button", extents: "x_button" },
-    { node: "y_button", extents: "y_button" },
-  ],
-};
+/** The one highlight colour, shared with every other in-VR surface. */
+const GLOW_COLOR = new Color(C.accent);
 
-/** Where a button is, and which way it faces - both in grip-local metres. */
-export type ButtonAnchor = {
-  position: Vector3;
-  /** Outward surface normal, or null when the asset cannot supply one. */
-  normal: Vector3 | null;
+/**
+ * The named button meshes the Touch profile carries.
+ *
+ * Only three of them are ever lit (see controller-hints.ts), but the full list is
+ * what the headless check asserts the asset still contains: an asset refresh that
+ * renames `thumbstick` would otherwise show up as a button that silently stops
+ * lighting, in a headset, weeks later. Both hands are listed because the face
+ * buttons differ (A/B right, X/Y left) while trigger, squeeze and thumbstick
+ * share their names.
+ *
+ * NO `thumbrest`: the profile declares the component but the asset carries no
+ * bare `thumbrest` node to light.
+ */
+export const BUTTON_NODES: Record<Handedness, readonly string[]> = {
+  right: ["trigger", "squeeze", "thumbstick", "a_button", "b_button"],
+  left: ["trigger", "squeeze", "thumbstick", "x_button", "y_button"],
 };
 
 /**
- * Measure the buttons off a loaded controller model, in GRIP-LOCAL metres - the
- * frame controller-hints authors its fallback offsets in.
+ * One button's glow state.
  *
- * POSITION IS THE BOUNDING-BOX CENTRE, NOT THE NODE ORIGIN. Every button here is
- * a separate mesh hung under an animation pivot
- * (`root > xr_standard_trigger_pressed_value > trigger`), and the pivots are
- * placed so the child's local transform cancels back to near the model origin -
- * the real position lives in the mesh's vertex data. Reading the matrixWorld
- * translation returns very nearly the SAME point for the trigger, the thumbstick
- * and the face button, stacking all three callout rings in the middle of the
- * controller. That failure looks entirely plausible in a number dump - every
- * value lands a couple of centimetres from the eyeballed fallback, so a
- * "close to the authored guess" assertion passes it happily - which is why
- * vr_check also asserts the anchors are mutually DISTINCT.
- *
- * NORMAL COMES FROM THE PRESS EXTENTS. `<extents>_pressed_min` minus
- * `_pressed_max` is the vector the cap travels when pressed, so its negation is
- * the outward surface normal, exact and free. It agrees to within a degree with
- * a plane fitted through the three top-face buttons, and it says the top face is
- * tilted about 37 degrees forward of grip +Y - which the hand-authored ringPitch
- * of -PI/2 (straight up) had no way of knowing. Buttons animated by ROTATION
- * rather than translation - the trigger and the squeeze, both hinged levers -
- * ship identical min and max, so they yield no normal and keep their authored
- * pitch.
- *
- * Pose-independent despite going through world space: Box3.setFromObject
- * refreshes the whole chain including `grip`, and grip.matrixWorld then cancels
- * exactly between the two sides of the conversion. Correct whether or not a
- * frame has been presented, which is what lets the headless check drive it
- * against a detached grip.
+ * `materials` are CLONES, never the asset's shared instance - see the header.
+ * `baseColors` exists for the placeholder proxy, whose MeshBasicMaterial has no
+ * emissive slot at all: there the highlight is a colour lerp instead, so the same
+ * call site works whether or not a glTF ever arrived.
  */
-export function measureAnchors(
-  model: Object3D,
-  grip: Object3D,
-  nodes: readonly ButtonNode[],
-): Map<string, ButtonAnchor> {
-  const out = new Map<string, ButtonAnchor>();
-  const box = new Box3();
+export type GlowTarget = {
+  materials: Material[];
+  baseColors: Color[];
+  /** Last applied intensity, so a per-frame call is free when nothing changed. */
+  applied: number;
+};
 
-  /** A node's position expressed in grip-local metres. */
-  const local = (o: Object3D) => {
-    o.updateWorldMatrix(true, false);
-    return grip.worldToLocal(new Vector3().setFromMatrixPosition(o.matrixWorld));
-  };
+type Emissive = Material & { emissive: Color; emissiveIntensity: number };
+type Tinted = Material & { color: Color };
 
-  for (const spec of nodes) {
-    const node = model.getObjectByName(spec.node);
+function isEmissive(m: Material): m is Emissive {
+  return (m as Emissive).emissive instanceof Color;
+}
+
+/**
+ * Clone the materials under each named node so they can be lit independently.
+ *
+ * Idempotent per call but NOT cached across calls: XRControllerModelFactory drops
+ * and rebuilds the glTF on `disconnected`, so a stale registry would be pointing
+ * at materials that are no longer on anything.
+ */
+export function registerGlow(
+  root: Object3D,
+  nodes: readonly string[],
+): Map<string, GlowTarget> {
+  const out = new Map<string, GlowTarget>();
+  for (const name of nodes) {
+    const node = root.getObjectByName(name);
     if (!node) continue;
 
-    box.setFromObject(node);
-    // An empty pivot with no geometry under it yields an inverted box; fall back
-    // to its origin rather than emitting an Infinity.
-    const position = box.isEmpty()
-      ? local(node)
-      : grip.worldToLocal(box.getCenter(new Vector3()));
+    const materials: Material[] = [];
+    const baseColors: Color[] = [];
+    node.traverse((o) => {
+      const mesh = o as Mesh;
+      if (!mesh.isMesh || !mesh.material) return;
+      // THE WHOLE POINT: every button on this asset shares one material
+      // instance, so without the clone the first setGlow lights the controller.
+      const cloned = (Array.isArray(mesh.material) ? mesh.material : [mesh.material]).map(
+        (m) => m.clone(),
+      );
+      mesh.material = cloned.length === 1 ? cloned[0] : cloned;
+      for (const m of cloned) {
+        if (isEmissive(m)) m.emissive.copy(GLOW_COLOR);
+        materials.push(m);
+        baseColors.push(isTinted(m) ? m.color.clone() : new Color());
+      }
+    });
 
-    let normal: Vector3 | null = null;
-    const min = model.getObjectByName(`${spec.extents}_pressed_min`);
-    const max = model.getObjectByName(`${spec.extents}_pressed_max`);
-    if (min && max) {
-      // Both sides converted before subtracting, so the direction picks up the
-      // grip's rotation without anyone having to extract a basis by hand.
-      const travel = local(min).sub(local(max));
-      // A hinged button ships min === max; 0.1 mm is well under the ~0.9 mm of
-      // real travel and well over float noise.
-      if (travel.lengthSq() > 1e-8) normal = travel.normalize();
-    }
-
-    out.set(spec.node, { position, normal });
+    if (materials.length) out.set(name, { materials, baseColors, applied: -1 });
   }
   return out;
 }
+
+function isTinted(m: Material): m is Tinted {
+  return (m as Tinted).color instanceof Color;
+}
+
+/** Drive one button's highlight, 0 (off) to 1 (fully lit). */
+export function applyGlow(target: GlowTarget, intensity: number) {
+  const v = Math.max(0, Math.min(1, intensity));
+  if (Math.abs(v - target.applied) < 0.004) return;
+  target.applied = v;
+  target.materials.forEach((m, i) => {
+    if (isEmissive(m)) {
+      m.emissiveIntensity = v * GLOW_MAX;
+    } else if (isTinted(m)) {
+      // The proxy's unlit bumps: no emissive slot, so lerp the flat colour.
+      m.color.copy(target.baseColors[i]).lerp(GLOW_COLOR, v);
+    }
+  });
+}
+
+/** Unlit base colour of the placeholder's button bumps. Named because
+ *  registerProxy has to restore it before re-registering - see below. */
+const PROXY_BUMP = 0x64748b;
+
+/** The proxy's three lightable bumps, keyed by what they stand in for. */
+export type ProxyBumps = { trigger: Mesh; thumbstick: Mesh; secondary: Mesh };
 
 /**
  * The stand-in shown until a glTF arrives, and kept if none ever does.
@@ -198,10 +207,15 @@ export function measureAnchors(
  * Unlit on purpose: it has to be legible on the frame the controller connects,
  * before anything has had a chance to load, and MeshBasicMaterial cannot be
  * defeated by a lighting mistake. Roughly Touch-shaped in grip space - +Y out of
- * the top face where the thumbstick sits, -Z along the pointing direction - so
- * the hint rings land somewhere plausible on it rather than in free air.
+ * the top face where the thumbstick sits, -Z along the pointing direction.
+ *
+ * It carries its own three button bumps. That is what finally retires the
+ * eyeballed fallback offsets this file's predecessor apologised for: these are
+ * positions on geometry WE authored, so they are exact by construction rather
+ * than a guess about hardware nobody had measured, and the glow path that runs
+ * on the real asset runs here unchanged.
  */
-function buildProxy(): Group {
+function buildProxy(): { group: Group; bumps: ProxyBumps } {
   const g = new Group();
 
   const body = new Mesh(
@@ -222,7 +236,24 @@ function buildProxy(): Group {
   face.rotation.x = 0.32;
   g.add(face);
 
-  return g;
+  const bump = (r: number, x: number, y: number, z: number) => {
+    const m = new Mesh(
+      new SphereGeometry(r, 12, 8),
+      new MeshBasicMaterial({ color: PROXY_BUMP }),
+    );
+    m.position.set(x, y, z);
+    g.add(m);
+    return m;
+  };
+
+  const bumps: ProxyBumps = {
+    // On the underside nose, where an index finger rests.
+    trigger: bump(0.011, 0, -0.012, -0.052),
+    thumbstick: bump(0.012, 0, 0.024, -0.028),
+    secondary: bump(0.008, 0.009, 0.021, 0.012),
+  };
+
+  return { group: g, bumps };
 }
 
 type Slot = {
@@ -231,6 +262,7 @@ type Slot = {
   holder: Group;
   model: Object3D;
   proxy: Group;
+  bumps: ProxyBumps;
   hand: Handedness | null;
   /** True once the glTF scene has been parented under `model`. */
   loaded: boolean;
@@ -253,8 +285,7 @@ export class ControllerModels {
   private factory: XRControllerModelFactory;
   private enabled: boolean;
   private onProblem?: (message: string) => void;
-  private readyCbs: ((hand: Handedness, model: Object3D) => void)[] = [];
-  private anchors: Record<Handedness, Map<string, ButtonAnchor>> = {
+  private glow: Record<Handedness, Map<string, GlowTarget>> = {
     left: new Map(),
     right: new Map(),
   };
@@ -285,7 +316,7 @@ export class ControllerModels {
 
       const holder = new Group();
       holder.visible = this.enabled;
-      const proxy = buildProxy();
+      const { group: proxy, bumps } = buildProxy();
       // createControllerModel registers on the object it is given, so the grip
       // has to be what is passed even though the result is parented deeper.
       const model = this.factory.createControllerModel(grip);
@@ -297,6 +328,7 @@ export class ControllerModels {
         holder,
         model,
         proxy,
+        bumps,
         hand: null,
         loaded: false,
         waiting: 0,
@@ -318,11 +350,18 @@ export class ControllerModels {
         slot.waiting = 0;
         slot.reported = false;
         slot.proxy.visible = !slot.loaded;
+        // The proxy is what is on screen for the next few hundred ms, so its
+        // bumps have to be lightable before the glTF resolves - otherwise the
+        // legend names three buttons and none of them respond.
+        if (slot.hand && !slot.loaded) this.registerProxy(slot, slot.hand);
       });
 
       grip.addEventListener("disconnected", () => {
         // The factory drops the glTF from `model` on this same event, so the
-        // proxy has to come back or the next connect shows an empty holder.
+        // proxy has to come back or the next connect shows an empty holder -
+        // and the glow registry has to go with it, or it points at materials
+        // that are no longer on anything.
+        if (slot.hand) this.glow[slot.hand] = new Map();
         slot.hand = null;
         slot.loaded = false;
         slot.proxy.visible = false;
@@ -330,16 +369,37 @@ export class ControllerModels {
     }
   }
 
-  /** Fired once per hand, the frame its glTF becomes measurable. */
-  onReady(cb: (hand: Handedness, model: Object3D) => void) {
-    this.readyCbs.push(cb);
+  /**
+   * Map the proxy's three bumps onto this hand's real node names.
+   *
+   * The colour reset is not defensive tidying. registerGlow captures each
+   * material's CURRENT colour as the unlit base, and a reconnect re-registers -
+   * so a bump that happened to be lit when the controller dropped would have its
+   * lit colour recorded as "off" and could never go grey again. The glTF path
+   * does not have this problem (emissive is additive, and the base texture is
+   * untouched); the proxy's colour lerp does.
+   */
+  private registerProxy(slot: Slot, hand: Handedness) {
+    const secondary = hand === "left" ? "y_button" : "b_button";
+    slot.bumps.trigger.name = "trigger";
+    slot.bumps.thumbstick.name = "thumbstick";
+    slot.bumps.secondary.name = secondary;
+    for (const b of [slot.bumps.trigger, slot.bumps.thumbstick, slot.bumps.secondary]) {
+      (b.material as MeshBasicMaterial).color.setHex(PROXY_BUMP);
+    }
+    // The proxy's other two meshes are deliberately unnamed, so a lookup by name
+    // cannot reach the body or the face plate.
+    this.glow[hand] = registerGlow(slot.proxy, ["trigger", "thumbstick", secondary]);
   }
 
-  /** A measured button in grip-local metres, or null if unavailable. */
-  buttonAnchor(hand: Handedness, node: string): ButtonAnchor | null {
-    const a = this.anchors[hand].get(node);
-    if (!a) return null;
-    return { position: a.position.clone(), normal: a.normal?.clone() ?? null };
+  /**
+   * Light a button, 0 to 1. Safe to call every frame and before anything has
+   * loaded: an unregistered node is a no-op, and applyGlow short-circuits when
+   * the value has not moved.
+   */
+  setGlow(hand: Handedness, node: string, intensity: number) {
+    const t = this.glow[hand].get(node);
+    if (t) applyGlow(t, intensity);
   }
 
   setVisible(v: boolean) {
@@ -358,16 +418,14 @@ export class ControllerModels {
         if (slot.model.children.length > 0) {
           slot.loaded = true;
           slot.proxy.visible = false;
-          const names = BUTTON_NODES[slot.hand];
-          this.anchors[slot.hand] = measureAnchors(slot.model, slot.grip, names);
-          for (const cb of this.readyCbs) cb(slot.hand, slot.model);
+          this.glow[slot.hand] = registerGlow(slot.model, BUTTON_NODES[slot.hand]);
         } else {
           slot.waiting += dt;
           if (slot.waiting > MODEL_TIMEOUT && !slot.reported) {
             slot.reported = true;
             this.onProblem?.(
               "Controller model did not load - showing a placeholder. " +
-                "Button callouts are using their authored positions.",
+                "The button highlights are on the placeholder instead.",
             );
           }
         }
@@ -380,15 +438,16 @@ export class ControllerModels {
  * What the headless check can see of all this without an XR session.
  *
  * Everything above only runs once a real controller connects, which no headless
- * browser will ever do - so the parts that CAN silently rot without a headset
- * are pulled out here and driven by scripts/vr_check.mjs through the ?dev=1
- * seam: does the vendored path resolve, does the asset still carry the node
- * names the hints anchor to, and does the world->grip-local conversion produce
- * numbers anywhere near the offsets that were eyeballed off the hardware.
+ * browser will ever do - so the parts that CAN silently rot without a headset are
+ * pulled out here and driven by scripts/vr_check.mjs through the ?dev=1 seam:
+ * does the vendored path resolve, does the asset still carry the node names the
+ * legend names, does every one of them resolve to real geometry, and - the one
+ * that matters - does registerGlow actually give each button its own material
+ * instead of lighting the whole controller through the shared one.
  *
  * It deliberately uses the same LOCAL_PATH, the same BUTTON_NODES and the same
- * measureAnchors() as the runtime, so a check that passes is evidence about the
- * real path rather than about a parallel implementation of it.
+ * registerGlow()/applyGlow() as the runtime, so a check that passes is evidence
+ * about the real path rather than about a parallel implementation of it.
  */
 export type ControllerProbe = {
   /** Profile ids in the vendored profilesList.json. */
@@ -397,13 +456,20 @@ export type ControllerProbe = {
   profileId: string | null;
   /** BUTTON_NODES entries the asset does not carry. */
   missingNodes: string[];
-  /** Measured grip-local positions, metres, by node name. */
-  anchors: Record<string, [number, number, number]>;
-  /** Measured outward normals, grip-local, by node name. Absent when derived
-   *  from a hinged button whose press extents do not translate. */
-  normals: Record<string, [number, number, number]>;
+  /** Named nodes that resolved but carry no drawable geometry. */
+  emptyNodes: string[];
+  /** Distinct material instances across the lit buttons - must equal their count. */
+  distinctMaterials: number;
+  glowNodes: number;
+  /** Emissive intensity of one button at glow 0 and glow 1. */
+  glowOff: number;
+  glowOn: number;
+  /** Did lighting one button leave the shared body mesh alone? */
+  bodyUnlit: boolean;
   /** Meshes in the placeholder, so an emptied proxy fails rather than vanishes. */
   proxyMeshes: number;
+  /** The placeholder's lightable bumps, by the node name each stands in for. */
+  proxyBumps: string[];
   /** Distinct material types in the asset. Lit ones need lights in the scene. */
   materials: string[];
   error: string | null;
@@ -413,16 +479,30 @@ export async function probeControllerAssets(
   hand: Handedness = "right",
 ): Promise<ControllerProbe> {
   let proxyMeshes = 0;
-  buildProxy().traverse((o) => {
+  const { group: proxy, bumps } = buildProxy();
+  proxy.traverse((o) => {
     if ((o as Mesh).isMesh) proxyMeshes++;
   });
+  // Exercise the proxy's own glow path, which is what runs when no profile
+  // matches the headset - the case with no glTF to fall back on.
+  const secondary = hand === "left" ? "y_button" : "b_button";
+  bumps.trigger.name = "trigger";
+  bumps.thumbstick.name = "thumbstick";
+  bumps.secondary.name = secondary;
+  const proxyGlow = registerGlow(proxy, ["trigger", "thumbstick", secondary]);
+
   const out: ControllerProbe = {
     profiles: [],
     profileId: null,
     missingNodes: [],
-    anchors: {},
-    normals: {},
+    emptyNodes: [],
+    distinctMaterials: 0,
+    glowNodes: 0,
+    glowOff: 0,
+    glowOn: 0,
+    bodyUnlit: false,
     proxyMeshes,
+    proxyBumps: [...proxyGlow.keys()],
     materials: [],
     error: null,
   };
@@ -446,15 +526,6 @@ export async function probeControllerAssets(
 
     const gltf = await new GLTFLoader().loadAsync(`${LOCAL_PATH}/${id}/${assetPath}`);
 
-    // A stand-in for the grip space, at a pose that is NOT the identity: the
-    // conversion is supposed to cancel the grip's world matrix exactly, and a
-    // grip parked at the origin would let a frame mix-up pass unnoticed.
-    const grip = new Group();
-    grip.position.set(0.31, 1.24, -0.47);
-    grip.rotation.set(0.4, -0.9, 0.25);
-    grip.add(gltf.scene);
-    grip.updateMatrixWorld(true);
-
     const mats = new Set<string>();
     gltf.scene.traverse((o) => {
       const m = (o as Mesh).material;
@@ -463,11 +534,36 @@ export async function probeControllerAssets(
     out.materials = [...mats];
 
     const names = BUTTON_NODES[hand];
-    out.missingNodes = names.filter((n) => !gltf.scene.getObjectByName(n.node)).map((n) => n.node);
-    for (const [name, a] of measureAnchors(gltf.scene, grip, names)) {
-      out.anchors[name] = [a.position.x, a.position.y, a.position.z];
-      if (a.normal) out.normals[name] = [a.normal.x, a.normal.y, a.normal.z];
+    out.missingNodes = names.filter((n) => !gltf.scene.getObjectByName(n));
+    out.emptyNodes = names.filter((n) => {
+      const node = gltf.scene.getObjectByName(n);
+      if (!node) return false;
+      let verts = 0;
+      node.traverse((o) => {
+        const mesh = o as Mesh;
+        if (mesh.isMesh) verts += mesh.geometry?.getAttribute("position")?.count ?? 0;
+      });
+      return verts === 0;
+    });
+
+    // The body shares material index 0 with every button, so it is the witness:
+    // if the clone did not happen, lighting one button lights this too.
+    const body = gltf.scene.getObjectByName("controller_mesh") as Mesh | undefined;
+    const bodyMat = body ? (Array.isArray(body.material) ? body.material[0] : body.material) : null;
+
+    const reg = registerGlow(gltf.scene, names);
+    out.glowNodes = reg.size;
+    out.distinctMaterials = new Set([...reg.values()].flatMap((t) => t.materials)).size;
+
+    const one = reg.get("thumbstick");
+    if (one) {
+      applyGlow(one, 0);
+      out.glowOff = (one.materials[0] as Emissive).emissiveIntensity ?? 0;
+      applyGlow(one, 1);
+      out.glowOn = (one.materials[0] as Emissive).emissiveIntensity ?? 0;
     }
+    out.bodyUnlit =
+      !!bodyMat && (!isEmissive(bodyMat) || bodyMat.emissiveIntensity * bodyMat.emissive.r === 0);
   } catch (err) {
     out.error = err instanceof Error ? err.message : String(err);
   }

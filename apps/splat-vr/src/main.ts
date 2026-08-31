@@ -26,7 +26,7 @@ import {
 } from "three";
 import { SparkControls, SparkRenderer, SparkXr, SplatMesh } from "@sparkjsdev/spark";
 import { DEFAULT_MODEL_KEY, findModel, MODELS, type ModelConfig } from "./models";
-import { authoredAnchors, ControllerHints } from "./controller-hints";
+import { ControllerHints } from "./controller-hints";
 import { ControllerModels, probeControllerAssets } from "./controller-models";
 import { Ground } from "./ground";
 import { HelpPanel } from "./help-panel";
@@ -405,10 +405,20 @@ const controllerModels = new ControllerModels({
   onProblem: (message) => reportError(message),
 });
 
-// Per-button callouts pinned to the controllers themselves. Complements the
-// panel: the panel is the reference list, these are the in-place labels.
-// Attaches its own grip spaces to the rig.
-const hints = new ControllerHints(renderer, playerRig, comfort, controllerModels);
+// The on-controller legend, plus the button glow it names. Complements the
+// world-locked panel: that one is the reference list, this is the in-place
+// label. Attaches its own grip spaces to the rig.
+//
+// ?hintpos= is the height above the grip. Whether the panel clears the hand
+// without covering the car is the kind of thing only a headset can settle, so
+// it gets a URL override like ?fbscale= and ?palmsign= rather than a rebuild.
+const hints = new ControllerHints(
+  renderer,
+  playerRig,
+  comfort,
+  controllerModels,
+  numParam("hintpos", 0.105, 0.04, 0.3),
+);
 vrInput.onUse((hand, control) => hints.markUsed(hand, control));
 
 // Teleport arc lives in world space (scene, not the rig) - it is aiming at a
@@ -1183,13 +1193,27 @@ if (DEV) {
      * Nothing headless will ever produce an `inputsourceschange`, so the runtime
      * path cannot be driven here. What CAN rot silently is everything upstream
      * of it: the vendored asset path 404ing, an asset update renaming the button
-     * nodes the callouts anchor to, or the world->grip-local conversion picking
-     * up the wrong frame. Those are what this exposes, through the same
-     * constants and the same measureAnchors() the runtime uses.
+     * nodes the legend lights, or - the expensive one - registerGlow failing to
+     * clone the shared material, so lighting one button lights the whole
+     * controller. Those are what this exposes, through the same constants and
+     * the same registerGlow()/applyGlow() the runtime uses.
      */
+    /**
+     * The legend's real laid-out metrics, for the angular-legibility assertion.
+     * Async because troika lays out on a worker: asking on the frame after load
+     * reliably returns an unsynced panel.
+     */
+    hints: async () => {
+      for (let i = 0; i < 60; i++) {
+        const m = hints.metrics();
+        if (m.rows.every((r) => r.laidOut)) return m;
+        await new Promise((r) => setTimeout(r, 50));
+      }
+      return hints.metrics();
+    },
+
     controllers: async (hand: "left" | "right" = "right") => ({
       ...(await probeControllerAssets(hand)),
-      authored: authoredAnchors(hand),
       enabled: CONTROLLERS_ENABLED,
     }),
   };
@@ -1401,10 +1425,13 @@ renderer.setAnimationLoop((time: number) => {
     vrInput.update(dt);
     // After vrInput, so a hint retired this frame fades from this frame, and so
     // the blink advances on the same frame the commit was emitted.
-    hints.update(dt, camera);
+    // The touch state is read per frame rather than pushed on an event: the
+    // Gamepad API exposes `touched` as sampled state, and there is no capacitive
+    // touchstart/touchend to subscribe to.
+    hints.update(dt, camera, (hand) => vrInput.touchedControls(hand));
     // After the hints are constructed but order-independent of them: this is
-    // what detects a freshly-loaded glTF and hands the hints their measured
-    // button anchors.
+    // what detects a freshly-loaded glTF and clones its button materials so they
+    // can be lit one at a time.
     controllerModels.update(dt);
     handInput.update(dt, camera);
     // A hand's arc has to be re-traced every frame from the live wrist pose -

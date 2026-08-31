@@ -184,8 +184,16 @@ export function installComfortFlush() {
   });
 }
 
-/** xr-standard gamepad button indices. */
-const BTN = { trigger: 0, grip: 1, primary: 4, secondary: 5 } as const;
+/**
+ * xr-standard gamepad button indices.
+ *
+ * `stick` (the thumbstick press) is here for its CAPACITIVE state, not its
+ * press - nothing in this app binds a stick click. On Touch hardware all three
+ * of the controls the on-controller legend names report `touched`, which is what
+ * lets controller-hints.ts highlight the row for the button your thumb is
+ * actually resting on.
+ */
+const BTN = { trigger: 0, grip: 1, stick: 3, primary: 4, secondary: 5 } as const;
 /** xr-standard thumbstick axes (0/1 are the unused touchpad). */
 const AX = { x: 2, y: 3 } as const;
 
@@ -374,6 +382,27 @@ export class VrInput {
    * Fires the first time a given control is actuated. Drives hint retirement:
    * a label whose control you have already used has done its job.
    */
+  /**
+   * Which named controls this hand is TOUCHING, not pressing.
+   *
+   * Capacitive sensing is what replaces the leader lines the callouts used to
+   * draw: rest a thumb on the stick and the legend lights that row, with no
+   * colour key to decode and no line crossing the view. A runtime that does not
+   * report `touched` (or a controller without the sensor) simply yields an empty
+   * set, and the legend falls back to showing all three rows plainly - so this
+   * is an enhancement, never a dependency.
+   */
+  touchedControls(hand: Handedness): ReadonlySet<VrControl> {
+    const out = new Set<VrControl>();
+    const pad = this.gamepads()[hand];
+    if (!pad) return out;
+    const b = pad.buttons;
+    if (b[BTN.trigger]?.touched) out.add("trigger");
+    if (b[BTN.stick]?.touched) out.add("stick");
+    if (b[BTN.secondary]?.touched) out.add("secondary");
+    return out;
+  }
+
   onUse(cb: (hand: Handedness, control: VrControl) => void) {
     this.useListeners.push(cb);
   }

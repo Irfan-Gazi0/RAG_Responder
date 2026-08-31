@@ -28,6 +28,7 @@
 import {
   CanvasTexture,
   LinearFilter,
+  LinearMipmapLinearFilter,
   Mesh,
   MeshBasicMaterial,
   PlaneGeometry,
@@ -72,6 +73,22 @@ export type CanvasSurface = {
 };
 
 /**
+ * Opt-in mipmapping, for a surface that is NOT read at glancing angles.
+ *
+ * The default above is deliberate and stays: a world-locked panel is read from
+ * wherever the user happens to be standing, and mipmapped text at a glancing
+ * angle is mush. But a BILLBOARDED surface is head-on by construction, and at
+ * hand distance a 512 px canvas covers only ~220-290 device pixels on a Quest 3
+ * at fbscale 0.8 - a ~2x minification, which without mipmaps aliases every
+ * high-contrast edge and shimmers under reprojection.
+ *
+ * `anisotropy` is the part that would also fix the glancing-angle case the
+ * comment above rules mipmaps out for; it is plumbed through here so that
+ * argument can be settled later without a second copy of this function.
+ */
+export type SurfaceFilter = { mipmaps?: boolean; anisotropy?: number };
+
+/**
  * Canvas -> texture -> quad. `metres` is the width; the height follows the
  * canvas aspect so the pixel grid is never stretched.
  */
@@ -80,13 +97,20 @@ export function makeCanvasSurface(
   h: number,
   metres: number,
   renderOrder: number,
+  filter?: SurfaceFilter,
 ): CanvasSurface {
   const canvas = document.createElement("canvas");
   canvas.width = w;
   canvas.height = h;
   const tex = new CanvasTexture(canvas);
   tex.colorSpace = SRGBColorSpace;
-  tex.minFilter = LinearFilter;
+  if (filter?.mipmaps) {
+    tex.generateMipmaps = true;
+    tex.minFilter = LinearMipmapLinearFilter;
+  } else {
+    tex.minFilter = LinearFilter;
+  }
+  if (filter?.anisotropy) tex.anisotropy = filter.anisotropy;
   const mesh = new Mesh(
     new PlaneGeometry(metres, (metres * h) / w),
     new MeshBasicMaterial({
