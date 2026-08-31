@@ -1,12 +1,11 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
 # Bump this whenever the embedded HTML changes on S3 — v2/index.html (the
 # default), inspector_portal.html, or chat_panel.html.
 # It changes the iframe URL's cache key so browsers can't serve a stale copy
 # (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
 # which a CloudFront invalidation does NOT clear).
-CACHE_BUST = "20260830a"
+CACHE_BUST = "20260831a"
 
 # v2 (IWSDK build) is now the default embedded portal — it lives under /v2/ as a
 # multi-file bundle and replaces the old A-Frame v1 (inspector_portal.html).
@@ -31,7 +30,7 @@ SPLAT_PLY = (
 )
 SPLAT_URL = f"{SPLAT_VIEWER}?url={SPLAT_PLY}"
 
-# Standalone WebXR splat viewer (Spark). VR cannot work inside components.iframe()
+# Standalone WebXR splat viewer (Spark). VR cannot work inside st.iframe()
 # because Streamlit withholds `xr-spatial-tracking`, so this is linked, not embedded.
 SPLAT_VR_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/splat-vr/index.html?v={CACHE_BUST}"
 
@@ -125,28 +124,26 @@ with tab1:
         "headset's browser, then tap the **Enter VR** button in the bottom-right "
         "corner to step inside."
     )
-    components.iframe(PORTAL_URL, height=800, scrolling=True)
+    st.iframe(PORTAL_URL, height=800)
 
 with tab2:
     st.subheader("🚗 3D Views of EVs")
     st.markdown(
-        "Inspect high-fidelity Gaussian-splatting 3D scans of the vehicle, with the AI "
-        "assistant alongside for procedure questions."
+        "Inspect high-fidelity Gaussian-splatting 3D scans of the vehicle."
     )
     st.caption(
         f"🥽 Using a VR headset? [Open the car scene in VR]({SPLAT_VR_URL}), "
-        "then tap **Enter VR** to walk around the vehicle."
+        "then tap **Enter VR** to walk in the virtual environment."
     )
     # The desktop viewer pulls a 43.6 MB .ply from Hugging Face and shows a red
     # placeholder cube meanwhile, with no progress of its own — it reads as broken
     # for ~15 s. Nothing to fix in this repo (that viewer is a third-party URL),
     # so say so rather than let people conclude the tab is dead.
     st.caption(
-        "⏳ The 3D scan is a large download — the viewer shows a placeholder for "
-        "roughly 15 seconds on first load before the vehicle appears."
+        "⏳ The 3D scan is a large file so it takes a moment to load the vehicle ."
     )
     viewer_col, chat_col = st.columns([2, 1])
     with viewer_col:
-        components.iframe(SPLAT_URL, height=750, scrolling=True)
+        st.iframe(SPLAT_URL, height=750)
     with chat_col:
-        components.iframe(CHAT_URL, height=750, scrolling=False)
+        st.iframe(CHAT_URL, height=750)

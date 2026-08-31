@@ -43,8 +43,8 @@
  * The entries below are written once, on the DRIVER side, and the symmetric
  * ones are mirrored to the passenger side at module load (see SYMMETRIC and
  * mirrorToPassengerSide). Restraints, high-strength zones and lifting points
- * exist on BOTH sides of a real vehicle, and hand-writing eight more blocks
- * would just be eight more places for the two sides to drift apart.
+ * exist on BOTH sides of a real vehicle, and hand-writing them out twice would
+ * just be more places for the two sides to drift apart.
  *
  * A responder standing on the passenger side used to see ghosted far-side
  * markers and nothing at all on the side they were actually working.
@@ -401,9 +401,11 @@ const DRIVER_SIDE: Record<VehicleId, Hotspot[]> = {
 
 /**
  * Markers that exist on both sides of the vehicle and so get a passenger-side
- * twin. The front-compartment four are deliberately absent: the loop, the 12V
- * battery, the SRS module and the front drive unit are each in exactly one
+ * twin. The front-compartment entries are deliberately absent: the loop, the
+ * 12V battery, the SRS module and the front drive unit are each in exactly one
  * place, and the pack marker is on the centreline already.
+ *
+ * This is applied to the ACTIVE set only - see the bottom of the file.
  */
 const SYMMETRIC = new Set(["restraints-pillar", "high-strength-zone", "lifting-points"]);
 
@@ -443,9 +445,40 @@ function withPassengerSide(list: Hotspot[]): Hotspot[] {
   return out;
 }
 
+/**
+ * Which of the blocks above actually become markers in VR.
+ *
+ * Trimmed 2026-08-31 from nine authored entries (thirteen after mirroring) to
+ * three. Thirteen beacons around a 4.79 m car read as a halo of dots rather
+ * than as the things you must know before you cut - the exact failure the
+ * DEPTH note in hotspots.ts warns about, arrived at from the other direction.
+ *
+ * The other six stay authored above with their ERG quotes and page citations
+ * intact, because that sourcing is the expensive part and re-deriving it costs
+ * an afternoon. Add an id here to put its marker back in VR; nothing else
+ * needs to change.
+ *
+ * Note that this drops every `caution` entry, so the amber tier is currently
+ * absent from the field by design - the survivors are two danger and one info.
+ */
+const ACTIVE = new Set<string>([
+  "first-responder-loop", // danger - where you cut
+  "hv-battery-pack", // danger - what kills you
+  "lifting-points", // info   - mirrored to both sides
+]);
+
+/**
+ * Filter BEFORE mirroring, so a switched-off entry takes its passenger-side
+ * twin with it. A surviving orphan twin would have no driver-side entry to
+ * reflect, which is both wrong on the vehicle and a vr_check.mjs failure.
+ */
+function active(list: Hotspot[]): Hotspot[] {
+  return list.filter((h) => ACTIVE.has(h.id));
+}
+
 export const HOTSPOTS: Record<VehicleId, Hotspot[]> = {
-  "equinox-ev-2024": withPassengerSide(DRIVER_SIDE["equinox-ev-2024"]),
-  "blazer-ev-2024": withPassengerSide(DRIVER_SIDE["blazer-ev-2024"]),
+  "equinox-ev-2024": withPassengerSide(active(DRIVER_SIDE["equinox-ev-2024"])),
+  "blazer-ev-2024": withPassengerSide(active(DRIVER_SIDE["blazer-ev-2024"])),
 };
 
 export function hotspotsFor(vehicle: VehicleId): Hotspot[] {

@@ -451,7 +451,7 @@ function pressHotspot(controller: Object3D): boolean {
   if (!hit) return false;
   const world = hotspots.worldOf(hit.id);
   if (!world) return false;
-  hotspotCard.show(hit, world, camera, renderer.xr.isPresenting);
+  hotspotCard.show(hit, world, camera);
   pulseFor(controller, 0.45, 25);
   return true;
 }
@@ -942,13 +942,33 @@ if (DEV) {
       const world = hotspots.worldOf(id);
       if (!h || !world) return false;
       camera.updateWorldMatrix(true, false);
-      hotspotCard.show(h, world, camera, renderer.xr.isPresenting);
+      hotspotCard.show(h, world, camera);
       return true;
     },
     card: () => ({
       visible: hotspotCard.visible,
       id: hotspotCard.hotspot?.id ?? null,
     }),
+    /**
+     * Where the open card ended up relative to the head and to its marker.
+     *
+     * This is the number that would have caught the card being unreadable in
+     * the headset: it opened at a standoff from the MARKER, so pressing from
+     * across the room put the text metres away at ~25 arcmin. `headDistance` is
+     * now bounded by READ_DISTANCE whatever the marker distance is, and
+     * vr_check.mjs asserts it.
+     */
+    cardPose: () => {
+      const head = camera.getWorldPosition(new Vector3());
+      const card = hotspotCard.group.getWorldPosition(new Vector3());
+      return {
+        headDistance: head.distanceTo(card),
+        markerDistance: hotspotCard.anchor.distanceTo(card),
+        headToMarker: head.distanceTo(hotspotCard.anchor),
+      };
+    },
+    /** What the last card draw actually laid out - see CardLayout. */
+    cardLayout: () => hotspotCard.layout,
     closeCard: () => hotspotCard.hide(),
     /** Hit-test the open card at normalized canvas coordinates. */
     cardHitUV(u: number, v: number) {
@@ -1139,7 +1159,7 @@ function syncHotspotPane() {
  * Emit the whole hazard set, not just the edited marker.
  *
  * Placing one marker almost always shifts your opinion of its neighbours, so
- * copying a single line back would mean nine round trips through the editor.
+ * copying a single line back would mean a round trip per marker.
  * `verified` is emitted as-is rather than flipped automatically: confirming a
  * position is a judgement a person makes, not a side effect of dragging a slider.
  */
@@ -1235,7 +1255,7 @@ renderer.setAnimationLoop((time: number) => {
     // the same reason the hint ordering above matters.
     hotspots.update(dt, camera);
     hotspots.setHover(vrInput.controllers);
-    hotspotCard.face(camera, true);
+    hotspotCard.face(camera);
     tracking.update();
     updateVrSurfaces(dt);
     // The synthetic floor is DoubleSide, so ducking below it turns it into a
@@ -1244,7 +1264,7 @@ renderer.setAnimationLoop((time: number) => {
   } else {
     controls.update(camera);
     hotspots.update(dt, camera);
-    hotspotCard.face(camera, false);
+    hotspotCard.face(camera);
   }
   renderer.render(scene, camera);
 });

@@ -339,13 +339,26 @@ const spots = await page.evaluate(() => {
     diag: window.__diag,
   };
 });
-check("the loaded scan has a hazard set", spots.list.length >= 8,
+// Three authored hazards survive the ACTIVE trim in hotspots-data.ts, plus the
+// mirrored lifting point: four markers. The floor is deliberately the ACTIVE
+// count and not the exact total, so putting a switched-off entry back does not
+// fail the suite.
+check("the loaded scan has a hazard set", spots.list.length >= 3,
   `${spots.list.length} markers`);
 check("hotspot ids are unique",
   new Set(spots.list.map((h) => h.id)).size === spots.list.length);
-check("the set covers all three severities",
-  new Set(spots.list.map((h) => h.severity)).size === 3,
-  [...new Set(spots.list.map((h) => h.severity))].join(","));
+// Not "all three severities" any more: the ACTIVE trim drops every `caution`
+// entry, so the field is deliberately danger + info. What still has to hold is
+// that every severity is one the renderer has a colour for, and that the thing
+// you must not get wrong - a danger marker - is on the car at all.
+{
+  const known = new Set(["danger", "caution", "info"]);
+  const seen = [...new Set(spots.list.map((h) => h.severity))];
+  check("every severity is one the renderer knows", seen.every((s) => known.has(s)),
+    seen.join(","));
+  check("at least one danger marker survives the trim", seen.includes("danger"),
+    seen.join(","));
+}
 {
   // Positions are authored in metres from the vehicle centre, so every marker
   // must land on the vehicle - not out on the tarmac, and not underground.
@@ -372,7 +385,7 @@ check("seeded positions are flagged unverified",
 {
   const byId = new Map(spots.list.map((h) => [h.id, h]));
   const twins = spots.list.filter((h) => h.id.endsWith("-passenger"));
-  check("symmetric hazards are present on both sides", twins.length >= 3,
+  check("symmetric hazards are present on both sides", twins.length >= 1,
     `${twins.length} passenger-side twins`);
   // Authored `pos`, not `world`: the vehicle frame is mirrored across its own
   // centreline, and the per-scan yaw is what decides which way that faces.
@@ -405,9 +418,15 @@ const card = await page.evaluate(() => {
   const swapped = window.__vr.card();
   const closeHit = window.__vr.cardHitUV((880 - 54) / 880, 48 / 620);
   const bodyHit = window.__vr.cardHitUV(0.5, 0.5);
+  // Re-open the first one and read back where it actually landed. The desktop
+  // framing camera sits several metres off the car, which is exactly the case
+  // that used to open the card metres away and unreadable.
+  window.__vr.openCard(target.id);
+  const pose = window.__vr.cardPose();
+  const layout = window.__vr.cardLayout();
   window.__vr.closeCard();
   return { target: target.id, hit, miss, opened, swapped, closeHit, bodyHit,
-           afterClose: window.__vr.card() };
+           pose, layout, afterClose: window.__vr.card() };
 });
 check("a ray at a marker resolves to that marker", card.hit === card.target,
   `got ${card.hit}, wanted ${card.target}`);
@@ -423,6 +442,25 @@ check("the card's close button is where it is painted", card.closeHit === "close
 check("the card body is not a button", card.bodyHit === null, `got ${card.bodyHit}`);
 check("closing the card hides it", card.afterClose.visible === false);
 
+// The three below are the permanent guard on the 2026-08-31 legibility fix.
+//
+// The card used to be placed at a standoff from its MARKER and, in XR, pinned
+// to scale 1. Press a marker from across the workshop and it opened metres
+// away, where 26 px body text on an 880 px canvas painted 0.62 m wide subtends
+// ~25 arcmin - about six device pixels on a Quest 3. Nothing headless caught
+// it because every existing card assertion raycasts the quad, which works
+// perfectly at any distance. Distance and layout are what needed asserting.
+check("an opened card lands within reading distance of the head",
+  card.pose.headDistance >= 0.5 && card.pose.headDistance <= 1.3,
+  `${card.pose.headDistance.toFixed(2)} m from the head, ` +
+  `marker was ${card.pose.headToMarker.toFixed(2)} m away`);
+check("card body text stays inside the card",
+  card.layout.maxLineWidth <= 880 - 60 && card.layout.lines > 0,
+  JSON.stringify(card.layout));
+check("card body does not run into the unverified banner",
+  card.layout.bodyBottom <= card.layout.limit,
+  JSON.stringify(card.layout));
+
 // Markers must survive a model swap - they are keyed by vehicle, and both scans
 // of one vehicle share a set.
 const swap = await page.evaluate(async () => {
@@ -435,7 +473,7 @@ const swap = await page.evaluate(async () => {
   return { before, after: list.length, sample: list[0]?.world ?? null };
 });
 check("a model swap keeps a full hazard set",
-  swap.after >= 8 && swap.sample !== null,
+  swap.after >= 3 && swap.sample !== null,
   JSON.stringify(swap));
 
 // --- 9. Input mode ---------------------------------------------------------

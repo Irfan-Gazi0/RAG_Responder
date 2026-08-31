@@ -14,7 +14,11 @@
  *   - `MeshBasicMaterial`. The scene has no lights at all - a lit material
  *     renders black.
  *   - `depthTest: false` plus an explicit `renderOrder`. The scans are dense
- *     point clouds and would otherwise chew holes in every label.
+ *     point clouds and would otherwise chew holes in every label. `depthWrite`
+ *     has to go with it: a surface that ignores depth but still WRITES it
+ *     stamps its whole quad into the buffer, and the things drawn after it that
+ *     do test depth - the teleport arc, disc and ring at 890-892 - get punched
+ *     out by a panel they are nowhere near.
  *
  * Colours stay CSS strings rather than THREE.Color. That is not laziness: a
  * canvas is sRGB but Color stores linear-sRGB components, so `color.r * 255`
@@ -85,7 +89,12 @@ export function makeCanvasSurface(
   tex.minFilter = LinearFilter;
   const mesh = new Mesh(
     new PlaneGeometry(metres, (metres * h) / w),
-    new MeshBasicMaterial({ map: tex, transparent: true, depthTest: false }),
+    new MeshBasicMaterial({
+      map: tex,
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
+    }),
   );
   mesh.renderOrder = renderOrder;
   return { canvas, ctx: canvas.getContext("2d")!, tex, mesh, w, h };

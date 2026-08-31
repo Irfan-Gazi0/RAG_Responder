@@ -1,0 +1,12 @@
+# Streamlit Cloud (nec4-jumpstart.streamlit.app) installs from this file on every
+# rebuild of the feature/streamlit-landing-page branch. Without it, the cloud pulls
+# whatever `streamlit` is latest at rebuild time — an upgrade nobody triggered can
+# break the app between deploys.
+#
+# streamlit_app.py imports nothing else: it is a pure iframe wrapper around the
+# CloudFront-hosted portal. Ingestion/deploy tooling (boto3, dotenv, whisper,
+# unstructured) runs locally under python3.10 and is deliberately NOT listed here.
+#
+# Floor is 1.62 because the app uses st.iframe, which replaced the removed
+# st.components.v1.iframe shim. Upper bound guards against a 2.x major.
+streamlit>=1.62,<2
