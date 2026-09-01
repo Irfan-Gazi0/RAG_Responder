@@ -667,6 +667,109 @@ check("input mode reports honestly with nothing connected", mode.mode === "none"
     `${(deg(h.panel.w / 2) * 2).toFixed(1)} deg wide (${h.panel.w.toFixed(3)} m)`);
 }
 
+// --- 11c. Handing over between controllers and tracked hands ---------------
+// THE ONLY HEADLESS COVERAGE OF THIS PATH THAT HAS EVER EXISTED. Nothing in a
+// headless browser produces an `inputsourceschange`, so every module that reacts
+// to one was verified by putting a headset on - which is how the app shipped a
+// legend that kept naming Trigger / Stick / B / Y at a hand holding none of
+// them, and a controller model that arrived twice. __vr.setInputSource drives
+// the shared registry (src/input-sources.ts) with the same shape three hands to
+// a `connected` event, so what the subscribers see here is what they see on
+// device.
+{
+  const CTRL = (handedness) => ({ handedness, gamepad: true });
+  const HAND = (handedness) => ({ handedness, hand: true });
+  const drive = (calls) =>
+    page.evaluate((cs) => {
+      for (const [i, src] of cs) window.__vr.setInputSource(i, src);
+      return window.__vr.inputState();
+    }, calls);
+
+  // Both controllers up.
+  let st = await drive([[0, CTRL("left")], [1, CTRL("right")]]);
+  check("two controllers read as controller mode", st.mode === "controllers",
+    JSON.stringify(st.slots));
+  check("each controller gets its own legend, and only its own",
+    st.hints.perGrip.join(",") === "1,1", `perGrip=${st.hints.perGrip}`);
+  check("both legends are raised while both controllers are held",
+    st.hints.visible.left && st.hints.visible.right, JSON.stringify(st.hints.visible));
+  check("each slot's controller model is shown",
+    st.models.every((m) => m.hand && m.holderVisible), JSON.stringify(st.models));
+
+  // Put the LEFT one down; the right is still held. This is the state the whole
+  // change is about, and the one the old code had no branch for.
+  st = await drive([[0, HAND("left")]]);
+  check("one controller and one tracked hand reads as mixed", st.mode === "mixed",
+    JSON.stringify(st.slots));
+  check("the hand's legend is detached from its grip",
+    st.hints.perGrip[0] === 0 && st.hints.gripOf.left === -1,
+    JSON.stringify(st.hints));
+  check("the hand's legend is hidden, not merely unparented",
+    st.hints.visible.left === false, JSON.stringify(st.hints.visible));
+  check("the hand's slot stops claiming a controller and goes dark",
+    st.models[0].hand === null && st.models[0].holderVisible === false,
+    JSON.stringify(st.models[0]));
+  check("the hand's button glow registry is emptied",
+    st.models[0].glowNodes === 0, `glowNodes=${st.models[0].glowNodes}`);
+  check("the hand-over does not disturb the controller still being held",
+    st.hints.perGrip[1] === 1 && st.hints.visible.right && st.models[1].holderVisible,
+    JSON.stringify({ hints: st.hints, model: st.models[1] }));
+
+  // Both hands now.
+  st = await drive([[1, HAND("right")]]);
+  check("two tracked hands read as hand mode", st.mode === "hands",
+    JSON.stringify(st.slots));
+  check("no legend survives into hand mode",
+    st.hints.perGrip.join(",") === "0,0" &&
+      !st.hints.visible.left && !st.hints.visible.right,
+    JSON.stringify(st.hints));
+  const eff = await page.evaluate(() => window.__vr.effectiveMovementStyle());
+  check("hand mode forces teleport locomotion", eff === "teleport", `got ${eff}`);
+
+  // Pick them back up, and in the OTHER slots - three re-assigns by arrival
+  // order, so a hands round-trip routinely hands them back the other way round.
+  // That swap is what used to leave `attached` naming a group it no longer owned.
+  st = await drive([[0, CTRL("right")], [1, CTRL("left")]]);
+  check("controllers coming back in swapped slots land one legend each",
+    st.hints.perGrip.join(",") === "1,1", `perGrip=${st.hints.perGrip}`);
+  check("the swap is tracked, not just survived",
+    st.hints.gripOf.right === 0 && st.hints.gripOf.left === 1,
+    JSON.stringify(st.hints.gripOf));
+  check("the bookkeeping agrees with the scene graph after a swap",
+    st.hints.attached.join(",") === "right,left", `attached=${st.hints.attached}`);
+
+  // THE REGRESSION GUARD. three's XRControllerModelFactory holds ONE closure
+  // variable for the loaded scene and loads asynchronously, so a controller put
+  // down mid-load leaves an orphan its disconnect can never remove - and the
+  // next connect adds a second clone on top. Two overlapping controllers in one
+  // hand, with the button glow bound by getObjectByName to the buried one.
+  // syncModel keeps the newest and drops the rest.
+  const arrivals = await page.evaluate(() => {
+    const out = [];
+    for (let cycle = 0; cycle < 3; cycle++) {
+      out.push(window.__vr.simulateControllerAsset(0)[0].modelChildren);
+      // A second arrival with no disconnect in between: the race, exactly.
+      out.push(window.__vr.simulateControllerAsset(0)[0].modelChildren);
+      window.__vr.setInputSource(0, { handedness: "right", hand: true });
+      window.__vr.setInputSource(0, { handedness: "right", gamepad: true });
+    }
+    return { counts: out, state: window.__vr.inputState().models[0] };
+  });
+  check("a slot never draws more than one controller model",
+    arrivals.counts.every((n) => n === 1), `children per arrival: ${arrivals.counts}`);
+  check("a hand-over clears the model out entirely",
+    arrivals.state.modelChildren === 0 && arrivals.state.loaded === false,
+    JSON.stringify(arrivals.state));
+
+  // Leave the rig empty so section 12 and the console sweep start clean.
+  await drive([[0, null], [1, null]]);
+  st = await page.evaluate(() => window.__vr.inputState());
+  check("clearing both slots returns the app to no-input mode",
+    st.mode === "none" && st.hints.perGrip.join(",") === "0,0" &&
+      st.models.every((m) => !m.holderVisible),
+    JSON.stringify(st));
+}
+
 // --- 12. The preflight warning outlives the model load ---------------------
 // The tracking preflight - "this page is inside a frame, VR will be
 // orientation-only" - is the answer to the question this project keeps having to

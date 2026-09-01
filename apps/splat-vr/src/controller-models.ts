@@ -68,6 +68,7 @@ import {
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { XRControllerModelFactory } from "three/addons/webxr/XRControllerModelFactory.js";
 import { C } from "./canvas-ui";
+import type { InputSources, SlotState } from "./input-sources";
 import type { Handedness } from "./vr-input";
 
 /** Vendored profiles, relative to the page (vite base is "./"). */
@@ -266,6 +267,13 @@ type Slot = {
   hand: Handedness | null;
   /** True once the glTF scene has been parented under `model`. */
   loaded: boolean;
+  /** Children of `model` at the last reconcile - see syncModel(). */
+  modelChildren: number;
+  /**
+   * The material clones registerGlow made for this slot, so re-registering
+   * frees the previous set rather than leaking one per connect.
+   */
+  owned: Material[];
   /** Seconds since this slot connected, for the timeout report. */
   waiting: number;
   reported: boolean;
@@ -274,6 +282,8 @@ type Slot = {
 export type ControllerModelsOptions = {
   renderer: WebGLRenderer;
   playerRig: Object3D;
+  /** Who is holding what. The only source of connect/disconnect state. */
+  inputs: InputSources;
   /** `?controllers=0` - suppress the models entirely for an A/B on device. */
   enabled?: boolean;
   /** Raised when a controller has been connected a long time with no model. */
@@ -284,6 +294,8 @@ export class ControllerModels {
   private slots: Slot[] = [];
   private factory: XRControllerModelFactory;
   private enabled: boolean;
+  /** Session-level show/hide, ANDed per slot with "is a controller in it". */
+  private visible = true;
   private onProblem?: (message: string) => void;
   private glow: Record<Handedness, Map<string, GlowTarget>> = {
     left: new Map(),
@@ -314,8 +326,9 @@ export class ControllerModels {
       const grip = opts.renderer.xr.getControllerGrip(i);
       opts.playerRig.add(grip);
 
+      // Visibility is refreshVisibility()'s job, per slot, at the end of the
+      // constructor - a holder starts hidden because a slot starts empty.
       const holder = new Group();
-      holder.visible = this.enabled;
       const { group: proxy, bumps } = buildProxy();
       // createControllerModel registers on the object it is given, so the grip
       // has to be what is passed even though the result is parented deeper.
@@ -331,41 +344,115 @@ export class ControllerModels {
         bumps,
         hand: null,
         loaded: false,
+        modelChildren: 0,
+        owned: [],
         waiting: 0,
         reported: false,
       };
       this.slots.push(slot);
+    }
 
-      grip.addEventListener("connected", (event) => {
-        const src = (event as unknown as { data?: XRInputSource }).data;
-        // A tracked hand has a grip space too. hand-input.ts draws those; a
-        // controller mesh floating inside someone's palm would be worse than
-        // nothing.
-        if (!src || src.hand) {
-          slot.hand = null;
-          slot.proxy.visible = false;
-          return;
-        }
-        slot.hand = src.handedness === "left" || src.handedness === "right" ? src.handedness : null;
+    opts.inputs.onChange((slots) => this.applySlots(slots));
+    this.refreshVisibility();
+  }
+
+  // --- slot lifecycle -----------------------------------------------------
+
+  /**
+   * Follow the slots. A controller mesh belongs in a hand holding a controller.
+   *
+   * This replaces a pair of grip listeners that had the same shape as the ones
+   * in controller-hints.ts and the same gap: the hand branch hid the placeholder
+   * and returned, leaving `loaded`, the glTF under `model` and the glow registry
+   * exactly as the departing controller left them. Reading the slot state makes
+   * every transition go through one teardown.
+   */
+  private applySlots(slots: readonly SlotState[]) {
+    for (let i = 0; i < this.slots.length; i++) {
+      const slot = this.slots[i];
+      const state = slots[i];
+      const hand = state?.kind === "controller" ? state.hand : null;
+      if (hand === slot.hand) continue;
+
+      this.release(slot);
+      slot.hand = hand;
+      if (hand) {
         slot.waiting = 0;
         slot.reported = false;
-        slot.proxy.visible = !slot.loaded;
+        slot.proxy.visible = true;
         // The proxy is what is on screen for the next few hundred ms, so its
         // bumps have to be lightable before the glTF resolves - otherwise the
         // legend names three buttons and none of them respond.
-        if (slot.hand && !slot.loaded) this.registerProxy(slot, slot.hand);
-      });
+        this.registerProxy(slot, hand);
+      }
+    }
+    this.refreshVisibility();
+  }
 
-      grip.addEventListener("disconnected", () => {
-        // The factory drops the glTF from `model` on this same event, so the
-        // proxy has to come back or the next connect shows an empty holder -
-        // and the glow registry has to go with it, or it points at materials
-        // that are no longer on anything.
-        if (slot.hand) this.glow[slot.hand] = new Map();
-        slot.hand = null;
-        slot.loaded = false;
-        slot.proxy.visible = false;
-      });
+  /**
+   * Take a slot back to empty, and mean it.
+   *
+   * three's XRControllerModelFactory cannot be trusted to remove what it added.
+   * It holds ONE closure variable for the loaded scene and the load is async:
+   *
+   *   connected  -> fetchProfile().then(load).then(() => model.add(scene))
+   *   disconnected -> model.remove(scene); scene = null
+   *
+   * Put the controller down before the glTF resolves - which is exactly what a
+   * controller-to-hands switch does against a load of a few hundred ms - and the
+   * late add() lands on an already-disconnected model with the closure nulled,
+   * so no future disconnect can ever remove it. Pick the controller back up and
+   * a second clone arrives on top of the first. That is the duplicated,
+   * overlapping controller a device tester sees; worse, registerGlow resolves
+   * buttons with getObjectByName, which returns the FIRST match, so the
+   * highlights light the buried copy and the visible one stays dark.
+   *
+   * We cannot fix three from here. We can refuse to keep more than one.
+   */
+  private release(slot: Slot) {
+    this.clearModel(slot);
+    this.disposeOwned(slot);
+    if (slot.hand) this.glow[slot.hand] = new Map();
+    slot.hand = null;
+    slot.loaded = false;
+    slot.proxy.visible = false;
+  }
+
+  private clearModel(slot: Slot) {
+    // Copy first: remove() splices the live children array.
+    for (const child of [...slot.model.children]) slot.model.remove(child);
+    slot.modelChildren = 0;
+  }
+
+  /**
+   * Free the material clones this slot last registered.
+   *
+   * Only the clones. An asset scene is `asset.scene.clone()`, and three's clone
+   * SHARES materials with the cached original, so disposing anything reachable
+   * by traversal would break every future controller loaded from the cache.
+   * registerGlow's own output is the exact set we made and the only set we may
+   * free.
+   */
+  private disposeOwned(slot: Slot) {
+    for (const m of slot.owned) m.dispose();
+    slot.owned = [];
+  }
+
+  /** Install a freshly-built glow map, freeing the one it replaces. */
+  private adopt(slot: Slot, hand: Handedness, map: Map<string, GlowTarget>) {
+    // registerGlow has already pointed the meshes at the new clones, so the
+    // previous set is unreferenced by the time this runs.
+    this.disposeOwned(slot);
+    slot.owned = [...map.values()].flatMap((t) => t.materials);
+    this.glow[hand] = map;
+  }
+
+  private refreshVisibility() {
+    // Per slot, not per app: a slot holding a tracked hand has to go dark on its
+    // own while the other one may still be holding a controller. setVisible()
+    // drove every holder together, so it could not express that.
+    for (const s of this.slots) {
+      s.holder.visible = this.visible && this.enabled && !!s.hand;
     }
   }
 
@@ -389,7 +476,7 @@ export class ControllerModels {
     }
     // The proxy's other two meshes are deliberately unnamed, so a lookup by name
     // cannot reach the body or the face plate.
-    this.glow[hand] = registerGlow(slot.proxy, ["trigger", "thumbstick", secondary]);
+    this.adopt(slot, hand, registerGlow(slot.proxy, ["trigger", "thumbstick", secondary]));
   }
 
   /**
@@ -403,7 +490,8 @@ export class ControllerModels {
   }
 
   setVisible(v: boolean) {
-    for (const s of this.slots) s.holder.visible = v && this.enabled;
+    this.visible = v;
+    this.refreshVisibility();
   }
 
   update(dt: number) {
@@ -411,26 +499,99 @@ export class ControllerModels {
     for (const slot of this.slots) {
       if (!slot.hand) continue;
 
+      this.syncModel(slot);
+
       if (!slot.loaded) {
-        // The factory offers no "loaded" signal and no per-controller callback,
-        // so detect the glTF by its arrival under the model. One property read
-        // per controller per frame, and only until it lands.
-        if (slot.model.children.length > 0) {
-          slot.loaded = true;
-          slot.proxy.visible = false;
-          this.glow[slot.hand] = registerGlow(slot.model, BUTTON_NODES[slot.hand]);
-        } else {
-          slot.waiting += dt;
-          if (slot.waiting > MODEL_TIMEOUT && !slot.reported) {
-            slot.reported = true;
-            this.onProblem?.(
-              "Controller model did not load - showing a placeholder. " +
-                "The button highlights are on the placeholder instead.",
-            );
-          }
+        slot.waiting += dt;
+        if (slot.waiting > MODEL_TIMEOUT && !slot.reported) {
+          slot.reported = true;
+          this.onProblem?.(
+            "Controller model did not load - showing a placeholder. " +
+              "The button highlights are on the placeholder instead.",
+          );
         }
       }
     }
+  }
+
+  /**
+   * Reconcile what the factory has put under this slot's model.
+   *
+   * The factory offers no "loaded" signal and no per-controller callback, so the
+   * arrival of a child IS the signal. This used to be a bare
+   * `children.length > 0` test, which is true of a stale orphan as readily as of
+   * the live asset - so after the race described on release() it would latch
+   * onto the leftover on the first frame after reconnect and register the glow
+   * against a mesh buried under the one actually being drawn.
+   *
+   * Comparing against the remembered count instead makes a SECOND arrival
+   * visible as an event, and the factory only ever appends, so the newest child
+   * is the live one and anything before it is an orphan. One integer compare per
+   * controller per frame buys the invariant that a slot draws exactly one model.
+   */
+  private syncModel(slot: Slot) {
+    const n = slot.model.children.length;
+    if (n === slot.modelChildren) return;
+
+    if (n > 1) {
+      for (const stale of slot.model.children.slice(0, n - 1)) slot.model.remove(stale);
+    }
+    slot.modelChildren = slot.model.children.length;
+
+    if (slot.modelChildren === 0) {
+      // The factory dropped the asset without the slot changing hands. Fall back
+      // to the placeholder rather than leaving an empty holder and three button
+      // names with nothing to light.
+      slot.loaded = false;
+      slot.proxy.visible = true;
+      if (slot.hand) this.registerProxy(slot, slot.hand);
+      return;
+    }
+
+    slot.loaded = true;
+    slot.proxy.visible = false;
+    if (slot.hand) {
+      this.adopt(slot, slot.hand, registerGlow(slot.model, BUTTON_NODES[slot.hand]));
+    }
+  }
+
+  /**
+   * Stand in for the factory parenting a loaded asset, so the prune can be
+   * asserted without a headset.
+   *
+   * The real arrival needs a controller `connected` event on the grip, which no
+   * headless browser produces - and the defect being guarded against is
+   * precisely an EXTRA arrival, which even a real device only manages on a race
+   * between an async glTF load and a controller being put down. So the check
+   * drives the one input syncModel actually reads: a child appearing under
+   * `model`. It is deliberately a proxy group rather than a bare Object3D, so
+   * the glow re-registration on the far side of the prune is exercised too.
+   */
+  simulateAssetArrival(index: number) {
+    const slot = this.slots[index];
+    if (!slot) return;
+    const { group, bumps } = buildProxy();
+    bumps.trigger.name = "trigger";
+    bumps.thumbstick.name = "thumbstick";
+    bumps.secondary.name = slot.hand === "left" ? "y_button" : "b_button";
+    slot.model.add(group);
+  }
+
+  /**
+   * What the headless handover check reads back.
+   *
+   * `modelChildren` is the one that matters: it is the assertion that three's
+   * factory race cannot put two overlapping controllers in one hand again.
+   */
+  slotStates() {
+    return this.slots.map((s) => ({
+      hand: s.hand,
+      holderVisible: s.holder.visible,
+      proxyVisible: s.proxy.visible,
+      loaded: s.loaded,
+      modelChildren: s.model.children.length,
+      glowNodes: s.hand ? this.glow[s.hand].size : 0,
+    }));
   }
 }
 

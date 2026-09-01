@@ -32,6 +32,7 @@ import { Ground } from "./ground";
 import { HelpPanel } from "./help-panel";
 import { HandInput } from "./hand-input";
 import { HotspotCard } from "./hotspot-card";
+import { InputSources } from "./input-sources";
 import { Hotspots } from "./hotspots";
 import { Teleport } from "./teleport";
 import { Tracking } from "./tracking";
@@ -389,7 +390,19 @@ function hazardsVisible(): boolean {
   return comfort.hotspots && !HAZARDS_FORCED_OFF;
 }
 
-const vrInput = new VrInput({ renderer, playerRig, camera, settings: comfort });
+/**
+ * Who is holding what, for everything downstream.
+ *
+ * Constructed FIRST of the input modules, and deliberately so: it installs the
+ * only `connected`/`disconnected` listeners in the app, and three delivers those
+ * to the target-ray space before the grip - so by the time ControllerModels lets
+ * three's own factory react on the grip, every subscriber here is already
+ * current. See input-sources.ts; the handover this fixes is what left duplicate
+ * controller meshes and a legend naming buttons at an empty hand.
+ */
+const inputSources = new InputSources(renderer);
+
+const vrInput = new VrInput({ renderer, playerRig, camera, inputs: inputSources, settings: comfort });
 const helpPanel = new HelpPanel(comfort);
 // Parented to the rig so the panel travels with the user rather than being left
 // behind the moment they walk to the far side of the car.
@@ -401,6 +414,7 @@ playerRig.add(helpPanel.group);
 const controllerModels = new ControllerModels({
   renderer,
   playerRig,
+  inputs: inputSources,
   enabled: CONTROLLERS_ENABLED,
   onProblem: (message) => reportError(message),
 });
@@ -415,6 +429,7 @@ const controllerModels = new ControllerModels({
 const hints = new ControllerHints(
   renderer,
   playerRig,
+  inputSources,
   comfort,
   controllerModels,
   numParam("hintpos", 0.105, 0.04, 0.3),
@@ -432,6 +447,7 @@ const teleport = new Teleport(scene, playerRig, camera);
 const handInput = new HandInput({
   renderer,
   playerRig,
+  inputs: inputSources,
   palmSign: numParam("palmsign", -1, -1, 1) < 0 ? -1 : 1,
 });
 
@@ -964,6 +980,11 @@ if (DEV) {
   // whose maths can silently go wrong (the teleport arc, the panel's UV-to-hit
   // mapping) are driven through here by scripts/vr_check.mjs instead. Same
   // rationale as window.__diag: assert behaviour, do not eyeball a screenshot.
+  //
+  // setInputSource/simulateControllerAsset extend that to the controller-to-hand
+  // HANDOVER, which had no headless coverage at all until a device tester found
+  // the legend still naming buttons at an empty hand and two controller meshes
+  // stacked in the other one.
   (window as unknown as { __vr: unknown }).__vr = {
     xrRender: () => ({
       framebufferScale: XR_FRAMEBUFFER_SCALE,
@@ -1009,6 +1030,44 @@ if (DEV) {
       (ground.mesh.material as { opacity: number }).opacity,
     inputMode: () => vrInput.inputMode,
     effectiveMovementStyle: () => vrInput.effectiveMovementStyle,
+    /**
+     * Drive the controller/hand handover.
+     *
+     * The single most valuable seam in this object, because it is the ONLY way
+     * to reach that code path outside a headset: nothing headless produces an
+     * `inputsourceschange`, which is how a handover bug - a legend naming
+     * buttons at an empty hand, and two overlapping controller meshes in one -
+     * sat in a shipped build with 81 passing assertions around it.
+     *
+     * Takes the same shape three hands to a `connected` event, so what the
+     * subscribers see here is what they see on device: `hand` truthy means a
+     * tracked hand, null clears the slot.
+     */
+    setInputSource: (
+      index: number,
+      src: { handedness?: string; hand?: boolean; gamepad?: boolean } | null,
+    ) => {
+      inputSources.set(index, src ? { ...src, hand: src.hand ? {} : undefined } : null);
+      return inputSources.snapshot();
+    },
+    /**
+     * Fake a controller asset landing under a slot, then run one reconcile.
+     *
+     * This is what makes three's factory race assertable: it appends, never
+     * replaces, so the guard is that a second arrival leaves exactly one model
+     * standing rather than two overlapping ones.
+     */
+    simulateControllerAsset: (index: number) => {
+      controllerModels.simulateAssetArrival(index);
+      controllerModels.update(1 / 60);
+      return controllerModels.slotStates();
+    },
+    /** Everything the handover touches, in one readback. */
+    inputState: () => ({
+      ...inputSources.snapshot(),
+      hints: hints.attachment(),
+      models: controllerModels.slotStates(),
+    }),
     /**
      * The ?hazards=0 override and the stored preference, separately.
      * scripts/vr_check.mjs asserts the override never reaches storage: folding
@@ -1382,14 +1441,32 @@ function updateVrSurfaces(dt: number) {
   helpPanel.setMode(vrInput.inputMode);
 
   const r = tracking.report();
+  /**
+   * Input sources the runtime offered that three never gave a slot.
+   *
+   * three keeps exactly two and drops the rest in silence (see
+   * input-sources.ts), so a Quest reporting controllers AND hands at once
+   * delivers whichever pair arrived first and nothing else. The user sees hand
+   * tracking that does nothing, which is indistinguishable from a tracking
+   * fault and would send the next person hunting in this codebase for a bug
+   * that is not in it. Naming it is the whole fix - the remedy is to put one
+   * pair down.
+   */
+  const dropped = inputSources.droppedSources;
   // Nothing to say unless something is actually wrong, or the user asked. A
   // permanent wall of numbers on the controls panel is its own usability bug.
-  if (!r.verdict && !DIAG) {
+  if (!r.verdict && !DIAG && !dropped) {
     helpPanel.setDiagnostics(null);
     return;
   }
   const lines: string[] = [];
   if (r.verdict) lines.push(`!${r.verdict}`);
+  if (dropped) {
+    lines.push(
+      `!${dropped} input source(s) are not reachable - this runtime tracks two.` +
+        " Put down the controllers or the hands, not both.",
+    );
+  }
   lines.push(
     `head travel ${(r.maxTravel * 100).toFixed(0)} cm over ${r.frames} frames` +
       `, ${r.poseFailures} lost poses`,

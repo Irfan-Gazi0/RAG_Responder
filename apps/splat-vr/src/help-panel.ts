@@ -38,10 +38,16 @@ import {
   type CanvasSurface,
   type Rect,
 } from "./canvas-ui";
+import type { InputMode } from "./input-sources";
 import type { ComfortSettings } from "./vr-input";
 
-/** What the user is holding. Drives which bindings the panel claims exist. */
-export type InputMode = "controllers" | "hands" | "mixed" | "none";
+/**
+ * What the user is holding. Drives which bindings the panel claims exist.
+ *
+ * Owned by input-sources.ts now that a single registry decides it; re-exported
+ * here so this file stays the one import site for anything panel-shaped.
+ */
+export type { InputMode };
 
 /** Re-exported so controller-hints.ts keeps its one import site. */
 export { C } from "./canvas-ui";

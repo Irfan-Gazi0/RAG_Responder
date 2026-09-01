@@ -58,6 +58,23 @@
  * and the capacitive-touch highlight (resting a thumb on the stick lights its row)
  * is a second, non-colour channel carrying the same mapping the leader lines used
  * to.
+ *
+ * WITH TRACKED HANDS THERE IS NO LEGEND
+ * -------------------------------------
+ * Every row of this panel names a physical button, so with empty hands every row
+ * of it is false - and it was shipping exactly that, because the old grip
+ * listener treated a hand as a case to ignore rather than a case to tear down.
+ * It now follows the slot registry (input-sources.ts) and stands down entirely
+ * when a slot stops holding a controller. Nothing is lost: help-panel.ts already
+ * paints a five-row hand binding list (Pinch / Pinch + hold / Palm up / ...) off
+ * the same registry, and that panel is world-locked, which is where a list you
+ * read rather than glance at belongs anyway.
+ *
+ * A consequence worth knowing, because it looks like an omission: labelFor()
+ * reads `settings.movementStyle` and NOT `vrInput.effectiveMovementStyle`. The
+ * two only diverge when the mode is "hands" - and in that mode this panel is not
+ * on screen at all. Wiring the effective style in here would add a dependency to
+ * describe a state that cannot be seen.
  */
 import {
   CircleGeometry,
@@ -72,6 +89,7 @@ import {
 import { Text } from "troika-three-text";
 import { C, makeCanvasSurface, roundRect, type CanvasSurface } from "./canvas-ui";
 import type { ControllerModels } from "./controller-models";
+import type { InputSources, SlotState } from "./input-sources";
 import type { ComfortSettings, Handedness, VrControl } from "./vr-input";
 
 /**
@@ -186,6 +204,7 @@ export class ControllerHints {
   constructor(
     renderer: WebGLRenderer,
     playerRig: Group,
+    inputs: InputSources,
     private settings: ComfortSettings,
     private models?: ControllerModels,
     offsetY = DEFAULT_Y,
@@ -201,15 +220,27 @@ export class ControllerHints {
       const grip = renderer.xr.getControllerGrip(i);
       playerRig.add(grip);
       this.grips.push(grip);
+    }
 
-      grip.addEventListener("connected", (event) => {
-        const src = event.data;
-        // Hand tracking has a grip space too, but no buttons to name.
-        if (!src || src.hand) return;
-        if (src.handedness !== "left" && src.handedness !== "right") return;
-        this.attach(i, src.handedness);
-      });
-      grip.addEventListener("disconnected", () => this.detach(i));
+    inputs.onChange((slots) => this.applySlots(slots));
+  }
+
+  /**
+   * Follow the slots: a legend belongs on a held controller and nowhere else.
+   *
+   * This used to attach from the grip's own `connected` event and detach from
+   * `disconnected`, with an early `return` for hands that did no teardown at
+   * all - so correctness rested on a disconnect ALWAYS arriving before the hand
+   * connected. That happens to be what three emits, but nothing enforced it, and
+   * the failure was the panel still naming a trigger, a stick and a B button at
+   * a hand holding none of them. Reading the slot state instead collapses "no
+   * controller here" and "a hand here" into the one case they always were.
+   */
+  private applySlots(slots: readonly SlotState[]) {
+    for (let i = 0; i < this.grips.length; i++) {
+      const slot = slots[i];
+      if (slot?.kind === "controller" && slot.hand) this.attach(i, slot.hand);
+      else this.detach(i);
     }
   }
 
@@ -386,15 +417,51 @@ export class ControllerHints {
   private attach(index: number, hand: Handedness) {
     if (this.attached[index] === hand) return;
     this.detach(index);
-    this.grips[index].add(this.rigs[hand].group);
+    // A rig is ONE Object3D, so parenting it here silently removes it from
+    // whichever grip held it before - leaving that slot's entry naming a group
+    // it no longer owns, and its later detach() a no-op that leaves the legend
+    // standing. Slots do swap: three re-assigns them by arrival order, so a
+    // hands round-trip can hand the controllers back the other way round.
+    const previous = this.attached.indexOf(hand);
+    if (previous !== -1) this.attached[previous] = null;
+
+    const rig = this.rigs[hand];
+    this.grips[index].add(rig.group);
     this.attached[index] = hand;
+
+    // Picking a controller back up mid-session is exactly when the legend is
+    // wanted, and it is also the only way a rig attached after entry would ever
+    // become visible now that show() skips unattached ones.
+    if (this.settings.controllerHints) {
+      this.remaining = Math.max(this.remaining, SHOW_SECONDS);
+      rig.group.visible = true;
+      rig.target = 1;
+      for (const row of rig.rows) row.used = false;
+    }
   }
 
   private detach(index: number) {
     const hand = this.attached[index];
     if (!hand) return;
-    this.grips[index].remove(this.rigs[hand].group);
+    const rig = this.rigs[hand];
+    this.grips[index].remove(rig.group);
     this.attached[index] = null;
+
+    // Wind it down rather than merely unparenting it. update() skips rigs that
+    // are not visible, so one detached mid-fade would keep its alpha and its
+    // rows' used-state and come back at them; and the button glow is driven from
+    // here, so a controller that vanished at full brightness would leave its
+    // last-applied intensity on the materials of whatever model arrives next.
+    rig.group.visible = false;
+    rig.alpha = 0;
+    rig.target = 0;
+    this.applyAlpha(rig);
+    for (const row of rig.rows) this.models?.setGlow(rig.hand, row.node, 0);
+  }
+
+  /** Is this hand's legend currently riding a controller? */
+  private isAttached(hand: Handedness): boolean {
+    return this.attached.includes(hand);
   }
 
   // --- state --------------------------------------------------------------
@@ -412,6 +479,12 @@ export class ControllerHints {
     if (!this.settings.controllerHints) return;
     this.remaining = SHOW_SECONDS;
     for (const rig of [this.rigs.left, this.rigs.right]) {
+      // A rig with no controller under it has nothing to name and nothing to
+      // ride on. It used to be raised anyway, which cost a billboard solve and
+      // two glow writes per frame for a parentless group nobody could see - and
+      // would put the legend in a tracked hand the moment anything else in this
+      // file started parenting to the hand space.
+      if (!this.isAttached(rig.hand)) continue;
       rig.group.visible = true;
       rig.target = 1;
       for (const row of rig.rows) row.used = false;
@@ -497,6 +570,32 @@ export class ControllerHints {
         this.models?.setGlow(rig.hand, row.node, level * rig.alpha);
       }
     }
+  }
+
+  /**
+   * Which legend is riding which grip, for the headless handover check.
+   *
+   * `gripOf` is read back from the scene graph rather than from `attached`,
+   * because `attached` is the bookkeeping under test: the interesting failure is
+   * the two disagreeing. `perGrip` counts rigs per grip so "both legends ended
+   * up on one hand" is an assertion rather than an eyeball.
+   */
+  attachment() {
+    const groups = [this.rigs.left.group, this.rigs.right.group];
+    return {
+      attached: [...this.attached],
+      gripOf: {
+        left: this.grips.indexOf(this.rigs.left.group.parent as never),
+        right: this.grips.indexOf(this.rigs.right.group.parent as never),
+      },
+      perGrip: this.grips.map(
+        (g) => g.children.filter((c) => groups.includes(c as Group)).length,
+      ),
+      visible: {
+        left: this.rigs.left.group.visible,
+        right: this.rigs.right.group.visible,
+      },
+    };
   }
 
   /**

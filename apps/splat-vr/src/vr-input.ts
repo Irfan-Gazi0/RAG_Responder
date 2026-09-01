@@ -63,6 +63,7 @@ import {
   WebGLRenderer,
 } from "three";
 import type { SparkXrControllers, XrGamepads } from "@sparkjsdev/spark";
+import type { InputMode, InputSources } from "./input-sources";
 
 export type TurnStyle = "snap" | "smooth";
 export type MovementStyle = "walk" | "teleport";
@@ -293,31 +294,26 @@ export class VrInput {
   private teleAiming = false;
 
   /**
-   * Which physical hand each controller index turned out to be. getController(i)
-   * is indexed by input-source slot, NOT by handedness, and the mapping is not
-   * guaranteed - so anything that needs "the controller in the moving hand"
-   * (the teleport arc) has to learn it from the connected event.
+   * Which slot holds what.
+   *
+   * This class used to keep its own copy - `handOfIndex` and `slotIsHand`, both
+   * filled from its own `connected` listener - which was one of four private
+   * tables over the same two events. It reads the shared registry now; see
+   * input-sources.ts for why the divergence mattered.
    */
-  private handOfIndex: (Handedness | null)[] = [null, null];
-
-  /**
-   * Whether each slot is a tracked hand rather than a controller. Learned from
-   * the same `connected` event, because a hand and a controller arrive through
-   * the identical target-ray object and the difference only shows on the input
-   * source - and it decides whether a select is a trigger pull or a pinch, which
-   * are bound to different things.
-   */
-  private slotIsHand: boolean[] = [false, false];
+  private inputs: InputSources;
 
   constructor(opts: {
     renderer: WebGLRenderer;
     playerRig: Group;
     camera: PerspectiveCamera;
+    inputs: InputSources;
     settings?: ComfortSettings;
   }) {
     this.renderer = opts.renderer;
     this.playerRig = opts.playerRig;
     this.camera = opts.camera;
+    this.inputs = opts.inputs;
     this.settings = opts.settings ?? loadComfort();
 
     // Controller rays. three's WebXRManager owns the pose; we only attach the
@@ -336,17 +332,6 @@ export class VrInput {
       ctrl.add(line);
       this.controllers.push(ctrl);
       this.playerRig.add(ctrl);
-
-      const slot = i;
-      ctrl.addEventListener("connected", (event) => {
-        const h = event.data?.handedness;
-        this.handOfIndex[slot] = h === "left" || h === "right" ? h : null;
-        this.slotIsHand[slot] = !!event.data?.hand;
-      });
-      ctrl.addEventListener("disconnected", () => {
-        this.handOfIndex[slot] = null;
-        this.slotIsHand[slot] = false;
-      });
     }
 
     // Vignette rides on the camera so it stays locked to the view. Large enough
@@ -421,7 +406,7 @@ export class VrInput {
 
   /** The ray space of a given physical hand, once it has announced itself. */
   controllerFor(hand: Handedness) {
-    const i = this.handOfIndex.indexOf(hand);
+    const i = this.inputs.indexOf(hand);
     return i === -1 ? null : this.controllers[i];
   }
 
@@ -438,7 +423,7 @@ export class VrInput {
     const i = this.controllers.indexOf(
       controller as (typeof this.controllers)[number],
     );
-    return i === -1 ? false : this.slotIsHand[i];
+    return i === -1 ? false : this.inputs.isHand(i);
   }
 
   /** Inverse of controllerFor: which hand a given ray space belongs to. */
@@ -446,7 +431,7 @@ export class VrInput {
     const i = this.controllers.indexOf(
       controller as (typeof this.controllers)[number],
     );
-    return i === -1 ? null : this.handOfIndex[i];
+    return i === -1 ? null : this.inputs.handOf(i);
   }
 
   /** Which hand currently drives movement (and therefore the teleport arc). */
@@ -463,17 +448,8 @@ export class VrInput {
    * is how a user concludes the app is broken rather than that they are in a
    * different input mode.
    */
-  get inputMode(): "controllers" | "hands" | "mixed" | "none" {
-    let hands = 0;
-    let pads = 0;
-    for (const src of this.renderer.xr.getSession()?.inputSources ?? []) {
-      if (src.hand) hands++;
-      else if (src.gamepad) pads++;
-    }
-    if (hands && pads) return "mixed";
-    if (hands) return "hands";
-    if (pads) return "controllers";
-    return "none";
+  get inputMode(): InputMode {
+    return this.inputs.mode;
   }
 
   /**

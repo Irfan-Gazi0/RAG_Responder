@@ -42,7 +42,7 @@ import {
   Vector3,
   WebGLRenderer,
 } from "three";
-import type { Handedness } from "./vr-input";
+import type { InputSources, SlotState } from "./input-sources";
 
 /** WebXR names the 25 hand joints; three keys `hand.joints` by these strings. */
 const JOINTS = [
@@ -96,7 +96,6 @@ export class HandInput {
 
   private renderer: WebGLRenderer;
   private meshes: InstancedMesh[] = [];
-  private handedness: (Handedness | null)[] = [null, null];
   private palmHeld = [0, 0];
   private palmArmed = [true, true];
   private listeners: ((e: HandEvent) => void)[] = [];
@@ -111,7 +110,12 @@ export class HandInput {
   private _toHead = new Vector3();
   private _palm = new Vector3();
 
-  constructor(opts: { renderer: WebGLRenderer; playerRig: Group; palmSign?: number }) {
+  constructor(opts: {
+    renderer: WebGLRenderer;
+    playerRig: Group;
+    inputs: InputSources;
+    palmSign?: number;
+  }) {
     this.renderer = opts.renderer;
     this.palmSign = opts.palmSign ?? DEFAULT_PALM_SIGN;
 
@@ -135,17 +139,28 @@ export class HandInput {
       opts.playerRig.add(hand);
       this.hands.push(hand);
       this.meshes.push(mesh);
+    }
 
-      const slot = i;
-      hand.addEventListener("connected", (event) => {
-        const h = (event as unknown as { data?: XRInputSource }).data?.handedness;
-        this.handedness[slot] = h === "left" || h === "right" ? h : null;
-      });
-      hand.addEventListener("disconnected", () => {
-        this.handedness[slot] = null;
-        mesh.visible = false;
-        mesh.count = 0;
-      });
+    opts.inputs.onChange((slots) => this.applySlots(slots));
+  }
+
+  /**
+   * Follow the slots, rather than keeping a fourth private copy of them.
+   *
+   * The joint visuals still self-clear every frame off tracking confidence
+   * (jointsOf() reads the wrist's `visible` flag), so this only has to handle
+   * the discrete case that frame loop cannot see: the slot ceasing to be a hand
+   * at all, which leaves the last-known joints on screen until something says
+   * otherwise.
+   */
+  private applySlots(slots: readonly SlotState[]) {
+    for (let i = 0; i < this.hands.length; i++) {
+      if (slots[i]?.kind !== "hand") {
+        this.meshes[i].visible = false;
+        this.meshes[i].count = 0;
+        this.palmHeld[i] = 0;
+        this.palmArmed[i] = true;
+      }
     }
   }
 
