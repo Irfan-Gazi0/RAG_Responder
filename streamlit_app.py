@@ -6,7 +6,7 @@ from urllib.parse import quote
 # It changes the iframe URL's cache key so browsers can't serve a stale copy
 # (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
 # which a CloudFront invalidation does NOT clear).
-CACHE_BUST = "20260831a"
+CACHE_BUST = "20260907a"
 
 # v2 (IWSDK build) is now the default embedded portal — it lives under /v2/ as a
 # multi-file bundle and replaces the old A-Frame v1 (inspector_portal.html).
