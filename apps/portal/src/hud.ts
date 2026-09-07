@@ -13,6 +13,7 @@ import {
   VisibilityState,
 } from "@iwsdk/core";
 import { fmt, getActiveVideo, getCurrentVideoIdx, switchVideo } from "./videosphere.js";
+import { icon } from "./icons.js";
 import {
   getChatHistory,
   setChatListener,
@@ -148,7 +149,9 @@ export class HudSystem extends createSystem({
           this.xrButton.setProperties({ text: inXR ? "Exit VR" : "Enter VR" });
         }
         if (enterBtn) {
-          enterBtn.textContent = inXR ? "🚪 Exit VR" : "🥽 Enter VR";
+          enterBtn.innerHTML = inXR
+            ? icon("log-out") + " Exit VR"
+            : icon("glasses") + " Enter VR";
         }
       }),
     );
@@ -320,7 +323,7 @@ export class HudSystem extends createSystem({
     const scroll = this.chatScroll;
     if (!scroll || this.placeholder) return;
     this.placeholder = new UIKit.Text({
-      text: "First Responder GPT - ask about EV emergency response.",
+      text: "First Responder AI Assistant - ask about EV emergency response.",
       fontSize: 2,
       color: "#94a3b8",
       width: "100%",
@@ -400,7 +403,7 @@ export class HudSystem extends createSystem({
     });
     bubble.add(
       new UIKit.Text({
-        text: isUser ? "You" : "First Responder GPT",
+        text: isUser ? "You" : "First Responder AI Assistant",
         fontSize: 1.5,
         color: isUser ? "#93c5fd" : "#94a3b8",
         width: "100%",

@@ -1,5 +1,6 @@
 import { focusInput, sendMessage, setInputValue } from "./chat.js";
 import { setHudTranscript, flashHudStatus } from "./hud-mirror.js";
+import { setErrorBanner } from "./icons.js";
 
 // Fallback transcription endpoint used when the browser lacks
 // SpeechRecognition. The Meta Quest Browser has NO native speech-to-text, so this
@@ -123,8 +124,8 @@ function startSpeechRecognition(vrMode: boolean) {
   recognition.onerror = (e) => {
     const msg =
       e.error === "not-allowed" || e.error === "service-not-allowed"
-        ? "⚠ Microphone access denied. Allow mic permissions and try again."
-        : `⚠ Voice input error: ${e.error}`;
+        ? "Microphone access denied. Allow mic permissions and try again."
+        : `Voice input error: ${e.error}`;
     showVoiceError(msg, vrMode);
   };
 
@@ -152,7 +153,7 @@ function startSpeechRecognition(vrMode: boolean) {
 async function startMediaRecording(vrMode: boolean) {
   if (!TRANSCRIBE_URL) {
     showVoiceError(
-      "⚠ Voice input not supported in this browser and no transcription endpoint configured.",
+      "Voice input not supported in this browser and no transcription endpoint configured.",
       vrMode,
     );
     return;
@@ -169,8 +170,8 @@ async function startMediaRecording(vrMode: boolean) {
     const denied = (err as DOMException).name === "NotAllowedError";
     showVoiceError(
       denied
-        ? "⚠ Microphone access denied. Allow mic permissions and try again."
-        : `⚠ Microphone error: ${(err as Error).message}`,
+        ? "Microphone access denied. Allow mic permissions and try again."
+        : `Microphone error: ${(err as Error).message}`,
       vrMode,
     );
     return;
@@ -237,7 +238,7 @@ async function startMediaRecording(vrMode: boolean) {
         focusInput();
       }
     } catch (err) {
-      showVoiceError(`⚠ Transcription failed: ${(err as Error).message}`, vrMode);
+      showVoiceError(`Transcription failed: ${(err as Error).message}`, vrMode);
       if (!vrMode) {
         micBtn.title = "Voice input";
       }
@@ -282,8 +283,8 @@ function showVoiceError(msg: string, vrMode: boolean) {
   if (vrMode) {
     flashHudStatus(msg);
   } else {
-    errorEl.style.display = "block";
-    errorEl.textContent = msg;
+    errorEl.style.display = "flex";
+    setErrorBanner(errorEl, msg);
   }
 }
 

@@ -5,6 +5,7 @@ import {
   mirrorToHud,
   setHudPending,
 } from "./hud-mirror.js";
+import { setErrorBanner } from "./icons.js";
 import { crumb } from "./breadcrumbs.js";
 
 const WEBHOOK_URL =
@@ -39,7 +40,8 @@ export function addMessage(role: "user" | "bot", text: string) {
 
   const label = document.createElement("span");
   label.className = "label";
-  label.textContent = role === "user" ? "You" : "First Responder GPT";
+  label.textContent =
+    role === "user" ? "You" : "First Responder AI Assistant";
 
   const bubble = document.createElement("div");
   bubble.className = "bubble";
@@ -62,7 +64,7 @@ function addTyping() {
   const wrap = document.createElement("div");
   wrap.className = "msg bot typing";
   wrap.innerHTML = `
-    <span class="label">First Responder GPT</span>
+    <span class="label">First Responder AI Assistant</span>
     <div class="bubble"><span></span><span></span><span></span></div>`;
   messagesEl.appendChild(wrap);
   scrollToBottom();
@@ -170,8 +172,8 @@ export async function sendMessage(overrideText?: string) {
   } catch (err) {
     crumb("chat", "sendMessage failed:", err as Error);
     typingEl?.remove();
-    errorEl.style.display = "block";
-    errorEl.textContent = `⚠ ${(err as Error).message}`;
+    errorEl.style.display = "flex";
+    setErrorBanner(errorEl, (err as Error).message);
     if ((err as Error).name === "AbortError") {
       flashHudStatus("Request timed out - try again.");
     } else {

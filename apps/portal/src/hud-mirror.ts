@@ -39,7 +39,7 @@ let transientTimer: ReturnType<typeof setTimeout> | null = null;
 
 // The UIKit font atlas has no emoji / em-dash / smart-quote / ellipsis glyphs
 // (they render as tofu boxes). Map the common ones to ASCII, then strip anything
-// else non-ASCII (incl. the ⚠ that voice/chat error strings carry). Defined once
+// else non-ASCII. Defined once
 // here and reused by every path that feeds the HUD.
 function toAscii(s: string): string {
   return s
@@ -47,7 +47,7 @@ function toAscii(s: string): string {
     .replace(/[‘’]/g, "'") // smart single quotes
     .replace(/[“”]/g, '"') // smart double quotes
     .replace(/…/g, "...") // ellipsis
-    .replace(/[^\x00-\x7F]/g, "") // strip remaining non-ASCII (incl. ⚠)
+    .replace(/[^\x00-\x7F]/g, "") // strip remaining non-ASCII
     .replace(/\s+/g, " ")
     .trim();
 }

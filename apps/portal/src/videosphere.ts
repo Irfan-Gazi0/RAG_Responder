@@ -9,6 +9,7 @@ import {
   World,
 } from "@iwsdk/core";
 import Hls from "hls.js";
+import { icon } from "./icons.js";
 import { flashHudStatus } from "./hud-mirror.js";
 import { crumb } from "./breadcrumbs.js";
 
@@ -283,12 +284,16 @@ function updateVideoSummary(idx: number) {
 function updatePlayButton() {
   const btn = document.getElementById("btn-play");
   if (!btn || !activeVideo) return;
-  btn.textContent = activeVideo.paused ? "▶ Play" : "⏸ Pause";
+  btn.innerHTML = activeVideo.paused
+    ? icon("play") + " Play"
+    : icon("pause") + " Pause";
 }
 function updateMuteButton() {
   const btn = document.getElementById("btn-mute");
   if (!btn || !activeVideo) return;
-  btn.textContent = activeVideo.muted ? "🔊 Unmute" : "🔇 Mute";
+  btn.innerHTML = activeVideo.muted
+    ? icon("volume-2") + " Unmute"
+    : icon("volume-x") + " Mute";
 }
 
 function bindVideoControls() {
@@ -303,10 +308,10 @@ function bindVideoControls() {
     if (!activeVideo) return;
     if (activeVideo.paused) {
       activeVideo.play();
-      btnPlay.textContent = "⏸ Pause";
+      btnPlay.innerHTML = icon("pause") + " Pause";
     } else {
       activeVideo.pause();
-      btnPlay.textContent = "▶ Play";
+      btnPlay.innerHTML = icon("play") + " Play";
     }
   });
 
