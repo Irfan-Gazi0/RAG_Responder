@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>First Responder GPT</title>
+  <title>Training Assistant</title>
 
   <!-- Marked.js — render Markdown in chat -->
   <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
@@ -226,26 +226,31 @@
     #mic-btn .icon, #send-btn .icon { width: 18px; height: 18px; vertical-align: 0; }
     #error-banner .icon { width: 14px; height: 14px; vertical-align: 0; }
     .input-hint .icon { width: 12px; height: 12px; vertical-align: -1px; }
+
+    /* Empty state — removed on the first message and never rebuilt. */
+    .chat-empty { display: flex; flex-direction: column; gap: 8px; padding: 4px 2px; }
+    .chat-empty p { font-size: 12.5px; color: #64748b; margin-bottom: 4px; }
+    .prompt-chip {
+      background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+      color: #cbd5e1; font-family: inherit; font-size: 12.5px; line-height: 1.4;
+      padding: 9px 12px; text-align: left; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .prompt-chip:hover { background: #273449; border-color: #475569; }
+    .prompt-chip:focus-visible { outline: 2px solid #3b82f6; outline-offset: 1px; }
   </style>
 </head>
 <body>
 
 <div class="chat-panel">
-  <div class="chat-header"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>First Responder AI Assistant</div>
+  <div class="chat-header"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>Training Assistant</div>
 
   <div class="chat-messages" id="chat-messages">
-    <div class="msg bot">
-      <span class="label">First Responder AI Assistant</span>
-      <div class="bubble">
-        <strong>First Responder AI Assistant</strong><br><br>
-        Ask me anything about:<br>
-        • High-voltage system shutdown &amp; isolation<br>
-        • HV battery fire &amp; thermal runaway response<br>
-        • No-cut zones &amp; structural reinforcements<br>
-        • Airbag &amp; pyrotechnic device locations<br>
-        • Vehicle stabilization &amp; lifting points<br>
-        • Submersion &amp; water rescue procedures
-      </div>
+    <div class="chat-empty" id="chat-empty">
+      <p>Ask about this vehicle.</p>
+      <button class="prompt-chip" type="button">How do I shut down the high-voltage system?</button>
+      <button class="prompt-chip" type="button">What do I do if the battery is on fire?</button>
+      <button class="prompt-chip" type="button">Where are the no-cut zones?</button>
     </div>
   </div>
 
@@ -292,11 +297,13 @@ function autoGrow() {
 }
 
 function addMessage(role, text) {
+  document.getElementById("chat-empty")?.remove();
+
   const wrap   = document.createElement("div");
   wrap.className = `msg ${role}`;
   const label  = document.createElement("span");
   label.className = "label";
-  label.textContent = role === "user" ? "You" : "First Responder AI Assistant";
+  label.textContent = role === "user" ? "You" : "Training Assistant";
   const bubble = document.createElement("div");
   bubble.className = "bubble";
   if (role === "bot") {
@@ -315,7 +322,7 @@ function addTyping() {
   const wrap = document.createElement("div");
   wrap.className = "msg bot typing";
   wrap.innerHTML = `
-    <span class="label">First Responder AI Assistant</span>
+    <span class="label">Training Assistant</span>
     <div class="bubble"><span></span><span></span><span></span></div>`;
   messagesEl.appendChild(wrap);
   scrollToBottom();
@@ -373,6 +380,13 @@ inputEl.addEventListener("keydown", (e) => {
 inputEl.addEventListener("input", autoGrow);
 
 sendBtn.addEventListener("click", sendMessage);
+
+document.querySelectorAll(".prompt-chip").forEach((chip) => {
+  chip.addEventListener("click", () => {
+    inputEl.value = chip.textContent.trim();
+    sendMessage();
+  });
+});
 
 // ── VOICE INPUT (Web Speech API — browser-native, no API key) ──
 const micBtn = document.getElementById("mic-btn");

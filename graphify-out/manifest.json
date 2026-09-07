@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "streamlit_app.py": {
-    "mtime": 1788811247.0065064,
-    "ast_hash": "25de9379e4f69f333b63adb8b514d87d",
+    "mtime": 1788819954.0421455,
+    "ast_hash": "179df0395ad3ee806ec93eb674f6266a",
     "semantic_hash": ""
   },
   ".claude/skills/hz-immersive-designer/SKILL.md": {
@@ -175,8 +175,8 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1788811327.4757376,
-    "ast_hash": "8025a2ecf42a4274448098c70e69cdd4",
+    "mtime": 1788815191.8277535,
+    "ast_hash": "deb67617f19bbd8ff41cd1d36332cb02",
     "semantic_hash": ""
   },
   ".devcontainer/devcontainer.json": {
@@ -195,13 +195,13 @@
     "semantic_hash": ""
   },
   "apps/portal/.iwsdk/runtime/launch.json": {
-    "mtime": 1787111590.8799756,
-    "ast_hash": "2679663fcdff9c7bcf1c474aff0b78eb",
+    "mtime": 1788819620.785272,
+    "ast_hash": "798a31f6a397a8e2ea813dc205491897",
     "semantic_hash": ""
   },
   "apps/portal/.iwsdk/runtime/session.json": {
-    "mtime": 1787111590.8779755,
-    "ast_hash": "1058c89d18b571d01405ec7452b5ed6a",
+    "mtime": 1788819818.7097635,
+    "ast_hash": "bfe17854ba13b4b1d86966646e3ff5df",
     "semantic_hash": ""
   },
   "apps/portal/.mcp.json": {
@@ -220,7 +220,7 @@
     "semantic_hash": ""
   },
   "apps/portal/public/ui/hud.json": {
-    "mtime": 1788798673.5907981,
+    "mtime": 1788819819.965767,
     "ast_hash": "f0ce8aad7f6546c69a7dfc27e2bff21c",
     "semantic_hash": ""
   },
@@ -230,18 +230,18 @@
     "semantic_hash": ""
   },
   "apps/portal/src/chat.ts": {
-    "mtime": 1788112407.7987432,
-    "ast_hash": "0866d56a506a3ea742447bbe40860436",
+    "mtime": 1788819554.094129,
+    "ast_hash": "29946205d2e4b6ae1adec9afafd5d276",
     "semantic_hash": ""
   },
   "apps/portal/src/hud-mirror.ts": {
-    "mtime": 1788112407.7987432,
-    "ast_hash": "0b6fe99f92ee51cd867cd62072e544d1",
+    "mtime": 1788812011.6035488,
+    "ast_hash": "c8141cd8c338b26ea2fcbe44430ab870",
     "semantic_hash": ""
   },
   "apps/portal/src/hud.ts": {
-    "mtime": 1788112407.7987432,
-    "ast_hash": "da733071f42cb3d884849b99265b1f1d",
+    "mtime": 1788819579.6581821,
+    "ast_hash": "2676f1a87b5ccc7696a07f33bfdee5a0",
     "semantic_hash": ""
   },
   "apps/portal/src/index.ts": {
@@ -260,13 +260,13 @@
     "semantic_hash": ""
   },
   "apps/portal/src/videosphere.ts": {
-    "mtime": 1788112407.7997432,
-    "ast_hash": "12f6a78f06540a2c0bb01504e5f5caee",
+    "mtime": 1788819565.4091523,
+    "ast_hash": "6ee4b739db2e701bcdb1df31c4932e22",
     "semantic_hash": ""
   },
   "apps/portal/src/voice.ts": {
-    "mtime": 1788112407.7997432,
-    "ast_hash": "5700db4ae4aa9273e40aed994f8cae6b",
+    "mtime": 1788812011.6035488,
+    "ast_hash": "13502a4049e8efdbf93b6accbbcb9afd",
     "semantic_hash": ""
   },
   "apps/portal/tsconfig.json": {
@@ -490,8 +490,8 @@
     "semantic_hash": ""
   },
   "apps/portal/index.html": {
-    "mtime": 1788798645.0609941,
-    "ast_hash": "8422a1103f048681f12ddb822d92672f",
+    "mtime": 1788819818.2477624,
+    "ast_hash": "40e57850d5e6afebec345f3616ee98e4",
     "semantic_hash": ""
   },
   "apps/splat-vr/index.html": {
@@ -500,8 +500,8 @@
     "semantic_hash": ""
   },
   "apps/v1/chat_panel.html": {
-    "mtime": 1788807149.469153,
-    "ast_hash": "487e7688da4d92035fc67d7b15437e5c",
+    "mtime": 1788819607.7042427,
+    "ast_hash": "8d061bc0e4f3bb3bc526ecff0a135d37",
     "semantic_hash": ""
   },
   "apps/v1/inspector_portal.html": {
@@ -662,6 +662,16 @@
   "deploy/deploy_v1.py": {
     "mtime": 1788810826.8043675,
     "ast_hash": "f86e4828e3b091894ee437fe60da642d",
+    "semantic_hash": ""
+  },
+  "apps/portal/src/icons.ts": {
+    "mtime": 1788811918.3747032,
+    "ast_hash": "25de292e6a856055ff04abb61cacb7da",
+    "semantic_hash": ""
+  },
+  "plan.md": {
+    "mtime": 1788818740.828425,
+    "ast_hash": "6aabf93cc0a554e77ca5c431d816ac82",
     "semantic_hash": ""
   }
 }

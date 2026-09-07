@@ -323,7 +323,7 @@ export class HudSystem extends createSystem({
     const scroll = this.chatScroll;
     if (!scroll || this.placeholder) return;
     this.placeholder = new UIKit.Text({
-      text: "First Responder AI Assistant - ask about EV emergency response.",
+      text: "Training Assistant - ask about EV emergency response.",
       fontSize: 2,
       color: "#94a3b8",
       width: "100%",
@@ -403,7 +403,7 @@ export class HudSystem extends createSystem({
     });
     bubble.add(
       new UIKit.Text({
-        text: isUser ? "You" : "First Responder AI Assistant",
+        text: isUser ? "You" : "Training Assistant",
         fontSize: 1.5,
         color: isUser ? "#93c5fd" : "#94a3b8",
         width: "100%",

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>First Responder Portal — IWSDK v2</title>
+  <title>First Responder Training</title>
   <!-- Inline Lucide truck favicon: matches the header logo and avoids the
        /favicon.ico 403 on S3. -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23ef4444'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M14%2018V6a1%201%200%200%200-1-1H3a1%201%200%200%200-1%201v11a1%201%200%200%200%201%201h2'/%3E%3Cpath%20d='M15%2018H9'/%3E%3Cpath%20d='M19%2018h2a1%201%200%200%200%201-1v-3.65a1%201%200%200%200-.22-.624l-3.48-4.35A1%201%200%200%200%2017.52%208H14'/%3E%3Ccircle%20cx='17'%20cy='18'%20r='2'/%3E%3Ccircle%20cx='7'%20cy='18'%20r='2'/%3E%3C/svg%3E" />
@@ -37,15 +37,9 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 16px; font-weight: 700; color: white;
     }
-    header h1 { font-size: 17px; font-weight: 600; color: #f1f5f9; }
-    header p  { font-size: 12px; color: #94a3b8; margin-top: 1px; }
-    header .badge {
-      margin-left: auto;
-      background: #166534; color: #86efac;
-      font-size: 11px; font-weight: 600;
-      padding: 3px 10px; border-radius: 999px;
-      letter-spacing: 0.4px;
-    }
+    header h1 { font-size: 15px; font-weight: 600; color: #f1f5f9; }
+    header .hint { font-size: 12px; color: #64748b; }
+    header .hint::before { content: "·"; margin-right: 8px; color: #475569; }
     .main { display: flex; flex: 1; overflow: hidden; }
 
     .viewer-panel {
@@ -53,59 +47,49 @@
       border-right: 1px solid #334155;
       min-width: 0; overflow: hidden;
     }
-    .viewer-header {
-      background: #1e293b;
-      padding: 10px 16px;
-      font-size: 12px; font-weight: 600; color: #94a3b8;
-      text-transform: uppercase; letter-spacing: 0.6px;
-      display: flex; align-items: center; gap: 8px; flex-shrink: 0;
-    }
-    .viewer-header span.dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #ef4444; animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
     #scene-container {
       flex: 1; min-height: 0; width: 100%;
       position: relative; background: #000; overflow: hidden;
     }
     #scene-container canvas { display: block; width: 100% !important; height: 100% !important; }
 
-    .video-toggle {
-      background: #1e293b;
-      padding: 8px 16px;
-      display: flex; flex-direction: column; gap: 6px;
-      border-top: 1px solid #334155; flex-shrink: 0;
-    }
-    .video-toggle-row { display: flex; align-items: center; gap: 8px; }
-    .video-summary { margin: 0; font-size: 11px; line-height: 1.45; color: #94a3b8; }
-    .video-summary strong { color: #cbd5e1; }
-    .video-toggle span {
-      font-size: 11px; color: #64748b; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px;
-    }
-    .video-toggle button {
-      background: #334155; border: 1px solid #475569; border-radius: 6px;
-      color: #94a3b8; padding: 4px 12px; font-size: 12px; font-weight: 500;
-      cursor: pointer; transition: background 0.15s, color 0.15s;
-    }
-    .video-toggle button.active { background: #3b82f6; border-color: #3b82f6; color: white; }
-    .video-toggle button:hover:not(.active) { background: #475569; color: #e2e8f0; }
-
-    .video-controls {
+    .video-bar {
       background: #1e293b; padding: 10px 16px;
-      display: flex; align-items: center; gap: 12px;
+      display: flex; flex-direction: column; gap: 9px;
       flex-shrink: 0; border-top: 1px solid #334155;
     }
-    .video-controls button {
+    .transport-row { display: flex; align-items: center; gap: 12px; }
+
+    /* Segmented control, not three loose buttons: one bordered group with
+       hairline dividers, so the three lectures read as one choice. The IDs stay
+       btn-vid1/2/3 — videosphere.ts and the in-VR HUD bind to them by id. */
+    .lecture-group {
+      display: inline-flex; align-self: flex-start;
+      border: 1px solid #334155; border-radius: 7px; overflow: hidden;
+    }
+    .lecture-group button {
+      background: transparent; border: none;
+      border-left: 1px solid #334155;
+      color: #94a3b8; padding: 5px 13px; font-size: 12px; font-weight: 500;
+      cursor: pointer; transition: background 0.15s, color 0.15s;
+      font-family: inherit;
+    }
+    .lecture-group button:first-child { border-left: none; }
+    .lecture-group button.active { background: #334155; color: #f1f5f9; font-weight: 600; }
+    .lecture-group button:hover:not(.active) { background: #273449; color: #e2e8f0; }
+    .lecture-group button:focus-visible { outline: 2px solid #3b82f6; outline-offset: -2px; }
+
+    .video-summary { margin: 0; font-size: 11px; line-height: 1.45; color: #94a3b8; }
+    .video-summary strong { color: #cbd5e1; }
+
+    .video-bar .transport-row button {
       background: #3b82f6; border: none; border-radius: 6px;
       color: white; padding: 6px 16px; font-size: 13px; font-weight: 600;
       cursor: pointer; transition: background 0.15s;
     }
-    .video-controls button:hover { background: #2563eb; }
-    .video-controls button#btn-mute { background: #475569; }
-    .video-controls button#btn-mute:hover { background: #64748b; }
+    .video-bar .transport-row button:hover { background: #2563eb; }
+    .video-bar .transport-row button#btn-mute { background: #475569; }
+    .video-bar .transport-row button#btn-mute:hover { background: #64748b; }
     #video-time { font-size: 12px; color: #94a3b8; margin-left: auto; }
     #progress-bar-wrap {
       flex: 1; height: 24px; cursor: pointer; position: relative;
@@ -220,6 +204,20 @@
     }
     .input-hint { font-size: 10.5px; color: #475569; margin-top: 6px; }
 
+    /* Empty state. Removed by chat.ts on the first message and never rebuilt —
+       a capability list is only useful before the conversation exists. */
+    .chat-empty { display: flex; flex-direction: column; gap: 8px; padding: 4px 2px; }
+    .chat-empty h2 { font-size: 13px; font-weight: 600; color: #cbd5e1; }
+    .chat-empty p  { font-size: 12.5px; color: #64748b; margin-bottom: 4px; }
+    .prompt-chip {
+      background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+      color: #cbd5e1; font-family: inherit; font-size: 12.5px; line-height: 1.4;
+      padding: 9px 12px; text-align: left; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .prompt-chip:hover { background: #273449; border-color: #475569; }
+    .prompt-chip:focus-visible { outline: 2px solid #3b82f6; outline-offset: 1px; }
+
     #error-banner {
       display: none;
       align-items: center; gap: 6px;
@@ -232,7 +230,7 @@
        the markup below are the pre-hydration state of the same buttons. */
     .icon { width: 15px; height: 15px; vertical-align: -2px; flex-shrink: 0; }
     header .logo-icon { width: 20px; height: 20px; vertical-align: 0; }
-    .video-controls .icon { margin-right: 5px; }
+    .transport-row .icon { margin-right: 5px; }
     #mic-btn .icon, #send-btn .icon { width: 18px; height: 18px; vertical-align: 0; }
     #error-banner .icon { width: 14px; height: 14px; vertical-align: 0; }
   </style>
@@ -241,42 +239,35 @@
 
 <header>
   <div class="logo"><svg class="icon logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div>
-  <div>
-    <h1>First Responder Portal</h1>
-  </div>
-  <span class="badge">● LIVE</span>
+  <h1>360° Training</h1>
+  <span class="hint">Drag to rotate</span>
 </header>
 
 <div class="main">
 
   <div class="viewer-panel">
-    <div class="viewer-header">
-      <span class="dot"></span>
-      360° Video &nbsp;·&nbsp; Drag to rotate
-    </div>
-
     <!-- IWSDK World renders into this container -->
     <div id="scene-container"></div>
 
-    <div class="video-toggle">
-      <div class="video-toggle-row">
-        <span>Lecture:</span>
-        <button id="btn-vid1" class="active" title="Part 1 — EV emergency-response fundamentals">First Part</button>
-        <button id="btn-vid2" title="Part 2 — charging system &amp; HV battery hardware">Second Part</button>
-        <button id="btn-vid3" title="Part 3 — battery fire response &amp; disconnects">Third Part</button>
+    <div class="video-bar">
+      <div class="transport-row">
+        <button id="btn-play"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg> Pause</button>
+        <button id="btn-mute"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg> Mute</button>
+        <div id="progress-bar-wrap" title="Click or drag to seek">
+          <div id="progress-track"><div id="progress-bar"></div></div>
+          <div id="progress-thumb"></div>
+        </div>
+        <span id="video-time">0:00 / 0:00</span>
+        <button id="btn-enter-vr" title="Enter VR (or use IWER emulator on desktop)"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="15" r="4"/><circle cx="18" cy="15" r="4"/><path d="M14 15a2 2 0 0 0-2-2 2 2 0 0 0-2 2"/><path d="M2.5 13 5 7c.7-1.3 1.4-2 3-2"/><path d="M21.5 13 19 7c-.7-1.3-1.5-2-3-2"/></svg> Enter VR</button>
       </div>
-      <p id="video-summary" class="video-summary"></p>
-    </div>
 
-    <div class="video-controls">
-      <button id="btn-play"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/></svg> Pause</button>
-      <button id="btn-mute"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg> Mute</button>
-      <div id="progress-bar-wrap" title="Click or drag to seek">
-        <div id="progress-track"><div id="progress-bar"></div></div>
-        <div id="progress-thumb"></div>
+      <div class="lecture-group" role="group" aria-label="Lecture">
+        <button id="btn-vid1" class="active" title="Part 1 — EV emergency-response fundamentals">Fundamentals</button>
+        <button id="btn-vid2" title="Part 2 — charging system &amp; HV battery hardware">Charging &amp; Battery</button>
+        <button id="btn-vid3" title="Part 3 — battery fire response &amp; disconnects">Fire Response</button>
       </div>
-      <span id="video-time">0:00 / 0:00</span>
-      <button id="btn-enter-vr" title="Enter VR (or use IWER emulator on desktop)"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="15" r="4"/><circle cx="18" cy="15" r="4"/><path d="M14 15a2 2 0 0 0-2-2 2 2 0 0 0-2 2"/><path d="M2.5 13 5 7c.7-1.3 1.4-2 3-2"/><path d="M21.5 13 19 7c-.7-1.3-1.5-2-3-2"/></svg> Enter VR</button>
+
+      <p id="video-summary" class="video-summary"></p>
     </div>
 
   </div>
@@ -284,24 +275,21 @@
   <div class="chat-panel">
 
     <div class="chat-messages" id="chat-messages">
-      <div class="msg bot">
-        <div class="bubble">
-          <strong>First Responder AI Assistant</strong><br><br>
-          Ask me anything about:<br>
-          • High-voltage system shutdown &amp; isolation<br>
-          • HV battery fire &amp; thermal runaway response<br>
-          • No-cut zones &amp; structural reinforcements<br>
-          • Vehicle stabilization &amp; lifting points<br>
-        </div>
+      <div class="chat-empty" id="chat-empty">
+        <h2>Training Assistant</h2>
+        <p>Ask about what you're watching.</p>
+        <button class="prompt-chip" type="button">How do I shut down the high-voltage system?</button>
+        <button class="prompt-chip" type="button">What do I do if the battery is on fire?</button>
+        <button class="prompt-chip" type="button">Where are the no-cut zones?</button>
       </div>
     </div>
 
     <div class="chat-input-wrap">
       <div class="chat-input-row">
         <textarea id="chat-input" rows="1"
-          placeholder="Ask here"></textarea>
-        <button id="mic-btn" title="Voice input"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/></svg></button>
-        <button id="send-btn" title="Send"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></button>
+          placeholder="Ask about this training"></textarea>
+        <button id="mic-btn" title="Voice input" aria-label="Voice input"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/></svg></button>
+        <button id="send-btn" title="Send" aria-label="Send"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></button>
       </div>
       <div class="input-hint">Press Enter to send &nbsp;·&nbsp; Shift+Enter for newline </div>
       <div id="error-banner"></div>

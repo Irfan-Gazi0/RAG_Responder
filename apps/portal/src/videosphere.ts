@@ -35,9 +35,9 @@ const VIDEO_BASE = import.meta.env.DEV
 export const VIDEOS: LectureConfig[] = [
   {
     src: `${VIDEO_BASE}/VID_20250912_110210_00_007_009/index.m3u8`,
-    label: "First Part",
+    label: "Fundamentals",
     summary:
-      "<strong>First Part — EV emergency-response fundamentals.</strong> " +
+      "<strong>Fundamentals — EV emergency response.</strong> " +
       "Classroom intro for first responders: why EV familiarity matters, hybrid vs. " +
       "lithium battery chemistry and why lithium fires run &gt;2,000&deg;F, how high " +
       "voltage is contained (contactors gated by the 12 V system), shutting HV down " +
@@ -47,9 +47,9 @@ export const VIDEOS: LectureConfig[] = [
   },
   {
     src: `${VIDEO_BASE}/VID_20250912_122900_00_010_012/index.m3u8`,
-    label: "Second Part",
+    label: "Charging & Battery",
     summary:
-      "<strong>Second Part — Charging system &amp; HV battery hardware.</strong> " +
+      "<strong>Charging &amp; Battery — charging system and HV battery hardware.</strong> " +
       "How to safely disconnect a charger in an emergency — never cut the cable " +
       "(DC fast charging exceeds 400 V) — how to release a locked Level-3 connector, " +
       "and how the high-voltage battery is built: modules, conductor plates, and the " +
@@ -57,9 +57,9 @@ export const VIDEOS: LectureConfig[] = [
   },
   {
     src: `${VIDEO_BASE}/VID_20250912_134205_00_013_014/index.m3u8`,
-    label: "Third Part",
+    label: "Fire Response",
     summary:
-      "<strong>Third Part — Battery fire response &amp; disconnects.</strong> " +
+      "<strong>Fire Response — battery fires and disconnects.</strong> " +
       "Thermal-runaway risk from densely packed lithium cells, the &ldquo;let it burn " +
       "out vs. keep cooling&rdquo; decision for battery fires, removing 12 V power for " +
       "extrication, and when to pull the manual disconnect device instead of cutting " +

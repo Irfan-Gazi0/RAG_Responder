@@ -8,6 +8,8 @@ import {
 import { setErrorBanner } from "./icons.js";
 import { crumb } from "./breadcrumbs.js";
 
+const ASSISTANT_NAME = "Training Assistant";
+
 const WEBHOOK_URL =
   "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1";
 
@@ -35,13 +37,14 @@ function autoGrow() {
 }
 
 export function addMessage(role: "user" | "bot", text: string) {
+  document.getElementById("chat-empty")?.remove();
+
   const wrap = document.createElement("div");
   wrap.className = `msg ${role}`;
 
   const label = document.createElement("span");
   label.className = "label";
-  label.textContent =
-    role === "user" ? "You" : "First Responder AI Assistant";
+  label.textContent = role === "user" ? "You" : ASSISTANT_NAME;
 
   const bubble = document.createElement("div");
   bubble.className = "bubble";
@@ -64,7 +67,7 @@ function addTyping() {
   const wrap = document.createElement("div");
   wrap.className = "msg bot typing";
   wrap.innerHTML = `
-    <span class="label">First Responder AI Assistant</span>
+    <span class="label">${ASSISTANT_NAME}</span>
     <div class="bubble"><span></span><span></span><span></span></div>`;
   messagesEl.appendChild(wrap);
   scrollToBottom();
@@ -254,6 +257,13 @@ export function initChatBindings() {
     }
   });
   inputEl.addEventListener("input", autoGrow);
+
+  // Suggested prompts in the empty state. They route through the same
+  // sendMessage() path as the in-VR Quick-Ask chips — no second send route,
+  // so the one-request-at-a-time guard covers them too.
+  document.querySelectorAll<HTMLButtonElement>(".prompt-chip").forEach((chip) => {
+    chip.addEventListener("click", () => askQuickQuestion(chip.textContent!.trim()));
+  });
   // Explicit closure: a bare reference would pass the DOM Event as overrideText.
   sendBtn.addEventListener("click", () => sendMessage());
 }
