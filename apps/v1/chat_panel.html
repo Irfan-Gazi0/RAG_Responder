@@ -220,11 +220,11 @@
 <body>
 
 <div class="chat-panel">
-  <div class="chat-header">First Responder GPT — Ask Anything</div>
+  <div class="chat-header">First Responder AI Assistant</div>
 
   <div class="chat-messages" id="chat-messages">
     <div class="msg bot">
-      <span class="label">First Responder GPT</span>
+      <span class="label">First Responder AI Assistant</span>
       <div class="bubble">
         <strong>First Responder AI Assistant</strong><br><br>
         Ask me anything about:<br>
@@ -284,7 +284,7 @@ function addMessage(role, text) {
   wrap.className = `msg ${role}`;
   const label  = document.createElement("span");
   label.className = "label";
-  label.textContent = role === "user" ? "You" : "First Responder GPT";
+  label.textContent = role === "user" ? "You" : "First Responder AI Assistant";
   const bubble = document.createElement("div");
   bubble.className = "bubble";
   if (role === "bot") {
@@ -303,7 +303,7 @@ function addTyping() {
   const wrap = document.createElement("div");
   wrap.className = "msg bot typing";
   wrap.innerHTML = `
-    <span class="label">First Responder GPT</span>
+    <span class="label">First Responder AI Assistant</span>
     <div class="bubble"><span></span><span></span><span></span></div>`;
   messagesEl.appendChild(wrap);
   scrollToBottom();
