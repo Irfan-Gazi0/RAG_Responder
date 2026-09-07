@@ -1,4 +1,5 @@
 import streamlit as st
+from urllib.parse import quote
 
 # Bump this whenever the embedded HTML changes on S3 — v2/index.html (the
 # default), inspector_portal.html, or chat_panel.html.
@@ -22,13 +23,22 @@ CHAT_URL   = f"https://d1ni7nkjr0eveg.cloudfront.net/chat_panel.html?v={CACHE_BU
 # GitHub Pages, rendering .ply scans hosted on Hugging Face. Replaced the old
 # `splat-site` host on 2026-08-18 after it started returning 404 (the tab rendered
 # an empty iframe with no error — verify pixels, not just HTTP, after changing this).
-# ?url= preloads one scan; the viewer's own category/model dropdowns switch scans.
+#
+# ⚠ DO NOT pass ?url= here. The viewer is now Equinox-specific, and both its guided
+# tour and its 3D annotation pins are selected by SUBSTRING MATCH against that
+# parameter (main.js:293 `decodedUrlLower.includes(key)`, :332 `targetUrlSnippet`).
+# The only mapped key is "EQUINOXREFINE_FINAL", so any other scan loads bare — the
+# tour panel reads "No Tour Available" and no pins appear, with nothing saying why.
+# Its sidebar camera views are worse: they are hardcoded to that scan and populate
+# regardless, so they silently aim at the wrong bodywork. Omitting ?url= lets the
+# viewer default to EQUINOXREFINE_FINAL.ply (main.js:288) and all three line up.
 SPLAT_VIEWER = "https://alistairwstbrk.github.io/DOE-Training/"
-SPLAT_PLY = (
-    "https://huggingface.co/datasets/AlistairWstbrk/splats/resolve/main/"
-    "3DGS%20.ply%20New%20Vehicle%20Scans/Equinox%20Hood%20Open%20(New)(Cropped).ply"
-)
-SPLAT_URL = f"{SPLAT_VIEWER}?url={SPLAT_PLY}"
+
+# The hash is the opening view matrix (main.js:284 JSON.parse's it) — the viewer's own
+# customCameras["EQUINOXREFINE_FINAL"] "Vehicle Overview" pose. Seeding it also stops
+# the idle carousel orbit, so the scan lands framed and still.
+_OVERVIEW_VIEW = "[0.87,0.11,-0.47,0,0.03,0.96,0.29,0,0.48,-0.27,0.83,0,0.75,0.83,5.19,1]"
+SPLAT_URL = f"{SPLAT_VIEWER}#{quote(_OVERVIEW_VIEW)}"
 
 # Standalone WebXR splat viewer (Spark). VR cannot work inside st.iframe()
 # because Streamlit withholds `xr-spatial-tracking`, so this is linked, not embedded.
@@ -129,18 +139,18 @@ with tab1:
 with tab2:
     st.subheader("🚗 3D Views of EVs")
     st.markdown(
-        "Inspect high-fidelity Gaussian-splatting 3D scans of the vehicle."
+        "Inspect high-fidelity 3D scans of the vehicle."
     )
     st.caption(
-        f"🥽 Using a VR headset? [Open the car scene in VR]({SPLAT_VR_URL}), "
-        "then tap **Enter VR** to walk in the virtual environment."
+        f" Using a VR headset? [Open the car scene in VR]({SPLAT_VR_URL}), "
+        "then tap **Enter VR**."
     )
     # The desktop viewer pulls a 43.6 MB .ply from Hugging Face and shows a red
     # placeholder cube meanwhile, with no progress of its own — it reads as broken
     # for ~15 s. Nothing to fix in this repo (that viewer is a third-party URL),
     # so say so rather than let people conclude the tab is dead.
     st.caption(
-        "⏳ The 3D scan is a large file so it takes a moment to load the vehicle ."
+        " The 3D scan is a large file so it takes a moment to load."
     )
     viewer_col, chat_col = st.columns([2, 1])
     with viewer_col:
