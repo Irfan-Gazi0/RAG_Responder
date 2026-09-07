@@ -1183,9 +1183,9 @@ Frontend copy polish, no behavior change.
 
 ### `streamlit_app.py` (VR caption)
 
-Reworded the Tab 1 caption to tell headset users they can enter VR by tapping the **Enter VR** button in the bottom-right corner, from their headset's browser:
+Reworded the Tab 1 caption to tell headset users they can enter VR by tapping **Enter VR** button in the bottom-right corner, from their headset's browser:
 
-> 🥽 On a VR headset? [Open the portal directly](…) in your headset's browser, then tap the **Enter VR** button in the bottom-right corner to step inside.
+> 🥽 On a VR headset? [Open the portal directly](…) in your headset's browser, then tap **Enter VR**.
 
 No `CACHE_BUST` bump — this edits the Streamlit app itself (redeployed wholesale by Streamlit Cloud), not the embedded portal HTML.
 
@@ -2025,3 +2025,88 @@ transcript and vehicle questions answered cleanly in the same probe run, so it i
 question-specific — consistent with the agent exhausting `maxIterations=10` hunting
 for unindexed content. Re-test after the Video 0 ingestion before treating it as a
 separate bug.
+
+---
+
+## 2026-09-07 — v2 S3-root cutover: the IWSDK portal is now the portal
+
+The Quest 3 in-headset shakedown passed, clearing the last gate on the cutover.
+`/inspector_portal.html` — the canonical URL, and the one every existing bookmark
+and the Streamlit iframe point at — now serves the IWSDK v2 bundle instead of the
+May-2026 A-Frame page.
+
+### What shipped
+
+| URL | Before | After |
+|---|---|---|
+| `/inspector_portal.html` | A-Frame v1 | **v2 bundle** |
+| `/v2/index.html` | v2 bundle | unchanged (direct URL for on-device testing) |
+| `/v1/inspector_portal.html` | 403 | **A-Frame v1**, frozen fallback + rollback |
+| `/chat_panel.html` | stale | redeployed with the Lucide icon pass |
+
+The bytes pushed to the root are the *same build* that passed on device —
+`assets/index-BuzlsTkp.js`, verified by md5 against local `dist/` after the fact,
+not rebuilt. Rebuilding would have shipped something the headset never saw.
+
+### Two things the CLAUDE.md cutover note got wrong
+
+It said "copy assets to `/assets/` at root (`<base href="./">` makes refs
+path-relative)". Both halves were off:
+
+1. **There is no `<base href>` in the build.** The refs are plain
+   document-relative, which happens to give the same result — but the note
+   attributed it to a tag that does not exist.
+2. **`assets/` alone is not enough.** The build also fetches `./ui/hud.json`
+   (`hud.ts:26`, `index.ts:124`) and `./audio/{click,chime}.mp3`
+   (`hud.ts:99,107`). Ship only `assets/` and the page looks perfect in 2D while
+   the in-VR HUD renders empty and silent, with nothing in the console. Both
+   directories now upload alongside `assets/`.
+
+### Tooling
+
+- **`deploy/deploy_portal_v2.py --root`** — same script, new target. A `Target`
+  dataclass carries the prefix, the entry-key remap (`index.html` →
+  `inspector_portal.html`) and the invalidation list, so `/v2/` and the root
+  share one code path. Also: **`*.html` now sorts last in the upload** in both
+  modes. `rglob` order was arbitrary, and the entry page is the only file that is
+  never cached — publishing it before its bundle exists would have served a page
+  whose `./assets/…` 404s.
+- **`deploy/deploy_v1.py`** — new. The v1 single-file pages had no script, only
+  the ad-hoc boto3 heredocs CLAUDE.md documents. Uploads `chat_panel.html` to the
+  root and the frozen portal to `/v1/`, then re-fetches both and asserts the live
+  sha256 matches local. `--restore-root` is the one-command rollback.
+
+### Chat-client dedup — resolved differently than planned
+
+The parked plan was "retire `apps/v1/chat_panel.html`". That would have broken
+the 3D-EVs tab, which iframes exactly that file (`streamlit_app.py:213`). The
+real duplicate was the *other* copy: `apps/v1/inspector_portal.html` carried the
+same chat block and had to be kept in sync with it. Freezing the v1 portal ends
+the sync obligation and leaves `chat_panel.html` as the sole owner. The residual
+overlap with `apps/portal/src/chat.ts` is still there and still worth collapsing,
+but that needs a standalone chat entry point built from `chat.ts` — a real
+change, not a deletion.
+
+### Verified live, not assumed
+
+`ui/hud.json`, both `audio/*.mp3`, all six `assets/*`, `/v1/`, `/chat_panel.html`
+and `/v2/` all return 200 with correct content types; the live root HTML is
+md5-identical to `dist/index.html`. In Chrome the root page logged
+`[hud] wireHud complete … geom=14 tex=2` (proves `ui/hud.json` resolved) and
+`[video] lecture0 levels=900/1440/2160 ABR=auto` (proves the HLS manifest and its
+ABR ladder resolved), with zero errors. A chat round-trip returned a cited answer
+(ERG p. 12 + transcript timestamps).
+
+The videosphere renders black at `0:00 / 0:00` in this desktop Chrome — **and so
+does `/v2/index.html`, which is untouched.** Same behavior on both, so it is the
+automation profile's autoplay/decode policy, not the cutover.
+
+### Deferred, on purpose
+
+The icon pass converted the v1 chat panel and the Streamlit chrome to Lucide
+SVGs but not v2, so the portal still shows 🚒 ⏸ 🔇 🥽 🎤 ➤ beside the SVG-iconed
+chat panel. v2 also still labels replies "First Responder GPT"
+(`chat.ts:42,65`, `hud.ts:323,403`) while greeting you as "First Responder AI
+Assistant". Both are one-line fixes that require rebuilding v2 — which would
+replace the shakedown-verified bundle. They belong in their own change with
+their own device pass.

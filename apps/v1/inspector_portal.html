@@ -429,6 +429,8 @@
     /* ── Error banner ── */
     #error-banner {
       display: none;
+      align-items: center;
+      gap: 6px;
       background: #450a0a;
       border: 1px solid #991b1b;
       color: #fca5a5;
@@ -437,13 +439,20 @@
       border-radius: 6px;
       margin-top: 8px;
     }
+
+    /* ── Lucide icons (github.com/lucide-icons/lucide, ISC) ── */
+    .icon { width: 15px; height: 15px; vertical-align: -2px; flex-shrink: 0; }
+    header .logo .icon { width: 20px; height: 20px; }
+    #mic-btn .icon, #send-btn .icon { width: 18px; height: 18px; vertical-align: 0; }
+    #error-banner .icon { width: 14px; height: 14px; vertical-align: 0; }
+    .input-hint .icon { width: 12px; height: 12px; vertical-align: -1px; }
   </style>
 </head>
 <body>
 
 <!-- ── Header ── -->
 <header>
-  <div class="logo">🚒</div>
+  <div class="logo"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg></div>
   <div>
     <h1>First Responder Portal</h1>
     <p>Emergency Response Guide &amp; Rescue Sheet — AI Assistant</p>
@@ -600,8 +609,8 @@
       <p id="video-summary" class="video-summary"></p>
     </div>
     <div class="video-controls">
-      <button id="btn-play">⏸ Pause</button>
-      <button id="btn-mute">🔇 Mute</button>
+      <button id="btn-play"></button>
+      <button id="btn-mute"></button>
       <div id="progress-bar-wrap" title="Click or drag to seek">
         <div id="progress-track">
           <div id="progress-bar"></div>
@@ -641,11 +650,11 @@
           rows="1"
           placeholder="Ask about HV shutdown, fire response, no-cut zones..."
         ></textarea>
-        <button id="mic-btn" title="Voice input">🎤</button>
-        <button id="send-btn" title="Send">➤</button>
+        <button id="mic-btn" title="Voice input"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/></svg></button>
+        <button id="send-btn" title="Send"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></button>
       </div>
-      <div class="input-hint">Press Enter to send &nbsp;·&nbsp; Shift+Enter for newline &nbsp;·&nbsp; 🎤 for voice</div>
-      <div id="error-banner"></div>
+      <div class="input-hint">Press Enter to send &nbsp;·&nbsp; Shift+Enter for newline &nbsp;·&nbsp; <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/></svg> for voice</div>
+      <div id="error-banner"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span id="error-text"></span></div>
     </div>
   </div>
 
@@ -779,16 +788,21 @@ function switchVideo(idx) {
 }
 
 // ── VIDEO CONTROLS ────────────────────────────────────
+const ICON_PLAY  = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>';
+const ICON_PAUSE = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>';
+const ICON_VOLUME_ON  = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>';
+const ICON_VOLUME_OFF = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.7.7 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.7.7 0 0 0 11 19.298z"/><path d="m16.5 14.5 5-5"/><path d="m16.5 9.5 5 5"/></svg>';
+
 function updatePlayButton() {
   const btn = document.getElementById("btn-play");
   if (!activeVideo) return;
-  btn.textContent = activeVideo.paused ? "▶ Play" : "⏸ Pause";
+  btn.innerHTML = activeVideo.paused ? `${ICON_PLAY} Play` : `${ICON_PAUSE} Pause`;
 }
 
 function updateMuteButton() {
   const btn = document.getElementById("btn-mute");
   if (!activeVideo) return;
-  btn.textContent = activeVideo.muted ? "🔊 Unmute" : "🔇 Mute";
+  btn.innerHTML = activeVideo.muted ? `${ICON_VOLUME_ON} Unmute` : `${ICON_VOLUME_OFF} Mute`;
 }
 
 function fmt(s) {
@@ -807,8 +821,9 @@ function bindVideoControls() {
 
   btnPlay.addEventListener("click", () => {
     if (!activeVideo) return;
-    if (activeVideo.paused) { activeVideo.play();  btnPlay.textContent = "⏸ Pause"; }
-    else                    { activeVideo.pause(); btnPlay.textContent = "▶ Play";  }
+    if (activeVideo.paused) activeVideo.play();
+    else                    activeVideo.pause();
+    updatePlayButton();
   });
 
   btnMute.addEventListener("click", () => {
@@ -867,6 +882,7 @@ const messagesEl = document.getElementById("chat-messages");
 const inputEl    = document.getElementById("chat-input");
 const sendBtn    = document.getElementById("send-btn");
 const errorEl    = document.getElementById("error-banner");
+const errorText  = document.getElementById("error-text");
 
 function scrollToBottom() {
   messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -954,8 +970,8 @@ async function sendMessage() {
 
   } catch (err) {
     typingEl.remove();
-    errorEl.style.display = "block";
-    errorEl.textContent = `⚠ ${err.message}`;
+    errorEl.style.display = "flex";
+    errorText.textContent = err.message;
   } finally {
     sendBtn.disabled = false;
     inputEl.focus();
@@ -1026,13 +1042,13 @@ function startRecognition(opts = {}) {
 
   recognition.onerror = (e) => {
     const msg = (e.error === "not-allowed" || e.error === "service-not-allowed")
-      ? "⚠ Microphone access denied. Allow mic permissions and try again."
-      : `⚠ Voice input error: ${e.error}`;
+      ? "Microphone access denied. Allow mic permissions and try again."
+      : `Voice input error: ${e.error}`;
     if (vrMode) {
-      hudTranscript && hudTranscript.setAttribute("value", msg);
+      hudTranscript && hudTranscript.setAttribute("value", `⚠ ${msg}`);
     } else {
-      errorEl.style.display = "block";
-      errorEl.textContent = msg;
+      errorEl.style.display = "flex";
+      errorText.textContent = msg;
     }
   };
 

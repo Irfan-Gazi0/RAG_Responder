@@ -12,6 +12,15 @@ Usage:
   python3.10 deploy_portal_v2.py            # full deploy: upload + invalidate
   python3.10 deploy_portal_v2.py --upload   # upload only
   python3.10 deploy_portal_v2.py --invalidate-only
+  python3.10 deploy_portal_v2.py --root     # deploy to the BUCKET ROOT (cutover)
+
+`--root` is the S3-root cutover: the same dist/ goes to the bucket root instead
+of under `v2/`, with index.html landing as `inspector_portal.html` (the URL the
+Streamlit iframe and every existing bookmark point at). The built HTML carries no
+<base href>; its `./assets/…`, `./ui/hud.json` and `./audio/*.mp3` references are
+plain document-relative, so they resolve against whichever prefix serves the page
+— which is exactly why the same bundle works at `/v2/` and at the root, and why
+ui/ and audio/ must be uploaded alongside assets/, not just assets/.
 
 Every path ends by re-fetching the live index.html and asserting it references
 the same hashed bundle as the local dist/. The success line is not printed until
@@ -24,6 +33,7 @@ import os
 import re
 import sys
 import time
+from dataclasses import dataclass
 from pathlib import Path
 from urllib.error import URLError
 from urllib.request import Request, urlopen
@@ -37,8 +47,37 @@ load_dotenv(str(REPO_ROOT / ".env"))
 BUCKET = os.getenv("AWS_S3_BUCKET", "first-responder-training")
 REGION = os.getenv("AWS_DEFAULT_REGION", "us-east-2")
 CLOUDFRONT_DIST_ID = "E2FCJOSZVLDA5W"
-PREFIX = "v2/"
+CDN = "https://d1ni7nkjr0eveg.cloudfront.net"
 DIST_DIR = REPO_ROOT / "apps" / "portal" / "dist"
+
+
+@dataclass(frozen=True)
+class Target:
+    """Where this deploy lands: the `v2/` staging prefix, or the bucket root."""
+
+    prefix: str  # "v2/" or ""
+    entry_key: str  # what dist/index.html is called on S3
+    invalidations: tuple
+
+    def key_for(self, rel_path: str) -> str:
+        return self.prefix + (self.entry_key if rel_path == "index.html" else rel_path)
+
+    @property
+    def live_url(self) -> str:
+        return f"{CDN}/{self.prefix}{self.entry_key}"
+
+
+STAGING = Target(prefix="v2/", entry_key="index.html", invalidations=("/v2/*",))
+
+# The cutover target. Root has no single wildcard that isolates this bundle, so
+# each directory the build actually uses is listed — assets/ for the JS+WASM,
+# ui/ for hud.json, audio/ for the HUD click/chime. Missing one of the latter two
+# is silent: the HUD just renders empty in VR.
+ROOT = Target(
+    prefix="",
+    entry_key="inspector_portal.html",
+    invalidations=("/inspector_portal.html", "/assets/*", "/ui/*", "/audio/*"),
+)
 
 EXT_CONTENT_TYPE = {
     ".html": "text/html",
@@ -78,7 +117,7 @@ def content_type_for(rel_path: str) -> str:
     return guessed or "application/octet-stream"
 
 
-def upload_dist(s3):
+def upload_dist(s3, target: Target):
     if not DIST_DIR.is_dir():
         print(f"❌ {DIST_DIR} does not exist — run `cd apps/portal && npm run build` first.")
         sys.exit(1)
@@ -88,10 +127,16 @@ def upload_dist(s3):
         print(f"❌ No files found in {DIST_DIR}")
         sys.exit(1)
 
-    print(f"📦 Uploading {len(files)} files to s3://{BUCKET}/{PREFIX} …")
+    # HTML last. rglob order is arbitrary, and the entry page is the only file
+    # that is never cached — publish it before its bundle exists and the edge can
+    # serve a page whose ./assets/… 404s, which on a first deploy to a new prefix
+    # is a fully broken portal rather than a stale one.
+    files.sort(key=lambda p: (p.suffix.lower() == ".html", p.as_posix()))
+
+    print(f"📦 Uploading {len(files)} files to s3://{BUCKET}/{target.prefix or '(root)'} …")
     for fp in files:
         rel = fp.relative_to(DIST_DIR).as_posix()
-        key = PREFIX + rel
+        key = target.key_for(rel)
         ctype = content_type_for(rel)
         ccontrol = cache_control_for(rel)
         with open(fp, "rb") as fh:
@@ -105,8 +150,6 @@ def upload_dist(s3):
         size_kb = fp.stat().st_size / 1024
         print(f"  ✅ {key}  [{ctype}, {ccontrol}, {size_kb:.1f} KB]")
 
-
-LIVE_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/{PREFIX}index.html"
 
 # Vite writes <script type="module" src="./assets/index-<hash>.js">. The hash
 # changes on every rebuild, which is exactly what makes it a deploy fingerprint.
@@ -126,19 +169,19 @@ def local_bundles() -> set:
     return names
 
 
-def verify_live(expected: set, attempts: int = 6, delay: int = 10) -> None:
+def verify_live(target: Target, expected: set, attempts: int = 6, delay: int = 10) -> None:
     """Re-fetch the live page and assert the edge serves this build.
 
     index.html is uploaded `no-cache, must-revalidate`, so CloudFront revalidates
     against the origin and this normally passes on the first try; the retries
     cover an invalidation that is still in progress.
     """
-    print(f"🔎 Verifying {LIVE_URL} serves {', '.join(sorted(expected))} …")
+    print(f"🔎 Verifying {target.live_url} serves {', '.join(sorted(expected))} …")
     served = set()
     for attempt in range(1, attempts + 1):
         try:
             req = Request(
-                LIVE_URL,
+                target.live_url,
                 headers={"Cache-Control": "no-cache", "Pragma": "no-cache", "User-Agent": "deploy-verify"},
             )
             with urlopen(req, timeout=20) as resp:
@@ -162,13 +205,13 @@ def verify_live(expected: set, attempts: int = 6, delay: int = 10) -> None:
     sys.exit(1)
 
 
-def invalidate_cloudfront():
+def invalidate_cloudfront(target: Target):
     cf = boto3.client(
         "cloudfront",
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
         aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
     )
-    paths = [f"/{PREFIX}*"]
+    paths = list(target.invalidations)
     caller_ref = f"v2-deploy-{int(time.time())}"
     print(f"🌐 Invalidating CloudFront {CLOUDFRONT_DIST_ID} paths: {paths}")
     resp = cf.create_invalidation(
@@ -185,12 +228,19 @@ def main():
     parser = argparse.ArgumentParser(description="Deploy IWSDK portal v2 to S3 + CloudFront")
     parser.add_argument("--upload", action="store_true", help="Upload dist/ only (skip invalidation)")
     parser.add_argument("--invalidate-only", action="store_true", help="Invalidate CloudFront only (skip upload)")
+    parser.add_argument(
+        "--root",
+        action="store_true",
+        help="Deploy to the bucket root as inspector_portal.html instead of v2/ (the cutover)",
+    )
     args = parser.parse_args()
 
     # --upload means "skip invalidation" and --invalidate-only means "skip
     # upload"; together they meant "do nothing", and still printed success.
     if args.upload and args.invalidate_only:
         parser.error("--upload and --invalidate-only are mutually exclusive (together they do nothing)")
+
+    target = ROOT if args.root else STAGING
 
     s3 = boto3.client(
         "s3",
@@ -202,15 +252,15 @@ def main():
     expected = local_bundles()
 
     if not args.invalidate_only:
-        upload_dist(s3)
+        upload_dist(s3, target)
     if not args.upload:
-        invalidate_cloudfront()
+        invalidate_cloudfront(target)
 
     # Exits non-zero if the edge is not serving this build — the success line
     # below is only reached once that has been proven.
-    verify_live(expected)
+    verify_live(target, expected)
 
-    print(f"\n🚀 Done. Portal v2 live at: {LIVE_URL}")
+    print(f"\n🚀 Done. Portal v2 live at: {target.live_url}")
 
 
 if __name__ == "__main__":

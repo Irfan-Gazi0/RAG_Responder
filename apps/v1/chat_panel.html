@@ -34,6 +34,9 @@
       text-transform: uppercase;
       letter-spacing: 0.6px;
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .chat-messages {
       flex: 1;
@@ -207,6 +210,8 @@
     }
     #error-banner {
       display: none;
+      align-items: center;
+      gap: 6px;
       background: #450a0a;
       border: 1px solid #991b1b;
       color: #fca5a5;
@@ -215,12 +220,18 @@
       border-radius: 6px;
       margin-top: 8px;
     }
+
+    /* ── Lucide icons (github.com/lucide-icons/lucide, ISC) ── */
+    .icon { width: 15px; height: 15px; vertical-align: -2px; flex-shrink: 0; }
+    #mic-btn .icon, #send-btn .icon { width: 18px; height: 18px; vertical-align: 0; }
+    #error-banner .icon { width: 14px; height: 14px; vertical-align: 0; }
+    .input-hint .icon { width: 12px; height: 12px; vertical-align: -1px; }
   </style>
 </head>
 <body>
 
 <div class="chat-panel">
-  <div class="chat-header">First Responder AI Assistant</div>
+  <div class="chat-header"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>First Responder AI Assistant</div>
 
   <div class="chat-messages" id="chat-messages">
     <div class="msg bot">
@@ -245,11 +256,11 @@
         rows="1"
         placeholder="Ask about HV shutdown, fire response, no-cut zones..."
       ></textarea>
-      <button id="mic-btn" title="Voice input">🎤</button>
-      <button id="send-btn" title="Send">➤</button>
+      <button id="mic-btn" title="Voice input"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/></svg></button>
+      <button id="send-btn" title="Send"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></button>
     </div>
-    <div class="input-hint">Press Enter to send &nbsp;·&nbsp; Shift+Enter for newline &nbsp;·&nbsp; 🎤 for voice</div>
-    <div id="error-banner"></div>
+    <div class="input-hint">Press Enter to send &nbsp;·&nbsp; Shift+Enter for newline &nbsp;·&nbsp; <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/></svg> for voice</div>
+    <div id="error-banner"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span id="error-text"></span></div>
   </div>
 </div>
 
@@ -269,6 +280,7 @@ const messagesEl = document.getElementById("chat-messages");
 const inputEl    = document.getElementById("chat-input");
 const sendBtn    = document.getElementById("send-btn");
 const errorEl    = document.getElementById("error-banner");
+const errorText  = document.getElementById("error-text");
 
 function scrollToBottom() {
   messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -346,8 +358,8 @@ async function sendMessage() {
     addMessage("bot", answer);
   } catch (err) {
     typingEl.remove();
-    errorEl.style.display = "block";
-    errorEl.textContent = `⚠ ${err.message}`;
+    errorEl.style.display = "flex";
+    errorText.textContent = err.message;
   } finally {
     sendBtn.disabled = false;
     inputEl.focus();
@@ -401,10 +413,10 @@ function startRecognition() {
   };
 
   recognition.onerror = (e) => {
-    errorEl.style.display = "block";
-    errorEl.textContent = (e.error === "not-allowed" || e.error === "service-not-allowed")
-      ? "⚠ Microphone access denied. Allow mic permissions and try again."
-      : `⚠ Voice input error: ${e.error}`;
+    errorEl.style.display = "flex";
+    errorText.textContent = (e.error === "not-allowed" || e.error === "service-not-allowed")
+      ? "Microphone access denied. Allow mic permissions and try again."
+      : `Voice input error: ${e.error}`;
   };
 
   recognition.onend = () => {
