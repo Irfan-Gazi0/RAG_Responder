@@ -824,35 +824,37 @@ const sparkXr = new SparkXr({
 // --- comfort settings UI --------------------------------------------------
 // Mirrored between the desktop panel and the in-VR panel: whichever surface the
 // user reaches for, both stay in step (applyComfort is the single writer).
+//
+// The desktop panel is deliberately a SUBSET of the settings. Vignette,
+// rise/duck, controller hints and haptics each have a button on the in-VR panel
+// (help-panel.ts), which is the only place they can be judged - none of them do
+// anything until you are in a headset, so a checkbox at a desk is a decision
+// made blind. They keep their defaults here and stay reachable on B/Y, the way
+// smoothTurnSpeed always has. What survives is what the in-VR panel cannot
+// offer: walk speed and handedness have no button there, and the hazard toggle
+// changes what a DESKTOP viewer sees, so it sits above the fold rather than
+// under "comfort".
 const movementStyleEl = el<HTMLSelectElement>("movementStyle");
 const turnStyleEl = el<HTMLSelectElement>("turnStyle");
-const snapDegreesEl = el<HTMLSelectElement>("snapDegrees");
 const moveSpeedEl = el<HTMLInputElement>("moveSpeed");
 const dominantHandEl = el<HTMLSelectElement>("dominantHand");
-const vignetteEl = el<HTMLInputElement>("vignette");
-const verticalMoveEl = el<HTMLInputElement>("verticalMove");
 const hotspotsEl = el<HTMLInputElement>("hotspotsOn");
-const controllerHintsEl = el<HTMLInputElement>("controllerHints");
-const hapticsEl = el<HTMLInputElement>("haptics");
 
 function syncComfortInputs() {
   movementStyleEl.value = comfort.movementStyle;
-  turnStyleEl.value = comfort.turnStyle;
-  snapDegreesEl.value = String(comfort.snapDegrees);
+  // Turn style and snap angle are one select: the value is "smooth" or the
+  // angle in degrees. As two controls the angle had to disable itself whenever
+  // smooth was picked, to stop it advertising a number nothing read.
+  turnStyleEl.value =
+    comfort.turnStyle === "smooth" ? "smooth" : String(comfort.snapDegrees);
   moveSpeedEl.value = String(comfort.moveSpeed);
   dominantHandEl.value = comfort.dominantHand;
-  vignetteEl.checked = comfort.vignette;
-  verticalMoveEl.checked = comfort.verticalMove;
   hotspotsEl.checked = comfort.hotspots;
   // The checkbox reflects the stored preference, but ?hazards=0 outranks it for
   // this load - disable it rather than let it claim markers are on when the
   // scene is empty.
   hotspotsEl.disabled = HAZARDS_FORCED_OFF;
-  controllerHintsEl.checked = comfort.controllerHints;
-  hapticsEl.checked = comfort.haptics;
   el("moveSpeedv").textContent = `${comfort.moveSpeed.toFixed(1)} m/s`;
-  // Snap angle is meaningless while smooth turning is selected.
-  snapDegreesEl.disabled = comfort.turnStyle !== "snap";
 }
 
 movementStyleEl.addEventListener("change", () =>
@@ -860,32 +862,22 @@ movementStyleEl.addEventListener("change", () =>
     movementStyle: movementStyleEl.value as ComfortSettings["movementStyle"],
   }),
 );
-turnStyleEl.addEventListener("change", () =>
-  applyComfort({ turnStyle: turnStyleEl.value as ComfortSettings["turnStyle"] }),
-);
-snapDegreesEl.addEventListener("change", () =>
-  applyComfort({ snapDegrees: Number(snapDegreesEl.value) }),
-);
+turnStyleEl.addEventListener("change", () => {
+  const v = turnStyleEl.value;
+  applyComfort(
+    v === "smooth"
+      ? { turnStyle: "smooth" }
+      : { turnStyle: "snap", snapDegrees: Number(v) },
+  );
+});
 moveSpeedEl.addEventListener("input", () =>
   applyComfort({ moveSpeed: Number(moveSpeedEl.value) }),
 );
 dominantHandEl.addEventListener("change", () =>
   applyComfort({ dominantHand: dominantHandEl.value as ComfortSettings["dominantHand"] }),
 );
-vignetteEl.addEventListener("change", () =>
-  applyComfort({ vignette: vignetteEl.checked }),
-);
-verticalMoveEl.addEventListener("change", () =>
-  applyComfort({ verticalMove: verticalMoveEl.checked }),
-);
 hotspotsEl.addEventListener("change", () =>
   applyComfort({ hotspots: hotspotsEl.checked }),
-);
-controllerHintsEl.addEventListener("change", () =>
-  applyComfort({ controllerHints: controllerHintsEl.checked }),
-);
-hapticsEl.addEventListener("change", () =>
-  applyComfort({ haptics: hapticsEl.checked }),
 );
 
 syncComfortInputs();

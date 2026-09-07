@@ -255,16 +255,20 @@ const store = await page.evaluate(async () => {
   // saveComfort debounces at 250 ms; wait past it and read what was persisted.
   await new Promise((r) => setTimeout(r, 500));
   const raw = localStorage.getItem("splatvr.comfort.v1");
+  // The haptics checkbox is gone from the desktop panel - it is an in-VR-only
+  // toggle now - so the boolean half of this probe reads the hazard checkbox,
+  // which the same apply() call above already sets. Shape is unchanged: a
+  // select, a checkbox and a second select, all mirrored.
   return { live, saved: raw ? JSON.parse(raw) : null, dom: {
     movement: document.getElementById("movementStyle").value,
-    haptics: document.getElementById("haptics").checked,
+    hazards: document.getElementById("hotspotsOn").checked,
     hand: document.getElementById("dominantHand").value,
   } };
 });
 check("settings reach the live comfort object",
   store.live.movementStyle === "teleport" && store.live.haptics === false);
 check("settings are mirrored onto the DOM controls",
-  store.dom.movement === "teleport" && store.dom.haptics === false && store.dom.hand === "left");
+  store.dom.movement === "teleport" && store.dom.hazards === false && store.dom.hand === "left");
 check("settings survive the debounced write",
   store.saved?.movementStyle === "teleport" && store.saved?.dominantHand === "left",
   JSON.stringify(store.saved));
@@ -272,6 +276,28 @@ check("the new comfort settings round-trip too",
   store.live.verticalMove === false && store.live.hotspots === false &&
     store.saved?.verticalMove === false && store.saved?.hotspots === false,
   JSON.stringify({ live: store.live.hotspots, saved: store.saved?.hotspots }));
+
+// Turn style and snap angle are one desktop select now, so a single DOM value
+// has to fan out into two settings fields and back. Nothing else in the app
+// reads that select, which is exactly why a silent break here would ship: the
+// headset would keep snapping 45 degrees whatever the page said.
+const turnSel = await page.evaluate(async () => {
+  const sel = document.getElementById("turnStyle");
+  const read = (patch) => { window.__vr.apply(patch); return sel.value; };
+  const smooth = read({ turnStyle: "smooth" });
+  const snap60 = read({ turnStyle: "snap", snapDegrees: 60 });
+  // ...and the other direction: a change on the select must reach the settings.
+  sel.value = "30";
+  sel.dispatchEvent(new Event("change"));
+  const c = window.__vr.comfort();
+  return { smooth, snap60, style: c.turnStyle, degrees: c.snapDegrees };
+});
+check("the merged turn select mirrors both settings fields",
+  turnSel.smooth === "smooth" && turnSel.snap60 === "60",
+  JSON.stringify(turnSel));
+check("picking an angle sets snap style and degrees together",
+  turnSel.style === "snap" && turnSel.degrees === 30,
+  JSON.stringify(turnSel));
 
 // --- 6. Rig wiring, which the reported 6DoF loss is NOT caused by ----------
 // The prescribed fix for "the headset does not move" is to put the camera in a

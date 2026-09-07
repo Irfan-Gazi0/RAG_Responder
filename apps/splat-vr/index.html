@@ -42,20 +42,38 @@
       .hint { font-size: 11px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
       .hint b { color: var(--text); font-weight: 600; }
 
-      .comfort { margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--border); }
-      .comfort-title {
-        font-size: 10px; font-weight: 700; letter-spacing: .08em;
-        color: #7dd3fc; margin-bottom: 8px;
+      /* Content toggle, not a comfort setting - it lives above the fold. */
+      label.check {
+        display: flex; align-items: center; gap: 7px;
+        color: var(--text); font-size: 12px; margin-top: 10px; cursor: pointer;
       }
+      label.check input { accent-color: #7dd3fc; }
+      label.check input:disabled { cursor: not-allowed; }
+      label.check:has(input:disabled) { color: var(--muted); cursor: not-allowed; }
+
+      /*
+        Closed on load. Everything in here only takes effect in VR, and all of it
+        (bar the walk-speed slider) is also on the in-headset panel, so a desktop
+        reader should not have to scroll past it to reach the vehicle picker.
+      */
+      .comfort { margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--border); }
+      .comfort summary {
+        list-style: none; cursor: pointer; user-select: none;
+        font-size: 10px; font-weight: 700; letter-spacing: .08em; color: #7dd3fc;
+      }
+      .comfort summary::-webkit-details-marker { display: none; }
+      /*
+        Swap the glyph rather than rotating one: a transform on a pseudo-element
+        transition resolves to the identity matrix here, so the arrow silently
+        stayed pointing right whether the drawer was open or shut.
+      */
+      .comfort summary::before { content: "\25B8"; display: inline-block; width: 11px; }
+      .comfort[open] summary::before { content: "\25BE"; }
+      .comfort[open] summary { margin-bottom: 9px; }
       .comfort label { margin-top: 8px; }
       .comfort label:first-of-type { margin-top: 0; }
       .comfort label span { color: #4ade80; font-variant-numeric: tabular-nums; float: right; }
       .comfort input[type=range] { width: 100%; accent-color: #7dd3fc; }
-      .comfort label.check {
-        display: flex; align-items: center; gap: 7px;
-        color: var(--text); font-size: 12px; margin-top: 10px; cursor: pointer;
-      }
-      .comfort label.check input { accent-color: #7dd3fc; }
 
       #status {
         position: fixed; bottom: 16px; left: 16px; z-index: 10;
@@ -101,32 +119,39 @@
       <h1>&#128663; EV Scan &mdash; VR Walkaround</h1>
       <label for="modelSelect">Vehicle scan</label>
       <select id="modelSelect"></select>
+
+      <label class="check">
+        <input type="checkbox" id="hotspotsOn" checked />
+        Hazard &amp; cut-point markers
+      </label>
+
       <div class="hint">
         <b>Desktop:</b> drag to look, scroll to zoom, WASD to move.<br />
-        <b>Headset:</b> tap <b>Enter VR</b>, then <b>left stick</b> to move,
-        <b>right stick</b> to turn. Press <b>B</b>/<b>Y</b> for the controls panel.
-        Sticks swap if you set Handedness to left-handed.
+        <b>Headset:</b> tap <b>Enter VR</b>, then press <b>B</b>/<b>Y</b> for the
+        controls panel &mdash; every comfort setting can be changed there without
+        taking the headset off.
       </div>
 
-      <div class="comfort">
-        <div class="comfort-title">VR COMFORT</div>
+      <details class="comfort">
+        <summary>VR COMFORT</summary>
+
         <label for="movementStyle">Movement</label>
         <select id="movementStyle">
           <option value="walk">Walk (thumbstick)</option>
           <option value="teleport">Teleport &mdash; most comfortable</option>
         </select>
 
+        <!--
+          Turn style and snap angle are one control: "Smooth" makes the angle
+          meaningless, which is why the separate select used to disable itself.
+          The value is "smooth" or the angle in degrees; main.ts fans it out.
+        -->
         <label for="turnStyle">Turning</label>
         <select id="turnStyle">
-          <option value="snap">Snap turn (recommended)</option>
+          <option value="30">Snap 30&deg; &mdash; gentler</option>
+          <option value="45">Snap 45&deg; &mdash; recommended</option>
+          <option value="60">Snap 60&deg; &mdash; fewer presses</option>
           <option value="smooth">Smooth turn</option>
-        </select>
-
-        <label for="snapDegrees">Snap angle</label>
-        <select id="snapDegrees">
-          <option value="30">30&deg; &mdash; gentler</option>
-          <option value="45">45&deg;</option>
-          <option value="60">60&deg; &mdash; fewer presses</option>
         </select>
 
         <label for="moveSpeed">Walk speed <span id="moveSpeedv">1.2 m/s</span></label>
@@ -137,32 +162,7 @@
           <option value="right">Right-handed (move = left stick)</option>
           <option value="left">Left-handed (move = right stick)</option>
         </select>
-
-        <label class="check">
-          <input type="checkbox" id="vignette" checked />
-          Vignette while moving
-        </label>
-
-        <label class="check">
-          <input type="checkbox" id="verticalMove" checked />
-          Rise / duck on the turn stick
-        </label>
-
-        <label class="check">
-          <input type="checkbox" id="hotspotsOn" checked />
-          Hazard &amp; cut-point markers
-        </label>
-
-        <label class="check">
-          <input type="checkbox" id="controllerHints" checked />
-          Controller hint labels
-        </label>
-
-        <label class="check">
-          <input type="checkbox" id="haptics" checked />
-          Controller vibration
-        </label>
-      </div>
+      </details>
     </div>
 
     <div id="status">Loading&hellip;</div>
