@@ -104,7 +104,8 @@ st.markdown(
       [data-testid="stToolbar"], [data-testid="stDecoration"],
       [data-testid="stStatusWidget"] { display: none !important; }
       [data-testid="stHeader"] { background: transparent; height: 0; }
-      .block-container { padding-top: 1.5rem; padding-bottom: 2rem; max-width: 1500px; }
+      .block-container { padding-top: 1.5rem; padding-bottom: 2rem;
+        max-width: 100%; width: 100%; padding-left: 3%; padding-right: 3%; }
 
       .stApp, p, li, span, label { color: var(--text); }
       h1, h2, h3 { color: #f1f5f9 !important;
