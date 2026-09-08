@@ -60,11 +60,21 @@
     }
     .transport-row { display: flex; align-items: center; gap: 12px; }
 
+    /* One labelled row: "TRAINING TOPICS  [1 · …][2 · …][3 · …]  watch in
+       order, or jump to one". The label and the trailing hint are what turn
+       three bare buttons into an explained choice; keep them together. */
+    .lecture-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .lecture-label {
+      font-size: 11px; font-weight: 600; color: #64748b;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .lecture-hint { font-size: 11px; color: #64748b; }
+
     /* Segmented control, not three loose buttons: one bordered group with
        hairline dividers, so the three lectures read as one choice. The IDs stay
        btn-vid1/2/3 — videosphere.ts and the in-VR HUD bind to them by id. */
     .lecture-group {
-      display: inline-flex; align-self: flex-start;
+      display: inline-flex;
       border: 1px solid #334155; border-radius: 7px; overflow: hidden;
     }
     .lecture-group button {
@@ -112,6 +122,18 @@
     .chat-panel { width: 400px; flex-shrink: 0; }
 
 
+    /* Narrow viewport (a phone, or this page in a half-width window): a 400px
+       chat column beside the video leaves the video unwatchable, so stack them.
+       Only applies below 760px — a Quest Browser viewport is far wider, so the
+       headset layout is untouched. */
+    @media (max-width: 760px) {
+      body { height: auto; min-height: 100vh; overflow: auto; }
+      .main { flex-direction: column; overflow: visible; }
+      .viewer-panel { border-right: none; border-bottom: 1px solid #334155; }
+      #scene-container { flex: none; height: 52vh; }
+      .chat-panel { width: 100%; height: 70vh; }
+    }
+
     /* -- Lucide icons (github.com/lucide-icons/lucide, ISC) --
        Sizing and the shared `.icon` base live in src/chat-panel.css, which
        src/index.ts imports; these two are portal chrome only. */
@@ -123,8 +145,8 @@
 
 <header>
   <div class="logo"><svg class="icon logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div>
-  <h1>360° Training</h1>
-  <span class="hint">Drag to rotate</span>
+  <h1>360° Training Video</h1>
+  <span class="hint">Drag to look around the scene</span>
 </header>
 
 <div class="main">
@@ -145,10 +167,14 @@
         <button id="btn-enter-vr" title="Enter VR (or use IWER emulator on desktop)"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="15" r="4"/><circle cx="18" cy="15" r="4"/><path d="M14 15a2 2 0 0 0-2-2 2 2 0 0 0-2 2"/><path d="M2.5 13 5 7c.7-1.3 1.4-2 3-2"/><path d="M21.5 13 19 7c-.7-1.3-1.5-2-3-2"/></svg> Enter VR</button>
       </div>
 
-      <div class="lecture-group" role="group" aria-label="Lecture">
-        <button id="btn-vid1" class="active" title="Part 1 — EV emergency-response fundamentals">Fundamentals</button>
-        <button id="btn-vid2" title="Part 2 — charging system &amp; HV battery hardware">Charging &amp; Battery</button>
-        <button id="btn-vid3" title="Part 3 — battery fire response &amp; disconnects">Fire Response</button>
+      <div class="lecture-row">
+        <span class="lecture-label" id="lecture-label">Training topics</span>
+        <div class="lecture-group" role="group" aria-labelledby="lecture-label">
+          <button id="btn-vid1" class="active" title="Part 1 — EV emergency-response fundamentals">1 · Fundamentals</button>
+          <button id="btn-vid2" title="Part 2 — charging system &amp; HV battery hardware">2 · Charging &amp; Battery</button>
+          <button id="btn-vid3" title="Part 3 — battery fire response &amp; disconnects">3 · Fire Response</button>
+        </div>
+        <span class="lecture-hint">Watch in order, or jump to one.</span>
       </div>
 
       <p id="video-summary" class="video-summary"></p>
@@ -164,7 +190,7 @@
            chat.ts clones this node and puts it back when the chat is cleared. -->
       <div class="chat-empty" id="chat-empty">
         <h2>Training Assistant</h2>
-        <p>Ask about EV emergency response.</p>
+        <p>Questions about the training? Ask about what you are watching, EV hazards, or emergency-response procedure.</p>
         <button class="prompt-chip" type="button">How do I shut down the high-voltage system?</button>
         <button class="prompt-chip" type="button">What do I do if the battery is on fire?</button>
         <button class="prompt-chip" type="button">Where are the no-cut zones?</button>

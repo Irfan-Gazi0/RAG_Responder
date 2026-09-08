@@ -32,7 +32,7 @@ def icon(name: str, size: int = 16) -> str:
 # It changes the iframe URL's cache key so browsers can't serve a stale copy
 # (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
 # which a CloudFront invalidation does NOT clear).
-CACHE_BUST = "20260907e"
+CACHE_BUST = "20260907f"
 
 # S3-root cutover, 2026-09-07: /inspector_portal.html IS the v2 IWSDK bundle now
 # (deploy/deploy_portal_v2.py --root), so the canonical URL and every existing
@@ -85,7 +85,7 @@ SPLAT_URL = f"{SPLAT_VIEWER}#{quote(_OVERVIEW_VIEW)}"
 SPLAT_VR_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/splat-vr/index.html?v={CACHE_BUST}"
 
 st.set_page_config(
-    page_title="RAG Responder Hub",
+    page_title="First Responder Training",
     page_icon="🚒",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -138,6 +138,22 @@ st.markdown(
       [data-baseweb="tab-highlight"], [data-baseweb="tab-border"] { background: transparent; }
       [data-baseweb="tab-panel"] { padding-top: 20px; }
 
+      /* Orientation copy: what this tab is, what you can do, where to start.
+         It lives HERE, in the Streamlit shell, rather than inside the portal —
+         apps/portal/index.html is also the page a Quest loads at the S3 root,
+         where a paragraph of onboarding would steal video height and follow the
+         user into the headset. Two sentences, no second title bar: the hero and
+         the tab label already name the section. */
+      .tab-intro {
+        font-size: 14px; color: #cbd5e1; line-height: 1.65;
+        max-width: 980px; margin-bottom: 8px;
+      }
+      .tab-intro strong { color: #f1f5f9; font-weight: 600; }
+      .tab-intro .next {
+        display: block; margin-top: 4px;
+        font-size: 13px; color: var(--muted);
+      }
+
       /* One quiet line of context above each iframe. Both notes are functional,
          not decorative — see the comments at their call sites. */
       .tab-note {
@@ -176,6 +192,17 @@ tab1, tab2 = st.tabs(["Training", "EV Explorer"])
 
 with tab1:
     st.markdown(
+        '<div class="tab-intro">'
+        "<strong>Watch the 360&deg; training and ask questions as you go.</strong> "
+        "Drag the video to look around the scene. The Training Assistant beside "
+        "it answers questions about what you are watching, EV hazards and "
+        "emergency-response procedure."
+        '<span class="next">Start with <strong>1 &middot; Fundamentals</strong>, '
+        "then 2 &middot; Charging &amp; Battery, then 3 &middot; Fire Response.</span>"
+        "</div>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
         f'<div class="tab-note">{icon("glasses", 14)} On a VR headset? '
         f'<a href="{PORTAL_URL}">Open the portal directly</a> in your '
         f"headset's browser, then tap <strong>Enter VR</strong>.</div>",
@@ -184,6 +211,19 @@ with tab1:
     st.iframe(PORTAL_URL, height=800)
 
 with tab2:
+    st.markdown(
+        '<div class="tab-intro">'
+        "<strong>Explore a 3D scan of the Chevrolet Equinox EV.</strong> "
+        "Get familiar with the vehicle before you have to work around one at a "
+        "scene: drag to rotate, scroll to zoom, and open a pin on the model to "
+        "read what that component is."
+        '<span class="next">Use the sidebar for preset camera views, the guided '
+        "walkthrough of the exterior, front fascia, engine bay and charge port, "
+        "and this vehicle&rsquo;s Emergency Response Guide. The assistant on the "
+        "right answers questions about anything you find.</span>"
+        "</div>",
+        unsafe_allow_html=True,
+    )
     st.markdown(
         f'<div class="tab-note">{icon("glasses", 14)} On a VR headset? '
         f'<a href="{SPLAT_VR_URL}">Open the car scene in VR</a>, then tap '

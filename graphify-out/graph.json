@@ -486,6 +486,16 @@
       "norm_label": "installcrumbsinspector()"
     },
     {
+      "label": "chat-standalone.ts",
+      "file_type": "code",
+      "source_file": "apps/portal/src/chat-standalone.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_chat_standalone",
+      "community": 35,
+      "norm_label": "chat-standalone.ts"
+    },
+    {
       "label": "chat.ts",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
@@ -496,20 +506,10 @@
       "norm_label": "chat.ts"
     },
     {
-      "label": "SESSION_ID",
-      "file_type": "code",
-      "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L16",
-      "_origin": "ast",
-      "id": "src_chat_session_id",
-      "community": 0,
-      "norm_label": "session_id"
-    },
-    {
       "label": "messagesEl",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L25",
+      "source_location": "L24",
       "_origin": "ast",
       "id": "src_chat_messagesel",
       "community": 0,
@@ -519,7 +519,7 @@
       "label": "inputEl",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L26",
+      "source_location": "L25",
       "_origin": "ast",
       "id": "src_chat_inputel",
       "community": 0,
@@ -529,7 +529,7 @@
       "label": "sendBtn",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L27",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "src_chat_sendbtn",
       "community": 0,
@@ -539,7 +539,7 @@
       "label": "errorEl",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L28",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "src_chat_errorel",
       "community": 0,
@@ -549,7 +549,7 @@
       "label": "scrollToBottom()",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L30",
+      "source_location": "L29",
       "_origin": "ast",
       "id": "src_chat_scrolltobottom",
       "community": 0,
@@ -559,7 +559,7 @@
       "label": "autoGrow()",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L34",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "src_chat_autogrow",
       "community": 0,
@@ -569,7 +569,7 @@
       "label": "addMessage()",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L39",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "src_chat_addmessage",
       "community": 0,
@@ -579,7 +579,7 @@
       "label": "addTyping()",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L66",
+      "source_location": "L76",
       "_origin": "ast",
       "id": "src_chat_addtyping",
       "community": 0,
@@ -589,7 +589,7 @@
       "label": "parseN8nResponse()",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L77",
+      "source_location": "L87",
       "_origin": "ast",
       "id": "src_chat_parsen8nresponse",
       "community": 0,
@@ -599,7 +599,7 @@
       "label": "sendMessage()",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L98",
+      "source_location": "L108",
       "_origin": "ast",
       "id": "src_chat_sendmessage",
       "community": 0,
@@ -609,7 +609,7 @@
       "label": "askQuickQuestion()",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L202",
+      "source_location": "L212",
       "_origin": "ast",
       "id": "src_chat_askquickquestion",
       "community": 0,
@@ -619,27 +619,57 @@
       "label": "setInputValue()",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L206",
+      "source_location": "L216",
       "_origin": "ast",
       "id": "src_chat_setinputvalue",
-      "community": 39,
+      "community": 35,
       "norm_label": "setinputvalue()"
     },
     {
       "label": "focusInput()",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L244",
+      "source_location": "L254",
       "_origin": "ast",
       "id": "src_chat_focusinput",
-      "community": 39,
+      "community": 35,
       "norm_label": "focusinput()"
+    },
+    {
+      "label": "clearBtn",
+      "file_type": "code",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L266",
+      "_origin": "ast",
+      "id": "src_chat_clearbtn",
+      "community": 0,
+      "norm_label": "clearbtn"
+    },
+    {
+      "label": "renderTranscript()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L276",
+      "_origin": "ast",
+      "id": "src_chat_rendertranscript",
+      "community": 0,
+      "norm_label": "rendertranscript()"
+    },
+    {
+      "label": "clearConversation()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L299",
+      "_origin": "ast",
+      "id": "src_chat_clearconversation",
+      "community": 0,
+      "norm_label": "clearconversation()"
     },
     {
       "label": "initChatBindings()",
       "file_type": "code",
       "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L252",
+      "source_location": "L306",
       "_origin": "ast",
       "id": "src_chat_initchatbindings",
       "community": 0,
@@ -692,7 +722,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_hud_mirror_setimmersive",
-      "community": 1,
+      "community": 30,
       "norm_label": "setimmersive()"
     },
     {
@@ -702,7 +732,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_hud_mirror_isimmersive",
-      "community": 39,
+      "community": 35,
       "norm_label": "isimmersive()"
     },
     {
@@ -732,7 +762,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "src_hud_mirror_setchatlistener",
-      "community": 1,
+      "community": 39,
       "norm_label": "setchatlistener()"
     },
     {
@@ -782,7 +812,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "src_hud_mirror_flashhudstatus",
-      "community": 39,
+      "community": 35,
       "norm_label": "flashhudstatus()"
     },
     {
@@ -832,7 +862,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "src_hud_setrendererprobe",
-      "community": 1,
+      "community": 30,
       "norm_label": "setrendererprobe()"
     },
     {
@@ -859,7 +889,7 @@
       "label": ".init()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L92",
+      "source_location": "L96",
       "_origin": "ast",
       "id": "src_hud_hudsystem_init",
       "community": 1,
@@ -869,7 +899,7 @@
       "label": ".adopt()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L162",
+      "source_location": "L209",
       "_origin": "ast",
       "id": "src_hud_hudsystem_adopt",
       "community": 1,
@@ -879,7 +909,7 @@
       "label": ".wireHud()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L169",
+      "source_location": "L216",
       "_origin": "ast",
       "id": "src_hud_hudsystem_wirehud",
       "community": 1,
@@ -889,7 +919,7 @@
       "label": ".renderInitial()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L277",
+      "source_location": "L324",
       "_origin": "ast",
       "id": "src_hud_hudsystem_renderinitial",
       "community": 1,
@@ -899,7 +929,7 @@
       "label": ".appendBubble()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L297",
+      "source_location": "L344",
       "_origin": "ast",
       "id": "src_hud_hudsystem_appendbubble",
       "community": 1,
@@ -909,7 +939,7 @@
       "label": ".showPlaceholder()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L322",
+      "source_location": "L369",
       "_origin": "ast",
       "id": "src_hud_hudsystem_showplaceholder",
       "community": 1,
@@ -919,7 +949,7 @@
       "label": ".scrollChatBy()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L342",
+      "source_location": "L389",
       "_origin": "ast",
       "id": "src_hud_hudsystem_scrollchatby",
       "community": 1,
@@ -929,7 +959,7 @@
       "label": ".scrollChatToBottom()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L355",
+      "source_location": "L402",
       "_origin": "ast",
       "id": "src_hud_hudsystem_scrollchattobottom",
       "community": 1,
@@ -939,7 +969,7 @@
       "label": ".chatPageUnits()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L367",
+      "source_location": "L414",
       "_origin": "ast",
       "id": "src_hud_hudsystem_chatpageunits",
       "community": 1,
@@ -949,7 +979,7 @@
       "label": ".scrollToBottomSoon()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L376",
+      "source_location": "L423",
       "_origin": "ast",
       "id": "src_hud_hudsystem_scrolltobottomsoon",
       "community": 1,
@@ -959,7 +989,7 @@
       "label": ".makeBubble()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L386",
+      "source_location": "L433",
       "_origin": "ast",
       "id": "src_hud_hudsystem_makebubble",
       "community": 1,
@@ -969,7 +999,7 @@
       "label": ".seekBy()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L424",
+      "source_location": "L471",
       "_origin": "ast",
       "id": "src_hud_hudsystem_seekby",
       "community": 1,
@@ -979,7 +1009,7 @@
       "label": ".guardedClick()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L433",
+      "source_location": "L480",
       "_origin": "ast",
       "id": "src_hud_hudsystem_guardedclick",
       "community": 1,
@@ -989,7 +1019,7 @@
       "label": ".playClick()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L439",
+      "source_location": "L486",
       "_origin": "ast",
       "id": "src_hud_hudsystem_playclick",
       "community": 1,
@@ -999,7 +1029,7 @@
       "label": ".playChime()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L443",
+      "source_location": "L490",
       "_origin": "ast",
       "id": "src_hud_hudsystem_playchime",
       "community": 1,
@@ -1009,7 +1039,7 @@
       "label": ".update()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L447",
+      "source_location": "L494",
       "_origin": "ast",
       "id": "src_hud_hudsystem_update",
       "community": 1,
@@ -1022,7 +1052,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_icons",
-      "community": 0,
+      "community": 1,
       "norm_label": "icons.ts"
     },
     {
@@ -1032,7 +1062,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_icons_paths",
-      "community": 0,
+      "community": 1,
       "norm_label": "paths"
     },
     {
@@ -1042,7 +1072,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "src_icons_iconname",
-      "community": 0,
+      "community": 1,
       "norm_label": "iconname"
     },
     {
@@ -1052,7 +1082,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_icons_icon",
-      "community": 32,
+      "community": 1,
       "norm_label": "icon()"
     },
     {
@@ -1062,7 +1092,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "src_icons_seterrorbanner",
-      "community": 0,
+      "community": 1,
       "norm_label": "seterrorbanner()"
     },
     {
@@ -1164,6 +1194,96 @@
       "id": "src_push_to_talk_pushtotalksystem_pulse",
       "community": 35,
       "norm_label": ".pulse()"
+    },
+    {
+      "label": "transcript.ts",
+      "file_type": "code",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_transcript",
+      "community": 0,
+      "norm_label": "transcript.ts"
+    },
+    {
+      "label": "Role",
+      "file_type": "code",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "src_transcript_role",
+      "community": 0,
+      "norm_label": "role"
+    },
+    {
+      "label": "Message",
+      "file_type": "code",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L25",
+      "_origin": "ast",
+      "id": "src_transcript_message",
+      "community": 0,
+      "norm_label": "message"
+    },
+    {
+      "label": "loadTranscript()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "src_transcript_loadtranscript",
+      "community": 0,
+      "norm_label": "loadtranscript()"
+    },
+    {
+      "label": "appendMessage()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "src_transcript_appendmessage",
+      "community": 0,
+      "norm_label": "appendmessage()"
+    },
+    {
+      "label": "clearTranscript()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "src_transcript_cleartranscript",
+      "community": 0,
+      "norm_label": "cleartranscript()"
+    },
+    {
+      "label": "getSessionId()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L76",
+      "_origin": "ast",
+      "id": "src_transcript_getsessionid",
+      "community": 0,
+      "norm_label": "getsessionid()"
+    },
+    {
+      "label": "rotateSessionId()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L97",
+      "_origin": "ast",
+      "id": "src_transcript_rotatesessionid",
+      "community": 0,
+      "norm_label": "rotatesessionid()"
+    },
+    {
+      "label": "subscribeToTranscript()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L110",
+      "_origin": "ast",
+      "id": "src_transcript_subscribetotranscript",
+      "community": 0,
+      "norm_label": "subscribetotranscript()"
     },
     {
       "label": "videosphere.ts",
@@ -1522,7 +1642,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "src_voice_startspeechrecognition",
-      "community": 39,
+      "community": 35,
       "norm_label": "startspeechrecognition()"
     },
     {
@@ -1532,7 +1652,7 @@
       "source_location": "L153",
       "_origin": "ast",
       "id": "src_voice_startmediarecording",
-      "community": 39,
+      "community": 35,
       "norm_label": "startmediarecording()"
     },
     {
@@ -1552,7 +1672,7 @@
       "source_location": "L282",
       "_origin": "ast",
       "id": "src_voice_showvoiceerror",
-      "community": 39,
+      "community": 35,
       "norm_label": "showvoiceerror()"
     },
     {
@@ -1562,7 +1682,7 @@
       "source_location": "L291",
       "_origin": "ast",
       "id": "src_voice_initvoicebindings",
-      "community": 30,
+      "community": 35,
       "norm_label": "initvoicebindings()"
     },
     {
@@ -2252,7 +2372,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_canvas_ui_rect",
-      "community": 93,
+      "community": 88,
       "norm_label": "rect"
     },
     {
@@ -2312,7 +2432,7 @@
       "source_location": "L150",
       "_origin": "ast",
       "id": "src_canvas_ui_fittext",
-      "community": 93,
+      "community": 88,
       "norm_label": "fittext()"
     },
     {
@@ -2322,7 +2442,7 @@
       "source_location": "L171",
       "_origin": "ast",
       "id": "src_canvas_ui_wraptext",
-      "community": 68,
+      "community": 88,
       "norm_label": "wraptext()"
     },
     {
@@ -2332,7 +2452,7 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "src_canvas_ui_hitat",
-      "community": 106,
+      "community": 88,
       "norm_label": "hitat()"
     },
     {
@@ -3192,7 +3312,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "src_help_panel_bindingrows",
-      "community": 61,
+      "community": 88,
       "norm_label": "bindingrows()"
     },
     {
@@ -3202,7 +3322,7 @@
       "source_location": "L158",
       "_origin": "ast",
       "id": "src_help_panel_helppanel",
-      "community": 61,
+      "community": 88,
       "norm_label": "helppanel"
     },
     {
@@ -3222,7 +3342,7 @@
       "source_location": "L191",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_redraw",
-      "community": 61,
+      "community": 88,
       "norm_label": ".redraw()"
     },
     {
@@ -3232,7 +3352,7 @@
       "source_location": "L198",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_drawfull",
-      "community": 61,
+      "community": 88,
       "norm_label": ".drawfull()"
     },
     {
@@ -3242,7 +3362,7 @@
       "source_location": "L380",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_seterror",
-      "community": 61,
+      "community": 88,
       "norm_label": ".seterror()"
     },
     {
@@ -3252,7 +3372,7 @@
       "source_location": "L386",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_drawbutton",
-      "community": 93,
+      "community": 88,
       "norm_label": ".drawbutton()"
     },
     {
@@ -3262,7 +3382,7 @@
       "source_location": "L405",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_drawmini",
-      "community": 61,
+      "community": 88,
       "norm_label": ".drawmini()"
     },
     {
@@ -3272,7 +3392,7 @@
       "source_location": "L438",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_visible",
-      "community": 61,
+      "community": 88,
       "norm_label": ".visible()"
     },
     {
@@ -3282,7 +3402,7 @@
       "source_location": "L448",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_surface",
-      "community": 61,
+      "community": 88,
       "norm_label": ".surface()"
     },
     {
@@ -3292,7 +3412,7 @@
       "source_location": "L452",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_setsettings",
-      "community": 61,
+      "community": 88,
       "norm_label": ".setsettings()"
     },
     {
@@ -3302,7 +3422,7 @@
       "source_location": "L464",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_setmode",
-      "community": 61,
+      "community": 88,
       "norm_label": ".setmode()"
     },
     {
@@ -3312,7 +3432,7 @@
       "source_location": "L474",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_setdiagnostics",
-      "community": 61,
+      "community": 88,
       "norm_label": ".setdiagnostics()"
     },
     {
@@ -3322,7 +3442,7 @@
       "source_location": "L486",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_repaintifchanged",
-      "community": 61,
+      "community": 88,
       "norm_label": ".repaintifchanged()"
     },
     {
@@ -3332,7 +3452,7 @@
       "source_location": "L499",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_show",
-      "community": 61,
+      "community": 88,
       "norm_label": ".show()"
     },
     {
@@ -3342,7 +3462,7 @@
       "source_location": "L504",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_hide",
-      "community": 61,
+      "community": 88,
       "norm_label": ".hide()"
     },
     {
@@ -3352,7 +3472,7 @@
       "source_location": "L509",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_toggle",
-      "community": 61,
+      "community": 88,
       "norm_label": ".toggle()"
     },
     {
@@ -3362,7 +3482,7 @@
       "source_location": "L526",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_place",
-      "community": 61,
+      "community": 88,
       "norm_label": ".place()"
     },
     {
@@ -3372,7 +3492,7 @@
       "source_location": "L565",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_hittest",
-      "community": 106,
+      "community": 88,
       "norm_label": ".hittest()"
     },
     {
@@ -3382,7 +3502,7 @@
       "source_location": "L597",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_hitregions",
-      "community": 93,
+      "community": 88,
       "norm_label": ".hitregions()"
     },
     {
@@ -3392,7 +3512,7 @@
       "source_location": "L602",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_surfacesize",
-      "community": 61,
+      "community": 88,
       "norm_label": ".surfacesize()"
     },
     {
@@ -3402,7 +3522,7 @@
       "source_location": "L609",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_activate",
-      "community": 61,
+      "community": 88,
       "norm_label": ".activate()"
     },
     {
@@ -3412,7 +3532,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_hotspot_card",
-      "community": 93,
+      "community": 88,
       "norm_label": "hotspot-card.ts"
     },
     {
@@ -3422,7 +3542,7 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "src_hotspot_card_cardaction",
-      "community": 93,
+      "community": 88,
       "norm_label": "cardaction"
     },
     {
@@ -3432,7 +3552,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "src_hotspot_card_hit",
-      "community": 93,
+      "community": 88,
       "norm_label": "hit"
     },
     {
@@ -3442,7 +3562,7 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "src_hotspot_card_cardlayout",
-      "community": 93,
+      "community": 88,
       "norm_label": "cardlayout"
     },
     {
@@ -3452,7 +3572,7 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "src_hotspot_card_accent",
-      "community": 93,
+      "community": 88,
       "norm_label": "accent"
     },
     {
@@ -3462,7 +3582,7 @@
       "source_location": "L150",
       "_origin": "ast",
       "id": "src_hotspot_card_fill",
-      "community": 93,
+      "community": 88,
       "norm_label": "fill"
     },
     {
@@ -3472,7 +3592,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "src_hotspot_card_badge",
-      "community": 93,
+      "community": 88,
       "norm_label": "badge"
     },
     {
@@ -3482,7 +3602,7 @@
       "source_location": "L162",
       "_origin": "ast",
       "id": "src_hotspot_card_isloud",
-      "community": 68,
+      "community": 88,
       "norm_label": "isloud()"
     },
     {
@@ -3492,7 +3612,7 @@
       "source_location": "L166",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard",
-      "community": 68,
+      "community": 88,
       "norm_label": "hotspotcard"
     },
     {
@@ -3512,7 +3632,7 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_visible",
-      "community": 68,
+      "community": 88,
       "norm_label": ".visible()"
     },
     {
@@ -3522,7 +3642,7 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_hotspot",
-      "community": 68,
+      "community": 88,
       "norm_label": ".hotspot()"
     },
     {
@@ -3532,7 +3652,7 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_mesh",
-      "community": 68,
+      "community": 88,
       "norm_label": ".mesh()"
     },
     {
@@ -3542,7 +3662,7 @@
       "source_location": "L210",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_layout",
-      "community": 68,
+      "community": 88,
       "norm_label": ".layout()"
     },
     {
@@ -3552,7 +3672,7 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_anchor",
-      "community": 68,
+      "community": 88,
       "norm_label": ".anchor()"
     },
     {
@@ -3562,7 +3682,7 @@
       "source_location": "L226",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_show",
-      "community": 68,
+      "community": 88,
       "norm_label": ".show()"
     },
     {
@@ -3572,7 +3692,7 @@
       "source_location": "L260",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_hide",
-      "community": 68,
+      "community": 88,
       "norm_label": ".hide()"
     },
     {
@@ -3582,7 +3702,7 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_face",
-      "community": 68,
+      "community": 88,
       "norm_label": ".face()"
     },
     {
@@ -3592,7 +3712,7 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_hittest",
-      "community": 106,
+      "community": 88,
       "norm_label": ".hittest()"
     },
     {
@@ -3602,7 +3722,7 @@
       "source_location": "L305",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_intersects",
-      "community": 68,
+      "community": 88,
       "norm_label": ".intersects()"
     },
     {
@@ -3612,7 +3732,7 @@
       "source_location": "L315",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_draw",
-      "community": 68,
+      "community": 88,
       "norm_label": ".draw()"
     },
     {
@@ -3622,7 +3742,7 @@
       "source_location": "L402",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_drawbody",
-      "community": 68,
+      "community": 88,
       "norm_label": ".drawbody()"
     },
     {
@@ -3632,7 +3752,7 @@
       "source_location": "L447",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_dispose",
-      "community": 68,
+      "community": 88,
       "norm_label": ".dispose()"
     },
     {
@@ -3662,7 +3782,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "src_hotspots_data_hotspot",
-      "community": 68,
+      "community": 88,
       "norm_label": "hotspot"
     },
     {
@@ -3802,7 +3922,7 @@
       "source_location": "L134",
       "_origin": "ast",
       "id": "src_hotspots_hotspots",
-      "community": 64,
+      "community": 67,
       "norm_label": "hotspots"
     },
     {
@@ -3812,7 +3932,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_constructor",
-      "community": 64,
+      "community": 67,
       "norm_label": ".constructor()"
     },
     {
@@ -3822,7 +3942,7 @@
       "source_location": "L159",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_count",
-      "community": 64,
+      "community": 67,
       "norm_label": ".count()"
     },
     {
@@ -3832,7 +3952,7 @@
       "source_location": "L164",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_ids",
-      "community": 64,
+      "community": 67,
       "norm_label": ".ids()"
     },
     {
@@ -3842,7 +3962,7 @@
       "source_location": "L168",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_setenabled",
-      "community": 64,
+      "community": 67,
       "norm_label": ".setenabled()"
     },
     {
@@ -3852,7 +3972,7 @@
       "source_location": "L173",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_isenabled",
-      "community": 64,
+      "community": 67,
       "norm_label": ".isenabled()"
     },
     {
@@ -3872,7 +3992,7 @@
       "source_location": "L229",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_place",
-      "community": 64,
+      "community": 67,
       "norm_label": ".place()"
     },
     {
@@ -3882,7 +4002,7 @@
       "source_location": "L252",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_update",
-      "community": 64,
+      "community": 67,
       "norm_label": ".update()"
     },
     {
@@ -3892,7 +4012,7 @@
       "source_location": "L292",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_hittest",
-      "community": 64,
+      "community": 67,
       "norm_label": ".hittest()"
     },
     {
@@ -3902,7 +4022,7 @@
       "source_location": "L297",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_markerat",
-      "community": 64,
+      "community": 67,
       "norm_label": ".markerat()"
     },
     {
@@ -3912,7 +4032,7 @@
       "source_location": "L327",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_sethover",
-      "community": 64,
+      "community": 67,
       "norm_label": ".sethover()"
     },
     {
@@ -3922,7 +4042,7 @@
       "source_location": "L345",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_worldof",
-      "community": 64,
+      "community": 67,
       "norm_label": ".worldof()"
     },
     {
@@ -3932,7 +4052,7 @@
       "source_location": "L350",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_byid",
-      "community": 68,
+      "community": 88,
       "norm_label": ".byid()"
     },
     {
@@ -3942,7 +4062,7 @@
       "source_location": "L358",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_setposition",
-      "community": 64,
+      "community": 67,
       "norm_label": ".setposition()"
     },
     {
@@ -3952,7 +4072,7 @@
       "source_location": "L370",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_clear",
-      "community": 64,
+      "community": 67,
       "norm_label": ".clear()"
     },
     {
@@ -3972,7 +4092,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "src_input_sources_inputmode",
-      "community": 61,
+      "community": 88,
       "norm_label": "inputmode"
     },
     {
@@ -4862,7 +4982,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_models",
-      "community": 89,
+      "community": 67,
       "norm_label": "models.ts"
     },
     {
@@ -4872,7 +4992,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "src_models_modelconfig",
-      "community": 89,
+      "community": 67,
       "norm_label": "modelconfig"
     },
     {
@@ -4882,7 +5002,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "src_models_models",
-      "community": 89,
+      "community": 67,
       "norm_label": "models"
     },
     {
@@ -4892,7 +5012,7 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "src_models_findmodel",
-      "community": 89,
+      "community": 67,
       "norm_label": "findmodel()"
     },
     {
@@ -5182,7 +5302,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_vr_input",
-      "community": 24,
+      "community": 61,
       "norm_label": "vr-input.ts"
     },
     {
@@ -5192,7 +5312,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "src_vr_input_turnstyle",
-      "community": 24,
+      "community": 61,
       "norm_label": "turnstyle"
     },
     {
@@ -5202,7 +5322,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "src_vr_input_movementstyle",
-      "community": 24,
+      "community": 61,
       "norm_label": "movementstyle"
     },
     {
@@ -5222,7 +5342,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "src_vr_input_comfortsettings",
-      "community": 61,
+      "community": 88,
       "norm_label": "comfortsettings"
     },
     {
@@ -5232,7 +5352,7 @@
       "source_location": "L109",
       "_origin": "ast",
       "id": "src_vr_input_default_comfort",
-      "community": 24,
+      "community": 61,
       "norm_label": "default_comfort"
     },
     {
@@ -5242,7 +5362,7 @@
       "source_location": "L125",
       "_origin": "ast",
       "id": "src_vr_input_loadcomfort",
-      "community": 24,
+      "community": 61,
       "norm_label": "loadcomfort()"
     },
     {
@@ -5252,7 +5372,7 @@
       "source_location": "L140",
       "_origin": "ast",
       "id": "src_vr_input_writecomfort",
-      "community": 24,
+      "community": 61,
       "norm_label": "writecomfort()"
     },
     {
@@ -5272,7 +5392,7 @@
       "source_location": "L165",
       "_origin": "ast",
       "id": "src_vr_input_flushcomfort",
-      "community": 24,
+      "community": 61,
       "norm_label": "flushcomfort()"
     },
     {
@@ -5282,7 +5402,7 @@
       "source_location": "L181",
       "_origin": "ast",
       "id": "src_vr_input_installcomfortflush",
-      "community": 24,
+      "community": 61,
       "norm_label": "installcomfortflush()"
     },
     {
@@ -5292,7 +5412,7 @@
       "source_location": "L197",
       "_origin": "ast",
       "id": "src_vr_input_btn",
-      "community": 24,
+      "community": 61,
       "norm_label": "btn"
     },
     {
@@ -5302,7 +5422,7 @@
       "source_location": "L199",
       "_origin": "ast",
       "id": "src_vr_input_ax",
-      "community": 24,
+      "community": 61,
       "norm_label": "ax"
     },
     {
@@ -5322,7 +5442,7 @@
       "source_location": "L225",
       "_origin": "ast",
       "id": "src_vr_input_makevignettetexture",
-      "community": 24,
+      "community": 61,
       "norm_label": "makevignettetexture()"
     },
     {
@@ -5332,7 +5452,7 @@
       "source_location": "L242",
       "_origin": "ast",
       "id": "src_vr_input_vrbuttonevent",
-      "community": 24,
+      "community": 61,
       "norm_label": "vrbuttonevent"
     },
     {
@@ -5352,7 +5472,7 @@
       "source_location": "L253",
       "_origin": "ast",
       "id": "src_vr_input_teleportevent",
-      "community": 24,
+      "community": 61,
       "norm_label": "teleportevent"
     },
     {
@@ -5372,7 +5492,7 @@
       "source_location": "L306",
       "_origin": "ast",
       "id": "src_vr_input_vrinput_constructor",
-      "community": 24,
+      "community": 61,
       "norm_label": ".constructor()"
     },
     {
@@ -5999,7 +6119,7 @@
       "label": "Target",
       "file_type": "code",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L55",
+      "source_location": "L60",
       "_origin": "ast",
       "id": "deploy_deploy_portal_v2_target",
       "community": 56,
@@ -6009,7 +6129,7 @@
       "label": ".key_for()",
       "file_type": "code",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L62",
+      "source_location": "L67",
       "_origin": "ast",
       "id": "deploy_deploy_portal_v2_target_key_for",
       "community": 56,
@@ -6019,17 +6139,27 @@
       "label": ".live_url()",
       "file_type": "code",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L66",
+      "source_location": "L71",
       "_origin": "ast",
       "id": "deploy_deploy_portal_v2_target_live_url",
       "community": 56,
       "norm_label": ".live_url()"
     },
     {
+      "label": ".url_for()",
+      "file_type": "code",
+      "source_file": "deploy/deploy_portal_v2.py",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "deploy_deploy_portal_v2_target_url_for",
+      "community": 56,
+      "norm_label": ".url_for()"
+    },
+    {
       "label": "cache_control_for()",
       "file_type": "code",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L99",
+      "source_location": "L114",
       "_origin": "ast",
       "id": "deploy_deploy_portal_v2_cache_control_for",
       "community": 56,
@@ -6039,7 +6169,7 @@
       "label": "content_type_for()",
       "file_type": "code",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L112",
+      "source_location": "L127",
       "_origin": "ast",
       "id": "deploy_deploy_portal_v2_content_type_for",
       "community": 56,
@@ -6049,7 +6179,7 @@
       "label": "upload_dist()",
       "file_type": "code",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L120",
+      "source_location": "L135",
       "_origin": "ast",
       "id": "deploy_deploy_portal_v2_upload_dist",
       "community": 56,
@@ -6059,7 +6189,7 @@
       "label": "local_bundles()",
       "file_type": "code",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L159",
+      "source_location": "L174",
       "_origin": "ast",
       "id": "deploy_deploy_portal_v2_local_bundles",
       "community": 56,
@@ -6069,7 +6199,7 @@
       "label": "verify_live()",
       "file_type": "code",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L172",
+      "source_location": "L187",
       "_origin": "ast",
       "id": "deploy_deploy_portal_v2_verify_live",
       "community": 56,
@@ -6079,7 +6209,7 @@
       "label": "invalidate_cloudfront()",
       "file_type": "code",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L208",
+      "source_location": "L226",
       "_origin": "ast",
       "id": "deploy_deploy_portal_v2_invalidate_cloudfront",
       "community": 56,
@@ -6089,7 +6219,7 @@
       "label": "main()",
       "file_type": "code",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L227",
+      "source_location": "L245",
       "_origin": "ast",
       "id": "deploy_deploy_portal_v2_main",
       "community": 56,
@@ -6109,31 +6239,31 @@
       "label": "Where this deploy lands: the `v2/` staging prefix, or the bucket root.",
       "file_type": "rationale",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L56",
+      "source_location": "L61",
       "_origin": "ast",
-      "id": "deploy_deploy_portal_v2_rationale_56",
+      "id": "deploy_deploy_portal_v2_rationale_61",
       "community": 56,
       "norm_label": "where this deploy lands: the `v2/` staging prefix, or the bucket root."
     },
     {
-      "label": "The hashed JS bundles the freshly-built local index.html references.",
+      "label": "The hashed JS bundles the freshly-built local page references.",
       "file_type": "rationale",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L160",
+      "source_location": "L175",
       "_origin": "ast",
-      "id": "deploy_deploy_portal_v2_rationale_160",
+      "id": "deploy_deploy_portal_v2_rationale_175",
       "community": 56,
-      "norm_label": "the hashed js bundles the freshly-built local index.html references."
+      "norm_label": "the hashed js bundles the freshly-built local page references."
     },
     {
-      "label": "Re-fetch the live page and assert the edge serves this build.      index.html is",
+      "label": "Re-fetch the live page and assert the edge serves this build.      Entry pages a",
       "file_type": "rationale",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L173",
+      "source_location": "L190",
       "_origin": "ast",
-      "id": "deploy_deploy_portal_v2_rationale_173",
+      "id": "deploy_deploy_portal_v2_rationale_190",
       "community": 56,
-      "norm_label": "re-fetch the live page and assert the edge serves this build.      index.html is"
+      "norm_label": "re-fetch the live page and assert the edge serves this build.      entry pages a"
     },
     {
       "label": "deploy_splat_vr.py",
@@ -6259,7 +6389,7 @@
       "label": "upload()",
       "file_type": "code",
       "source_file": "deploy/deploy_v1.py",
-      "source_location": "L61",
+      "source_location": "L63",
       "_origin": "ast",
       "id": "deploy_deploy_v1_upload",
       "community": 4,
@@ -6269,7 +6399,7 @@
       "label": "invalidate()",
       "file_type": "code",
       "source_file": "deploy/deploy_v1.py",
-      "source_location": "L77",
+      "source_location": "L79",
       "_origin": "ast",
       "id": "deploy_deploy_v1_invalidate",
       "community": 4,
@@ -6279,7 +6409,7 @@
       "label": "verify()",
       "file_type": "code",
       "source_file": "deploy/deploy_v1.py",
-      "source_location": "L94",
+      "source_location": "L96",
       "_origin": "ast",
       "id": "deploy_deploy_v1_verify",
       "community": 4,
@@ -6289,7 +6419,7 @@
       "label": "main()",
       "file_type": "code",
       "source_file": "deploy/deploy_v1.py",
-      "source_location": "L131",
+      "source_location": "L133",
       "_origin": "ast",
       "id": "deploy_deploy_v1_main",
       "community": 4,
@@ -6309,9 +6439,9 @@
       "label": "Re-fetch each page and assert the edge serves the local bytes.",
       "file_type": "rationale",
       "source_file": "deploy/deploy_v1.py",
-      "source_location": "L95",
+      "source_location": "L97",
       "_origin": "ast",
-      "id": "deploy_deploy_v1_rationale_95",
+      "id": "deploy_deploy_v1_rationale_97",
       "community": 4,
       "norm_label": "re-fetch each page and assert the edge serves the local bytes."
     },
@@ -7102,7 +7232,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "streamlit_app",
-      "community": 90,
+      "community": 6,
       "norm_label": "streamlit_app.py"
     },
     {
@@ -7112,7 +7242,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "streamlit_app_icon",
-      "community": 90,
+      "community": 6,
       "norm_label": "icon()"
     },
     {
@@ -7122,7 +7252,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "streamlit_app_rationale_22",
-      "community": 90,
+      "community": 6,
       "norm_label": "inline lucide svg, sized in px, colored via currentcolor."
     },
     {
@@ -7199,7 +7329,7 @@
       "label": "v1 portal architecture (`apps/v1/inspector_portal.html`) \u2014 RETIRED, frozen",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L150",
+      "source_location": "L151",
       "_origin": "ast",
       "id": "claude_v1_portal_architecture_apps_v1_inspector_portal_html_retired_frozen",
       "community": 26,
@@ -7209,17 +7339,27 @@
       "label": "v2 portal (`apps/portal/`, IWSDK \u2014 parallel deploy, not yet cut over)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L179",
+      "source_location": "L182",
       "_origin": "ast",
       "id": "claude_v2_portal_apps_portal_iwsdk_parallel_deploy_not_yet_cut_over",
       "community": 26,
       "norm_label": "v2 portal (`apps/portal/`, iwsdk \u2014 parallel deploy, not yet cut over)"
     },
     {
+      "label": "One chat panel, one conversation (2026-09-07)",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L192",
+      "_origin": "ast",
+      "id": "claude_one_chat_panel_one_conversation_2026_09_07",
+      "community": 26,
+      "norm_label": "one chat panel, one conversation (2026-09-07)"
+    },
+    {
       "label": "3D Views of EVs \u2014 Gaussian splat scans (Streamlit tab 2)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L217",
+      "source_location": "L244",
       "_origin": "ast",
       "id": "claude_3d_views_of_evs_gaussian_splat_scans_streamlit_tab_2",
       "community": 26,
@@ -7229,7 +7369,7 @@
       "label": "Deploy",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L297",
+      "source_location": "L324",
       "_origin": "ast",
       "id": "claude_deploy",
       "community": 26,
@@ -7239,7 +7379,7 @@
       "label": "v1 (single HTML) \u2014 hard rules, learned the hard way",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L312",
+      "source_location": "L339",
       "_origin": "ast",
       "id": "claude_v1_single_html_hard_rules_learned_the_hard_way",
       "community": 26,
@@ -7249,7 +7389,7 @@
       "label": "v2 (multi-file bundle)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L329",
+      "source_location": "L356",
       "_origin": "ast",
       "id": "claude_v2_multi_file_bundle",
       "community": 26,
@@ -7259,7 +7399,7 @@
       "label": "splat-vr (standalone WebXR splat viewer)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L361",
+      "source_location": "L390",
       "_origin": "ast",
       "id": "claude_splat_vr_standalone_webxr_splat_viewer",
       "community": 26,
@@ -7269,7 +7409,7 @@
       "label": "n8n workflow",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L372",
+      "source_location": "L401",
       "_origin": "ast",
       "id": "claude_n8n_workflow",
       "community": 26,
@@ -7279,7 +7419,7 @@
       "label": "Pinecone",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L393",
+      "source_location": "L422",
       "_origin": "ast",
       "id": "claude_pinecone",
       "community": 26,
@@ -7289,7 +7429,7 @@
       "label": "Environment",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L422",
+      "source_location": "L451",
       "_origin": "ast",
       "id": "claude_environment",
       "community": 26,
@@ -7299,7 +7439,7 @@
       "label": "Known open issues",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L435",
+      "source_location": "L464",
       "_origin": "ast",
       "id": "claude_known_open_issues",
       "community": 26,
@@ -7309,7 +7449,7 @@
       "label": "graphify",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L473",
+      "source_location": "L502",
       "_origin": "ast",
       "id": "claude_graphify",
       "community": 26,
@@ -7319,7 +7459,7 @@
       "label": "Workflow tooling",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L491",
+      "source_location": "L520",
       "_origin": "ast",
       "id": "claude_workflow_tooling",
       "community": 26,
@@ -7329,7 +7469,7 @@
       "label": "NEXT STEPS (parked \u2014 build next session, do not auto-start)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L510",
+      "source_location": "L539",
       "_origin": "ast",
       "id": "claude_next_steps_parked_build_next_session_do_not_auto_start",
       "community": 26,
@@ -9006,804 +9146,264 @@
       "norm_label": "plan.md"
     },
     {
-      "label": "Frontend UX Redesign Plan",
+      "label": "UX pass 2 \u2014 \"clear + informative\" \u2014 RUNBOOK",
       "file_type": "document",
       "source_file": "plan.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "plan_frontend_ux_redesign_plan",
+      "id": "plan_ux_pass_2_clear_informative_runbook",
       "community": 78,
-      "norm_label": "frontend ux redesign plan"
+      "norm_label": "ux pass 2 \u2014 \"clear + informative\" \u2014 runbook"
     },
     {
-      "label": "Purpose",
+      "label": "1. Ground truth: this is three deployables, not one app",
       "file_type": "document",
       "source_file": "plan.md",
-      "source_location": "L3",
+      "source_location": "L15",
       "_origin": "ast",
-      "id": "plan_purpose",
+      "id": "plan_1_ground_truth_this_is_three_deployables_not_one_app",
       "community": 78,
-      "norm_label": "purpose"
+      "norm_label": "1. ground truth: this is three deployables, not one app"
     },
     {
-      "label": "Core UX Principle",
+      "label": "What the third-party viewer actually offers (verified 2026-09-07)",
       "file_type": "document",
       "source_file": "plan.md",
-      "source_location": "L21",
+      "source_location": "L35",
       "_origin": "ast",
-      "id": "plan_core_ux_principle",
+      "id": "plan_what_the_third_party_viewer_actually_offers_verified_2026_09_07",
       "community": 78,
-      "norm_label": "core ux principle"
+      "norm_label": "what the third-party viewer actually offers (verified 2026-09-07)"
     },
     {
-      "label": "Important Implementation Constraint",
+      "label": "What it does NOT offer",
       "file_type": "document",
       "source_file": "plan.md",
-      "source_location": "L57",
+      "source_location": "L53",
       "_origin": "ast",
-      "id": "plan_important_implementation_constraint",
+      "id": "plan_what_it_does_not_offer",
       "community": 78,
-      "norm_label": "important implementation constraint"
+      "norm_label": "what it does not offer"
     },
     {
-      "label": "Do not rebuild the working application architecture for this redesign",
+      "label": "2. Where copy is allowed to live",
       "file_type": "document",
       "source_file": "plan.md",
-      "source_location": "L59",
+      "source_location": "L65",
       "_origin": "ast",
-      "id": "plan_do_not_rebuild_the_working_application_architecture_for_this_redesign",
+      "id": "plan_2_where_copy_is_allowed_to_live",
       "community": 78,
-      "norm_label": "do not rebuild the working application architecture for this redesign"
+      "norm_label": "2. where copy is allowed to live"
     },
     {
-      "label": "Target User Journey",
+      "label": "3. Hard rules (breaking one of these breaks production)",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L77",
+      "_origin": "ast",
+      "id": "plan_3_hard_rules_breaking_one_of_these_breaks_production",
+      "community": 78,
+      "norm_label": "3. hard rules (breaking one of these breaks production)"
+    },
+    {
+      "label": "4. Already done \u2014 do NOT redo (code written, tsc clean, build clean, checked in Chrome)",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L101",
+      "_origin": "ast",
+      "id": "plan_4_already_done_do_not_redo_code_written_tsc_clean_build_clean_checked_in_chrome",
+      "community": 78,
+      "norm_label": "4. already done \u2014 do not redo (code written, tsc clean, build clean, checked in chrome)"
+    },
+    {
+      "label": "4.1 `streamlit_app.py`",
       "file_type": "document",
       "source_file": "plan.md",
       "source_location": "L103",
       "_origin": "ast",
-      "id": "plan_target_user_journey",
+      "id": "plan_4_1_streamlit_app_py",
       "community": 78,
-      "norm_label": "target user journey"
+      "norm_label": "4.1 `streamlit_app.py`"
     },
     {
-      "label": "PHASE 1 \u2014 Simplify the Global Page Structure",
+      "label": "4.2 `apps/portal/index.html`",
       "file_type": "document",
       "source_file": "plan.md",
-      "source_location": "L127",
+      "source_location": "L128",
       "_origin": "ast",
-      "id": "plan_phase_1_simplify_the_global_page_structure",
-      "community": 98,
-      "norm_label": "phase 1 \u2014 simplify the global page structure"
-    },
-    {
-      "label": "Goal",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L129",
-      "_origin": "ast",
-      "id": "plan_goal",
-      "community": 98,
-      "norm_label": "goal"
-    },
-    {
-      "label": "1.1 Remove Duplicate Branding",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L135",
-      "_origin": "ast",
-      "id": "plan_1_1_remove_duplicate_branding",
-      "community": 98,
-      "norm_label": "1.1 remove duplicate branding"
-    },
-    {
-      "label": "1.2 Simplify the Main Navigation",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L157",
-      "_origin": "ast",
-      "id": "plan_1_2_simplify_the_main_navigation",
-      "community": 98,
-      "norm_label": "1.2 simplify the main navigation"
-    },
-    {
-      "label": "1.3 Remove the LIVE Badge",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L185",
-      "_origin": "ast",
-      "id": "plan_1_3_remove_the_live_badge",
-      "community": 98,
-      "norm_label": "1.3 remove the live badge"
-    },
-    {
-      "label": "1.4 Reduce Introductory Text",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L197",
-      "_origin": "ast",
-      "id": "plan_1_4_reduce_introductory_text",
-      "community": 98,
-      "norm_label": "1.4 reduce introductory text"
-    },
-    {
-      "label": "PHASE 2 \u2014 Establish a Clear Main Workspace",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L217",
-      "_origin": "ast",
-      "id": "plan_phase_2_establish_a_clear_main_workspace",
-      "community": 94,
-      "norm_label": "phase 2 \u2014 establish a clear main workspace"
-    },
-    {
-      "label": "Goal",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L219",
-      "_origin": "ast",
-      "id": "plan_goal_219",
-      "community": 94,
-      "norm_label": "goal"
-    },
-    {
-      "label": "2.1 Primary Desktop Layout",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L225",
-      "_origin": "ast",
-      "id": "plan_2_1_primary_desktop_layout",
-      "community": 94,
-      "norm_label": "2.1 primary desktop layout"
-    },
-    {
-      "label": "2.2 Visual Hierarchy",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L251",
-      "_origin": "ast",
-      "id": "plan_2_2_visual_hierarchy",
-      "community": 94,
-      "norm_label": "2.2 visual hierarchy"
-    },
-    {
-      "label": "Level 1",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L255",
-      "_origin": "ast",
-      "id": "plan_level_1",
-      "community": 94,
-      "norm_label": "level 1"
-    },
-    {
-      "label": "Level 2",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L260",
-      "_origin": "ast",
-      "id": "plan_level_2",
-      "community": 94,
-      "norm_label": "level 2"
-    },
-    {
-      "label": "Level 3",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L265",
-      "_origin": "ast",
-      "id": "plan_level_3",
-      "community": 94,
-      "norm_label": "level 3"
-    },
-    {
-      "label": "Level 4",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L270",
-      "_origin": "ast",
-      "id": "plan_level_4",
-      "community": 94,
-      "norm_label": "level 4"
-    },
-    {
-      "label": "2.3 Keep the Number of Permanent Buttons Low",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L284",
-      "_origin": "ast",
-      "id": "plan_2_3_keep_the_number_of_permanent_buttons_low",
-      "community": 94,
-      "norm_label": "2.3 keep the number of permanent buttons low"
-    },
-    {
-      "label": "PHASE 3 \u2014 Redesign Training Chapters",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L305",
-      "_origin": "ast",
-      "id": "plan_phase_3_redesign_training_chapters",
-      "community": 101,
-      "norm_label": "phase 3 \u2014 redesign training chapters"
-    },
-    {
-      "label": "Goal",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L307",
-      "_origin": "ast",
-      "id": "plan_goal_307",
-      "community": 101,
-      "norm_label": "goal"
-    },
-    {
-      "label": "3.1 Replace Part Buttons with a Chapter Selector",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L313",
-      "_origin": "ast",
-      "id": "plan_3_1_replace_part_buttons_with_a_chapter_selector",
-      "community": 101,
-      "norm_label": "3.1 replace part buttons with a chapter selector"
-    },
-    {
-      "label": "3.2 Current Chapter Should Always Be Clear",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L344",
-      "_origin": "ast",
-      "id": "plan_3_2_current_chapter_should_always_be_clear",
-      "community": 101,
-      "norm_label": "3.2 current chapter should always be clear"
-    },
-    {
-      "label": "3.3 Prepare Chapter State for Future AI Context",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L356",
-      "_origin": "ast",
-      "id": "plan_3_3_prepare_chapter_state_for_future_ai_context",
-      "community": 101,
-      "norm_label": "3.3 prepare chapter state for future ai context"
-    },
-    {
-      "label": "PHASE 4 \u2014 Simplify Video Controls",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L370",
-      "_origin": "ast",
-      "id": "plan_phase_4_simplify_video_controls",
-      "community": 102,
-      "norm_label": "phase 4 \u2014 simplify video controls"
-    },
-    {
-      "label": "Goal",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L372",
-      "_origin": "ast",
-      "id": "plan_goal_372",
-      "community": 102,
-      "norm_label": "goal"
-    },
-    {
-      "label": "4.1 Default Controls",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L378",
-      "_origin": "ast",
-      "id": "plan_4_1_default_controls",
-      "community": 102,
-      "norm_label": "4.1 default controls"
-    },
-    {
-      "label": "4.2 Do Not Make Every Action a Permanent Button",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L400",
-      "_origin": "ast",
-      "id": "plan_4_2_do_not_make_every_action_a_permanent_button",
-      "community": 102,
-      "norm_label": "4.2 do not make every action a permanent button"
-    },
-    {
-      "label": "4.3 Separate VR from Normal Playback Controls",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L415",
-      "_origin": "ast",
-      "id": "plan_4_3_separate_vr_from_normal_playback_controls",
-      "community": 102,
-      "norm_label": "4.3 separate vr from normal playback controls"
-    },
-    {
-      "label": "PHASE 5 \u2014 Redesign the AI Assistant",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L435",
-      "_origin": "ast",
-      "id": "plan_phase_5_redesign_the_ai_assistant",
-      "community": 96,
-      "norm_label": "phase 5 \u2014 redesign the ai assistant"
-    },
-    {
-      "label": "Goal",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L437",
-      "_origin": "ast",
-      "id": "plan_goal_437",
-      "community": 96,
-      "norm_label": "goal"
-    },
-    {
-      "label": "5.1 Rename the Assistant",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L443",
-      "_origin": "ast",
-      "id": "plan_5_1_rename_the_assistant",
-      "community": 96,
-      "norm_label": "5.1 rename the assistant"
-    },
-    {
-      "label": "5.2 Replace the Large Static Capability List",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L461",
-      "_origin": "ast",
-      "id": "plan_5_2_replace_the_large_static_capability_list",
-      "community": 96,
-      "norm_label": "5.2 replace the large static capability list"
-    },
-    {
-      "label": "5.3 Keep One Primary Input",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L498",
-      "_origin": "ast",
-      "id": "plan_5_3_keep_one_primary_input",
-      "community": 96,
-      "norm_label": "5.3 keep one primary input"
-    },
-    {
-      "label": "5.4 Conversation State",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L528",
-      "_origin": "ast",
-      "id": "plan_5_4_conversation_state",
-      "community": 96,
-      "norm_label": "5.4 conversation state"
-    },
-    {
-      "label": "5.5 Avoid Exposing Backend Concepts",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L558",
-      "_origin": "ast",
-      "id": "plan_5_5_avoid_exposing_backend_concepts",
-      "community": 96,
-      "norm_label": "5.5 avoid exposing backend concepts"
-    },
-    {
-      "label": "PHASE 6 \u2014 Add Contextual AI Awareness",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L580",
-      "_origin": "ast",
-      "id": "plan_phase_6_add_contextual_ai_awareness",
-      "community": 103,
-      "norm_label": "phase 6 \u2014 add contextual ai awareness"
-    },
-    {
-      "label": "Goal",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L582",
-      "_origin": "ast",
-      "id": "plan_goal_582",
-      "community": 103,
-      "norm_label": "goal"
-    },
-    {
-      "label": "6.1 Maintain Frontend Context",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L588",
-      "_origin": "ast",
-      "id": "plan_6_1_maintain_frontend_context",
-      "community": 103,
-      "norm_label": "6.1 maintain frontend context"
-    },
-    {
-      "label": "6.2 Improve User-Facing Context",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L612",
-      "_origin": "ast",
-      "id": "plan_6_2_improve_user_facing_context",
-      "community": 103,
-      "norm_label": "6.2 improve user-facing context"
-    },
-    {
-      "label": "6.3 Future AI-to-Experience Actions",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L644",
-      "_origin": "ast",
-      "id": "plan_6_3_future_ai_to_experience_actions",
-      "community": 103,
-      "norm_label": "6.3 future ai-to-experience actions"
-    },
-    {
-      "label": "PHASE 7 \u2014 Separate the EV Explorer Experience",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L678",
-      "_origin": "ast",
-      "id": "plan_phase_7_separate_the_ev_explorer_experience",
-      "community": 97,
-      "norm_label": "phase 7 \u2014 separate the ev explorer experience"
-    },
-    {
-      "label": "Goal",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L680",
-      "_origin": "ast",
-      "id": "plan_goal_680",
-      "community": 97,
-      "norm_label": "goal"
-    },
-    {
-      "label": "7.1 Keep EV Explorer as a Distinct Top-Level Experience",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L686",
-      "_origin": "ast",
-      "id": "plan_7_1_keep_ev_explorer_as_a_distinct_top_level_experience",
-      "community": 97,
-      "norm_label": "7.1 keep ev explorer as a distinct top-level experience"
-    },
-    {
-      "label": "Training",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L694",
-      "_origin": "ast",
-      "id": "plan_training",
-      "community": 97,
-      "norm_label": "training"
-    },
-    {
-      "label": "EV Explorer",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L702",
-      "_origin": "ast",
-      "id": "plan_ev_explorer",
-      "community": 97,
-      "norm_label": "ev explorer"
-    },
-    {
-      "label": "7.2 EV Explorer UI Principle",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L714",
-      "_origin": "ast",
-      "id": "plan_7_2_ev_explorer_ui_principle",
-      "community": 97,
-      "norm_label": "7.2 ev explorer ui principle"
-    },
-    {
-      "label": "7.3 Do Not Leak Technical VR Complexity into the UI",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L754",
-      "_origin": "ast",
-      "id": "plan_7_3_do_not_leak_technical_vr_complexity_into_the_ui",
-      "community": 97,
-      "norm_label": "7.3 do not leak technical vr complexity into the ui"
-    },
-    {
-      "label": "PHASE 8 \u2014 Responsive Behavior",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L775",
-      "_origin": "ast",
-      "id": "plan_phase_8_responsive_behavior",
-      "community": 104,
-      "norm_label": "phase 8 \u2014 responsive behavior"
-    },
-    {
-      "label": "Goal",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L777",
-      "_origin": "ast",
-      "id": "plan_goal_777",
-      "community": 104,
-      "norm_label": "goal"
-    },
-    {
-      "label": "8.1 Desktop",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L783",
-      "_origin": "ast",
-      "id": "plan_8_1_desktop",
-      "community": 104,
-      "norm_label": "8.1 desktop"
-    },
-    {
-      "label": "8.2 Smaller Screens",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L795",
-      "_origin": "ast",
-      "id": "plan_8_2_smaller_screens",
-      "community": 104,
-      "norm_label": "8.2 smaller screens"
-    },
-    {
-      "label": "8.3 Mobile Priorities",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L811",
-      "_origin": "ast",
-      "id": "plan_8_3_mobile_priorities",
-      "community": 104,
-      "norm_label": "8.3 mobile priorities"
-    },
-    {
-      "label": "PHASE 9 \u2014 Visual Design Rules",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L831",
-      "_origin": "ast",
-      "id": "plan_phase_9_visual_design_rules",
-      "community": 99,
-      "norm_label": "phase 9 \u2014 visual design rules"
-    },
-    {
-      "label": "Goal",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L833",
-      "_origin": "ast",
-      "id": "plan_goal_833",
-      "community": 99,
-      "norm_label": "goal"
-    },
-    {
-      "label": "9.1 Reduce Visual Containers",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L839",
-      "_origin": "ast",
-      "id": "plan_9_1_reduce_visual_containers",
-      "community": 99,
-      "norm_label": "9.1 reduce visual containers"
-    },
-    {
-      "label": "9.2 Use Whitespace Intentionally",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L857",
-      "_origin": "ast",
-      "id": "plan_9_2_use_whitespace_intentionally",
-      "community": 99,
-      "norm_label": "9.2 use whitespace intentionally"
-    },
-    {
-      "label": "9.3 Typography",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L886",
-      "_origin": "ast",
-      "id": "plan_9_3_typography",
-      "community": 99,
-      "norm_label": "9.3 typography"
-    },
-    {
-      "label": "9.4 Color",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L910",
-      "_origin": "ast",
-      "id": "plan_9_4_color",
-      "community": 99,
-      "norm_label": "9.4 color"
-    },
-    {
-      "label": "PHASE 10 \u2014 Accessibility and Interaction Validation",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L927",
-      "_origin": "ast",
-      "id": "plan_phase_10_accessibility_and_interaction_validation",
+      "id": "plan_4_2_apps_portal_index_html",
       "community": 78,
-      "norm_label": "phase 10 \u2014 accessibility and interaction validation"
+      "norm_label": "4.2 `apps/portal/index.html`"
     },
     {
-      "label": "Goal",
+      "label": "4.3 `apps/portal/chat.html`",
       "file_type": "document",
       "source_file": "plan.md",
-      "source_location": "L929",
+      "source_location": "L143",
       "_origin": "ast",
-      "id": "plan_goal_929",
+      "id": "plan_4_3_apps_portal_chat_html",
       "community": 78,
-      "norm_label": "goal"
+      "norm_label": "4.3 `apps/portal/chat.html`"
     },
     {
-      "label": "PHASE 11 \u2014 Implementation Order",
+      "label": "4.4 `apps/portal/src/hud.ts`",
       "file_type": "document",
       "source_file": "plan.md",
-      "source_location": "L953",
+      "source_location": "L147",
       "_origin": "ast",
-      "id": "plan_phase_11_implementation_order",
-      "community": 95,
-      "norm_label": "phase 11 \u2014 implementation order"
-    },
-    {
-      "label": "Step 1 \u2014 Audit Existing UI",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L957",
-      "_origin": "ast",
-      "id": "plan_step_1_audit_existing_ui",
-      "community": 95,
-      "norm_label": "step 1 \u2014 audit existing ui"
-    },
-    {
-      "label": "Step 2 \u2014 Preserve Functional Baseline",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L974",
-      "_origin": "ast",
-      "id": "plan_step_2_preserve_functional_baseline",
-      "community": 95,
-      "norm_label": "step 2 \u2014 preserve functional baseline"
-    },
-    {
-      "label": "Step 3 \u2014 Implement PHASE 1 and PHASE 2",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L991",
-      "_origin": "ast",
-      "id": "plan_step_3_implement_phase_1_and_phase_2",
-      "community": 95,
-      "norm_label": "step 3 \u2014 implement phase 1 and phase 2"
-    },
-    {
-      "label": "Step 4 \u2014 Implement PHASE 3 and PHASE 4",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L1005",
-      "_origin": "ast",
-      "id": "plan_step_4_implement_phase_3_and_phase_4",
-      "community": 95,
-      "norm_label": "step 4 \u2014 implement phase 3 and phase 4"
-    },
-    {
-      "label": "Step 5 \u2014 Implement PHASE 5",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L1017",
-      "_origin": "ast",
-      "id": "plan_step_5_implement_phase_5",
-      "community": 95,
-      "norm_label": "step 5 \u2014 implement phase 5"
-    },
-    {
-      "label": "Step 6 \u2014 Implement PHASE 6",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L1032",
-      "_origin": "ast",
-      "id": "plan_step_6_implement_phase_6",
-      "community": 95,
-      "norm_label": "step 6 \u2014 implement phase 6"
-    },
-    {
-      "label": "Step 7 \u2014 Implement PHASE 7 and PHASE 8",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L1045",
-      "_origin": "ast",
-      "id": "plan_step_7_implement_phase_7_and_phase_8",
-      "community": 95,
-      "norm_label": "step 7 \u2014 implement phase 7 and phase 8"
-    },
-    {
-      "label": "PHASE 12 \u2014 Testing Requirements",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L1058",
-      "_origin": "ast",
-      "id": "plan_phase_12_testing_requirements",
+      "id": "plan_4_4_apps_portal_src_hud_ts",
       "community": 78,
-      "norm_label": "phase 12 \u2014 testing requirements"
+      "norm_label": "4.4 `apps/portal/src/hud.ts`"
     },
     {
-      "label": "Acceptance Criteria",
+      "label": "4.5 Verification already performed",
       "file_type": "document",
       "source_file": "plan.md",
-      "source_location": "L1101",
+      "source_location": "L166",
       "_origin": "ast",
-      "id": "plan_acceptance_criteria",
-      "community": 100,
-      "norm_label": "acceptance criteria"
-    },
-    {
-      "label": "Where am I?",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L1105",
-      "_origin": "ast",
-      "id": "plan_where_am_i",
-      "community": 100,
-      "norm_label": "where am i?"
-    },
-    {
-      "label": "What am I doing?",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L1109",
-      "_origin": "ast",
-      "id": "plan_what_am_i_doing",
-      "community": 100,
-      "norm_label": "what am i doing?"
-    },
-    {
-      "label": "What should I do next?",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L1113",
-      "_origin": "ast",
-      "id": "plan_what_should_i_do_next",
-      "community": 100,
-      "norm_label": "what should i do next?"
-    },
-    {
-      "label": "Where do I ask a question?",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L1117",
-      "_origin": "ast",
-      "id": "plan_where_do_i_ask_a_question",
-      "community": 100,
-      "norm_label": "where do i ask a question?"
-    },
-    {
-      "label": "How do I enter VR?",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L1121",
-      "_origin": "ast",
-      "id": "plan_how_do_i_enter_vr",
-      "community": 100,
-      "norm_label": "how do i enter vr?"
-    },
-    {
-      "label": "Final Target Experience",
-      "file_type": "document",
-      "source_file": "plan.md",
-      "source_location": "L1129",
-      "_origin": "ast",
-      "id": "plan_final_target_experience",
+      "id": "plan_4_5_verification_already_performed",
       "community": 78,
-      "norm_label": "final target experience"
+      "norm_label": "4.5 verification already performed"
     },
     {
-      "label": "Final Guardrails",
+      "label": "5. Remaining work \u2014 run these in order",
       "file_type": "document",
       "source_file": "plan.md",
-      "source_location": "L1173",
+      "source_location": "L178",
       "_origin": "ast",
-      "id": "plan_final_guardrails",
+      "id": "plan_5_remaining_work_run_these_in_order",
       "community": 78,
-      "norm_label": "final guardrails"
+      "norm_label": "5. remaining work \u2014 run these in order"
+    },
+    {
+      "label": "Step 1 \u2014 rebuild (the tree may have changed since the last build)",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L183",
+      "_origin": "ast",
+      "id": "plan_step_1_rebuild_the_tree_may_have_changed_since_the_last_build",
+      "community": 78,
+      "norm_label": "step 1 \u2014 rebuild (the tree may have changed since the last build)"
+    },
+    {
+      "label": "Step 2 \u2014 deploy to the staging path and look at it",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L192",
+      "_origin": "ast",
+      "id": "plan_step_2_deploy_to_the_staging_path_and_look_at_it",
+      "community": 78,
+      "norm_label": "step 2 \u2014 deploy to the staging path and look at it"
+    },
+    {
+      "label": "Step 3 \u2014 deploy to the live root",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L204",
+      "_origin": "ast",
+      "id": "plan_step_3_deploy_to_the_live_root",
+      "community": 78,
+      "norm_label": "step 3 \u2014 deploy to the live root"
+    },
+    {
+      "label": "Step 4 \u2014 refresh the knowledge graph",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L214",
+      "_origin": "ast",
+      "id": "plan_step_4_refresh_the_knowledge_graph",
+      "community": 78,
+      "norm_label": "step 4 \u2014 refresh the knowledge graph"
+    },
+    {
+      "label": "Step 5 \u2014 commit and push",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L224",
+      "_origin": "ast",
+      "id": "plan_step_5_commit_and_push",
+      "community": 78,
+      "norm_label": "step 5 \u2014 commit and push"
+    },
+    {
+      "label": "Step 6 \u2014 record the one thing still untested",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L250",
+      "_origin": "ast",
+      "id": "plan_step_6_record_the_one_thing_still_untested",
+      "community": 78,
+      "norm_label": "step 6 \u2014 record the one thing still untested"
+    },
+    {
+      "label": "6. Acceptance checks \u2014 mechanical, run them all",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L262",
+      "_origin": "ast",
+      "id": "plan_6_acceptance_checks_mechanical_run_them_all",
+      "community": 78,
+      "norm_label": "6. acceptance checks \u2014 mechanical, run them all"
+    },
+    {
+      "label": "6.1 Empty-state parity (hard rule 3.1)",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L264",
+      "_origin": "ast",
+      "id": "plan_6_1_empty_state_parity_hard_rule_3_1",
+      "community": 78,
+      "norm_label": "6.1 empty-state parity (hard rule 3.1)"
+    },
+    {
+      "label": "6.2 No implementation jargon reaches a user",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L279",
+      "_origin": "ast",
+      "id": "plan_6_2_no_implementation_jargon_reaches_a_user",
+      "community": 78,
+      "norm_label": "6.2 no implementation jargon reaches a user"
+    },
+    {
+      "label": "6.3 HUD text is still ASCII (hard rule 3.3)",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L289",
+      "_origin": "ast",
+      "id": "plan_6_3_hud_text_is_still_ascii_hard_rule_3_3",
+      "community": 78,
+      "norm_label": "6.3 hud text is still ascii (hard rule 3.3)"
+    },
+    {
+      "label": "6.4 On the live site (`https://nec4-jumpstart.streamlit.app`)",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L302",
+      "_origin": "ast",
+      "id": "plan_6_4_on_the_live_site_https_nec4_jumpstart_streamlit_app",
+      "community": 78,
+      "norm_label": "6.4 on the live site (`https://nec4-jumpstart.streamlit.app`)"
+    },
+    {
+      "label": "6.5 Narrow window",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L323",
+      "_origin": "ast",
+      "id": "plan_6_5_narrow_window",
+      "community": 78,
+      "norm_label": "6.5 narrow window"
+    },
+    {
+      "label": "7. Rejected from the previous plan \u2014 do not build these",
+      "file_type": "document",
+      "source_file": "plan.md",
+      "source_location": "L330",
+      "_origin": "ast",
+      "id": "plan_7_rejected_from_the_previous_plan_do_not_build_these",
+      "community": 78,
+      "norm_label": "7. rejected from the previous plan \u2014 do not build these"
     },
     {
       "label": "progress.md",
@@ -9842,7 +9442,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "progress_2026_04_20_enriched_metadata_evaluation_framework",
-      "community": 62,
+      "community": 24,
       "norm_label": "2026-04-20 \u2014 enriched metadata + evaluation framework"
     },
     {
@@ -9852,7 +9452,7 @@
       "source_location": "L35",
       "_origin": "ast",
       "id": "progress_metadata_enrichment_video_transcript_v2_namespace",
-      "community": 62,
+      "community": 24,
       "norm_label": "metadata enrichment (video_transcript_v2 namespace)"
     },
     {
@@ -9862,7 +9462,7 @@
       "source_location": "L76",
       "_origin": "ast",
       "id": "progress_n8n_agent_system_message",
-      "community": 62,
+      "community": 24,
       "norm_label": "n8n agent system message"
     },
     {
@@ -9872,7 +9472,7 @@
       "source_location": "L84",
       "_origin": "ast",
       "id": "progress_evaluation_framework",
-      "community": 62,
+      "community": 24,
       "norm_label": "evaluation framework"
     },
     {
@@ -9892,7 +9492,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "progress_2026_05_03_cloudfront_hls_video_integration_portal_cleanup",
-      "community": 231,
+      "community": 68,
       "norm_label": "2026-05-03 \u2014 cloudfront hls video integration + portal cleanup"
     },
     {
@@ -9902,7 +9502,7 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "progress_video_hosting_local_cloudfront_hls",
-      "community": 231,
+      "community": 68,
       "norm_label": "video hosting \u2014 local \u2192 cloudfront hls"
     },
     {
@@ -9912,7 +9512,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "progress_inspector_portal_html_changes",
-      "community": 231,
+      "community": 68,
       "norm_label": "`inspector_portal.html` changes"
     },
     {
@@ -9922,7 +9522,7 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "progress_streamlit_app_py_changes",
-      "community": 231,
+      "community": 68,
       "norm_label": "`streamlit_app.py` changes"
     },
     {
@@ -10002,7 +9602,7 @@
       "source_location": "L190",
       "_origin": "ast",
       "id": "progress_2026_05_04_hls_fix_whisper_voice_input_chat_panel_html",
-      "community": 105,
+      "community": 62,
       "norm_label": "2026-05-04 \u2014 hls fix + whisper voice input + chat_panel.html"
     },
     {
@@ -10012,7 +9612,7 @@
       "source_location": "L195",
       "_origin": "ast",
       "id": "progress_hls_fix_inspector_portal_html",
-      "community": 105,
+      "community": 62,
       "norm_label": "hls fix (`inspector_portal.html`)"
     },
     {
@@ -10022,7 +9622,7 @@
       "source_location": "L199",
       "_origin": "ast",
       "id": "progress_whisper_voice_input_button_inspector_portal_html",
-      "community": 105,
+      "community": 62,
       "norm_label": "whisper voice input button (`inspector_portal.html`)"
     },
     {
@@ -10032,7 +9632,7 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "progress_chat_panel_html_gaussian_tab_refactor_streamlit_app_py",
-      "community": 105,
+      "community": 62,
       "norm_label": "chat_panel.html + gaussian tab refactor (`streamlit_app.py`)"
     },
     {
@@ -10442,7 +10042,7 @@
       "source_location": "L684",
       "_origin": "ast",
       "id": "progress_2026_06_01_iwsdk_v2_live_iwer_emulator_pass_quest_stt_correction_transcribe_webhook",
-      "community": 76,
+      "community": 92,
       "norm_label": "2026-06-01 \u2014 iwsdk v2 live iwer emulator pass + quest stt correction + transcribe webhook"
     },
     {
@@ -10452,7 +10052,7 @@
       "source_location": "L689",
       "_origin": "ast",
       "id": "progress_live_iwer_emulator_pass_v2_portal",
-      "community": 76,
+      "community": 92,
       "norm_label": "live iwer emulator pass (v2 portal)"
     },
     {
@@ -10462,7 +10062,7 @@
       "source_location": "L725",
       "_origin": "ast",
       "id": "progress_quest_stt_correction_supersedes_the_2026_05_25_claim",
-      "community": 76,
+      "community": 92,
       "norm_label": "quest stt correction (supersedes the 2026-05-25 claim)"
     },
     {
@@ -10472,7 +10072,7 @@
       "source_location": "L740",
       "_origin": "ast",
       "id": "progress_transcribe_webhook_delivered_n8n_transcribe_webhook_json",
-      "community": 76,
+      "community": 92,
       "norm_label": "transcribe webhook delivered (`n8n_transcribe_webhook.json`)"
     },
     {
@@ -10482,7 +10082,7 @@
       "source_location": "L776",
       "_origin": "ast",
       "id": "progress_changes_776",
-      "community": 76,
+      "community": 92,
       "norm_label": "changes"
     },
     {
@@ -10492,7 +10092,7 @@
       "source_location": "L785",
       "_origin": "ast",
       "id": "progress_still_pending_785",
-      "community": 76,
+      "community": 92,
       "norm_label": "still pending"
     },
     {
@@ -10732,7 +10332,7 @@
       "source_location": "L1057",
       "_origin": "ast",
       "id": "progress_2026_06_22_router_re_diagnosis_real_bug_was_retrieval_depth_prompt_contradiction_weak_model_supersedes_the_06_18_3_missing_tools_theory_eval_set_60_90_skill_cleanup",
-      "community": 198,
+      "community": 64,
       "norm_label": "2026-06-22 \u2014 router re-diagnosis: real bug was retrieval depth + prompt contradiction + weak model (supersedes the 06-18 \"3 missing tools\" theory) + eval set 60\u219290 + skill cleanup"
     },
     {
@@ -10742,7 +10342,7 @@
       "source_location": "L1062",
       "_origin": "ast",
       "id": "progress_context_the_professor_s_report_take_two",
-      "community": 198,
+      "community": 64,
       "norm_label": "context \u2014 the professor's report, take two"
     },
     {
@@ -10752,7 +10352,7 @@
       "source_location": "L1070",
       "_origin": "ast",
       "id": "progress_what_the_re_audit_ruled_out_the_assumed_causes_were_wrong",
-      "community": 198,
+      "community": 64,
       "norm_label": "what the re-audit ruled out (the assumed causes were wrong)"
     },
     {
@@ -10762,7 +10362,7 @@
       "source_location": "L1079",
       "_origin": "ast",
       "id": "progress_the_real_root_causes_all_in_the_live_workflow_none_in_the_repo_data",
-      "community": 198,
+      "community": 64,
       "norm_label": "the real root causes (all in the live workflow, none in the repo data)"
     },
     {
@@ -10772,7 +10372,7 @@
       "source_location": "L1092",
       "_origin": "ast",
       "id": "progress_the_fix_applied_via_the_n8n_public_api_get_mutate_put",
-      "community": 198,
+      "community": 64,
       "norm_label": "the fix (applied via the n8n public api \u2014 get \u2192 mutate \u2192 put)"
     },
     {
@@ -10782,7 +10382,7 @@
       "source_location": "L1109",
       "_origin": "ast",
       "id": "progress_eval_set_expanded_60_90_live_class_questions",
-      "community": 198,
+      "community": 64,
       "norm_label": "eval set expanded 60 \u2192 90 (live-class questions)"
     },
     {
@@ -10792,7 +10392,7 @@
       "source_location": "L1118",
       "_origin": "ast",
       "id": "progress_repo_skill_cleanup",
-      "community": 198,
+      "community": 64,
       "norm_label": "repo / skill cleanup"
     },
     {
@@ -10802,7 +10402,7 @@
       "source_location": "L1126",
       "_origin": "ast",
       "id": "progress_changes_1126",
-      "community": 198,
+      "community": 64,
       "norm_label": "changes"
     },
     {
@@ -11707,7 +11307,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 90,
+      "community": 6,
       "norm_label": "openai whisper transcription",
       "id": "transcribe_videos_whisper"
     },
@@ -11720,7 +11320,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 90,
+      "community": 6,
       "norm_label": "video_metadata.json",
       "id": "video_metadata"
     },
@@ -11733,7 +11333,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 90,
+      "community": 6,
       "norm_label": "chat_panel.html (first responder gpt)",
       "id": "chat_panel"
     },
@@ -11746,7 +11346,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 90,
+      "community": 6,
       "norm_label": "chat_panel.sendmessage",
       "id": "chat_panel_send_message"
     },
@@ -11759,7 +11359,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 90,
+      "community": 6,
       "norm_label": "chat_panel.startrecognition (web speech)",
       "id": "chat_panel_start_recognition"
     },
@@ -11772,7 +11372,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 90,
+      "community": 6,
       "norm_label": "n8n chat webhook (a7782f7b)",
       "id": "n8n_chat_webhook"
     },
@@ -11785,7 +11385,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 90,
+      "community": 6,
       "norm_label": "n8n transcribe-audio webhook",
       "id": "n8n_transcribe_webhook"
     },
@@ -11798,7 +11398,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 90,
+      "community": 6,
       "norm_label": "first responder gpt router agent",
       "id": "n8n_router_config_router_agent"
     },
@@ -11824,7 +11424,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 90,
+      "community": 6,
       "norm_label": "eval_questions.json (transcript+pdf qa set)",
       "id": "eval_questions"
     },
@@ -11837,7 +11437,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 90,
+      "community": 6,
       "norm_label": "cloudfront distribution e2fcjoszvlda5w",
       "id": "cloudfront_distribution"
     },
@@ -11980,7 +11580,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 32,
+      "community": 30,
       "norm_label": "index.ts world.create entry",
       "id": "src_index_world_create"
     },
@@ -13442,6 +13042,17 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L303",
+      "weight": 1.0,
+      "source": "src_chat_clearconversation",
+      "target": "src_breadcrumbs_crumb"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/portal/src/chat.ts",
       "source_location": "L241",
       "weight": 1.0,
       "source": "src_chat_focusinput",
@@ -13478,6 +13089,17 @@
       "source_location": "L298",
       "weight": 1.0,
       "source": "src_hud_hudsystem_appendbubble",
+      "target": "src_breadcrumbs_crumb"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L151",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem_init",
       "target": "src_breadcrumbs_crumb"
     },
     {
@@ -13558,6 +13180,50 @@
       "target": "src_breadcrumbs_installcrumbsinspector"
     },
     {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat-standalone.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat_standalone",
+      "target": "src_chat"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat-standalone.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat_standalone",
+      "target": "src_chat_initchatbindings"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat-standalone.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat_standalone",
+      "target": "src_voice"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat-standalone.ts",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat_standalone",
+      "target": "src_voice_initvoicebindings"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/portal/src/chat.ts",
@@ -13596,6 +13262,26 @@
       "confidence_score": 1.0,
       "source": "src_chat",
       "target": "src_chat_autogrow"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L266",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat",
+      "target": "src_chat_clearbtn"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L299",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat",
+      "target": "src_chat_clearconversation"
     },
     {
       "relation": "contains",
@@ -13661,6 +13347,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L276",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat",
+      "target": "src_chat_rendertranscript"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
       "source_location": "L21",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -13686,16 +13382,6 @@
       "confidence_score": 1.0,
       "source": "src_chat",
       "target": "src_chat_sendmessage"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "apps/portal/src/chat.ts",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_chat",
-      "target": "src_chat_session_id"
     },
     {
       "relation": "contains",
@@ -13799,6 +13485,83 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat",
+      "target": "src_transcript"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat",
+      "target": "src_transcript_appendmessage"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat",
+      "target": "src_transcript_cleartranscript"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat",
+      "target": "src_transcript_getsessionid"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat",
+      "target": "src_transcript_loadtranscript"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat",
+      "target": "src_transcript_rotatesessionid"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat",
+      "target": "src_transcript_subscribetotranscript"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "apps/portal/src/voice.ts",
       "source_location": "L1",
       "weight": 1.0,
@@ -13871,6 +13634,28 @@
       "weight": 1.0,
       "source": "src_chat_addmessage",
       "target": "src_hud_mirror_mirrortohud"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "src_chat_addmessage",
+      "target": "src_transcript_appendmessage"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L285",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat_rendertranscript",
+      "target": "src_chat_addmessage"
     },
     {
       "relation": "calls",
@@ -13958,6 +13743,17 @@
       "weight": 1.0,
       "source": "src_chat_sendmessage",
       "target": "src_icons_seterrorbanner"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L142",
+      "weight": 1.0,
+      "source": "src_chat_sendmessage",
+      "target": "src_transcript_getsessionid"
     },
     {
       "relation": "imports",
@@ -14081,6 +13877,61 @@
       "target": "src_chat_focusinput"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L302",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat_clearconversation",
+      "target": "src_chat_rendertranscript"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L330",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_chat_initchatbindings",
+      "target": "src_chat_rendertranscript"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L277",
+      "weight": 1.0,
+      "source": "src_chat_rendertranscript",
+      "target": "src_transcript_loadtranscript"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L300",
+      "weight": 1.0,
+      "source": "src_chat_clearconversation",
+      "target": "src_transcript_cleartranscript"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L301",
+      "weight": 1.0,
+      "source": "src_chat_clearconversation",
+      "target": "src_transcript_rotatesessionid"
+    },
+    {
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
@@ -14090,6 +13941,17 @@
       "confidence_score": 1.0,
       "source": "src_chat_initchatbindings",
       "target": "src_index"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/portal/src/chat.ts",
+      "source_location": "L331",
+      "weight": 1.0,
+      "source": "src_chat_initchatbindings",
+      "target": "src_transcript_subscribetotranscript"
     },
     {
       "relation": "imports_from",
@@ -14705,6 +14567,17 @@
       "confidence_score": 1.0,
       "source": "src_hud",
       "target": "src_icons_icon"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_hud",
+      "target": "src_icons_seterrorbanner",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -15649,6 +15522,97 @@
       "weight": 1.0,
       "source": "src_push_to_talk_pushtotalksystem_update",
       "target": "src_voice_stoprecognition"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L47",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_transcript",
+      "target": "src_transcript_appendmessage"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L60",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_transcript",
+      "target": "src_transcript_cleartranscript"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L76",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_transcript",
+      "target": "src_transcript_getsessionid"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L30",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_transcript",
+      "target": "src_transcript_loadtranscript"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L25",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_transcript",
+      "target": "src_transcript_message"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L24",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_transcript",
+      "target": "src_transcript_role"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L97",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_transcript",
+      "target": "src_transcript_rotatesessionid"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L110",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_transcript",
+      "target": "src_transcript_subscribetotranscript"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/transcript.ts",
+      "source_location": "L49",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_transcript_appendmessage",
+      "target": "src_transcript_loadtranscript"
     },
     {
       "relation": "contains",
@@ -23784,10 +23748,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L56",
+      "source_location": "L61",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "deploy_deploy_portal_v2_rationale_56",
+      "source": "deploy_deploy_portal_v2_rationale_61",
       "target": "deploy_deploy_portal_v2_target"
     },
     {
@@ -23809,6 +23773,16 @@
       "confidence_score": 1.0,
       "source": "deploy_deploy_portal_v2_target",
       "target": "deploy_deploy_portal_v2_target_live_url"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "deploy/deploy_portal_v2.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "deploy_deploy_portal_v2_target",
+      "target": "deploy_deploy_portal_v2_target_url_for"
     },
     {
       "relation": "references",
@@ -23837,11 +23811,44 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "deploy/deploy_portal_v2.py",
+      "source_location": "L75",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "deploy_deploy_portal_v2_target_url_for",
+      "target": "deploy_deploy_portal_v2_target_key_for"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "deploy/deploy_portal_v2.py",
       "source_location": "L139",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "deploy_deploy_portal_v2_upload_dist",
       "target": "deploy_deploy_portal_v2_target_key_for"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "deploy/deploy_portal_v2.py",
+      "source_location": "L283",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "deploy_deploy_portal_v2_main",
+      "target": "deploy_deploy_portal_v2_target_url_for"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "deploy/deploy_portal_v2.py",
+      "source_location": "L196",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "deploy_deploy_portal_v2_verify_live",
+      "target": "deploy_deploy_portal_v2_target_url_for"
     },
     {
       "relation": "calls",
@@ -23891,10 +23898,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L160",
+      "source_location": "L175",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "deploy_deploy_portal_v2_rationale_160",
+      "source": "deploy_deploy_portal_v2_rationale_175",
       "target": "deploy_deploy_portal_v2_local_bundles"
     },
     {
@@ -23912,10 +23919,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "deploy/deploy_portal_v2.py",
-      "source_location": "L173",
+      "source_location": "L190",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "deploy_deploy_portal_v2_rationale_173",
+      "source": "deploy_deploy_portal_v2_rationale_190",
       "target": "deploy_deploy_portal_v2_verify_live"
     },
     {
@@ -24182,10 +24189,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "deploy/deploy_v1.py",
-      "source_location": "L95",
+      "source_location": "L97",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "deploy_deploy_v1_rationale_95",
+      "source": "deploy_deploy_v1_rationale_97",
       "target": "deploy_deploy_v1_verify"
     },
     {
@@ -25637,9 +25644,9 @@
       "source_file": "streamlit_app.py",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "streamlit_app_rationale_22",
-      "target": "streamlit_app_icon",
-      "confidence_score": 1.0
+      "target": "streamlit_app_icon"
     },
     {
       "relation": "contains",
@@ -25800,6 +25807,16 @@
       "confidence_score": 1.0,
       "source": "claude_start_here_launching_a_claude_code_session",
       "target": "claude_v2_iwsdk_vr_work_dev_server_quest_3_emulator_start_the_server_then_launch_from_apps_portal"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L192",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "claude_v2_portal_apps_portal_iwsdk_parallel_deploy_not_yet_cut_over",
+      "target": "claude_one_chat_panel_one_conversation_2026_09_07"
     },
     {
       "relation": "contains",
@@ -27435,180 +27452,100 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L1101",
-      "weight": 1.0,
-      "source": "plan",
-      "target": "plan_acceptance_criteria",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L21",
-      "weight": 1.0,
-      "source": "plan",
-      "target": "plan_core_ux_principle",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L1173",
-      "weight": 1.0,
-      "source": "plan",
-      "target": "plan_final_guardrails",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L1129",
-      "weight": 1.0,
-      "source": "plan",
-      "target": "plan_final_target_experience",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
       "source_location": "L1",
       "weight": 1.0,
       "source": "plan",
-      "target": "plan_frontend_ux_redesign_plan",
+      "target": "plan_ux_pass_2_clear_informative_runbook",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L57",
+      "source_location": "L15",
       "weight": 1.0,
-      "source": "plan",
-      "target": "plan_important_implementation_constraint",
+      "source": "plan_ux_pass_2_clear_informative_runbook",
+      "target": "plan_1_ground_truth_this_is_three_deployables_not_one_app",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L927",
+      "source_location": "L65",
       "weight": 1.0,
-      "source": "plan",
-      "target": "plan_phase_10_accessibility_and_interaction_validation",
+      "source": "plan_ux_pass_2_clear_informative_runbook",
+      "target": "plan_2_where_copy_is_allowed_to_live",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L953",
+      "source_location": "L77",
       "weight": 1.0,
-      "source": "plan",
-      "target": "plan_phase_11_implementation_order",
+      "source": "plan_ux_pass_2_clear_informative_runbook",
+      "target": "plan_3_hard_rules_breaking_one_of_these_breaks_production",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L1058",
+      "source_location": "L101",
       "weight": 1.0,
-      "source": "plan",
-      "target": "plan_phase_12_testing_requirements",
+      "source": "plan_ux_pass_2_clear_informative_runbook",
+      "target": "plan_4_already_done_do_not_redo_code_written_tsc_clean_build_clean_checked_in_chrome",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L127",
+      "source_location": "L178",
       "weight": 1.0,
-      "source": "plan",
-      "target": "plan_phase_1_simplify_the_global_page_structure",
+      "source": "plan_ux_pass_2_clear_informative_runbook",
+      "target": "plan_5_remaining_work_run_these_in_order",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L217",
+      "source_location": "L262",
       "weight": 1.0,
-      "source": "plan",
-      "target": "plan_phase_2_establish_a_clear_main_workspace",
+      "source": "plan_ux_pass_2_clear_informative_runbook",
+      "target": "plan_6_acceptance_checks_mechanical_run_them_all",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L305",
+      "source_location": "L330",
       "weight": 1.0,
-      "source": "plan",
-      "target": "plan_phase_3_redesign_training_chapters",
+      "source": "plan_ux_pass_2_clear_informative_runbook",
+      "target": "plan_7_rejected_from_the_previous_plan_do_not_build_these",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L370",
+      "source_location": "L53",
       "weight": 1.0,
-      "source": "plan",
-      "target": "plan_phase_4_simplify_video_controls",
+      "source": "plan_1_ground_truth_this_is_three_deployables_not_one_app",
+      "target": "plan_what_it_does_not_offer",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L435",
+      "source_location": "L35",
       "weight": 1.0,
-      "source": "plan",
-      "target": "plan_phase_5_redesign_the_ai_assistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L580",
-      "weight": 1.0,
-      "source": "plan",
-      "target": "plan_phase_6_add_contextual_ai_awareness",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L678",
-      "weight": 1.0,
-      "source": "plan",
-      "target": "plan_phase_7_separate_the_ev_explorer_experience",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L775",
-      "weight": 1.0,
-      "source": "plan",
-      "target": "plan_phase_8_responsive_behavior",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L831",
-      "weight": 1.0,
-      "source": "plan",
-      "target": "plan_phase_9_visual_design_rules",
+      "source": "plan_1_ground_truth_this_is_three_deployables_not_one_app",
+      "target": "plan_what_the_third_party_viewer_actually_offers_verified_2026_09_07",
       "confidence_score": 1.0
     },
     {
@@ -27617,618 +27554,158 @@
       "source_file": "plan.md",
       "source_location": "L103",
       "weight": 1.0,
-      "source": "plan",
-      "target": "plan_target_user_journey",
+      "source": "plan_4_already_done_do_not_redo_code_written_tsc_clean_build_clean_checked_in_chrome",
+      "target": "plan_4_1_streamlit_app_py",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L3",
+      "source_location": "L128",
       "weight": 1.0,
-      "source": "plan_frontend_ux_redesign_plan",
-      "target": "plan_purpose",
+      "source": "plan_4_already_done_do_not_redo_code_written_tsc_clean_build_clean_checked_in_chrome",
+      "target": "plan_4_2_apps_portal_index_html",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L59",
+      "source_location": "L143",
       "weight": 1.0,
-      "source": "plan_important_implementation_constraint",
-      "target": "plan_do_not_rebuild_the_working_application_architecture_for_this_redesign",
+      "source": "plan_4_already_done_do_not_redo_code_written_tsc_clean_build_clean_checked_in_chrome",
+      "target": "plan_4_3_apps_portal_chat_html",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L135",
+      "source_location": "L147",
       "weight": 1.0,
-      "source": "plan_phase_1_simplify_the_global_page_structure",
-      "target": "plan_1_1_remove_duplicate_branding",
+      "source": "plan_4_already_done_do_not_redo_code_written_tsc_clean_build_clean_checked_in_chrome",
+      "target": "plan_4_4_apps_portal_src_hud_ts",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L157",
+      "source_location": "L166",
       "weight": 1.0,
-      "source": "plan_phase_1_simplify_the_global_page_structure",
-      "target": "plan_1_2_simplify_the_main_navigation",
+      "source": "plan_4_already_done_do_not_redo_code_written_tsc_clean_build_clean_checked_in_chrome",
+      "target": "plan_4_5_verification_already_performed",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L185",
+      "source_location": "L183",
       "weight": 1.0,
-      "source": "plan_phase_1_simplify_the_global_page_structure",
-      "target": "plan_1_3_remove_the_live_badge",
+      "source": "plan_5_remaining_work_run_these_in_order",
+      "target": "plan_step_1_rebuild_the_tree_may_have_changed_since_the_last_build",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L197",
+      "source_location": "L192",
       "weight": 1.0,
-      "source": "plan_phase_1_simplify_the_global_page_structure",
-      "target": "plan_1_4_reduce_introductory_text",
+      "source": "plan_5_remaining_work_run_these_in_order",
+      "target": "plan_step_2_deploy_to_the_staging_path_and_look_at_it",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L129",
+      "source_location": "L204",
       "weight": 1.0,
-      "source": "plan_phase_1_simplify_the_global_page_structure",
-      "target": "plan_goal",
+      "source": "plan_5_remaining_work_run_these_in_order",
+      "target": "plan_step_3_deploy_to_the_live_root",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L225",
+      "source_location": "L214",
       "weight": 1.0,
-      "source": "plan_phase_2_establish_a_clear_main_workspace",
-      "target": "plan_2_1_primary_desktop_layout",
+      "source": "plan_5_remaining_work_run_these_in_order",
+      "target": "plan_step_4_refresh_the_knowledge_graph",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L251",
+      "source_location": "L224",
       "weight": 1.0,
-      "source": "plan_phase_2_establish_a_clear_main_workspace",
-      "target": "plan_2_2_visual_hierarchy",
+      "source": "plan_5_remaining_work_run_these_in_order",
+      "target": "plan_step_5_commit_and_push",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L284",
+      "source_location": "L250",
       "weight": 1.0,
-      "source": "plan_phase_2_establish_a_clear_main_workspace",
-      "target": "plan_2_3_keep_the_number_of_permanent_buttons_low",
+      "source": "plan_5_remaining_work_run_these_in_order",
+      "target": "plan_step_6_record_the_one_thing_still_untested",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L219",
+      "source_location": "L264",
       "weight": 1.0,
-      "source": "plan_phase_2_establish_a_clear_main_workspace",
-      "target": "plan_goal_219",
+      "source": "plan_6_acceptance_checks_mechanical_run_them_all",
+      "target": "plan_6_1_empty_state_parity_hard_rule_3_1",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L255",
+      "source_location": "L279",
       "weight": 1.0,
-      "source": "plan_2_2_visual_hierarchy",
-      "target": "plan_level_1",
+      "source": "plan_6_acceptance_checks_mechanical_run_them_all",
+      "target": "plan_6_2_no_implementation_jargon_reaches_a_user",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L260",
+      "source_location": "L289",
       "weight": 1.0,
-      "source": "plan_2_2_visual_hierarchy",
-      "target": "plan_level_2",
+      "source": "plan_6_acceptance_checks_mechanical_run_them_all",
+      "target": "plan_6_3_hud_text_is_still_ascii_hard_rule_3_3",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L265",
+      "source_location": "L302",
       "weight": 1.0,
-      "source": "plan_2_2_visual_hierarchy",
-      "target": "plan_level_3",
+      "source": "plan_6_acceptance_checks_mechanical_run_them_all",
+      "target": "plan_6_4_on_the_live_site_https_nec4_jumpstart_streamlit_app",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "plan.md",
-      "source_location": "L270",
+      "source_location": "L323",
       "weight": 1.0,
-      "source": "plan_2_2_visual_hierarchy",
-      "target": "plan_level_4",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L313",
-      "weight": 1.0,
-      "source": "plan_phase_3_redesign_training_chapters",
-      "target": "plan_3_1_replace_part_buttons_with_a_chapter_selector",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L344",
-      "weight": 1.0,
-      "source": "plan_phase_3_redesign_training_chapters",
-      "target": "plan_3_2_current_chapter_should_always_be_clear",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L356",
-      "weight": 1.0,
-      "source": "plan_phase_3_redesign_training_chapters",
-      "target": "plan_3_3_prepare_chapter_state_for_future_ai_context",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L307",
-      "weight": 1.0,
-      "source": "plan_phase_3_redesign_training_chapters",
-      "target": "plan_goal_307",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L378",
-      "weight": 1.0,
-      "source": "plan_phase_4_simplify_video_controls",
-      "target": "plan_4_1_default_controls",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L400",
-      "weight": 1.0,
-      "source": "plan_phase_4_simplify_video_controls",
-      "target": "plan_4_2_do_not_make_every_action_a_permanent_button",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L415",
-      "weight": 1.0,
-      "source": "plan_phase_4_simplify_video_controls",
-      "target": "plan_4_3_separate_vr_from_normal_playback_controls",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L372",
-      "weight": 1.0,
-      "source": "plan_phase_4_simplify_video_controls",
-      "target": "plan_goal_372",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L443",
-      "weight": 1.0,
-      "source": "plan_phase_5_redesign_the_ai_assistant",
-      "target": "plan_5_1_rename_the_assistant",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L461",
-      "weight": 1.0,
-      "source": "plan_phase_5_redesign_the_ai_assistant",
-      "target": "plan_5_2_replace_the_large_static_capability_list",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L498",
-      "weight": 1.0,
-      "source": "plan_phase_5_redesign_the_ai_assistant",
-      "target": "plan_5_3_keep_one_primary_input",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L528",
-      "weight": 1.0,
-      "source": "plan_phase_5_redesign_the_ai_assistant",
-      "target": "plan_5_4_conversation_state",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L558",
-      "weight": 1.0,
-      "source": "plan_phase_5_redesign_the_ai_assistant",
-      "target": "plan_5_5_avoid_exposing_backend_concepts",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L437",
-      "weight": 1.0,
-      "source": "plan_phase_5_redesign_the_ai_assistant",
-      "target": "plan_goal_437",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L588",
-      "weight": 1.0,
-      "source": "plan_phase_6_add_contextual_ai_awareness",
-      "target": "plan_6_1_maintain_frontend_context",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L612",
-      "weight": 1.0,
-      "source": "plan_phase_6_add_contextual_ai_awareness",
-      "target": "plan_6_2_improve_user_facing_context",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L644",
-      "weight": 1.0,
-      "source": "plan_phase_6_add_contextual_ai_awareness",
-      "target": "plan_6_3_future_ai_to_experience_actions",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L582",
-      "weight": 1.0,
-      "source": "plan_phase_6_add_contextual_ai_awareness",
-      "target": "plan_goal_582",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L686",
-      "weight": 1.0,
-      "source": "plan_phase_7_separate_the_ev_explorer_experience",
-      "target": "plan_7_1_keep_ev_explorer_as_a_distinct_top_level_experience",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L714",
-      "weight": 1.0,
-      "source": "plan_phase_7_separate_the_ev_explorer_experience",
-      "target": "plan_7_2_ev_explorer_ui_principle",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L754",
-      "weight": 1.0,
-      "source": "plan_phase_7_separate_the_ev_explorer_experience",
-      "target": "plan_7_3_do_not_leak_technical_vr_complexity_into_the_ui",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L680",
-      "weight": 1.0,
-      "source": "plan_phase_7_separate_the_ev_explorer_experience",
-      "target": "plan_goal_680",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L702",
-      "weight": 1.0,
-      "source": "plan_7_1_keep_ev_explorer_as_a_distinct_top_level_experience",
-      "target": "plan_ev_explorer",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L694",
-      "weight": 1.0,
-      "source": "plan_7_1_keep_ev_explorer_as_a_distinct_top_level_experience",
-      "target": "plan_training",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L783",
-      "weight": 1.0,
-      "source": "plan_phase_8_responsive_behavior",
-      "target": "plan_8_1_desktop",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L795",
-      "weight": 1.0,
-      "source": "plan_phase_8_responsive_behavior",
-      "target": "plan_8_2_smaller_screens",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L811",
-      "weight": 1.0,
-      "source": "plan_phase_8_responsive_behavior",
-      "target": "plan_8_3_mobile_priorities",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L777",
-      "weight": 1.0,
-      "source": "plan_phase_8_responsive_behavior",
-      "target": "plan_goal_777",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L839",
-      "weight": 1.0,
-      "source": "plan_phase_9_visual_design_rules",
-      "target": "plan_9_1_reduce_visual_containers",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L857",
-      "weight": 1.0,
-      "source": "plan_phase_9_visual_design_rules",
-      "target": "plan_9_2_use_whitespace_intentionally",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L886",
-      "weight": 1.0,
-      "source": "plan_phase_9_visual_design_rules",
-      "target": "plan_9_3_typography",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L910",
-      "weight": 1.0,
-      "source": "plan_phase_9_visual_design_rules",
-      "target": "plan_9_4_color",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L833",
-      "weight": 1.0,
-      "source": "plan_phase_9_visual_design_rules",
-      "target": "plan_goal_833",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L929",
-      "weight": 1.0,
-      "source": "plan_phase_10_accessibility_and_interaction_validation",
-      "target": "plan_goal_929",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L957",
-      "weight": 1.0,
-      "source": "plan_phase_11_implementation_order",
-      "target": "plan_step_1_audit_existing_ui",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L974",
-      "weight": 1.0,
-      "source": "plan_phase_11_implementation_order",
-      "target": "plan_step_2_preserve_functional_baseline",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L991",
-      "weight": 1.0,
-      "source": "plan_phase_11_implementation_order",
-      "target": "plan_step_3_implement_phase_1_and_phase_2",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L1005",
-      "weight": 1.0,
-      "source": "plan_phase_11_implementation_order",
-      "target": "plan_step_4_implement_phase_3_and_phase_4",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L1017",
-      "weight": 1.0,
-      "source": "plan_phase_11_implementation_order",
-      "target": "plan_step_5_implement_phase_5",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L1032",
-      "weight": 1.0,
-      "source": "plan_phase_11_implementation_order",
-      "target": "plan_step_6_implement_phase_6",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L1045",
-      "weight": 1.0,
-      "source": "plan_phase_11_implementation_order",
-      "target": "plan_step_7_implement_phase_7_and_phase_8",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L1121",
-      "weight": 1.0,
-      "source": "plan_acceptance_criteria",
-      "target": "plan_how_do_i_enter_vr",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L1109",
-      "weight": 1.0,
-      "source": "plan_acceptance_criteria",
-      "target": "plan_what_am_i_doing",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L1113",
-      "weight": 1.0,
-      "source": "plan_acceptance_criteria",
-      "target": "plan_what_should_i_do_next",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L1105",
-      "weight": 1.0,
-      "source": "plan_acceptance_criteria",
-      "target": "plan_where_am_i",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "plan.md",
-      "source_location": "L1117",
-      "weight": 1.0,
-      "source": "plan_acceptance_criteria",
-      "target": "plan_where_do_i_ask_a_question",
+      "source": "plan_6_acceptance_checks_mechanical_run_them_all",
+      "target": "plan_6_5_narrow_window",
       "confidence_score": 1.0
     },
     {
@@ -31613,5 +31090,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "aa140441a709d06c9beb7c78cfa566ec1bacaec8"
+  "built_at_commit": "604a5c48380a4c4585bd7a5dca81e39583c0dced"
 }

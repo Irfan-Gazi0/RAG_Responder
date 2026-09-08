@@ -13,7 +13,7 @@ import {
   VisibilityState,
 } from "@iwsdk/core";
 import { fmt, getActiveVideo, getCurrentVideoIdx, switchVideo } from "./videosphere.js";
-import { icon } from "./icons.js";
+import { icon, setErrorBanner } from "./icons.js";
 import {
   getChatHistory,
   setChatListener,
@@ -77,6 +77,10 @@ export class HudSystem extends createSystem({
   private chimeAudio: Entity | null = null;
   private loggedFirstBubble = false;
 
+  // Whether this browsing context can actually start an immersive session.
+  // Probed once at init, never on the click path — see the Enter VR wiring.
+  private xrSupported: boolean | null = null;
+
   // Bubbles we created, in display order. We track them ourselves instead of
   // walking scroll.children so removal can never touch anything UIKit owns.
   private bubbles: UIKit.Container[] = [];
@@ -123,15 +127,58 @@ export class HudSystem extends createSystem({
     this.queries.hudPanel.subscribe("qualify", (entity) => this.adopt(entity));
     for (const entity of this.queries.hudPanel.entities) this.adopt(entity);
 
+    // Can this context start an immersive session at all? Inside the Streamlit
+    // iframe it cannot: components.iframe() withholds `xr-spatial-tracking`, so
+    // navigator.xr is either absent or refuses. launchXR() has no .catch (see
+    // @iwsdk/core init/xr.js — `requestSession(...).then(onSessionStart)`), so
+    // the click there used to land as an unhandled rejection and the button
+    // simply did nothing. Probe ONCE here and branch synchronously on the click:
+    // an await between the gesture and requestSession() risks spending the
+    // transient user activation the Quest needs, and that path must not change.
+    if (navigator.xr) {
+      navigator.xr
+        .isSessionSupported("immersive-vr")
+        .then((ok) => {
+          this.xrSupported = ok;
+          crumb("xr", "immersive-vr supported =", String(ok));
+        })
+        .catch((e) => {
+          this.xrSupported = false;
+          crumb("xr", "isSessionSupported threw:", String(e));
+        });
+    } else {
+      this.xrSupported = false;
+      crumb("xr", "navigator.xr absent (embedded without xr-spatial-tracking?)");
+    }
+
     // DOM Enter VR button → launchXR
     const enterBtn = window.document.getElementById("btn-enter-vr");
     if (enterBtn) {
       enterBtn.addEventListener("click", () => {
-        if (this.world.visibilityState.value === VisibilityState.NonImmersive) {
-          this.world.launchXR();
-        } else {
+        if (this.world.visibilityState.value !== VisibilityState.NonImmersive) {
           this.world.exitXR();
+          return;
         }
+        if (this.xrSupported === false) {
+          const banner = window.document.getElementById("error-banner");
+          if (banner) {
+            banner.style.display = "flex";
+            // Two different "no" answers, and telling them apart is the whole
+            // point: no navigator.xr at all means the permission was withheld
+            // (this page inside the Streamlit iframe); navigator.xr present but
+            // refusing means there is simply no headset on this browser.
+            setErrorBanner(
+              banner,
+              navigator.xr
+                ? "No VR headset available in this browser. Open this page in " +
+                    "your headset's browser, then tap Enter VR."
+                : "This embedded view can't start VR. Open the portal directly " +
+                    "in your headset's browser, then tap Enter VR.",
+            );
+          }
+          return;
+        }
+        this.world.launchXR();
       });
     }
 
