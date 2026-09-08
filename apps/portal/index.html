@@ -4,8 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>First Responder Training</title>
-  <!-- Inline Lucide truck favicon: matches the header logo and avoids the
-       /favicon.ico 403 on S3. -->
+  <!-- Inline Lucide truck favicon: avoids the /favicon.ico 403 on S3. -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23ef4444'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M14%2018V6a1%201%200%200%200-1-1H3a1%201%200%200%200-1%201v11a1%201%200%200%200%201%201h2'/%3E%3Cpath%20d='M15%2018H9'/%3E%3Cpath%20d='M19%2018h2a1%201%200%200%200%201-1v-3.65a1%201%200%200%200-.22-.624l-3.48-4.35A1%201%200%200%200%2017.52%208H14'/%3E%3Ccircle%20cx='17'%20cy='18'%20r='2'/%3E%3Ccircle%20cx='7'%20cy='18'%20r='2'/%3E%3C/svg%3E" />
 
   <style>
@@ -29,13 +28,6 @@
       align-items: center;
       gap: 12px;
       flex-shrink: 0;
-    }
-    header .logo {
-      width: 36px; height: 36px;
-      background: linear-gradient(135deg, #ef4444, #b91c1c);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 700; color: white;
     }
     header h1 { font-size: 15px; font-weight: 600; color: #f1f5f9; }
     header .hint { font-size: 12px; color: #64748b; }
@@ -172,14 +164,12 @@
     /* -- Lucide icons (github.com/lucide-icons/lucide, ISC) --
        Sizing and the shared `.icon` base live in src/chat-panel.css, which
        src/index.ts imports; these two are portal chrome only. */
-    header .logo-icon { width: 20px; height: 20px; vertical-align: 0; }
     .transport-row .icon { margin-right: 5px; }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo"><svg class="icon logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div>
   <h1>360° Training Video</h1>
   <span class="hint">Drag to look around the scene</span>
 </header>
@@ -223,7 +213,7 @@
            in two places, so the empty state must not read as two products.
            chat.ts clones this node and puts it back when the chat is cleared. -->
       <div class="chat-empty" id="chat-empty">
-        <h2>Training Assistant</h2>
+        <h2>Training Assistant<svg class="icon assistant-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></h2>
         <p>Tap the prompts below to get started or ask on your own.</p>
         <button class="prompt-chip" type="button">How do I shut down the high-voltage system?</button>
         <button class="prompt-chip" type="button">What do I do if the battery is on fire?</button>

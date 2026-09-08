@@ -122,7 +122,9 @@
 /* Empty state. Removed by chat.ts on the first message and never rebuilt —
    a capability list is only useful before the conversation exists. */
 .chat-empty { display: flex; flex-direction: column; gap: 8px; padding: 4px 2px; }
-.chat-empty h2 { font-size: 13px; font-weight: 600; color: #cbd5e1; }
+.chat-empty h2 { font-size: 13px; font-weight: 600; color: #cbd5e1;
+  display: flex; align-items: center; gap: 6px; }
+.chat-empty h2 .assistant-icon { width: 15px; height: 15px; color: #94a3b8; }
 .chat-empty p  { font-size: 12.5px; color: #64748b; margin-bottom: 4px; }
 .prompt-chip {
   background: #1e293b; border: 1px solid #334155; border-radius: 10px;
