@@ -1,4 +1,5 @@
 import { createSystem, Hovered, InputComponent } from "@iwsdk/core";
+import { requestChatExpand } from "./hud-mirror.js";
 import {
   isCurrentlyRecording,
   isVoiceSupported,
@@ -44,6 +45,9 @@ export class PushToTalkSystem extends createSystem({
       if (hoveringUI) {
         this.pulse(0.4, 25); // tactile confirm for a button press
       } else if (!isCurrentlyRecording()) {
+        // Asking a question implies wanting to see the answer: restore the chat
+        // if it was minimized, so "Listening..." and the reply are visible.
+        requestChatExpand();
         startRecognition({ source: "vr" });
         this.pulse(0.6, 60); // confirm voice capture started
       }

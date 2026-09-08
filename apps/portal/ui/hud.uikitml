@@ -159,8 +159,38 @@
     margin-top: 0.5;
   }
 
+  /* Panel-level actions, side by side. The chat toggle has to live OUTSIDE
+     .chat-surface or it would collapse along with the thing it restores; the
+     playback row has no spare width (Pause+Mute+1/2/3+gaps is ~38 of the 57
+     usable units, and #hud-time takes most of the rest), so it pairs with
+     Exit VR down here instead of squeezing the seek row's progress track. */
+  .bottom-row {
+    display: flex;
+    flex-direction: row;
+    gap: 1;
+  }
+
+  .hud-toggle {
+    flex-grow: 1;
+    padding: 1.2;
+    background-color: #1e293b;
+    border-color: #334155;
+    border-width: 0.1;
+    border-radius: 1.2;
+    color: #e2e8f0;
+    font-size: 2.2;
+    font-weight: medium;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .hud-toggle:hover {
+    background-color: #334155;
+    border-color: #64748b;
+  }
+
   #xr-button {
-    width: 100%;
+    flex-grow: 1;
     padding: 1.2;
     background-color: #ef4444;
     color: #ffffff;
@@ -196,7 +226,7 @@
     <button id="hud-fwd10" class="hud-btn hud-btn-seek">10s &gt;</button>
   </div>
 
-  <div class="chat-surface">
+  <div id="hud-chat-surface" class="chat-surface">
     <div class="chips-row">
       <button id="hud-chip1" class="hud-chip">Shut down HV</button>
       <button id="hud-chip2" class="hud-chip">Battery fire</button>
@@ -212,5 +242,8 @@
     <span id="hud-hint" class="chat-hint">Hold RIGHT TRIGGER or PINCH to speak - LEFT STICK scrolls chat</span>
   </div>
 
-  <button id="xr-button">Exit VR</button>
+  <div class="bottom-row">
+    <button id="hud-chat-toggle" class="hud-toggle">Hide Chat</button>
+    <button id="xr-button">Exit VR</button>
+  </div>
 </div>

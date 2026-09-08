@@ -68,6 +68,27 @@ export function setTranscriptListener(fn: TranscriptListener | null) {
   transcriptListener = fn;
 }
 
+// ---------------------------------------------------------------------------
+// Restore the in-VR chat surface if the user has minimized it. HudSystem
+// registers the handler; push-to-talk.ts calls it when voice capture starts.
+//
+// The hook lives at the voice *source* rather than on the transcript listener
+// because both channels above funnel into liveText: a listener-level hook could
+// not tell "Listening..." from a typed question's "Thinking...", and would pop
+// the panel open on every answer. It lives in this module rather than hud.ts so
+// push-to-talk.ts (which hud.ts already imports pttStopWasRecent from) does not
+// have to import back into hud.ts.
+// ---------------------------------------------------------------------------
+let chatExpandHandler: (() => void) | null = null;
+
+export function setChatExpandHandler(fn: (() => void) | null) {
+  chatExpandHandler = fn;
+}
+
+export function requestChatExpand() {
+  chatExpandHandler?.();
+}
+
 // Collapse a bot answer's markdown to plain text for the HUD chat surface:
 // marked -> HTML -> textContent (drops **bold**, links, list markers, etc.),
 // then ASCII-sanitized. The HUD renders full text in a scrollable bubble list,

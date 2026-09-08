@@ -16,6 +16,7 @@ import { fmt, getActiveVideo, getCurrentVideoIdx, switchVideo } from "./videosph
 import { icon, setErrorBanner } from "./icons.js";
 import {
   getChatHistory,
+  setChatExpandHandler,
   setChatListener,
   setImmersive,
   setTranscriptListener,
@@ -63,6 +64,8 @@ export class HudSystem extends createSystem({
   },
 }) {
   private hudDoc: UIKitDocument | null = null;
+  // Kept so the minimize path can rewrite PanelUI.maxWidth (see setChatMinimized).
+  private hudEntity: Entity | null = null;
   private playText: UIKit.Text | null = null;
   private muteText: UIKit.Text | null = null;
   private timeText: UIKit.Text | null = null;
@@ -71,6 +74,15 @@ export class HudSystem extends createSystem({
   private progressFill: UIKit.Container | null = null;
   private transcriptText: UIKit.Text | null = null;
   private xrButton: UIKit.Text | null = null;
+  private chatSurface: UIKit.Container | null = null;
+  private chatToggle: UIKit.Text | null = null;
+  private chatMinimized = false;
+  // Bot answers that landed while minimized, surfaced on the restore button so a
+  // user watching the video knows an answer is waiting (the chime alone is easy
+  // to miss under a lecture soundtrack).
+  private unreadWhileMinimized = 0;
+  // Widest expanded panel width seen so far, in metres - see setChatMinimized.
+  private lockedPanelWidth = 0;
   private elapsedSinceUpdate = 0;
   private lastActiveIdx = -1;
   private clickAudio: Entity | null = null;
@@ -92,6 +104,12 @@ export class HudSystem extends createSystem({
   // only the most recent exchanges. Older turns stay in hud-mirror's history and
   // in the DOM chat panel — nothing is truncated, just not built as geometry.
   private static readonly MAX_BUBBLES = 6;
+
+  // Panel-scale bookkeeping for the minimize toggle - see setChatMinimized.
+  // ROOT_WIDTH_UNITS is .hud-root's `width: 60` from hud.uikitml; keep in sync.
+  private static readonly ROOT_WIDTH_UNITS = 60;
+  private static readonly EXPANDED_MAX_WIDTH = 1.3; // matches PanelUI in index.ts
+  private static readonly FALLBACK_PANEL_SCALE = 1.61; // if the doc scale is unreadable
 
   init() {
     // Non-positional UI sounds: a click to confirm button presses and a chime
@@ -210,6 +228,7 @@ export class HudSystem extends createSystem({
     const document = PanelDocument.data.document[entity.index] as UIKitDocument;
     if (!document || this.hudDoc === document) return;
     this.hudDoc = document;
+    this.hudEntity = entity;
     this.wireHud();
   }
 
@@ -229,6 +248,8 @@ export class HudSystem extends createSystem({
     this.progressFill = doc.getElementById("hud-progress-fill") as UIKit.Container;
     this.transcriptText = doc.getElementById("hud-transcript") as UIKit.Text;
     this.xrButton = doc.getElementById("xr-button") as UIKit.Text;
+    this.chatSurface = doc.getElementById("hud-chat-surface") as UIKit.Container;
+    this.chatToggle = doc.getElementById("hud-chat-toggle") as UIKit.Text;
 
     // HUD buttons proxy to DOM controls (re-uses existing playback/lecture logic)
     this.playText?.addEventListener("click", () =>
@@ -276,6 +297,16 @@ export class HudSystem extends createSystem({
       );
     }
 
+    // Collapse the chat so the panel becomes a slim video-control bar - for the
+    // responder who just wants to watch the lecture. guardedClick, like every
+    // other HUD button, or a push-to-talk release with the laser resting here
+    // would toggle it by accident.
+    this.chatToggle?.addEventListener("click", () =>
+      this.guardedClick(() => this.setChatMinimized(!this.chatMinimized)),
+    );
+    setChatExpandHandler(() => this.setChatMinimized(false));
+    this.cleanupFuncs.push(() => setChatExpandHandler(null));
+
     this.xrButton?.addEventListener("click", () =>
       this.guardedClick(() => {
         if (this.world.visibilityState.value === VisibilityState.NonImmersive) {
@@ -298,7 +329,15 @@ export class HudSystem extends createSystem({
         this.loggedFirstBubble = true;
       }
       this.appendBubble(role, text);
-      if (role === "bot") this.playChime();
+      if (role === "bot") {
+        this.playChime();
+        // Bubbles keep building behind the hidden surface, so restoring is
+        // instant - we only need to advertise that something arrived.
+        if (this.chatMinimized) {
+          this.unreadWhileMinimized++;
+          this.refreshChatToggleLabel();
+        }
+      }
     });
     this.renderInitial(); // placeholder, or the tail of any existing history
     // hud-mirror merges the live + transient channels before calling this, so we
@@ -468,6 +507,63 @@ export class HudSystem extends createSystem({
     return bubble;
   }
 
+  /**
+   * Collapse or restore the chat surface. `display: "none"` (not `visibility`)
+   * because only display reflows - the siblings closing up is the entire point.
+   *
+   * The catch is that the panel auto-rescales when its intrinsic height changes.
+   * UIKitDocument.updateScaling() sets scale = min(maxWidth / rootWidth,
+   * maxHeight / rootHeight) and is subscribed to the root's size signal, so it
+   * fires the instant the chat collapses. Expanded, the panel is HEIGHT-bound
+   * (~1.61); collapsed, height falls by two thirds and it flips to WIDTH-bound
+   * (2.17), which would balloon the little control bar to the full 1.3 m with
+   * ~35% larger glyphs. So we pin maxWidth to the width the expanded panel
+   * renders at, and PanelUISystem - which re-reads maxWidth every frame - holds
+   * the scale steady. Measured rather than hardcoded so it survives markup edits.
+   *
+   * Measured as a running MAX, not as a one-shot read, because the expanded
+   * panel's own width flexes ~5% - #hud-transcript is display:none until a voice
+   * or "Thinking..." status appears, and that extra line makes the panel taller,
+   * hence (height-bound) smaller. A plain read collapses at whatever transient
+   * state happened to be up, so minimizing mid-question gave a bar 5% smaller
+   * than minimizing at rest. The max converges on the resting width and cannot
+   * oscillate.
+   */
+  private setChatMinimized(minimized: boolean) {
+    if (this.chatMinimized === minimized) return;
+    this.chatMinimized = minimized;
+
+    if (minimized && this.hudEntity) {
+      const scale = this.hudDoc?.scale.x || HudSystem.FALLBACK_PANEL_SCALE;
+      this.lockedPanelWidth = Math.max(
+        this.lockedPanelWidth,
+        (HudSystem.ROOT_WIDTH_UNITS / 100) * scale,
+      );
+      this.hudEntity.setValue(PanelUI, "maxWidth", this.lockedPanelWidth);
+    } else if (this.hudEntity) {
+      this.hudEntity.setValue(PanelUI, "maxWidth", HudSystem.EXPANDED_MAX_WIDTH);
+    }
+
+    this.chatSurface?.setProperties({ display: minimized ? "none" : "flex" });
+
+    if (!minimized) {
+      this.unreadWhileMinimized = 0;
+      // Layout is async after the reflow; scrollChatToBottom already retries.
+      this.scrollChatToBottom();
+    }
+    this.refreshChatToggleLabel();
+  }
+
+  private refreshChatToggleLabel() {
+    if (!this.chatToggle) return;
+    const label = this.chatMinimized
+      ? this.unreadWhileMinimized > 0
+        ? `Show Chat (${this.unreadWhileMinimized})`
+        : "Show Chat"
+      : "Hide Chat";
+    this.chatToggle.setProperties({ text: label });
+  }
+
   private seekBy(seconds: number) {
     const v = getActiveVideo();
     if (!v || !v.duration || isNaN(v.duration)) return;
@@ -496,7 +592,9 @@ export class HudSystem extends createSystem({
 
     // Left-thumbstick scrolls the chat history (right hand is push-to-talk).
     // Unavailable under hand tracking — that is what the on-panel buttons cover.
-    const axes = this.input.xr.gamepads.left?.getAxesValues(InputComponent.Thumbstick);
+    const axes = this.chatMinimized
+      ? null
+      : this.input.xr.gamepads.left?.getAxesValues(InputComponent.Thumbstick);
     if (axes && Math.abs(axes.y) > 0.2) {
       this.scrollChatBy(axes.y * delta * 40);
     }
