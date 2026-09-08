@@ -215,7 +215,14 @@ st.markdown(
         margin-bottom: 10px;
       }
       .tab-note svg { margin-right: 5px; }
-      .tab-note a { color: inherit; text-decoration: underline; }
+      /* The two headset links are the only actionable thing in this line, and
+         at `color: inherit` they were --muted grey on grey — an underline was
+         the only thing marking them as links. They now carry the site accent
+         (a lighter tint of the --accent red used by the hero badge and the
+         active tab, chosen over #ef4444 itself for contrast against #0f172a). */
+      .tab-note a { color: #f87171; text-decoration: underline;
+        text-underline-offset: 2px; font-weight: 600; }
+      .tab-note a:hover { color: #fca5a5; }
       .tab-note strong { color: #cbd5e1; font-weight: 600; }
       .tab-note .sep { color: #475569; margin: 0 2px; }
 
@@ -256,7 +263,7 @@ tab1, tab2 = st.tabs(["Training Workshop", "3D EV Explorer"])
 with tab1:
     st.markdown(
         '<div class="tab-intro">'
-        "<strong>Watch the 360&deg; training and ask questions.</strong>"
+        "<strong>Watch the 360&deg; training and ask questions to the AI assistant.</strong>"
         "</div>",
         unsafe_allow_html=True,
     )
