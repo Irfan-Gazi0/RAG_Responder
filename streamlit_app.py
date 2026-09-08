@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 from urllib.parse import quote
 
 # Lucide icons (github.com/lucide-icons/lucide, ISC license) — inline SVG paths,
@@ -9,6 +10,11 @@ _ICON_PATHS = {
         '<circle cx="6" cy="15" r="4"/><circle cx="18" cy="15" r="4"/>'
         '<path d="M14 15a2 2 0 0 0-2-2 2 2 0 0 0-2 2"/><path d="M2.5 13 5 7c.7-1.3 1.4-2 3-2"/>'
         '<path d="M21.5 13 19 7c-.7-1.3-1.5-2-3-2"/>'
+    ),
+    "file-text": (
+        '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>'
+        '<path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/>'
+        '<path d="M16 13H8"/><path d="M16 17H8"/>'
     ),
     "hourglass": (
         '<path d="M5 22h14"/><path d="M5 2h14"/>'
@@ -79,6 +85,53 @@ SPLAT_VIEWER = "https://alistairwstbrk.github.io/DOE-Training/"
 # the idle carousel orbit, so the scan lands framed and still.
 _OVERVIEW_VIEW = "[0.87,0.11,-0.47,0,0.03,0.96,0.29,0,0.48,-0.27,0.83,0,0.75,0.83,5.19,1]"
 SPLAT_URL = f"{SPLAT_VIEWER}#{quote(_OVERVIEW_VIEW)}"
+
+# ⚠ DO NOT put the viewer in a bare st.iframe(). `st.tabs` mounts BOTH panels at
+# first render and the inactive one gets no layout, so an iframe sitting in it
+# loads at 0x0 — and the viewer sizes itself exactly ONCE, in a resize() that
+# runs at load (main.js:424-431). At 0x0 that builds its projection as
+# `2 * fx / 0` = Infinity and sets its canvas to 0x0. Opening the tab fires no
+# resize event in the child (its box goes from "not laid out" to laid out, which
+# is not a resize), and any resize that does arrive later writes u_viewport /
+# u_projection while the BACKGROUND program is the bound one — main.js binds
+# bgProg last in every frame — so the splat shader keeps the dead uniforms for
+# good. The scan still downloads and the DOM annotation pins still land in the
+# right place; the car simply never draws. That was this tab for the whole life
+# of the embed, and it is why the same URL is fine in its own browser tab.
+#
+# So mount it from JS instead, once this host iframe actually has a size. The
+# viewer then gets its single resize() at the real size with the splat program
+# bound, which is all it ever needed. The 15%-wide red load bar it leaves behind
+# is cosmetic: main.js divides by a .splat row length the .ply doesn't have, so
+# 15.09% IS the fully-loaded state.
+SPLAT_EMBED = """
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #0f172a; }
+  #host { width: 100%; height: 100%; }
+  iframe { width: 100%; height: 100%; border: 0; display: block; }
+</style>
+<div id="host"></div>
+<script>
+  var mounted = false;
+  function mount() {
+    if (mounted || !window.innerWidth || !window.innerHeight) return;
+    mounted = true;
+    clearInterval(timer);
+    if (observer) observer.disconnect();
+    var f = document.createElement("iframe");
+    f.setAttribute("allow", "accelerometer; autoplay; fullscreen; xr-spatial-tracking");
+    f.src = "__SRC__";
+    document.getElementById("host").appendChild(f);
+  }
+  // ResizeObserver is the one that actually fires the moment the tab opens: a
+  // timer is throttled to once a minute while the browser tab sits in the
+  // background, so the poll below is only a fallback for browsers without it.
+  var observer = window.ResizeObserver ? new ResizeObserver(mount) : null;
+  if (observer) observer.observe(document.documentElement);
+  var timer = setInterval(mount, 200);
+  mount();
+</script>
+""".replace("__SRC__", SPLAT_URL)
 
 # Standalone WebXR splat viewer (Spark). VR cannot work inside st.iframe()
 # because Streamlit withholds `xr-spatial-tracking`, so this is linked, not embedded.
@@ -239,11 +292,18 @@ with tab2:
         f'<a href="{SPLAT_VR_URL}">Open the car scene there</a>, then tap '
         f'<strong>Enter VR</strong>.<span class="sep">·</span>'
         f'{icon("hourglass", 14)} The 3D scan is large, so it takes a '
-        f"moment to load.</div>",
+        f'moment to load.<span class="sep">·</span>'
+        # Chrome refuses to run its PDF viewer inside a sandboxed frame, and
+        # Streamlit sandboxes every embed, so the viewer's own "View / Hide ERG
+        # PDF" panel can only ever show "This page has been blocked by Chrome"
+        # here. Its "Open PDF in New Tab" button is unaffected — allow-popups is
+        # one of the sandbox tokens Streamlit does grant.
+        f'{icon("file-text", 14)} For the ERG, use <strong>Open PDF in New '
+        f"Tab</strong> — Chrome blocks PDFs inside an embed.</div>",
         unsafe_allow_html=True,
     )
     viewer_col, chat_col = st.columns([2, 1])
     with viewer_col:
-        st.iframe(SPLAT_URL, height=750)
+        components.html(SPLAT_EMBED, height=750)
     with chat_col:
         st.iframe(CHAT_URL, height=750)
