@@ -3,7 +3,12 @@ Deploy the IWSDK portal v2 (apps/portal/dist/) to S3 + invalidate CloudFront.
 
 The IWSDK build is a multi-file bundle (index.html + hashed JS chunks + WASM)
 rather than a single HTML file, so we upload the whole tree under the `v2/`
-prefix preserving relative paths. Per CLAUDE.md hard rules:
+prefix preserving relative paths.
+
+The build has TWO entry pages: index.html (the portal) and chat.html (the same
+chat panel standalone, embedded by the Streamlit "EV Explorer" tab). Both ship,
+both are no-cache, and both are bundle-verified before this script reports
+success. Per CLAUDE.md hard rules:
   - put_object only (never copy_object — IAM lacks s3:GetObject)
   - HTML gets CacheControl="no-cache, must-revalidate" + ContentType="text/html"
   - Hashed assets (.js/.wasm/.json under assets/) get long max-age (immutable)
@@ -22,8 +27,8 @@ plain document-relative, so they resolve against whichever prefix serves the pag
 — which is exactly why the same bundle works at `/v2/` and at the root, and why
 ui/ and audio/ must be uploaded alongside assets/, not just assets/.
 
-Every path ends by re-fetching the live index.html and asserting it references
-the same hashed bundle as the local dist/. The success line is not printed until
+Every path ends by re-fetching the live index.html AND chat.html and asserting
+each references the same hashed bundles as the local dist/. The success line is not printed until
 that passes — an unverified deploy is how splat-vr sat five days behind source.
 """
 
@@ -66,6 +71,9 @@ class Target:
     def live_url(self) -> str:
         return f"{CDN}/{self.prefix}{self.entry_key}"
 
+    def url_for(self, rel_path: str) -> str:
+        return f"{CDN}/{self.key_for(rel_path)}"
+
 
 STAGING = Target(prefix="v2/", entry_key="index.html", invalidations=("/v2/*",))
 
@@ -76,8 +84,15 @@ STAGING = Target(prefix="v2/", entry_key="index.html", invalidations=("/v2/*",))
 ROOT = Target(
     prefix="",
     entry_key="inspector_portal.html",
-    invalidations=("/inspector_portal.html", "/assets/*", "/ui/*", "/audio/*"),
+    invalidations=("/inspector_portal.html", "/chat.html", "/assets/*", "/ui/*", "/audio/*"),
 )
+
+# The build has two entry pages, and both are served in production: index.html
+# is the portal, chat.html is the same chat panel standalone (the Streamlit
+# "EV Explorer" tab embeds it). Both are uploaded no-cache and both are
+# bundle-verified — a stale chat.html is exactly the failure that let the two
+# panels drift apart in the first place.
+PAGES = ("index.html", "chat.html")
 
 EXT_CONTENT_TYPE = {
     ".html": "text/html",
@@ -156,32 +171,35 @@ def upload_dist(s3, target: Target):
 ASSET_RE = re.compile(r"assets/[A-Za-z0-9._-]+\.js")
 
 
-def local_bundles() -> set:
-    """The hashed JS bundles the freshly-built local index.html references."""
-    index = DIST_DIR / "index.html"
-    if not index.is_file():
-        print(f"❌ {index} does not exist — run `cd apps/portal && npm run build` first.")
+def local_bundles(rel_path: str) -> set:
+    """The hashed JS bundles the freshly-built local page references."""
+    page = DIST_DIR / rel_path
+    if not page.is_file():
+        print(f"❌ {page} does not exist — run `cd apps/portal && npm run build` first.")
         sys.exit(1)
-    names = set(ASSET_RE.findall(index.read_text(encoding="utf-8", errors="replace")))
+    names = set(ASSET_RE.findall(page.read_text(encoding="utf-8", errors="replace")))
     if not names:
-        print(f"❌ No assets/*.js reference found in {index} — cannot verify the deploy.")
+        print(f"❌ No assets/*.js reference found in {page} — cannot verify the deploy.")
         sys.exit(1)
     return names
 
 
-def verify_live(target: Target, expected: set, attempts: int = 6, delay: int = 10) -> None:
+def verify_live(
+    target: Target, rel_path: str, expected: set, attempts: int = 6, delay: int = 10
+) -> None:
     """Re-fetch the live page and assert the edge serves this build.
 
-    index.html is uploaded `no-cache, must-revalidate`, so CloudFront revalidates
-    against the origin and this normally passes on the first try; the retries
-    cover an invalidation that is still in progress.
+    Entry pages are uploaded `no-cache, must-revalidate`, so CloudFront
+    revalidates against the origin and this normally passes on the first try;
+    the retries cover an invalidation that is still in progress.
     """
-    print(f"🔎 Verifying {target.live_url} serves {', '.join(sorted(expected))} …")
+    live_url = target.url_for(rel_path)
+    print(f"🔎 Verifying {live_url} serves {', '.join(sorted(expected))} …")
     served = set()
     for attempt in range(1, attempts + 1):
         try:
             req = Request(
-                target.live_url,
+                live_url,
                 headers={"Cache-Control": "no-cache", "Pragma": "no-cache", "User-Agent": "deploy-verify"},
             )
             with urlopen(req, timeout=20) as resp:
@@ -249,7 +267,7 @@ def main():
         region_name=REGION,
     )
 
-    expected = local_bundles()
+    expected = {page: local_bundles(page) for page in PAGES}
 
     if not args.invalidate_only:
         upload_dist(s3, target)
@@ -257,10 +275,12 @@ def main():
         invalidate_cloudfront(target)
 
     # Exits non-zero if the edge is not serving this build — the success line
-    # below is only reached once that has been proven.
-    verify_live(target, expected)
+    # below is only reached once that has been proven, for BOTH entry pages.
+    for page in PAGES:
+        verify_live(target, page, expected[page])
 
     print(f"\n🚀 Done. Portal v2 live at: {target.live_url}")
+    print(f"   Standalone chat panel:  {target.url_for('chat.html')}")
 
 
 if __name__ == "__main__":

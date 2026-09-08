@@ -3,11 +3,13 @@ Deploy the v1 single-file HTML pages to S3 + invalidate CloudFront.
 
 After the v2 S3-root cutover (2026-09-07) these two files have different jobs:
 
-  apps/v1/chat_panel.html       -> /chat_panel.html         (LIVE, maintained)
-      The standalone chat panel embedded by the Streamlit "3D Views of EVs" tab.
-      Since v2 owns the root, nothing else serves this chat block any more — this
-      file is now the sole owner of the v1-era chat client, not a duplicate of
-      inspector_portal.html's.
+  apps/v1/chat_panel.html       -> /chat_panel.html         (RETIRED 2026-09-07)
+      Was the standalone chat panel for the Streamlit "EV Explorer" tab. That
+      tab now loads /chat.html — a second entry of the v2 bundle built from the
+      same source as the portal's own panel (apps/portal/chat.html), so the two
+      panels share one look and one conversation. Nothing references this file
+      any more; it still uploads so the URL keeps working, but changes belong in
+      apps/portal/, not here.
 
   apps/v1/inspector_portal.html -> /v1/inspector_portal.html (FROZEN fallback)
       The retired A-Frame portal. Kept deployable so `?portal=v1` on the Streamlit

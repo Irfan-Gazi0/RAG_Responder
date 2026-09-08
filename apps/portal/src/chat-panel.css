@@ -1,0 +1,148 @@
+/*
+ * The chat panel, styled once for both pages that render it: index.html (the
+ * portal, panel beside the 360 video) and chat.html (the standalone panel the
+ * EV Explorer tab embeds). Previously each page carried its own copy of these
+ * rules and the two drifted apart visually — the whole point of this file is
+ * that they cannot drift again.
+ *
+ * Layout that belongs to the SURROUNDING page (the portal's 400px column, the
+ * standalone page's full height) stays in that page's own <style>.
+ */
+
+.chat-panel {
+  display: flex; flex-direction: column; background: #0f172a;
+  min-height: 0;
+}
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-track { background: transparent; }
+.chat-messages::-webkit-scrollbar-thumb { background: #334155; border-radius: 2px; }
+
+.msg { display: flex; flex-direction: column; gap: 4px; max-width: 100%; }
+.msg .bubble {
+  padding: 10px 14px; border-radius: 12px;
+  font-size: 13.5px; line-height: 1.55; word-break: break-word;
+}
+.msg.user { align-items: flex-end; }
+.msg.user .bubble {
+  background: #b91c1c; color: #fef2f2; border-bottom-right-radius: 4px;
+}
+.msg.bot { align-items: flex-start; }
+.msg.bot .bubble {
+  background: #1e293b; color: #e2e8f0;
+  border-bottom-left-radius: 4px; border: 1px solid #334155;
+}
+.msg .label { font-size: 10.5px; color: #64748b; padding: 0 2px; }
+.msg.bot .bubble table {
+  border-collapse: collapse; font-size: 12px; margin: 6px 0;
+  width: 100%; overflow-x: auto; display: block;
+}
+.msg.bot .bubble th, .msg.bot .bubble td {
+  border: 1px solid #334155; padding: 5px 8px; text-align: left;
+}
+.msg.bot .bubble th { background: #0f172a; font-weight: 600; }
+.msg.bot .bubble code {
+  background: #0f172a; border-radius: 4px; padding: 1px 5px; font-size: 12px;
+}
+.msg.bot .bubble h3, .msg.bot .bubble h4 {
+  margin: 8px 0 4px; color: #fca5a5; font-size: 13px;
+}
+.msg.bot .bubble ul, .msg.bot .bubble ol { padding-left: 18px; margin: 4px 0; }
+.msg.bot .bubble strong { color: #fecaca; }
+
+.typing .bubble {
+  display: flex; gap: 5px; align-items: center; padding: 12px 16px;
+}
+.typing .bubble span {
+  width: 7px; height: 7px; background: #64748b;
+  border-radius: 50%; animation: bounce 1.2s infinite;
+}
+.typing .bubble span:nth-child(2) { animation-delay: 0.2s; }
+.typing .bubble span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40%           { transform: translateY(-6px); }
+}
+
+.chat-input-wrap {
+  border-top: 1px solid #334155;
+  padding: 12px 16px; background: #1e293b; flex-shrink: 0;
+}
+.chat-input-row { display: flex; gap: 8px; align-items: flex-end; }
+#chat-input {
+  flex: 1; background: #0f172a; border: 1px solid #334155;
+  border-radius: 10px; color: #e2e8f0;
+  font-size: 13.5px; padding: 10px 14px; resize: none; outline: none;
+  max-height: 120px; line-height: 1.5; font-family: inherit;
+}
+#chat-input:focus { border-color: #ef4444; }
+#chat-input::placeholder { color: #475569; }
+#send-btn {
+  background: #ef4444; border: none; border-radius: 10px;
+  color: white; width: 40px; height: 40px; cursor: pointer;
+  font-size: 16px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.15s;
+}
+#send-btn:hover { background: #dc2626; }
+#send-btn:disabled { background: #334155; cursor: not-allowed; }
+#mic-btn {
+  background: #1e293b; border: 1px solid #334155;
+  border-radius: 10px; color: #94a3b8;
+  width: 40px; height: 40px; cursor: pointer;
+  font-size: 17px; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+#mic-btn:hover { background: #334155; color: #e2e8f0; }
+#mic-btn.recording {
+  background: #7f1d1d; border-color: #ef4444; color: #fca5a5;
+  animation: mic-pulse 1s ease-in-out infinite;
+}
+@keyframes mic-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+  50%       { box-shadow: 0 0 0 7px rgba(239,68,68,0); }
+}
+/* Hint text and Clear share one row: the reset is a quiet text button, not a
+   destructive-looking one, and chat.ts hides it until there is something to
+   clear. */
+.input-hint-row { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+.input-hint { font-size: 10.5px; color: #475569; }
+#clear-btn {
+  margin-left: auto; flex-shrink: 0;
+  background: none; border: none; border-radius: 5px;
+  color: #64748b; font-family: inherit; font-size: 10.5px;
+  padding: 2px 5px; cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+#clear-btn:hover { background: #1e293b; color: #e2e8f0; }
+#clear-btn:focus-visible { outline: 2px solid #3b82f6; outline-offset: 1px; }
+
+/* Empty state. Removed by chat.ts on the first message and never rebuilt —
+   a capability list is only useful before the conversation exists. */
+.chat-empty { display: flex; flex-direction: column; gap: 8px; padding: 4px 2px; }
+.chat-empty h2 { font-size: 13px; font-weight: 600; color: #cbd5e1; }
+.chat-empty p  { font-size: 12.5px; color: #64748b; margin-bottom: 4px; }
+.prompt-chip {
+  background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+  color: #cbd5e1; font-family: inherit; font-size: 12.5px; line-height: 1.4;
+  padding: 9px 12px; text-align: left; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.prompt-chip:hover { background: #273449; border-color: #475569; }
+.prompt-chip:focus-visible { outline: 2px solid #3b82f6; outline-offset: 1px; }
+
+#error-banner {
+  display: none;
+  align-items: center; gap: 6px;
+  background: #450a0a; border: 1px solid #991b1b; color: #fca5a5;
+  font-size: 12px; padding: 8px 14px; border-radius: 6px; margin-top: 8px;
+}
+
+/* -- Lucide icons (github.com/lucide-icons/lucide, ISC) --
+   Paths for the JS-driven labels live in src/icons.ts; the ones inlined in
+   each page's markup are the pre-hydration state of the same buttons. */
+.icon { width: 15px; height: 15px; vertical-align: -2px; flex-shrink: 0; }
+#mic-btn .icon, #send-btn .icon { width: 18px; height: 18px; vertical-align: 0; }
+#error-banner .icon { width: 14px; height: 14px; vertical-align: 0; }

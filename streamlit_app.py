@@ -28,11 +28,11 @@ def icon(name: str, size: int = 16) -> str:
     )
 
 # Bump this whenever the embedded HTML changes on S3 — inspector_portal.html
-# (now the v2 bundle), v1/inspector_portal.html, or chat_panel.html.
+# (now the v2 bundle), chat.html, or v1/inspector_portal.html.
 # It changes the iframe URL's cache key so browsers can't serve a stale copy
 # (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
 # which a CloudFront invalidation does NOT clear).
-CACHE_BUST = "20260907d"
+CACHE_BUST = "20260907e"
 
 # S3-root cutover, 2026-09-07: /inspector_portal.html IS the v2 IWSDK bundle now
 # (deploy/deploy_portal_v2.py --root), so the canonical URL and every existing
@@ -49,7 +49,15 @@ if _USE_V1:
     PORTAL_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/v1/inspector_portal.html?v={CACHE_BUST}"
 else:
     PORTAL_URL = f"https://d1ni7nkjr0eveg.cloudfront.net/inspector_portal.html?v={CACHE_BUST}"
-CHAT_URL   = f"https://d1ni7nkjr0eveg.cloudfront.net/chat_panel.html?v={CACHE_BUST}"
+# The chat panel the EV Explorer tab embeds. Since 2026-09-07 this is a SECOND
+# ENTRY OF THE V2 BUNDLE (apps/portal/chat.html), not the old standalone
+# apps/v1/chat_panel.html — same markup, same CSS, same chat client as the panel
+# inside the portal above. That is what makes it one assistant instead of two:
+# the transcript lives in localStorage (apps/portal/src/transcript.ts) and both
+# iframes are same-origin here, so a question asked in Training shows up in EV
+# Explorer live, and Clear in either one resets both.
+# Deployed by deploy_portal_v2.py --root; /chat_panel.html is the retired file.
+CHAT_URL   = f"https://d1ni7nkjr0eveg.cloudfront.net/chat.html?v={CACHE_BUST}"
 
 # 3D Gaussian-splat viewer. Third-party: github.com/AlistairWstbrk/DOE-Training on
 # GitHub Pages, rendering .ply scans hosted on Hugging Face. Replaced the old

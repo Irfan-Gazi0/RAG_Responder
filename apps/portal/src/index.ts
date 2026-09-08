@@ -7,6 +7,9 @@ import {
   World,
 } from "@iwsdk/core";
 
+// The chat panel's styling, shared verbatim with the standalone chat.html.
+import "./chat-panel.css";
+
 import { initChatBindings } from "./chat.js";
 import { initVoiceBindings } from "./voice.js";
 import { initVideosphere } from "./videosphere.js";

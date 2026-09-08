@@ -7,20 +7,19 @@ import {
 } from "./hud-mirror.js";
 import { setErrorBanner } from "./icons.js";
 import { crumb } from "./breadcrumbs.js";
+import {
+  appendMessage,
+  clearTranscript,
+  getSessionId,
+  loadTranscript,
+  rotateSessionId,
+  subscribeToTranscript,
+} from "./transcript.js";
 
 const ASSISTANT_NAME = "Training Assistant";
 
 const WEBHOOK_URL =
   "https://irfangazi.app.n8n.cloud/webhook/a7782f7b-3403-48c3-9e6d-c14772a002a1";
-
-const SESSION_ID = (() => {
-  let id = localStorage.getItem("fr_session_id");
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem("fr_session_id", id);
-  }
-  return id;
-})();
 
 const messagesEl = document.getElementById("chat-messages") as HTMLDivElement;
 const inputEl = document.getElementById("chat-input") as HTMLTextAreaElement;
@@ -36,8 +35,19 @@ function autoGrow() {
   inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + "px";
 }
 
-export function addMessage(role: "user" | "bot", text: string) {
+/**
+ * `replay` is set only by renderTranscript() when it repaints stored messages.
+ * It suppresses BOTH side effects that must happen once per real message and
+ * never again: writing the message back to the store it just came from, and
+ * mirroring it into the in-VR HUD (hud-mirror keeps its own history, so a
+ * replay would push the whole conversation into the headset on every load).
+ */
+export function addMessage(role: "user" | "bot", text: string, replay = false) {
   document.getElementById("chat-empty")?.remove();
+  if (!replay) {
+    appendMessage(role, text);
+    if (clearBtn) clearBtn.hidden = false;
+  }
 
   const wrap = document.createElement("div");
   wrap.className = `msg ${role}`;
@@ -59,7 +69,7 @@ export function addMessage(role: "user" | "bot", text: string) {
   wrap.appendChild(bubble);
   messagesEl.appendChild(wrap);
   scrollToBottom();
-  mirrorToHud(role, text);
+  if (!replay) mirrorToHud(role, text);
   return wrap;
 }
 
@@ -129,7 +139,7 @@ export async function sendMessage(overrideText?: string) {
     const res = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, session_id: SESSION_ID }),
+      body: JSON.stringify({ question, session_id: getSessionId() }),
       signal: controller.signal,
     });
 
@@ -249,7 +259,53 @@ export function focusInput() {
   inputEl.focus();
 }
 
+// The empty state is authored in the markup (index.html / chat.html) so the
+// prompt chips stay editable there. Cloned once at init because clearing the
+// conversation has to put it back, and addMessage() removes the original.
+let emptyStateTemplate: HTMLElement | null = null;
+const clearBtn = document.getElementById("clear-btn") as HTMLButtonElement | null;
+
+/**
+ * Repaint the message list from the shared store.
+ *
+ * Called on load and whenever the OTHER panel changes the transcript, which is
+ * what makes one conversation appear in both Streamlit tabs. Cheap enough to
+ * rebuild wholesale: the store is capped at a few dozen messages, and doing a
+ * full repaint (rather than diffing) keeps the two panels byte-identical.
+ */
+export function renderTranscript() {
+  const messages = loadTranscript();
+  messagesEl.replaceChildren();
+
+  if (messages.length === 0) {
+    if (emptyStateTemplate) {
+      messagesEl.appendChild(emptyStateTemplate.cloneNode(true));
+    }
+  } else {
+    for (const m of messages) addMessage(m.role, m.text, true);
+  }
+
+  // Nothing to clear before the first question, and the empty state already
+  // explains itself.
+  if (clearBtn) clearBtn.hidden = messages.length === 0;
+}
+
+/**
+ * Start over: drop the visible transcript AND rotate the session id, so the
+ * n8n agent's Postgres memory (keyed on session_id) is left behind too. The
+ * localStorage writes fire a `storage` event in the other panel, which
+ * re-renders itself — so clearing here clears both tabs.
+ */
+export function clearConversation() {
+  clearTranscript();
+  rotateSessionId();
+  renderTranscript();
+  crumb("chat", "conversation cleared - new session id");
+}
+
 export function initChatBindings() {
+  emptyStateTemplate = document.getElementById("chat-empty") as HTMLElement | null;
+
   inputEl.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -260,10 +316,17 @@ export function initChatBindings() {
 
   // Suggested prompts in the empty state. They route through the same
   // sendMessage() path as the in-VR Quick-Ask chips — no second send route,
-  // so the one-request-at-a-time guard covers them too.
-  document.querySelectorAll<HTMLButtonElement>(".prompt-chip").forEach((chip) => {
-    chip.addEventListener("click", () => askQuickQuestion(chip.textContent!.trim()));
+  // so the one-request-at-a-time guard covers them too. Delegated rather than
+  // bound per chip, because renderTranscript() re-creates the empty state from
+  // a clone every time the conversation is cleared.
+  messagesEl.addEventListener("click", (e) => {
+    const chip = (e.target as HTMLElement).closest<HTMLButtonElement>(".prompt-chip");
+    if (chip) askQuickQuestion(chip.textContent!.trim());
   });
   // Explicit closure: a bare reference would pass the DOM Event as overrideText.
   sendBtn.addEventListener("click", () => sendMessage());
+  clearBtn?.addEventListener("click", () => clearConversation());
+
+  renderTranscript();
+  subscribeToTranscript(() => renderTranscript());
 }

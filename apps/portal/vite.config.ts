@@ -62,7 +62,9 @@ export default defineConfig({
     outDir: "dist",
     sourcemap: process.env.NODE_ENV !== "production",
     target: "esnext",
-    rollupOptions: { input: "./index.html" },
+    // Two pages, one chat client: index.html is the portal, chat.html is the
+    // same chat panel standalone for the Streamlit EV Explorer iframe.
+    rollupOptions: { input: { index: "./index.html", chat: "./chat.html" } },
   },
   esbuild: { target: "esnext" },
   optimizeDeps: {

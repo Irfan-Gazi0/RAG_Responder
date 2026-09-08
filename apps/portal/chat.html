@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Training Assistant</title>
+  <!-- Same inline Lucide truck favicon as the portal: one product, one mark. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2024%2024'%20fill='none'%20stroke='%23ef4444'%20stroke-width='2'%20stroke-linecap='round'%20stroke-linejoin='round'%3E%3Cpath%20d='M14%2018V6a1%201%200%200%200-1-1H3a1%201%200%200%200-1%201v11a1%201%200%200%200%201%201h2'/%3E%3Cpath%20d='M15%2018H9'/%3E%3Cpath%20d='M19%2018h2a1%201%200%200%200%201-1v-3.65a1%201%200%200%200-.22-.624l-3.48-4.35A1%201%200%200%200%2017.52%208H14'/%3E%3Ccircle%20cx='17'%20cy='18'%20r='2'/%3E%3Ccircle%20cx='7'%20cy='18'%20r='2'/%3E%3C/svg%3E" />
+
+  <!--
+    The chat panel on its own, for the EV Explorer tab's iframe. Everything
+    below the page shell is the SAME markup, CSS (src/chat-panel.css) and code
+    (src/chat.ts, src/voice.ts) the portal's panel uses — this page only chooses
+    how the panel is sized. The conversation itself is shared through
+    localStorage (src/transcript.ts), so this panel and the portal's show the
+    same messages and update each other live.
+
+    Do not fork this file's panel markup from index.html's. If the panel gains a
+    control, both pages get it.
+  -->
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      overflow: hidden;
+    }
+
+    /* The panel is the whole page here; in the portal it is a 400px column. */
+    .chat-panel { height: 100%; }
+  </style>
+</head>
+<body>
+
+<div class="chat-panel">
+
+  <div class="chat-messages" id="chat-messages">
+    <!-- Kept byte-identical with the same block in index.html: it is one panel
+         in two places, so the empty state must not read as two products.
+         chat.ts clones this node and puts it back when the chat is cleared. -->
+    <div class="chat-empty" id="chat-empty">
+      <h2>Training Assistant</h2>
+      <p>Ask about EV emergency response.</p>
+      <button class="prompt-chip" type="button">How do I shut down the high-voltage system?</button>
+      <button class="prompt-chip" type="button">What do I do if the battery is on fire?</button>
+      <button class="prompt-chip" type="button">Where are the no-cut zones?</button>
+    </div>
+  </div>
+
+  <div class="chat-input-wrap">
+    <div class="chat-input-row">
+      <textarea id="chat-input" rows="1"
+        placeholder="Ask a question..."></textarea>
+      <button id="mic-btn" title="Voice input" aria-label="Voice input"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19v3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><rect x="9" y="2" width="6" height="13" rx="3"/></svg></button>
+      <button id="send-btn" title="Send" aria-label="Send"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></button>
+    </div>
+    <div class="input-hint-row">
+      <span class="input-hint">Press Enter to send &nbsp;·&nbsp; Shift+Enter for newline</span>
+      <button id="clear-btn" type="button" title="Clear this conversation and start a new session" hidden>Clear</button>
+    </div>
+    <div id="error-banner"></div>
+  </div>
+</div>
+
+<script type="module" src="/src/chat-standalone.ts"></script>
+</body>
+</html>
