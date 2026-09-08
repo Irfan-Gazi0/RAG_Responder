@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "streamlit_app.py": {
-    "mtime": 1788877738.8099647,
-    "ast_hash": "b1258e345f69572812de397ea78c1747",
+    "mtime": 1788879311.3361785,
+    "ast_hash": "aad17a8c35ed7d88250c750446d03f72",
     "semantic_hash": ""
   },
   ".claude/skills/hz-immersive-designer/SKILL.md": {
@@ -175,8 +175,8 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1788837189.3334053,
-    "ast_hash": "fa3c3d0aec56246f155a9d41dec8e910",
+    "mtime": 1788907661.174249,
+    "ast_hash": "bd65f29005a71494ce7503025db5fcac",
     "semantic_hash": ""
   },
   ".devcontainer/devcontainer.json": {
@@ -195,13 +195,13 @@
     "semantic_hash": ""
   },
   "apps/portal/.iwsdk/runtime/launch.json": {
-    "mtime": 1788848857.4757676,
-    "ast_hash": "7681ba51f5246678738f61e7fe0f2ae4",
+    "mtime": 1788880368.3008237,
+    "ast_hash": "4774b68ffab8e0fdd0e5e783227f1506",
     "semantic_hash": ""
   },
   "apps/portal/.iwsdk/runtime/session.json": {
-    "mtime": 1788850250.9546657,
-    "ast_hash": "3008ef57c9442bb2b5d00c671bb34399",
+    "mtime": 1788898623.163188,
+    "ast_hash": "19b77bb0d6b94516a58619593716cb06",
     "semantic_hash": ""
   },
   "apps/portal/.mcp.json": {
@@ -220,8 +220,8 @@
     "semantic_hash": ""
   },
   "apps/portal/public/ui/hud.json": {
-    "mtime": 1788877783.3127174,
-    "ast_hash": "f0ce8aad7f6546c69a7dfc27e2bff21c",
+    "mtime": 1788881528.896778,
+    "ast_hash": "df870502b9fd9cad847f386f6aa60a8f",
     "semantic_hash": ""
   },
   "apps/portal/src/breadcrumbs.ts": {
@@ -235,13 +235,13 @@
     "semantic_hash": ""
   },
   "apps/portal/src/hud-mirror.ts": {
-    "mtime": 1788812011.6035488,
-    "ast_hash": "c8141cd8c338b26ea2fcbe44430ab870",
+    "mtime": 1788880272.4012432,
+    "ast_hash": "47bd7fa2a5af895333fc5edd2101b105",
     "semantic_hash": ""
   },
   "apps/portal/src/hud.ts": {
-    "mtime": 1788836847.4965057,
-    "ast_hash": "c5d480ba3987ac20a9307fb7e759e5d4",
+    "mtime": 1788880799.0975218,
+    "ast_hash": "1f19834eeb9af9789cff7dbda0749d67",
     "semantic_hash": ""
   },
   "apps/portal/src/index.ts": {
@@ -255,8 +255,8 @@
     "semantic_hash": ""
   },
   "apps/portal/src/push-to-talk.ts": {
-    "mtime": 1788112407.7987432,
-    "ast_hash": "337a060d1cb602f2a6d8350608c41ddb",
+    "mtime": 1788880285.714011,
+    "ast_hash": "446fec1874e2adb81e7e27d4ec958123",
     "semantic_hash": ""
   },
   "apps/portal/src/videosphere.ts": {
@@ -315,8 +315,8 @@
     "semantic_hash": ""
   },
   "apps/splat-vr/scripts/vr_check.mjs": {
-    "mtime": 1788796060.855183,
-    "ast_hash": "5640e9c824dd67e4f76f60da702fd3c9",
+    "mtime": 1788907908.2461708,
+    "ast_hash": "6b9962ec7341ab588798a6a56d5336c5",
     "semantic_hash": ""
   },
   "apps/splat-vr/src/canvas-ui.ts": {
@@ -325,8 +325,8 @@
     "semantic_hash": ""
   },
   "apps/splat-vr/src/controller-hints.ts": {
-    "mtime": 1788200720.9064846,
-    "ast_hash": "c5b12554b7f622111153ced9b2b1e52d",
+    "mtime": 1788907923.751169,
+    "ast_hash": "3cfae4735397f29e36c3e022ed128012",
     "semantic_hash": ""
   },
   "apps/splat-vr/src/controller-models.ts": {
@@ -370,8 +370,8 @@
     "semantic_hash": ""
   },
   "apps/splat-vr/src/main.ts": {
-    "mtime": 1788796036.9968019,
-    "ast_hash": "26da9de47afd1738d5b61641ccb5aa64",
+    "mtime": 1788907886.0721736,
+    "ast_hash": "823297352e3e66429b335d0e69db5a5e",
     "semantic_hash": ""
   },
   "apps/splat-vr/src/models.ts": {
@@ -490,8 +490,8 @@
     "semantic_hash": ""
   },
   "apps/portal/index.html": {
-    "mtime": 1788877751.4218948,
-    "ast_hash": "83f23455b2d325191484e2cc09f72f2d",
+    "mtime": 1788878728.2162604,
+    "ast_hash": "ebc34d08a9a90b1cdb4846f08d0db3f6",
     "semantic_hash": ""
   },
   "apps/splat-vr/index.html": {
@@ -680,8 +680,13 @@
     "semantic_hash": ""
   },
   "apps/portal/chat.html": {
-    "mtime": 1788850250.4916744,
-    "ast_hash": "63133d81b10a0c4bffd6eac519b6f8bc",
+    "mtime": 1788878653.4917,
+    "ast_hash": "9b76028fc01f1e3c5387970eed3f86f9",
+    "semantic_hash": ""
+  },
+  "WhatsApp Video 2026-09-08 at 5.14.39 PM.mp4": {
+    "mtime": 1788906155.0934129,
+    "ast_hash": "6dd5493ce24f4347b868b009cbdd7ff4",
     "semantic_hash": ""
   }
 }

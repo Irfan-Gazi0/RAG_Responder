@@ -84,6 +84,7 @@ import {
   PerspectiveCamera,
   PlaneGeometry,
   Quaternion,
+  Vector3,
   WebGLRenderer,
 } from "three";
 import { Text } from "troika-three-text";
@@ -126,6 +127,9 @@ const OFFSET_Z = -0.02;
 
 /** Seconds the untouched legend stays up before retiring itself. */
 const SHOW_SECONDS = 22;
+
+/** Wrist roll is about the grip's own forward axis. Test seam only. */
+const ROLL_AXIS = new Vector3(0, 0, 1);
 /** Fade rate; asymmetric so it appears promptly and leaves gently. */
 const FADE_IN = 7;
 const FADE_OUT = 3;
@@ -556,9 +560,16 @@ export class ControllerHints {
         continue;
       }
 
-      // getWorldQuaternion refreshes the parent chain, so this picks up the grip
-      // pose written by the current XR frame rather than the last one.
-      rig.group.getWorldQuaternion(this.parentInv).invert();
+      // Ask the GRIP, not the panel: getWorldQuaternion returns the object's
+      // own world rotation, so calling it on rig.group folds in the local
+      // quaternion we are about to overwrite, and each frame corrects against
+      // last frame's result instead of the hand. On device that showed up as
+      // the legend rolling further out of level the more the wrist turned.
+      // Reading it off the parent also refreshes the chain, so the grip pose
+      // is the one this XR frame wrote rather than the last one.
+      const parent = rig.group.parent;
+      if (parent) parent.getWorldQuaternion(this.parentInv).invert();
+      else this.parentInv.identity();
       // World orientation := head orientation, expressed in grip-local space, so
       // wrist roll cannot tip the text over.
       rig.group.quaternion.copy(this.parentInv).multiply(this.camQuat);
@@ -624,6 +635,44 @@ export class ControllerHints {
           inkHeight: vb ? vb[3] - vb[1] : 0,
         };
       }),
+    };
+  }
+
+  /**
+   * Roll a grip, step the legend, and report how level it stayed.
+   *
+   * update() aims the panel by cancelling its PARENT's rotation and applying the
+   * head's, so the invariant is flat: the legend's world orientation IS the
+   * head's, whatever the wrist is doing. Reading that parent quaternion off the
+   * panel instead folded in the local rotation about to be overwritten, so every
+   * frame corrected against the previous frame's own output - which cancels
+   * nothing and alternates instead. It needs a rolled grip AND a run of frames
+   * to show, which is why 100 headless assertions missed it and a device tester
+   * filmed the legend tipping into a diagonal as the wrist turned.
+   *
+   * The roll is applied HERE, to the grip this rig is really parented to, rather
+   * than to a grip the caller looked up itself: an off-by-one there measures an
+   * untouched panel against an untilted head and reports a clean zero for every
+   * possible implementation.
+   */
+  rollProbe(hand: Handedness, roll: number, frames: number, camera: PerspectiveCamera) {
+    const index = this.attached.indexOf(hand);
+    if (index === -1) return null;
+    const grip = this.grips[index];
+    grip.quaternion.setFromAxisAngle(ROLL_AXIS, roll);
+    grip.updateMatrixWorld(true);
+    for (let i = 0; i < frames; i++) this.update(1 / 60, camera);
+
+    const legend = this.rigs[hand].group.getWorldQuaternion(new Quaternion());
+    const head = camera.getWorldQuaternion(new Quaternion());
+    return {
+      index,
+      // Radians between the two orientations. Zero is screen-aligned.
+      offAxis: 2 * Math.acos(Math.min(1, Math.abs(legend.dot(head)))),
+      // Proof the roll landed on something: a probe that silently rolled
+      // nothing would report a perfect zero too.
+      gripOffHead:
+        2 * Math.acos(Math.min(1, Math.abs(grip.getWorldQuaternion(new Quaternion()).dot(head)))),
     };
   }
 

@@ -796,6 +796,58 @@ check("input mode reports honestly with nothing connected", mode.mode === "none"
     JSON.stringify(st));
 }
 
+// --- 11d. The legend stays level however the wrist rolls -------------------
+// 11b measures whether the legend can be READ; this measures whether it can be
+// read WHILE THE HAND MOVES, which is the only way it is ever read. update()
+// aims the panel by cancelling its parent's rotation and applying the head's,
+// and it took that parent quaternion off the panel itself - so it folded in the
+// local rotation it was about to overwrite and every frame corrected against
+// the previous frame's own output. It cancels nothing and alternates instead,
+// which needs BOTH a rolled grip and a run of frames to show up: a single frame
+// from rest looks fine, which is how it passed 100 assertions, shipped, and
+// then turned up on video as a legend tipping into a diagonal as the wrist
+// turned. __vr.hintRoll tilts the head, rolls the grip the legend is really
+// parented to, and steps real frames, so the invariant is flat: the panel's
+// world orientation IS the head's, at every roll.
+{
+  const CTRL = (handedness) => ({ handedness, gamepad: true });
+  await page.evaluate((cs) => {
+    for (const [i, src] of cs) window.__vr.setInputSource(i, src);
+  }, [[0, CTRL("left")], [1, CTRL("right")]]);
+
+  const deg = (rad) => ((rad * 180) / Math.PI).toFixed(1);
+  const rolls = [0, 15, -40, 90, 179, -120];
+  const measured = await page.evaluate(
+    (rs) => rs.map((d) => ({ d, ...window.__vr.hintRoll("right", d) })),
+    rolls,
+  );
+
+  // Without this the whole section is vacuous: a probe that rolled the wrong
+  // object would leave the legend at the head's orientation by default and
+  // report a flawless zero for a broken implementation.
+  check("the levelness probe actually rolls the grip the legend rides",
+    measured.every((m) => m && (m.d === 0 || m.gripOffHead > 0.05)),
+    JSON.stringify(measured));
+
+  const worst = measured.reduce((a, b) => (a.offAxis > b.offAxis ? a : b));
+  check("wrist roll never tips the legend off the head's orientation",
+    measured.every((m) => m.offAxis < 1e-3),
+    `worst: ${worst.d} deg roll leaves ${deg(worst.offAxis)} deg off-axis`);
+
+  // The failure mode alternates frame over frame, so an odd count can look
+  // right where an even one does not. Step several.
+  const held = await page.evaluate(() =>
+    [1, 2, 3, 4, 30, 120].map((frames) => ({ frames, ...window.__vr.hintRoll("right", 55, frames) })));
+  check("holding a rolled pose stays level frame after frame",
+    held.every((h) => h.offAxis < 1e-3),
+    held.map((h) => `${h.frames}f=${deg(h.offAxis)}deg`).join(" "));
+
+  await page.evaluate(() => {
+    window.__vr.setInputSource(0, null);
+    window.__vr.setInputSource(1, null);
+  });
+}
+
 // --- 12. The preflight warning outlives the model load ---------------------
 // The tracking preflight - "this page is inside a frame, VR will be
 // orientation-only" - is the answer to the question this project keeps having to

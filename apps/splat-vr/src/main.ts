@@ -1263,6 +1263,27 @@ if (DEV) {
       return hints.metrics();
     },
 
+    /**
+     * The legend's levelness under a rolling wrist, which 11b cannot see.
+     *
+     * The head pose is deliberately tilted here before stepping the frames: at
+     * rest this scene's camera and rig quaternions are all identity, so a wrong
+     * answer and a right one are both the identity too and any implementation
+     * measures perfectly level. Tilt the head, roll the grip, and the assertion
+     * has something to be wrong about.
+     */
+    hintRoll: (hand: "left" | "right", rollDeg: number, frames = 30) => {
+      const before = camera.quaternion.clone();
+      camera.quaternion.setFromEuler(
+        new Euler(MathUtils.degToRad(-12), MathUtils.degToRad(35), MathUtils.degToRad(8)),
+      );
+      camera.updateMatrixWorld(true);
+      const out = hints.rollProbe(hand, MathUtils.degToRad(rollDeg), frames, camera);
+      camera.quaternion.copy(before);
+      camera.updateMatrixWorld(true);
+      return out;
+    },
+
     controllers: async (hand: "left" | "right" = "right") => ({
       ...(await probeControllerAssets(hand)),
       enabled: CONTROLLERS_ENABLED,

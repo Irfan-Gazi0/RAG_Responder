@@ -492,7 +492,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_chat_standalone",
-      "community": 0,
+      "community": 35,
       "norm_label": "chat-standalone.ts"
     },
     {
@@ -602,7 +602,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "src_chat_sendmessage",
-      "community": 35,
+      "community": 0,
       "norm_label": "sendmessage()"
     },
     {
@@ -622,7 +622,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "src_chat_setinputvalue",
-      "community": 35,
+      "community": 39,
       "norm_label": "setinputvalue()"
     },
     {
@@ -632,7 +632,7 @@
       "source_location": "L254",
       "_origin": "ast",
       "id": "src_chat_focusinput",
-      "community": 35,
+      "community": 39,
       "norm_label": "focusinput()"
     },
     {
@@ -772,14 +772,34 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_hud_mirror_settranscriptlistener",
-      "community": 1,
+      "community": 39,
       "norm_label": "settranscriptlistener()"
+    },
+    {
+      "label": "setChatExpandHandler()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/hud-mirror.ts",
+      "source_location": "L84",
+      "_origin": "ast",
+      "id": "src_hud_mirror_setchatexpandhandler",
+      "community": 1,
+      "norm_label": "setchatexpandhandler()"
+    },
+    {
+      "label": "requestChatExpand()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/hud-mirror.ts",
+      "source_location": "L88",
+      "_origin": "ast",
+      "id": "src_hud_mirror_requestchatexpand",
+      "community": 35,
+      "norm_label": "requestchatexpand()"
     },
     {
       "label": "mdToPlain()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud-mirror.ts",
-      "source_location": "L75",
+      "source_location": "L96",
       "_origin": "ast",
       "id": "src_hud_mirror_mdtoplain",
       "community": 39,
@@ -789,7 +809,7 @@
       "label": "mirrorToHud()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud-mirror.ts",
-      "source_location": "L82",
+      "source_location": "L103",
       "_origin": "ast",
       "id": "src_hud_mirror_mirrortohud",
       "community": 39,
@@ -799,27 +819,27 @@
       "label": "setHudTranscript()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud-mirror.ts",
-      "source_location": "L90",
+      "source_location": "L111",
       "_origin": "ast",
       "id": "src_hud_mirror_sethudtranscript",
-      "community": 35,
+      "community": 39,
       "norm_label": "sethudtranscript()"
     },
     {
       "label": "flashHudStatus()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud-mirror.ts",
-      "source_location": "L97",
+      "source_location": "L118",
       "_origin": "ast",
       "id": "src_hud_mirror_flashhudstatus",
-      "community": 35,
+      "community": 39,
       "norm_label": "flashhudstatus()"
     },
     {
       "label": "setHudPending()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud-mirror.ts",
-      "source_location": "L111",
+      "source_location": "L132",
       "_origin": "ast",
       "id": "src_hud_mirror_sethudpending",
       "community": 39,
@@ -829,7 +849,7 @@
       "label": "getChatHistory()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud-mirror.ts",
-      "source_location": "L116",
+      "source_location": "L137",
       "_origin": "ast",
       "id": "src_hud_mirror_getchathistory",
       "community": 1,
@@ -849,7 +869,7 @@
       "label": "RendererProbe",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L36",
+      "source_location": "L37",
       "_origin": "ast",
       "id": "src_hud_rendererprobe",
       "community": 1,
@@ -859,7 +879,7 @@
       "label": "setRendererProbe()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L45",
+      "source_location": "L46",
       "_origin": "ast",
       "id": "src_hud_setrendererprobe",
       "community": 30,
@@ -869,7 +889,7 @@
       "label": "probeString()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L49",
+      "source_location": "L50",
       "_origin": "ast",
       "id": "src_hud_probestring",
       "community": 1,
@@ -879,7 +899,7 @@
       "label": "HudSystem",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L59",
+      "source_location": "L60",
       "_origin": "ast",
       "id": "src_hud_hudsystem",
       "community": 1,
@@ -889,7 +909,7 @@
       "label": ".init()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L96",
+      "source_location": "L114",
       "_origin": "ast",
       "id": "src_hud_hudsystem_init",
       "community": 1,
@@ -899,7 +919,7 @@
       "label": ".adopt()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L209",
+      "source_location": "L227",
       "_origin": "ast",
       "id": "src_hud_hudsystem_adopt",
       "community": 1,
@@ -909,7 +929,7 @@
       "label": ".wireHud()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L216",
+      "source_location": "L235",
       "_origin": "ast",
       "id": "src_hud_hudsystem_wirehud",
       "community": 1,
@@ -919,7 +939,7 @@
       "label": ".renderInitial()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L324",
+      "source_location": "L363",
       "_origin": "ast",
       "id": "src_hud_hudsystem_renderinitial",
       "community": 1,
@@ -929,7 +949,7 @@
       "label": ".appendBubble()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L344",
+      "source_location": "L383",
       "_origin": "ast",
       "id": "src_hud_hudsystem_appendbubble",
       "community": 1,
@@ -939,7 +959,7 @@
       "label": ".showPlaceholder()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L369",
+      "source_location": "L408",
       "_origin": "ast",
       "id": "src_hud_hudsystem_showplaceholder",
       "community": 1,
@@ -949,7 +969,7 @@
       "label": ".scrollChatBy()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L389",
+      "source_location": "L428",
       "_origin": "ast",
       "id": "src_hud_hudsystem_scrollchatby",
       "community": 1,
@@ -959,7 +979,7 @@
       "label": ".scrollChatToBottom()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L402",
+      "source_location": "L441",
       "_origin": "ast",
       "id": "src_hud_hudsystem_scrollchattobottom",
       "community": 1,
@@ -969,7 +989,7 @@
       "label": ".chatPageUnits()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L414",
+      "source_location": "L453",
       "_origin": "ast",
       "id": "src_hud_hudsystem_chatpageunits",
       "community": 1,
@@ -979,7 +999,7 @@
       "label": ".scrollToBottomSoon()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L423",
+      "source_location": "L462",
       "_origin": "ast",
       "id": "src_hud_hudsystem_scrolltobottomsoon",
       "community": 1,
@@ -989,17 +1009,37 @@
       "label": ".makeBubble()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L433",
+      "source_location": "L472",
       "_origin": "ast",
       "id": "src_hud_hudsystem_makebubble",
       "community": 1,
       "norm_label": ".makebubble()"
     },
     {
+      "label": ".setChatMinimized()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L532",
+      "_origin": "ast",
+      "id": "src_hud_hudsystem_setchatminimized",
+      "community": 1,
+      "norm_label": ".setchatminimized()"
+    },
+    {
+      "label": ".refreshChatToggleLabel()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L557",
+      "_origin": "ast",
+      "id": "src_hud_hudsystem_refreshchattogglelabel",
+      "community": 1,
+      "norm_label": ".refreshchattogglelabel()"
+    },
+    {
       "label": ".seekBy()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L471",
+      "source_location": "L567",
       "_origin": "ast",
       "id": "src_hud_hudsystem_seekby",
       "community": 1,
@@ -1009,7 +1049,7 @@
       "label": ".guardedClick()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L480",
+      "source_location": "L576",
       "_origin": "ast",
       "id": "src_hud_hudsystem_guardedclick",
       "community": 1,
@@ -1019,7 +1059,7 @@
       "label": ".playClick()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L486",
+      "source_location": "L582",
       "_origin": "ast",
       "id": "src_hud_hudsystem_playclick",
       "community": 1,
@@ -1029,7 +1069,7 @@
       "label": ".playChime()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L490",
+      "source_location": "L586",
       "_origin": "ast",
       "id": "src_hud_hudsystem_playchime",
       "community": 1,
@@ -1039,7 +1079,7 @@
       "label": ".update()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L494",
+      "source_location": "L590",
       "_origin": "ast",
       "id": "src_hud_hudsystem_update",
       "community": 1,
@@ -1052,7 +1092,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_icons",
-      "community": 35,
+      "community": 32,
       "norm_label": "icons.ts"
     },
     {
@@ -1062,7 +1102,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "src_icons_paths",
-      "community": 35,
+      "community": 32,
       "norm_label": "paths"
     },
     {
@@ -1072,7 +1112,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "src_icons_iconname",
-      "community": 35,
+      "community": 32,
       "norm_label": "iconname"
     },
     {
@@ -1092,7 +1132,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "src_icons_seterrorbanner",
-      "community": 35,
+      "community": 32,
       "norm_label": "seterrorbanner()"
     },
     {
@@ -1112,7 +1152,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_look_controls",
-      "community": 89,
+      "community": 30,
       "norm_label": "look-controls.ts"
     },
     {
@@ -1122,7 +1162,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "src_look_controls_desktoplooksystem",
-      "community": 89,
+      "community": 30,
       "norm_label": "desktoplooksystem"
     },
     {
@@ -1132,7 +1172,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "src_look_controls_desktoplooksystem_init",
-      "community": 89,
+      "community": 30,
       "norm_label": ".init()"
     },
     {
@@ -1142,7 +1182,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "src_look_controls_desktoplooksystem_update",
-      "community": 89,
+      "community": 30,
       "norm_label": ".update()"
     },
     {
@@ -1152,14 +1192,14 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_push_to_talk",
-      "community": 89,
+      "community": 35,
       "norm_label": "push-to-talk.ts"
     },
     {
       "label": "pttStopWasRecent()",
       "file_type": "code",
       "source_file": "apps/portal/src/push-to-talk.ts",
-      "source_location": "L25",
+      "source_location": "L26",
       "_origin": "ast",
       "id": "src_push_to_talk_pttstopwasrecent",
       "community": 1,
@@ -1169,30 +1209,30 @@
       "label": "PushToTalkSystem",
       "file_type": "code",
       "source_file": "apps/portal/src/push-to-talk.ts",
-      "source_location": "L29",
+      "source_location": "L30",
       "_origin": "ast",
       "id": "src_push_to_talk_pushtotalksystem",
-      "community": 89,
+      "community": 35,
       "norm_label": "pushtotalksystem"
     },
     {
       "label": ".update()",
       "file_type": "code",
       "source_file": "apps/portal/src/push-to-talk.ts",
-      "source_location": "L32",
+      "source_location": "L33",
       "_origin": "ast",
       "id": "src_push_to_talk_pushtotalksystem_update",
-      "community": 89,
+      "community": 35,
       "norm_label": ".update()"
     },
     {
       "label": ".pulse()",
       "file_type": "code",
       "source_file": "apps/portal/src/push-to-talk.ts",
-      "source_location": "L60",
+      "source_location": "L64",
       "_origin": "ast",
       "id": "src_push_to_talk_pushtotalksystem_pulse",
-      "community": 89,
+      "community": 35,
       "norm_label": ".pulse()"
     },
     {
@@ -1622,7 +1662,7 @@
       "source_location": "L62",
       "_origin": "ast",
       "id": "src_voice_isvoicesupported",
-      "community": 89,
+      "community": 35,
       "norm_label": "isvoicesupported()"
     },
     {
@@ -1632,7 +1672,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "src_voice_iscurrentlyrecording",
-      "community": 89,
+      "community": 35,
       "norm_label": "iscurrentlyrecording()"
     },
     {
@@ -1642,7 +1682,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "src_voice_stoprecognition",
-      "community": 89,
+      "community": 35,
       "norm_label": "stoprecognition()"
     },
     {
@@ -1652,7 +1692,7 @@
       "source_location": "L79",
       "_origin": "ast",
       "id": "src_voice_startrecognition",
-      "community": 89,
+      "community": 35,
       "norm_label": "startrecognition()"
     },
     {
@@ -1662,7 +1702,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "src_voice_startspeechrecognition",
-      "community": 35,
+      "community": 39,
       "norm_label": "startspeechrecognition()"
     },
     {
@@ -1672,7 +1712,7 @@
       "source_location": "L153",
       "_origin": "ast",
       "id": "src_voice_startmediarecording",
-      "community": 35,
+      "community": 39,
       "norm_label": "startmediarecording()"
     },
     {
@@ -1692,7 +1732,7 @@
       "source_location": "L282",
       "_origin": "ast",
       "id": "src_voice_showvoiceerror",
-      "community": 35,
+      "community": 39,
       "norm_label": "showvoiceerror()"
     },
     {
@@ -1702,7 +1742,7 @@
       "source_location": "L291",
       "_origin": "ast",
       "id": "src_voice_initvoicebindings",
-      "community": 0,
+      "community": 35,
       "norm_label": "initvoicebindings()"
     },
     {
@@ -2392,7 +2432,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_canvas_ui_rect",
-      "community": 88,
+      "community": 64,
       "norm_label": "rect"
     },
     {
@@ -2402,7 +2442,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "src_canvas_ui_c",
-      "community": 67,
+      "community": 88,
       "norm_label": "c"
     },
     {
@@ -2442,7 +2482,7 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "src_canvas_ui_roundrect",
-      "community": 90,
+      "community": 88,
       "norm_label": "roundrect()"
     },
     {
@@ -2452,7 +2492,7 @@
       "source_location": "L150",
       "_origin": "ast",
       "id": "src_canvas_ui_fittext",
-      "community": 88,
+      "community": 68,
       "norm_label": "fittext()"
     },
     {
@@ -2482,54 +2522,64 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_controller_hints",
-      "community": 90,
+      "community": 88,
       "norm_label": "controller-hints.ts"
+    },
+    {
+      "label": "ROLL_AXIS",
+      "file_type": "code",
+      "source_file": "apps/splat-vr/src/controller-hints.ts",
+      "source_location": "L132",
+      "_origin": "ast",
+      "id": "src_controller_hints_roll_axis",
+      "community": 88,
+      "norm_label": "roll_axis"
     },
     {
       "label": "RowSpec",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L140",
+      "source_location": "L144",
       "_origin": "ast",
       "id": "src_controller_hints_rowspec",
-      "community": 90,
+      "community": 88,
       "norm_label": "rowspec"
     },
     {
       "label": "ROWS",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L149",
+      "source_location": "L153",
       "_origin": "ast",
       "id": "src_controller_hints_rows",
-      "community": 90,
+      "community": 88,
       "norm_label": "rows"
     },
     {
       "label": "Row",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L167",
+      "source_location": "L171",
       "_origin": "ast",
       "id": "src_controller_hints_row",
-      "community": 90,
+      "community": 88,
       "norm_label": "row"
     },
     {
       "label": "HandRig",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L178",
+      "source_location": "L182",
       "_origin": "ast",
       "id": "src_controller_hints_handrig",
-      "community": 90,
+      "community": 88,
       "norm_label": "handrig"
     },
     {
       "label": "ControllerHints",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L192",
+      "source_location": "L196",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints",
       "community": 25,
@@ -2539,7 +2589,7 @@
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L204",
+      "source_location": "L208",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_constructor",
       "community": 25,
@@ -2549,7 +2599,7 @@
       "label": ".applySlots()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L239",
+      "source_location": "L243",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_applyslots",
       "community": 25,
@@ -2559,7 +2609,7 @@
       "label": ".buildRig()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L249",
+      "source_location": "L253",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_buildrig",
       "community": 25,
@@ -2569,7 +2619,7 @@
       "label": ".labelFor()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L317",
+      "source_location": "L321",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_labelfor",
       "community": 25,
@@ -2579,7 +2629,7 @@
       "label": ".refreshLabels()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L338",
+      "source_location": "L342",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_refreshlabels",
       "community": 25,
@@ -2589,7 +2639,7 @@
       "label": ".layout()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L362",
+      "source_location": "L366",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_layout",
       "community": 25,
@@ -2599,17 +2649,17 @@
       "label": ".drawBackground()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L396",
+      "source_location": "L400",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_drawbackground",
-      "community": 90,
+      "community": 88,
       "norm_label": ".drawbackground()"
     },
     {
       "label": ".attach()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L417",
+      "source_location": "L421",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_attach",
       "community": 25,
@@ -2619,7 +2669,7 @@
       "label": ".detach()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L443",
+      "source_location": "L447",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_detach",
       "community": 25,
@@ -2629,7 +2679,7 @@
       "label": ".isAttached()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L463",
+      "source_location": "L467",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_isattached",
       "community": 25,
@@ -2639,7 +2689,7 @@
       "label": ".setSettings()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L469",
+      "source_location": "L473",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_setsettings",
       "community": 25,
@@ -2649,7 +2699,7 @@
       "label": ".show()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L478",
+      "source_location": "L482",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_show",
       "community": 25,
@@ -2659,7 +2709,7 @@
       "label": ".hide()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L494",
+      "source_location": "L498",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_hide",
       "community": 25,
@@ -2669,7 +2719,7 @@
       "label": ".markUsed()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L510",
+      "source_location": "L514",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_markused",
       "community": 25,
@@ -2679,7 +2729,7 @@
       "label": ".update()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L529",
+      "source_location": "L533",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_update",
       "community": 25,
@@ -2689,7 +2739,7 @@
       "label": ".attachment()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L583",
+      "source_location": "L594",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_attachment",
       "community": 25,
@@ -2699,17 +2749,27 @@
       "label": ".metrics()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L610",
+      "source_location": "L621",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_metrics",
       "community": 25,
       "norm_label": ".metrics()"
     },
     {
+      "label": ".rollProbe()",
+      "file_type": "code",
+      "source_file": "apps/splat-vr/src/controller-hints.ts",
+      "source_location": "L658",
+      "_origin": "ast",
+      "id": "src_controller_hints_controllerhints_rollprobe",
+      "community": 25,
+      "norm_label": ".rollprobe()"
+    },
+    {
       "label": ".applyAlpha()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L630",
+      "source_location": "L679",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_applyalpha",
       "community": 25,
@@ -2719,20 +2779,20 @@
       "label": "bgDotGeometry()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L652",
+      "source_location": "L701",
       "_origin": "ast",
       "id": "src_controller_hints_bgdotgeometry",
-      "community": 90,
+      "community": 88,
       "norm_label": "bgdotgeometry()"
     },
     {
       "label": "planeFor()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
-      "source_location": "L657",
+      "source_location": "L706",
       "_origin": "ast",
       "id": "src_controller_hints_planefor",
-      "community": 90,
+      "community": 88,
       "norm_label": "planefor()"
     },
     {
@@ -3392,7 +3452,7 @@
       "source_location": "L386",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_drawbutton",
-      "community": 88,
+      "community": 64,
       "norm_label": ".drawbutton()"
     },
     {
@@ -3522,7 +3582,7 @@
       "source_location": "L597",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_hitregions",
-      "community": 88,
+      "community": 64,
       "norm_label": ".hitregions()"
     },
     {
@@ -3552,7 +3612,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_hotspot_card",
-      "community": 88,
+      "community": 68,
       "norm_label": "hotspot-card.ts"
     },
     {
@@ -3562,7 +3622,7 @@
       "source_location": "L131",
       "_origin": "ast",
       "id": "src_hotspot_card_cardaction",
-      "community": 88,
+      "community": 68,
       "norm_label": "cardaction"
     },
     {
@@ -3572,7 +3632,7 @@
       "source_location": "L132",
       "_origin": "ast",
       "id": "src_hotspot_card_hit",
-      "community": 88,
+      "community": 68,
       "norm_label": "hit"
     },
     {
@@ -3582,7 +3642,7 @@
       "source_location": "L135",
       "_origin": "ast",
       "id": "src_hotspot_card_cardlayout",
-      "community": 88,
+      "community": 68,
       "norm_label": "cardlayout"
     },
     {
@@ -3592,7 +3652,7 @@
       "source_location": "L145",
       "_origin": "ast",
       "id": "src_hotspot_card_accent",
-      "community": 88,
+      "community": 68,
       "norm_label": "accent"
     },
     {
@@ -3602,7 +3662,7 @@
       "source_location": "L150",
       "_origin": "ast",
       "id": "src_hotspot_card_fill",
-      "community": 88,
+      "community": 68,
       "norm_label": "fill"
     },
     {
@@ -3612,7 +3672,7 @@
       "source_location": "L155",
       "_origin": "ast",
       "id": "src_hotspot_card_badge",
-      "community": 88,
+      "community": 68,
       "norm_label": "badge"
     },
     {
@@ -3642,7 +3702,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_constructor",
-      "community": 88,
+      "community": 68,
       "norm_label": ".constructor()"
     },
     {
@@ -4092,7 +4152,7 @@
       "source_location": "L370",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_clear",
-      "community": 67,
+      "community": 78,
       "norm_label": ".clear()"
     },
     {
@@ -4242,7 +4302,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "src_input_sources_inputsources_indexof",
-      "community": 54,
+      "community": 25,
       "norm_label": ".indexof()"
     },
     {
@@ -4939,7 +4999,7 @@
       "label": "onHotspotSlide()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/main.ts",
-      "source_location": "L1332",
+      "source_location": "L1353",
       "_origin": "ast",
       "id": "src_main_onhotspotslide",
       "community": 44,
@@ -4949,7 +5009,7 @@
       "label": "refreshHotspotLabels()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/main.ts",
-      "source_location": "L1346",
+      "source_location": "L1367",
       "_origin": "ast",
       "id": "src_main_refreshhotspotlabels",
       "community": 44,
@@ -4959,7 +5019,7 @@
       "label": "syncHotspotPane()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/main.ts",
-      "source_location": "L1353",
+      "source_location": "L1374",
       "_origin": "ast",
       "id": "src_main_synchotspotpane",
       "community": 44,
@@ -4969,7 +5029,7 @@
       "label": "writeHotspotOutput()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/main.ts",
-      "source_location": "L1389",
+      "source_location": "L1410",
       "_origin": "ast",
       "id": "src_main_writehotspotoutput",
       "community": 44,
@@ -4979,7 +5039,7 @@
       "label": "_headProbe",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/main.ts",
-      "source_location": "L1409",
+      "source_location": "L1430",
       "_origin": "ast",
       "id": "src_main_headprobe",
       "community": 29,
@@ -4989,7 +5049,7 @@
       "label": "updateVrSurfaces()",
       "file_type": "code",
       "source_file": "apps/splat-vr/src/main.ts",
-      "source_location": "L1425",
+      "source_location": "L1446",
       "_origin": "ast",
       "id": "src_main_updatevrsurfaces",
       "community": 29,
@@ -5632,7 +5692,7 @@
       "source_location": "L451",
       "_origin": "ast",
       "id": "src_vr_input_vrinput_inputmode",
-      "community": 64,
+      "community": 28,
       "norm_label": ".inputmode()"
     },
     {
@@ -7469,7 +7529,7 @@
       "label": "graphify",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L510",
+      "source_location": "L524",
       "_origin": "ast",
       "id": "claude_graphify",
       "community": 26,
@@ -7479,7 +7539,7 @@
       "label": "Workflow tooling",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L528",
+      "source_location": "L542",
       "_origin": "ast",
       "id": "claude_workflow_tooling",
       "community": 26,
@@ -7489,7 +7549,7 @@
       "label": "NEXT STEPS (parked \u2014 build next session, do not auto-start)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L547",
+      "source_location": "L561",
       "_origin": "ast",
       "id": "claude_next_steps_parked_build_next_session_do_not_auto_start",
       "community": 26,
@@ -8302,7 +8362,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_ev_responder_qa_comparison",
-      "community": 70,
+      "community": 69,
       "norm_label": "ev_responder_qa_comparison.md"
     },
     {
@@ -11330,7 +11390,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 89,
+      "community": 30,
       "norm_label": "index.ts world.create entry",
       "id": "src_index_world_create"
     },
@@ -13798,6 +13858,26 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/portal/src/hud-mirror.ts",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "src_hud_mirror",
+      "target": "src_hud_mirror_requestchatexpand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud-mirror.ts",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "src_hud_mirror",
+      "target": "src_hud_mirror_setchatexpandhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud-mirror.ts",
       "source_location": "L14",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -13885,6 +13965,17 @@
       "confidence_score": 1.0,
       "source": "src_index",
       "target": "src_hud_mirror"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/push-to-talk.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_push_to_talk",
+      "target": "src_hud_mirror",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -14101,6 +14192,50 @@
       "weight": 1.0,
       "source": "src_hud_mirror_settranscriptlistener",
       "target": "src_hud_mirror_sethudtranscript"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "src_hud",
+      "target": "src_hud_mirror_setchatexpandhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L307",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem_wirehud",
+      "target": "src_hud_mirror_setchatexpandhandler"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/push-to-talk.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "src_push_to_talk",
+      "target": "src_hud_mirror_requestchatexpand",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "apps/portal/src/push-to-talk.ts",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "src_push_to_talk_pushtotalksystem_update",
+      "target": "src_hud_mirror_requestchatexpand"
     },
     {
       "relation": "calls",
@@ -14545,6 +14680,16 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L557",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem",
+      "target": "src_hud_hudsystem_refreshchattogglelabel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
       "source_location": "L222",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -14590,6 +14735,16 @@
       "confidence_score": 1.0,
       "source": "src_hud_hudsystem",
       "target": "src_hud_hudsystem_seekby"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L532",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem",
+      "target": "src_hud_hudsystem_setchatminimized",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -14749,6 +14904,28 @@
       "confidence_score": 1.0,
       "source": "src_hud_hudsystem_update",
       "target": "src_hud_hudsystem_scrollchatby"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L552",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem_setchatminimized",
+      "target": "src_hud_hudsystem_scrollchattobottom",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L554",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem_setchatminimized",
+      "target": "src_hud_hudsystem_refreshchattogglelabel",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -14918,9 +15095,9 @@
       "source_file": "apps/portal/src/videosphere.ts",
       "source_location": "L297",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_videosphere_rendermutebutton",
-      "target": "src_icons_icon",
-      "confidence_score": 1.0
+      "target": "src_icons_icon"
     },
     {
       "relation": "calls",
@@ -14929,9 +15106,9 @@
       "source_file": "apps/portal/src/videosphere.ts",
       "source_location": "L290",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_videosphere_renderplaybutton",
-      "target": "src_icons_icon",
-      "confidence_score": 1.0
+      "target": "src_icons_icon"
     },
     {
       "relation": "calls",
@@ -15522,9 +15699,9 @@
       "source_file": "apps/portal/src/videosphere.ts",
       "source_location": "L294",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_videosphere",
-      "target": "src_videosphere_rendermutebutton",
-      "confidence_score": 1.0
+      "target": "src_videosphere_rendermutebutton"
     },
     {
       "relation": "contains",
@@ -15532,9 +15709,9 @@
       "source_file": "apps/portal/src/videosphere.ts",
       "source_location": "L287",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_videosphere",
-      "target": "src_videosphere_renderplaybutton",
-      "confidence_score": 1.0
+      "target": "src_videosphere_renderplaybutton"
     },
     {
       "relation": "contains",
@@ -15711,9 +15888,9 @@
       "source_file": "apps/portal/src/videosphere.ts",
       "source_location": "L304",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_videosphere_updateplaybutton",
-      "target": "src_videosphere_renderplaybutton",
-      "confidence_score": 1.0
+      "target": "src_videosphere_renderplaybutton"
     },
     {
       "relation": "calls",
@@ -15722,9 +15899,9 @@
       "source_file": "apps/portal/src/videosphere.ts",
       "source_location": "L308",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_videosphere_updatemutebutton",
-      "target": "src_videosphere_rendermutebutton",
-      "confidence_score": 1.0
+      "target": "src_videosphere_rendermutebutton"
     },
     {
       "relation": "calls",
@@ -17259,6 +17436,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
+      "source_location": "L132",
+      "weight": 1.0,
+      "source": "src_controller_hints",
+      "target": "src_controller_hints_roll_axis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/splat-vr/src/controller-hints.ts",
       "source_location": "L167",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -17555,6 +17742,16 @@
       "confidence_score": 1.0,
       "source": "src_controller_hints_controllerhints",
       "target": "src_controller_hints_controllerhints_refreshlabels"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/splat-vr/src/controller-hints.ts",
+      "source_location": "L658",
+      "weight": 1.0,
+      "source": "src_controller_hints_controllerhints",
+      "target": "src_controller_hints_controllerhints_rollprobe",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -17899,6 +18096,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "apps/splat-vr/src/controller-hints.ts",
+      "source_location": "L664",
+      "weight": 1.0,
+      "source": "src_controller_hints_controllerhints_rollprobe",
+      "target": "src_controller_hints_controllerhints_update",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/splat-vr/src/controller-hints.ts",
       "source_location": "L401",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -17926,6 +18134,17 @@
       "confidence_score": 1.0,
       "source": "src_controller_hints_controllerhints_update",
       "target": "src_vr_input_vrcontrol"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/splat-vr/src/controller-hints.ts",
+      "source_location": "L658",
+      "weight": 1.0,
+      "source": "src_controller_hints_controllerhints_rollprobe",
+      "target": "src_vr_input_handedness",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -25458,9 +25677,9 @@
       "source_file": "streamlit_app.py",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "streamlit_app_rationale_18",
-      "target": "streamlit_app_icon",
-      "confidence_score": 1.0
+      "target": "streamlit_app_icon"
     },
     {
       "relation": "contains",
@@ -30644,5 +30863,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "7bc227fa587d87b0a2b00b34e357faea0a3c5282"
+  "built_at_commit": "5c9d4951f960e91a4020cb0c060769d40f9a874b"
 }

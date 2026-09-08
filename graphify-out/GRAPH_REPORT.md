@@ -1,16 +1,16 @@
 # Graph Report - RAG_Responder  (2026-09-08)
 
 ## Corpus Check
-- 75 files · ~235,643 words
+- 75 files · ~237,592 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1184 nodes · 1782 edges · 100 communities (81 shown, 19 thin omitted)
+- 1190 nodes · 1797 edges · 98 communities (79 shown, 19 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 82 edges (avg confidence: 0.84)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `7bc227fa`
+- Built from commit: `5c9d4951`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -102,8 +102,6 @@
 - [[_COMMUNITY_Community 86|Community 86]]
 - [[_COMMUNITY_Community 87|Community 87]]
 - [[_COMMUNITY_Community 88|Community 88]]
-- [[_COMMUNITY_Community 89|Community 89]]
-- [[_COMMUNITY_Community 90|Community 90]]
 - [[_COMMUNITY_Community 91|Community 91]]
 - [[_COMMUNITY_Community 92|Community 92]]
 - [[_COMMUNITY_Community 93|Community 93]]
@@ -117,13 +115,13 @@
 ## God Nodes (most connected - your core abstractions)
 1. `Project Progress — Ford Mustang Mach-E 2026 First Responder RAG Portal` - 34 edges
 2. `VrInput` - 29 edges
-3. `HelpPanel` - 25 edges
-4. `HudSystem` - 23 edges
-5. `InputSources` - 22 edges
-6. `ControllerHints` - 21 edges
+3. `HudSystem` - 25 edges
+4. `HelpPanel` - 25 edges
+5. `ControllerHints` - 22 edges
+6. `InputSources` - 22 edges
 7. `Review Checklist` - 21 edges
-8. `ControllerModels` - 19 edges
-9. `Handedness` - 19 edges
+8. `Handedness` - 20 edges
+9. `ControllerModels` - 19 edges
 10. `HotspotCard` - 18 edges
 
 ## Surprising Connections (you probably didn't know these)
@@ -141,15 +139,15 @@
 ## Import Cycles
 - None detected.
 
-## Communities (100 total, 19 thin omitted)
+## Communities (98 total, 19 thin omitted)
 
 ### Community 0 - "Chat & Voice Frontend"
-Cohesion: 0.13
+Cohesion: 0.16
 Nodes (23): addMessage(), addTyping(), askQuickQuestion(), autoGrow(), clearBtn, clearConversation(), errorEl, initChatBindings() (+15 more)
 
 ### Community 1 - "HUD & Videosphere Rendering"
-Cohesion: 0.12
-Nodes (9): HudSystem, getChatHistory(), setTranscriptListener(), probeString(), RendererProbe, pttStopWasRecent(), fmt(), getActiveVideo() (+1 more)
+Cohesion: 0.11
+Nodes (9): HudSystem, getChatHistory(), setChatExpandHandler(), probeString(), RendererProbe, pttStopWasRecent(), fmt(), getActiveVideo() (+1 more)
 
 ### Community 2 - "Portal Build Dependencies"
 Cohesion: 0.06
@@ -220,7 +218,7 @@ Cohesion: 0.50
 Nodes (4): 2026-04-20 — Enriched Metadata + Evaluation Framework, Evaluation Framework, Metadata Enrichment (video_transcript_v2 namespace), n8n Agent System Message
 
 ### Community 25 - "Community 25"
-Cohesion: 0.22
+Cohesion: 0.19
 Nodes (3): ControllerHints, Handedness, VrControl
 
 ### Community 26 - "Community 26"
@@ -236,16 +234,16 @@ Cohesion: 0.04
 Nodes (41): camera, canvas, carRig, comfort, controllerModels, controls, currentConfig, devEl (+33 more)
 
 ### Community 30 - "Community 30"
-Cohesion: 0.24
-Nodes (11): ArchivedRun, archivePreviousRun(), buffer, crumb(), getArchive(), installCrumbsInspector(), persist(), readJson() (+3 more)
+Cohesion: 0.16
+Nodes (13): ArchivedRun, archivePreviousRun(), buffer, crumb(), getArchive(), installCrumbsInspector(), persist(), readJson() (+5 more)
 
 ### Community 31 - "Community 31"
 Cohesion: 0.10
 Nodes (19): dependencies, @sparkjsdev/spark, three, troika-three-text, description, devDependencies, @types/three, typescript (+11 more)
 
 ### Community 32 - "Community 32"
-Cohesion: 0.16
-Nodes (20): icon(), activatePanorama(), bindVideoControls(), createHiddenVideoEls(), ensureHls(), hlsInstances, hlsReady, hlsRecoveries (+12 more)
+Cohesion: 0.13
+Nodes (23): icon(), IconName, PATHS, setErrorBanner(), activatePanorama(), bindVideoControls(), createHiddenVideoEls(), ensureHls() (+15 more)
 
 ### Community 33 - "Community 33"
 Cohesion: 0.11
@@ -256,8 +254,8 @@ Cohesion: 0.08
 Nodes (21): 10. Audio Configuration, 11. Three.js Import Check (CRITICAL), 12. Component Size Check, 15. Direct asset loaders instead of AssetManager, 16. Raw scene.add() instead of createTransformEntity, 17. Manual Raycaster instead of Interactable, 18. Environment components on wrong entity, 19. Missing `_needsUpdate` on environment changes (+13 more)
 
 ### Community 35 - "Community 35"
-Cohesion: 0.16
-Nodes (22): focusInput(), sendMessage(), setInputValue(), n8n chat WEBHOOK_URL, flashHudStatus(), setHudTranscript(), IconName, PATHS (+14 more)
+Cohesion: 0.15
+Nodes (18): n8n chat WEBHOOK_URL, requestChatExpand(), PushToTalkSystem, errorEl, initVoiceBindings(), inputEl, isCurrentlyRecording(), isVoiceSupported() (+10 more)
 
 ### Community 36 - "Community 36"
 Cohesion: 0.16
@@ -272,8 +270,8 @@ Cohesion: 0.08
 Nodes (29): EV First-Responder Q&A Comparison (webhook vs graphify), Generic Deferral Policy (no model-specific answer without make/model/year), graphify Knowledge Graph (graph.json BFS traversal), n8n RAG Chat Webhook (live chat workflow), Vehicle-Naming Determines Grounded vs Deferred Answer, Claude Opus 4.8 Router Model (lmChatAnthropic), n8n Router Agent Multi-Vehicle Config, Never Mix Data Across Vehicles (+21 more)
 
 ### Community 39 - "Community 39"
-Cohesion: 0.33
-Nodes (10): chatHistory, ChatListener, isImmersive(), mdToPlain(), mirrorToHud(), pushMerged(), setChatListener(), setHudPending() (+2 more)
+Cohesion: 0.22
+Nodes (18): focusInput(), setInputValue(), chatHistory, ChatListener, flashHudStatus(), isImmersive(), mdToPlain(), mirrorToHud() (+10 more)
 
 ### Community 40 - "Community 40"
 Cohesion: 0.36
@@ -352,27 +350,27 @@ Cohesion: 0.50
 Nodes (4): IWER dev runtime launch config (port 8081, dev:runtime), IWER Quest emulator runtime, IWER emulator session state (agent mode, browser disconnected), portal .claude settings (IWSDK MCP tool allowlist)
 
 ### Community 64 - "Community 64"
-Cohesion: 0.17
-Nodes (4): bindingRows(), HelpPanel, InputMode, ComfortSettings
+Cohesion: 0.16
+Nodes (5): Rect, bindingRows(), HelpPanel, InputMode, ComfortSettings
 
 ### Community 65 - "Community 65"
 Cohesion: 0.20
 Nodes (7): HandEvent, HandSpace, JOINTS, TrackedJoint, InputSourceLike, SlotKind, SlotState
 
 ### Community 67 - "Community 67"
-Cohesion: 0.15
-Nodes (14): C, ACCENT, ACTIVE, DRIVER_SIDE, HOTSPOTS, hotspotsFor(), MIRROR_NOTES, mirrorToPassengerSide() (+6 more)
+Cohesion: 0.17
+Nodes (13): ACCENT, ACTIVE, DRIVER_SIDE, HOTSPOTS, hotspotsFor(), MIRROR_NOTES, mirrorToPassengerSide(), Severity (+5 more)
 
 ### Community 68 - "Community 68"
-Cohesion: 0.17
-Nodes (4): wrapText(), HotspotCard, isLoud(), Hotspot
+Cohesion: 0.11
+Nodes (11): fitText(), wrapText(), ACCENT, BADGE, CardAction, CardLayout, FILL, Hit (+3 more)
 
 ### Community 69 - "Community 69"
-Cohesion: 0.20
+Cohesion: 0.18
 Nodes (10): Alternate Procedures, Final router model: Claude Sonnet 4.6 (2026-06-24), Nissan Ariya 2026 — High-Voltage System Shutdown, Opus 4.6 Verification Appendix (2026-06-24), Primary Procedure (recommended), Q17 — Volkswagen ID.4 2025 ERG · ✅ confirmed, Q3 — Chevrolet Blazer EV 2024 ERG · ⚠️ term real, color claim unsupported, R5 — Nissan Ariya 2026 ERG · ✅ confirmed (+2 more)
 
 ### Community 70 - "Community 70"
-Cohesion: 0.22
+Cohesion: 0.25
 Nodes (8): Charging & Infrastructure Issues, EV First-Responder Q&A — n8n RAG Webhook vs. graphify Knowledge Graph, Q1. How can I quickly identify if a vehicle is an EV or hybrid when arriving at a crash scene?, Q20. What are the common safety issues or fire risks associated with residential or commercial EV chargers?, Q21. If an EV is currently plugged into a DC fast charger at a station, is it safe to cut the charging cable during an emergency?, Q2. If a vehicle is on its side and I cannot see the exterior badges, what other visual clues or dash indicators can I look for?, Q3. What does a green 'Ready' light or symbol on the dash indicate about the vehicle's operational status?, Scene Arrival & Vehicle Identification
 
 ### Community 72 - "Community 72"
@@ -412,16 +410,8 @@ Cohesion: 0.40
 Nodes (5): Original run (no vehicle named), Out-of-scope refusals — removed and replaced, Per-question detail (original run), Retest run (same questions, vehicle named) — the headline result, Scorecard
 
 ### Community 88 - "Community 88"
-Cohesion: 0.13
-Nodes (15): CanvasSurface, fitText(), hitAt(), makeCanvasSurface(), Rect, SurfaceFilter, Hit, PanelAction (+7 more)
-
-### Community 89 - "Community 89"
-Cohesion: 0.26
-Nodes (7): index.ts World.create entry, DesktopLookSystem, PushToTalkSystem, isCurrentlyRecording(), isVoiceSupported(), startRecognition(), stopRecognition()
-
-### Community 90 - "Community 90"
-Cohesion: 0.25
-Nodes (6): roundRect(), HandRig, planeFor(), Row, ROWS, RowSpec
+Cohesion: 0.14
+Nodes (15): C, CanvasSurface, hitAt(), makeCanvasSurface(), roundRect(), SurfaceFilter, HandRig, planeFor() (+7 more)
 
 ### Community 91 - "Community 91"
 Cohesion: 0.22
@@ -460,24 +450,24 @@ Cohesion: 0.50
 Nodes (3): Develop / build, First Responder Portal — v2 (IWSDK), Layout (flat — one module per concern, no starter-template scaffold)
 
 ## Knowledge Gaps
-- **505 isolated node(s):** `name`, `version`, `private`, `type`, `dev` (+500 more)
+- **506 isolated node(s):** `name`, `version`, `private`, `type`, `dev` (+501 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `VrInput` connect `Community 28` to `Community 64`, `Community 61`, `Community 29`, `Community 54`?**
-  _High betweenness centrality (0.017) - this node is a cross-community bridge._
-- **Why does `HelpPanel` connect `Community 64` to `Community 88`, `Community 29`?**
-  _High betweenness centrality (0.011) - this node is a cross-community bridge._
+- **Why does `VrInput` connect `Community 28` to `Community 61`, `Community 29`, `Community 54`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Why does `Project Progress — Ford Mustang Mach-E 2026 First Responder RAG Portal` connect `Community 62` to `Community 166`, `Community 198`, `n8n Workflow Patterns`, `Community 107`, `Community 74`, `Community 14`, `Community 47`, `Community 49`, `Community 23`, `Community 24`, `Community 91`, `Community 92`, `Community 93`, `Community 94`?**
-  _High betweenness centrality (0.010) - this node is a cross-community bridge._
+  _High betweenness centrality (0.009) - this node is a cross-community bridge._
+- **Why does `HandInput` connect `Community 71` to `Community 65`, `Community 29`, `Community 25`?**
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
 - **What connects `name`, `version`, `private` to the rest of the system?**
-  _546 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Chat & Voice Frontend` be split into smaller, more focused modules?**
-  _Cohesion score 0.13230769230769232 - nodes in this community are weakly interconnected._
+  _547 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `HUD & Videosphere Rendering` be split into smaller, more focused modules?**
-  _Cohesion score 0.12333333333333334 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11396011396011396 - nodes in this community are weakly interconnected._
 - **Should `Portal Build Dependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.0625 - nodes in this community are weakly interconnected._
+- **Should `EV Response Guides & Concepts` be split into smaller, more focused modules?**
+  _Cohesion score 0.14126984126984127 - nodes in this community are weakly interconnected._
