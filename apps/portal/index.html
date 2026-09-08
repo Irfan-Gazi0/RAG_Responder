@@ -106,11 +106,35 @@
     .video-bar .transport-row button {
       background: #3b82f6; border: none; border-radius: 6px;
       color: white; padding: 8px 18px; font-size: 13.5px; font-weight: 600;
-      cursor: pointer; transition: background 0.15s;
+      cursor: pointer; transition: background 0.15s, box-shadow 0.15s;
     }
     .video-bar .transport-row button:hover { background: #2563eb; }
-    .video-bar .transport-row button#btn-mute { background: #475569; }
+
+    /* Play and mute carry their STATE in colour, not just in the label. Slate
+       means "running, nothing needs you"; the accent means something is
+       stopping you and the button is what clears it. The state classes are set
+       from videosphere.ts, and the in-VR HUD buttons fire the same DOM click
+       (hud.ts:235,238), so the colour can never drift from the video. */
+    .video-bar .transport-row button#btn-play,
+    .video-bar .transport-row button#btn-mute {
+      background: #475569; box-shadow: inset 0 0 0 1px #64748b;
+    }
+    .video-bar .transport-row button#btn-play:hover,
     .video-bar .transport-row button#btn-mute:hover { background: #64748b; }
+
+    /* Paused: the same blue as the progress bar and Enter VR — press to resume. */
+    .video-bar .transport-row button#btn-play.is-paused {
+      background: #3b82f6; box-shadow: inset 0 0 0 1px #60a5fa;
+    }
+    .video-bar .transport-row button#btn-play.is-paused:hover { background: #2563eb; }
+
+    /* Muted: amber, not slate. The narration IS the training, so silence is a
+       degraded state and earns a warning tint. #b45309 keeps white text at
+       5.0:1; the brighter amber-500s drop under 3:1 and stop being readable. */
+    .video-bar .transport-row button#btn-mute.is-muted {
+      background: #b45309; box-shadow: inset 0 0 0 1px #d97706;
+    }
+    .video-bar .transport-row button#btn-mute.is-muted:hover { background: #92400e; }
     #video-time { font-size: 13px; color: #a8b6c8; margin-left: auto; }
     #progress-bar-wrap {
       flex: 1; height: 24px; cursor: pointer; position: relative;

@@ -11,16 +11,6 @@ _ICON_PATHS = {
         '<path d="M14 15a2 2 0 0 0-2-2 2 2 0 0 0-2 2"/><path d="M2.5 13 5 7c.7-1.3 1.4-2 3-2"/>'
         '<path d="M21.5 13 19 7c-.7-1.3-1.5-2-3-2"/>'
     ),
-    "file-text": (
-        '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>'
-        '<path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/>'
-        '<path d="M16 13H8"/><path d="M16 17H8"/>'
-    ),
-    "hourglass": (
-        '<path d="M5 22h14"/><path d="M5 2h14"/>'
-        '<path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/>'
-        '<path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>'
-    ),
 }
 
 
@@ -38,7 +28,7 @@ def icon(name: str, size: int = 16) -> str:
 # It changes the iframe URL's cache key so browsers can't serve a stale copy
 # (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
 # which a CloudFront invalidation does NOT clear).
-CACHE_BUST = "20260908a"
+CACHE_BUST = "20260908b"
 
 # S3-root cutover, 2026-09-07: /inspector_portal.html IS the v2 IWSDK bundle now
 # (deploy/deploy_portal_v2.py --root), so the canonical URL and every existing
@@ -266,8 +256,7 @@ tab1, tab2 = st.tabs(["Training Workshop", "3D EV Explorer"])
 with tab1:
     st.markdown(
         '<div class="tab-intro">'
-        "<strong>Watch the 360&deg; training and ask questions.</strong> "
-        "Drag the video to look around."
+        "<strong>Watch the 360&deg; training and ask questions.</strong>"
         "</div>",
         unsafe_allow_html=True,
     )
@@ -290,16 +279,7 @@ with tab2:
     st.markdown(
         f'<div class="tab-note">{icon("glasses", 14)} On a VR headset? '
         f'<a href="{SPLAT_VR_URL}">Open the car scene there</a>, then tap '
-        f'<strong>Enter VR</strong>.<span class="sep">·</span>'
-        f'{icon("hourglass", 14)} The 3D scan is large, so it takes a '
-        f'moment to load.<span class="sep">·</span>'
-        # Chrome refuses to run its PDF viewer inside a sandboxed frame, and
-        # Streamlit sandboxes every embed, so the viewer's own "View / Hide ERG
-        # PDF" panel can only ever show "This page has been blocked by Chrome"
-        # here. Its "Open PDF in New Tab" button is unaffected — allow-popups is
-        # one of the sandbox tokens Streamlit does grant.
-        f'{icon("file-text", 14)} For the ERG, use <strong>Open PDF in New '
-        f"Tab</strong> — Chrome blocks PDFs inside an embed.</div>",
+        f"<strong>Enter VR</strong>.</div>",
         unsafe_allow_html=True,
     )
     viewer_col, chat_col = st.columns([2, 1])

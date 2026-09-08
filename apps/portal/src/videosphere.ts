@@ -281,19 +281,31 @@ function updateVideoSummary(idx: number) {
   document.getElementById("video-summary")!.innerHTML = VIDEOS[idx].summary;
 }
 
-function updatePlayButton() {
+// The label says what the click DOES; the class says what the video IS. Both
+// come from one place so a click handler can't set one and forget the other --
+// see the state-colour block in index.html for what each class paints.
+function renderPlayButton(playing: boolean) {
   const btn = document.getElementById("btn-play");
-  if (!btn || !activeVideo) return;
-  btn.innerHTML = activeVideo.paused
-    ? icon("play") + " Play"
-    : icon("pause") + " Pause";
+  if (!btn) return;
+  btn.innerHTML = playing ? icon("pause") + " Pause" : icon("play") + " Play";
+  btn.classList.toggle("is-playing", playing);
+  btn.classList.toggle("is-paused", !playing);
+}
+function renderMuteButton(muted: boolean) {
+  const btn = document.getElementById("btn-mute");
+  if (!btn) return;
+  btn.innerHTML = muted ? icon("volume-2") + " Unmute" : icon("volume-x") + " Mute";
+  btn.classList.toggle("is-muted", muted);
+  btn.classList.toggle("is-unmuted", !muted);
+}
+
+function updatePlayButton() {
+  if (!activeVideo) return;
+  renderPlayButton(!activeVideo.paused);
 }
 function updateMuteButton() {
-  const btn = document.getElementById("btn-mute");
-  if (!btn || !activeVideo) return;
-  btn.innerHTML = activeVideo.muted
-    ? icon("volume-2") + " Unmute"
-    : icon("volume-x") + " Mute";
+  if (!activeVideo) return;
+  renderMuteButton(activeVideo.muted);
 }
 
 function bindVideoControls() {
@@ -308,10 +320,10 @@ function bindVideoControls() {
     if (!activeVideo) return;
     if (activeVideo.paused) {
       activeVideo.play();
-      btnPlay.innerHTML = icon("pause") + " Pause";
+      renderPlayButton(true);
     } else {
       activeVideo.pause();
-      btnPlay.innerHTML = icon("play") + " Play";
+      renderPlayButton(false);
     }
   });
 
@@ -319,6 +331,16 @@ function bindVideoControls() {
     if (!activeVideo) return;
     activeVideo.muted = !activeVideo.muted;
     updateMuteButton();
+  });
+
+  // A pause can also come from outside these buttons -- an autoplay rejection,
+  // the video ending, or the element being paused during a lecture switch. Keep
+  // the colour honest in those cases too. `videoEls` is every element, not just
+  // the active one, so a stale listener can't repaint for a hidden video.
+  videoEls.forEach((v) => {
+    v.addEventListener("play", () => v === activeVideo && renderPlayButton(true));
+    v.addEventListener("pause", () => v === activeVideo && renderPlayButton(false));
+    v.addEventListener("volumechange", () => v === activeVideo && renderMuteButton(v.muted));
   });
 
   let lastTime = -1;
