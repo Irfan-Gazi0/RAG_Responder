@@ -32,7 +32,7 @@ def icon(name: str, size: int = 16) -> str:
 # It changes the iframe URL's cache key so browsers can't serve a stale copy
 # (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
 # which a CloudFront invalidation does NOT clear).
-CACHE_BUST = "20260907f"
+CACHE_BUST = "20260908a"
 
 # S3-root cutover, 2026-09-07: /inspector_portal.html IS the v2 IWSDK bundle now
 # (deploy/deploy_portal_v2.py --root), so the canonical URL and every existing
@@ -91,7 +91,10 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Cohesive dark theme matching the embedded portal (#0f172a slate, #ef4444 red accent)
+# Layout and typography only. THE PALETTE LIVES IN .streamlit/config.toml —
+# the variables below mirror it so the hand-written rules here (hero, intro copy,
+# iframes) stay in step with what Streamlit itself paints. Change a color in one
+# place and change it in the other, or the shell splits from its own widgets.
 st.markdown(
     """
     <style>
@@ -111,32 +114,40 @@ st.markdown(
       h1, h2, h3 { color: #f1f5f9 !important;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
+      /* Deliberately small. This is a masthead, not a landing-page hero: it
+         names the product once and gets out of the way, because the two things
+         people came for (the 360 video, the assistant) are below it and every
+         pixel here is one they scroll past. Sized to roughly the portal's own
+         36px-logo header so the shell and the iframe read as one continuous
+         page instead of two stacked title bars. */
       .hero {
         background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-        border: 1px solid var(--border); border-radius: 14px;
-        padding: 22px 28px; margin-bottom: 22px;
-        display: flex; align-items: center; gap: 18px;
+        border: 1px solid var(--border); border-radius: 12px;
+        padding: 13px 18px; margin-bottom: 14px;
+        display: flex; align-items: center; gap: 13px;
       }
       .hero .badge {
-        width: 52px; height: 52px; border-radius: 12px; flex-shrink: 0;
+        width: 38px; height: 38px; border-radius: 9px; flex-shrink: 0;
         background: linear-gradient(135deg, #ef4444, #b91c1c);
-        display: flex; align-items: center; justify-content: center; font-size: 26px;
+        display: flex; align-items: center; justify-content: center; font-size: 19px;
       }
-      .hero h1 { font-size: 24px; font-weight: 700; margin: 0; color: #f1f5f9; }
-      .hero p  { font-size: 14px; color: var(--muted); margin: 4px 0 0; }
+      /* `padding: 0` is load-bearing: Streamlit gives every h1 a ~1.25rem/1rem
+         vertical padding of its own, which silently added ~36px to this box and
+         is most of why the masthead looked oversized. */
+      .hero h1 { font-size: 18px; font-weight: 700; margin: 0; padding: 0;
+        color: #f1f5f9; line-height: 1.25; }
+      .hero p  { font-size: 13px; color: var(--muted); margin: 2px 0 0; }
 
-      [data-baseweb="tab-list"] { gap: 6px; border-bottom: 1px solid var(--border); }
-      [data-baseweb="tab"] {
-        background: var(--panel); color: var(--muted) !important;
-        border-radius: 9px 9px 0 0; padding: 11px 20px;
-        font-weight: 600; font-size: 14px;
-      }
-      [data-baseweb="tab"]:hover { color: var(--text) !important; }
-      [data-baseweb="tab"][aria-selected="true"] {
-        background: var(--accent); color: #fff !important;
-      }
-      [data-baseweb="tab-highlight"], [data-baseweb="tab-border"] { background: transparent; }
-      [data-baseweb="tab-panel"] { padding-top: 20px; }
+      /* Tab COLOR is themed in .streamlit/config.toml, not here. The rules that
+         used to sit at this spot targeted `data-baseweb="tab*"`, which Streamlit
+         stopped emitting when it moved off BaseWeb to react-aria — on the version
+         requirements.txt pins (>=1.62) they matched zero elements, so the "red
+         slab" active tab never rendered and the accent silently fell back to
+         Streamlit's stock #FF4B4B. `primaryColor` drives it correctly and won't
+         break on the next DOM change. The current hook, if an override is ever
+         genuinely needed, is [data-testid="stTab"]. */
+      [role="tablist"] { gap: 22px; }
+      [data-testid="stTab"] { font-weight: 600; font-size: 14px; }
 
       /* Orientation copy: what this tab is, what you can do, where to start.
          It lives HERE, in the Streamlit shell, rather than inside the portal —
@@ -165,11 +176,20 @@ st.markdown(
       .tab-note strong { color: #cbd5e1; font-weight: 600; }
       .tab-note .sep { color: #475569; margin: 0 2px; }
 
-      [data-testid="stAlert"] {
-        background: var(--panel); border: 1px solid var(--border);
-        border-radius: 10px; color: var(--text);
+      /* The border is why an embed reads as a panel rather than as content that
+         ran off the page — without it the chat column just floats, and the
+         third-party splat viewer bleeds into our chrome with no seam. It needs
+         the wrapper selector AND !important: Streamlit ships its own
+         `border: none` on the iframe, which a bare `iframe {}` rule loses to.
+         (That is why this looked borderless despite the old rule saying otherwise.)
+         `background` is a separate fix — Streamlit paints this box before the
+         remote document loads, and the portal is a heavy IWSDK bundle, so at #000
+         it was a black slab flashing inside a #0f172a page on every load. */
+      iframe,
+      [data-testid="stIFrame"] iframe {
+        border-radius: 12px; background: var(--bg);
+        border: 1px solid var(--border) !important;
       }
-      iframe { border-radius: 12px; border: 1px solid var(--border); background: #000; }
     </style>
     """,
     unsafe_allow_html=True,
@@ -178,7 +198,7 @@ st.markdown(
 st.markdown(
     f"""
     <div class="hero">
-      <div class="badge">{icon("flame", 26)}</div>
+      <div class="badge">{icon("flame", 19)}</div>
       <div>
         <h1>First Responder Training</h1>
         <p>EV emergency response — watch, explore, ask.</p>
@@ -188,23 +208,19 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-tab1, tab2 = st.tabs(["Training", "EV Explorer"])
+tab1, tab2 = st.tabs(["Training Workshop", "3D EV Explorer"])
 
 with tab1:
     st.markdown(
         '<div class="tab-intro">'
-        "<strong>Watch the 360&deg; training and ask questions as you go.</strong> "
-        "Drag the video to look around the scene. The Training Assistant beside "
-        "it answers questions about what you are watching, EV hazards and "
-        "emergency-response procedure."
-        '<span class="next">Start with <strong>1 &middot; Fundamentals</strong>, '
-        "then 2 &middot; Charging &amp; Battery, then 3 &middot; Fire Response.</span>"
+        "<strong>Watch the 360&deg; training and ask questions.</strong> "
+        "Drag the video to look around."
         "</div>",
         unsafe_allow_html=True,
     )
     st.markdown(
         f'<div class="tab-note">{icon("glasses", 14)} On a VR headset? '
-        f'<a href="{PORTAL_URL}">Open the portal directly</a> in your '
+        f'<a href="{PORTAL_URL}">Open the portal</a> in your '
         f"headset's browser, then tap <strong>Enter VR</strong>.</div>",
         unsafe_allow_html=True,
     )
@@ -213,22 +229,16 @@ with tab1:
 with tab2:
     st.markdown(
         '<div class="tab-intro">'
-        "<strong>Explore a 3D scan of the Chevrolet Equinox EV.</strong> "
-        "Get familiar with the vehicle before you have to work around one at a "
-        "scene: drag to rotate, scroll to zoom, and open a pin on the model to "
-        "read what that component is."
-        '<span class="next">Use the sidebar for preset camera views, the guided '
-        "walkthrough of the exterior, front fascia, engine bay and charge port, "
-        "and this vehicle&rsquo;s Emergency Response Guide. The assistant on the "
-        "right answers questions about anything you find.</span>"
+        "<strong>Explore a 3D scan of a electric vehicle.</strong> "
+        "Get familiar with the vehicle here."
         "</div>",
         unsafe_allow_html=True,
     )
     st.markdown(
         f'<div class="tab-note">{icon("glasses", 14)} On a VR headset? '
-        f'<a href="{SPLAT_VR_URL}">Open the car scene in VR</a>, then tap '
+        f'<a href="{SPLAT_VR_URL}">Open the car scene there</a>, then tap '
         f'<strong>Enter VR</strong>.<span class="sep">·</span>'
-        f'{icon("hourglass", 14)} The 3D scan is a large file, so it takes a '
+        f'{icon("hourglass", 14)} The 3D scan is large, so it takes a '
         f"moment to load.</div>",
         unsafe_allow_html=True,
     )

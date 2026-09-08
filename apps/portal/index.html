@@ -53,22 +53,25 @@
     }
     #scene-container canvas { display: block; width: 100% !important; height: 100% !important; }
 
+    /* Three stacked rows (transport, topic picker, summary) share this bar, so
+       its gap is doing the work a divider would. At 9px/10px padding they read
+       as one dense block; these values are the smallest that still separate the
+       rows. Height here is taken from the video, so don't inflate them further
+       without checking the 100vh case on a headset. */
     .video-bar {
-      background: #1e293b; padding: 10px 16px;
-      display: flex; flex-direction: column; gap: 9px;
+      background: #1e293b; padding: 15px 20px 17px;
+      display: flex; flex-direction: column; gap: 14px;
       flex-shrink: 0; border-top: 1px solid #334155;
     }
-    .transport-row { display: flex; align-items: center; gap: 12px; }
+    .transport-row { display: flex; align-items: center; gap: 14px; }
 
-    /* One labelled row: "TRAINING TOPICS  [1 · …][2 · …][3 · …]  watch in
-       order, or jump to one". The label and the trailing hint are what turn
-       three bare buttons into an explained choice; keep them together. */
-    .lecture-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    /* One labelled row: "TRAINING TOPICS  [1 · …][2 · …][3 · …]". The label is
+       what turns three bare buttons into an explained choice; keep it. */
+    .lecture-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
     .lecture-label {
-      font-size: 11px; font-weight: 600; color: #64748b;
+      font-size: 11.5px; font-weight: 600; color: #7c8ba1;
       text-transform: uppercase; letter-spacing: 0.5px;
     }
-    .lecture-hint { font-size: 11px; color: #64748b; }
 
     /* Segmented control, not three loose buttons: one bordered group with
        hairline dividers, so the three lectures read as one choice. The IDs stay
@@ -80,7 +83,7 @@
     .lecture-group button {
       background: transparent; border: none;
       border-left: 1px solid #334155;
-      color: #94a3b8; padding: 5px 13px; font-size: 12px; font-weight: 500;
+      color: #94a3b8; padding: 7px 15px; font-size: 13px; font-weight: 500;
       cursor: pointer; transition: background 0.15s, color 0.15s;
       font-family: inherit;
     }
@@ -89,18 +92,26 @@
     .lecture-group button:hover:not(.active) { background: #273449; color: #e2e8f0; }
     .lecture-group button:focus-visible { outline: 2px solid #3b82f6; outline-offset: -2px; }
 
-    .video-summary { margin: 0; font-size: 11px; line-height: 1.45; color: #94a3b8; }
+    .video-summary {
+      margin: 0; font-size: 13px; line-height: 1.6; color: #a8b6c8;
+      /* Caps the measure. Unbounded, this line runs the full width of the video
+         (~180 characters) and the eye loses its place on the return sweep, which
+         is half of why the summary read as unreadable. 138ch lands it at ~125
+         and costs one extra line; tighter measures cost two, and this bar's
+         height comes out of the video. */
+      max-width: 138ch;
+    }
     .video-summary strong { color: #cbd5e1; }
 
     .video-bar .transport-row button {
       background: #3b82f6; border: none; border-radius: 6px;
-      color: white; padding: 6px 16px; font-size: 13px; font-weight: 600;
+      color: white; padding: 8px 18px; font-size: 13.5px; font-weight: 600;
       cursor: pointer; transition: background 0.15s;
     }
     .video-bar .transport-row button:hover { background: #2563eb; }
     .video-bar .transport-row button#btn-mute { background: #475569; }
     .video-bar .transport-row button#btn-mute:hover { background: #64748b; }
-    #video-time { font-size: 12px; color: #94a3b8; margin-left: auto; }
+    #video-time { font-size: 13px; color: #a8b6c8; margin-left: auto; }
     #progress-bar-wrap {
       flex: 1; height: 24px; cursor: pointer; position: relative;
       user-select: none; touch-action: none;
@@ -174,7 +185,6 @@
           <button id="btn-vid2" title="Part 2 — charging system &amp; HV battery hardware">2 · Charging &amp; Battery</button>
           <button id="btn-vid3" title="Part 3 — battery fire response &amp; disconnects">3 · Fire Response</button>
         </div>
-        <span class="lecture-hint">Watch in order, or jump to one.</span>
       </div>
 
       <p id="video-summary" class="video-summary"></p>
@@ -190,7 +200,7 @@
            chat.ts clones this node and puts it back when the chat is cleared. -->
       <div class="chat-empty" id="chat-empty">
         <h2>Training Assistant</h2>
-        <p>Questions about the training? Ask about what you are watching, EV hazards, or emergency-response procedure.</p>
+        <p>Tap the prompts below to get started or ask on your own.</p>
         <button class="prompt-chip" type="button">How do I shut down the high-voltage system?</button>
         <button class="prompt-chip" type="button">What do I do if the battery is on fire?</button>
         <button class="prompt-chip" type="button">Where are the no-cut zones?</button>

@@ -38,20 +38,20 @@ export const VIDEOS: LectureConfig[] = [
     label: "Fundamentals",
     summary:
       "<strong>Fundamentals — EV emergency response.</strong> " +
-      "Classroom intro for first responders: why EV familiarity matters, hybrid vs. " +
-      "lithium battery chemistry and why lithium fires run &gt;2,000&deg;F, how high " +
-      "voltage is contained (contactors gated by the 12 V system), shutting HV down " +
-      "(turn the car off, service disconnect, cut both battery cables, manual " +
-      "disconnect), spotting a drive-away &ldquo;ready&rdquo; state, and SAE J2929 " +
+      "The video starts with an introduction to EV familiarity, hybrid vs. " +
+      "lithium battery, how high " +
+      "voltage is contained, shutting HV down " +
+      "(cut both battery cables, manual " +
+      "disconnect), spotting a drive-away &ldquo;ready&rdquo; state, and " +
       "tool-free cut loops.",
   },
   {
     src: `${VIDEO_BASE}/VID_20250912_122900_00_010_012/index.m3u8`,
     label: "Charging & Battery",
     summary:
-      "<strong>Charging &amp; Battery — charging system and HV battery hardware.</strong> " +
+      "<strong>Charging &amp; Battery — charging system and hardware.</strong> " +
       "How to safely disconnect a charger in an emergency — never cut the cable " +
-      "(DC fast charging exceeds 400 V) — how to release a locked Level-3 connector, " +
+      "— how to release a locked Level-3 connector, " +
       "and how the high-voltage battery is built: modules, conductor plates, and the " +
       "thermal-transfer material that keeps them cool.",
   },
@@ -63,7 +63,7 @@ export const VIDEOS: LectureConfig[] = [
       "Thermal-runaway risk from densely packed lithium cells, the &ldquo;let it burn " +
       "out vs. keep cooling&rdquo; decision for battery fires, removing 12 V power for " +
       "extrication, and when to pull the manual disconnect device instead of cutting " +
-      "the battery cables (long-term storage / evidence).",
+      "the battery cables.",
   },
 ];
 

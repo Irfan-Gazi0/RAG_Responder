@@ -1,0 +1,26 @@
+# Streamlit theme for the First Responder portal wrapper.
+#
+# WHY THIS FILE EXISTS: the shell's palette used to live entirely in the
+# `st.markdown(<style>)` block in streamlit_app.py, targeting `data-baseweb="*"`
+# selectors. Streamlit moved its widgets from BaseWeb to react-aria, so those
+# selectors match NOTHING on the version requirements.txt pins (>=1.62) — the
+# tab accent silently fell back to Streamlit's stock #FF4B4B instead of the
+# product red. Theming natively here is version-proof; CSS overrides are not.
+#
+# The palette is the portal's, not an invention: #0f172a / #1e293b / #334155 /
+# #e2e8f0 are the exact values in apps/portal/index.html and
+# apps/portal/src/chat-panel.css, and #ef4444 is the brand red shared by the
+# hero badge, the portal header logo and both favicons. Keep them in sync — the
+# shell and the iframes are meant to read as one page.
+[theme]
+base = "dark"
+
+primaryColor = "#ef4444"             # brand red: tab accent, focus rings, links
+backgroundColor = "#0f172a"          # portal body background
+secondaryBackgroundColor = "#1e293b" # portal panel/header background
+textColor = "#e2e8f0"
+borderColor = "#334155"
+
+# Plain #ef4444 on #0f172a is thin for body-size link text; #f87171 is the same
+# hue a step lighter and clears contrast without introducing a second accent.
+linkColor = "#f87171"
