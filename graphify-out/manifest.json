@@ -5,8 +5,8 @@
     "semantic_hash": ""
   },
   "streamlit_app.py": {
-    "mtime": 1788879311.3361785,
-    "ast_hash": "aad17a8c35ed7d88250c750446d03f72",
+    "mtime": 1788910422.9794807,
+    "ast_hash": "24c2cd89b06dae5c7b3f6c5b26c24171",
     "semantic_hash": ""
   },
   ".claude/skills/hz-immersive-designer/SKILL.md": {
@@ -165,8 +165,8 @@
     "semantic_hash": "b48f521e405dcbea187905d9057a4494"
   },
   "progress.md": {
-    "mtime": 1788811355.3655226,
-    "ast_hash": "80414d779753e562763225ae128f6e1d",
+    "mtime": 1788910459.3849933,
+    "ast_hash": "31eff4d135bcb7fb0b1d8e37d70dd0a1",
     "semantic_hash": ""
   },
   ".claude/settings.local.json": {
@@ -175,8 +175,8 @@
     "semantic_hash": ""
   },
   "CLAUDE.md": {
-    "mtime": 1788907661.174249,
-    "ast_hash": "bd65f29005a71494ce7503025db5fcac",
+    "mtime": 1788910437.8582783,
+    "ast_hash": "c5c9cfb1ebd1480f2a64e8cdbc365163",
     "semantic_hash": ""
   },
   ".devcontainer/devcontainer.json": {
@@ -195,13 +195,13 @@
     "semantic_hash": ""
   },
   "apps/portal/.iwsdk/runtime/launch.json": {
-    "mtime": 1788880368.3008237,
-    "ast_hash": "4774b68ffab8e0fdd0e5e783227f1506",
+    "mtime": 1788909920.5362122,
+    "ast_hash": "f5faabbb9e57e32cb698c5e77555ff93",
     "semantic_hash": ""
   },
   "apps/portal/.iwsdk/runtime/session.json": {
-    "mtime": 1788898623.163188,
-    "ast_hash": "19b77bb0d6b94516a58619593716cb06",
+    "mtime": 1788910387.9399772,
+    "ast_hash": "5458edc6a2fbb00a1c2d11b2c7999172",
     "semantic_hash": ""
   },
   "apps/portal/.mcp.json": {
@@ -220,8 +220,8 @@
     "semantic_hash": ""
   },
   "apps/portal/public/ui/hud.json": {
-    "mtime": 1788881528.896778,
-    "ast_hash": "df870502b9fd9cad847f386f6aa60a8f",
+    "mtime": 1788910396.5618525,
+    "ast_hash": "0ceca007bab5040edd182ed4b004e645",
     "semantic_hash": ""
   },
   "apps/portal/src/breadcrumbs.ts": {
@@ -240,8 +240,8 @@
     "semantic_hash": ""
   },
   "apps/portal/src/hud.ts": {
-    "mtime": 1788880799.0975218,
-    "ast_hash": "1f19834eeb9af9789cff7dbda0749d67",
+    "mtime": 1788909848.3032687,
+    "ast_hash": "e74c8ed74afe55f56b6eaa61373964dd",
     "semantic_hash": ""
   },
   "apps/portal/src/index.ts": {
@@ -682,11 +682,6 @@
   "apps/portal/chat.html": {
     "mtime": 1788878653.4917,
     "ast_hash": "9b76028fc01f1e3c5387970eed3f86f9",
-    "semantic_hash": ""
-  },
-  "WhatsApp Video 2026-09-08 at 5.14.39 PM.mp4": {
-    "mtime": 1788906155.0934129,
-    "ast_hash": "6dd5493ce24f4347b868b009cbdd7ff4",
     "semantic_hash": ""
   }
 }

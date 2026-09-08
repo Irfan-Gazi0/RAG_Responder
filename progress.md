@@ -2110,3 +2110,75 @@ chat panel. v2 also still labels replies "First Responder GPT"
 Assistant". Both are one-line fixes that require rebuilding v2 — which would
 replace the shakedown-verified bundle. They belong in their own change with
 their own device pass.
+
+---
+
+## 2026-09-08 — Hide the whole in-VR HUD, with a coach mark pointing at the button
+
+`Hide Chat` (shipped earlier today) collapsed only the chat surface and left a
+slim video-control bar parked in the middle of the 360 video. This adds a third
+state so the panel can get out of the way entirely.
+
+### What changed
+
+`apps/portal/ui/hud.uikitml` + `apps/portal/src/hud.ts`. The `chatMinimized`
+boolean becomes a three-valued `HudState`:
+
+| State | What renders |
+|---|---|
+| `full` | everything |
+| `chatHidden` | playback + seek bar (unchanged from this morning) |
+| `allHidden` | a single `Show Controls` pill |
+
+- Bottom row is now `[Hide Chat] [Hide All] [Exit VR]`. Everything except the
+  pill lives in a new `#hud-main` wrapper that `Hide All` collapses as one unit,
+  and the root narrows from 60 to 22 units so the pill is not marooned in the
+  middle of a full-width bar.
+- **B (right) / Y (left) toggles full ⇄ hidden.** Hand tracking reports no face
+  buttons, which is exactly why the on-panel pill exists as well.
+- A coach mark — "Watch the video clean - tap Hide All (or press B / Y)" with a
+  blue caret directly above the (centered) `Hide All` button — appears on *every*
+  entry into VR and clears after 10 s or the first toggle. No localStorage on
+  purpose: this is shared training hardware and the next person to put the
+  headset on has not read it.
+- The unread-answer badge now rides whichever restore affordance is showing.
+- Push-to-talk's `requestChatExpand()` now restores from either collapsed state.
+
+### The panel-scale lock, generalized
+
+`UIKitDocument.updateScaling()` is `min(maxWidth / rootWidth, maxHeight /
+rootHeight)`, subscribed to the root's size signal, so any collapse flips the
+panel from height-bound to width-bound and would balloon the glyphs. The
+previous fix pinned `maxWidth` to a width computed from a hardcoded 60 units —
+which the pill breaks, since the root itself narrows. It is now: record the
+expanded scale as a running max (only while `full`), then on every root-size
+change while collapsed solve for the `maxWidth` that reproduces that scale at
+the root's *measured* width. Exact for both collapsed widths, immune to
+box-sizing, and no feedback loop — layout units do not depend on the Group scale.
+
+### Verified in the IWER emulator, not assumed
+
+The `iwsdk-runtime` MCP server failed to connect this session; `npx iwsdk` has
+full CLI parity with it, so verification ran through that instead. Ray-driven
+(`xr set-transform` + `xr select`) and screenshotted at each step: Hide All from
+both `full` and `chatHidden` → the pill, with glyphs the same size as before;
+`Show Controls` → full panel with history intact; `Hide Chat` unchanged from its
+verified behaviour; B (right, button index 4) and Y (left, index 4) both toggle;
+holding the trigger while fully hidden pops the panel back; the coach mark
+appears, expires after 10 s, and returns on the next entry. Console clean apart
+from the pre-existing `Can't change size while VR device is presenting` warning,
+with `[hud] wireHud complete … geom=14 tex=2 tris=4864` present.
+
+Note for anyone repeating this: `scene transform` reports the HUD panel at
+`(0, 0, -1.4)`, which is head-*relative*. The real target is
+`(0, headY - 0.2, -1.4)`, and the controller's ray sits ~0.21 m below where
+`look-at` aims at 1 m, so `set-transform` with an explicit pose beats `look-at`.
+
+### Shipped
+
+`npx tsc --noEmit` clean, rebuilt, deployed to `/v2/` and then `--root` (both
+bundle-hash-verified against `dist/`), `CACHE_BUST` → `20260908d`.
+
+### Still device-only
+
+Pill legibility/reach at 1.4 m, and push-to-talk restore with a real microphone.

@@ -8,6 +8,17 @@
     border-radius: 2;
     padding: 1.5;
     width: 60;
+  }
+
+  /* Everything except the restore pill. Hidden as one unit by "Hide All" so the
+     panel shrinks to the pill and stops covering the video. The gap lives here
+     rather than on .hud-root because the root's two children (#hud-main and
+     #hud-collapsed) are mutually exclusive - a gap between them would show up as
+     dead space above the pill. */
+  .hud-main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     gap: 1.5;
   }
 
@@ -163,7 +174,9 @@
      .chat-surface or it would collapse along with the thing it restores; the
      playback row has no spare width (Pause+Mute+1/2/3+gaps is ~38 of the 57
      usable units, and #hud-time takes most of the rest), so it pairs with
-     Exit VR down here instead of squeezing the seek row's progress track. */
+     Hide All and Exit VR down here instead of squeezing the seek row's progress
+     track. Hide All sits in the middle on purpose - the coach mark's caret is
+     centered, so it points straight at it. */
   .bottom-row {
     display: flex;
     flex-direction: row;
@@ -189,6 +202,58 @@
     border-color: #64748b;
   }
 
+  /* One-line coach mark, shown on every entry into VR and cleared after ten
+     seconds or on the first toggle. The caret is a literal 'v' - the font atlas
+     has no arrow glyph, and anything non-ASCII renders as a tofu box. Both this
+     and the caret are centered, and Hide All is the middle of the three bottom
+     buttons, so the caret lands on the button it is talking about. */
+  .hud-tip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  .hud-tip-text {
+    color: #93c5fd;
+    font-size: 1.7;
+    text-align: center;
+  }
+
+  .hud-tip-caret {
+    color: #3b82f6;
+    font-size: 2.4;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  /* All that is left of the panel once "Hide All" is pressed. It has to be a
+     real on-panel button, not just the B/Y controller shortcut, because hand
+     tracking reports no face buttons at all. */
+  .collapsed-row {
+    display: none;
+    flex-direction: row;
+  }
+
+  .hud-restore {
+    flex-grow: 1;
+    padding: 1.2;
+    background-color: #1e293b;
+    border-color: #3b82f6;
+    border-width: 0.1;
+    border-radius: 1.2;
+    color: #e2e8f0;
+    font-size: 2.2;
+    font-weight: medium;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .hud-restore:hover {
+    background-color: #1e3a8a;
+    border-color: #60a5fa;
+  }
+
   #xr-button {
     flex-grow: 1;
     padding: 1.2;
@@ -208,42 +273,54 @@
   }
 </style>
 
-<div class="hud-root">
-  <div class="playback-row">
-    <button id="hud-play" class="hud-btn">Pause</button>
-    <button id="hud-mute" class="hud-btn">Mute</button>
-    <button id="hud-vid1" class="hud-btn hud-btn-narrow hud-btn-active">1</button>
-    <button id="hud-vid2" class="hud-btn hud-btn-narrow">2</button>
-    <button id="hud-vid3" class="hud-btn hud-btn-narrow">3</button>
-    <span id="hud-time" class="hud-time">--:-- / --:--</span>
+<div id="hud-root" class="hud-root">
+  <div id="hud-main" class="hud-main">
+    <div class="playback-row">
+      <button id="hud-play" class="hud-btn">Pause</button>
+      <button id="hud-mute" class="hud-btn">Mute</button>
+      <button id="hud-vid1" class="hud-btn hud-btn-narrow hud-btn-active">1</button>
+      <button id="hud-vid2" class="hud-btn hud-btn-narrow">2</button>
+      <button id="hud-vid3" class="hud-btn hud-btn-narrow">3</button>
+      <span id="hud-time" class="hud-time">--:-- / --:--</span>
+    </div>
+
+    <div class="seek-row">
+      <button id="hud-back10" class="hud-btn hud-btn-seek">&lt; 10s</button>
+      <div id="hud-progress-track" class="progress-track">
+        <div id="hud-progress-fill" class="progress-fill"></div>
+      </div>
+      <button id="hud-fwd10" class="hud-btn hud-btn-seek">10s &gt;</button>
+    </div>
+
+    <div id="hud-chat-surface" class="chat-surface">
+      <div class="chips-row">
+        <button id="hud-chip1" class="hud-chip">Shut down HV</button>
+        <button id="hud-chip2" class="hud-chip">Battery fire</button>
+        <button id="hud-chip3" class="hud-chip">Where to cut</button>
+      </div>
+      <div id="hud-chat-scroll" class="chat-scroll"></div>
+      <div class="scroll-row">
+        <button id="hud-scroll-up" class="hud-scrollbtn">^ Up</button>
+        <button id="hud-scroll-down" class="hud-scrollbtn">v Down</button>
+        <button id="hud-scroll-latest" class="hud-scrollbtn">Latest</button>
+      </div>
+      <span id="hud-transcript" class="chat-transcript">-</span>
+      <span id="hud-hint" class="chat-hint">Hold RIGHT TRIGGER or PINCH to speak - LEFT STICK scrolls chat</span>
+    </div>
+
+    <div id="hud-tip" class="hud-tip">
+      <span class="hud-tip-text">Watch the video clean - tap Hide All (or press B / Y)</span>
+      <span class="hud-tip-caret">v</span>
+    </div>
+
+    <div class="bottom-row">
+      <button id="hud-chat-toggle" class="hud-toggle">Hide Chat</button>
+      <button id="hud-all-toggle" class="hud-toggle">Hide All</button>
+      <button id="xr-button">Exit VR</button>
+    </div>
   </div>
 
-  <div class="seek-row">
-    <button id="hud-back10" class="hud-btn hud-btn-seek">&lt; 10s</button>
-    <div id="hud-progress-track" class="progress-track">
-      <div id="hud-progress-fill" class="progress-fill"></div>
-    </div>
-    <button id="hud-fwd10" class="hud-btn hud-btn-seek">10s &gt;</button>
-  </div>
-
-  <div id="hud-chat-surface" class="chat-surface">
-    <div class="chips-row">
-      <button id="hud-chip1" class="hud-chip">Shut down HV</button>
-      <button id="hud-chip2" class="hud-chip">Battery fire</button>
-      <button id="hud-chip3" class="hud-chip">Where to cut</button>
-    </div>
-    <div id="hud-chat-scroll" class="chat-scroll"></div>
-    <div class="scroll-row">
-      <button id="hud-scroll-up" class="hud-scrollbtn">^ Up</button>
-      <button id="hud-scroll-down" class="hud-scrollbtn">v Down</button>
-      <button id="hud-scroll-latest" class="hud-scrollbtn">Latest</button>
-    </div>
-    <span id="hud-transcript" class="chat-transcript">-</span>
-    <span id="hud-hint" class="chat-hint">Hold RIGHT TRIGGER or PINCH to speak - LEFT STICK scrolls chat</span>
-  </div>
-
-  <div class="bottom-row">
-    <button id="hud-chat-toggle" class="hud-toggle">Hide Chat</button>
-    <button id="xr-button">Exit VR</button>
+  <div id="hud-collapsed" class="collapsed-row">
+    <button id="hud-restore" class="hud-restore">Show Controls</button>
   </div>
 </div>

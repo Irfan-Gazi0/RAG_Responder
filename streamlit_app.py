@@ -28,7 +28,7 @@ def icon(name: str, size: int = 16) -> str:
 # It changes the iframe URL's cache key so browsers can't serve a stale copy
 # (CloudFront has no Cache-Control header → Chrome caches the HTML heuristically,
 # which a CloudFront invalidation does NOT clear).
-CACHE_BUST = "20260908c"
+CACHE_BUST = "20260908d"
 
 # S3-root cutover, 2026-09-07: /inspector_portal.html IS the v2 IWSDK bundle now
 # (deploy/deploy_portal_v2.py --root), so the canonical URL and every existing

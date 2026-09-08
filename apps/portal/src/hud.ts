@@ -43,6 +43,15 @@ type RendererProbe = () => {
 
 let rendererProbe: RendererProbe | null = null;
 
+/**
+ * How much of the HUD is showing.
+ *   full       - everything
+ *   chatHidden - chat surface collapsed, playback + seek bar left ("Hide Chat")
+ *   allHidden  - panel collapsed to the Show Controls pill ("Hide All"), so the
+ *                360 video is unobstructed
+ */
+type HudState = "full" | "chatHidden" | "allHidden";
+
 export function setRendererProbe(probe: RendererProbe) {
   rendererProbe = probe;
 }
@@ -76,13 +85,20 @@ export class HudSystem extends createSystem({
   private xrButton: UIKit.Text | null = null;
   private chatSurface: UIKit.Container | null = null;
   private chatToggle: UIKit.Text | null = null;
-  private chatMinimized = false;
-  // Bot answers that landed while minimized, surfaced on the restore button so a
-  // user watching the video knows an answer is waiting (the chime alone is easy
-  // to miss under a lecture soundtrack).
+  private hudRoot: UIKit.Container | null = null;
+  private hudMain: UIKit.Container | null = null;
+  private hudCollapsed: UIKit.Container | null = null;
+  private allToggle: UIKit.Text | null = null;
+  private restoreButton: UIKit.Text | null = null;
+  private tip: UIKit.Container | null = null;
+  private tipTimer: ReturnType<typeof setTimeout> | null = null;
+  private hudState: HudState = "full";
+  // Bot answers that landed while collapsed, surfaced on whichever restore
+  // button is showing so a user watching the video knows an answer is waiting
+  // (the chime alone is easy to miss under a lecture soundtrack).
   private unreadWhileMinimized = 0;
-  // Widest expanded panel width seen so far, in metres - see setChatMinimized.
-  private lockedPanelWidth = 0;
+  // Largest panel scale seen while fully expanded - see setHudState.
+  private lockedScale = 0;
   private elapsedSinceUpdate = 0;
   private lastActiveIdx = -1;
   private clickAudio: Entity | null = null;
@@ -105,11 +121,16 @@ export class HudSystem extends createSystem({
   // in the DOM chat panel — nothing is truncated, just not built as geometry.
   private static readonly MAX_BUBBLES = 6;
 
-  // Panel-scale bookkeeping for the minimize toggle - see setChatMinimized.
-  // ROOT_WIDTH_UNITS is .hud-root's `width: 60` from hud.uikitml; keep in sync.
+  // Panel-scale bookkeeping for the collapse toggles - see setHudState.
+  // ROOT_WIDTH_UNITS is .hud-root's `width: 60` from hud.uikitml; PILL_WIDTH_UNITS
+  // is what the root shrinks to when only the restore button is left. Keep both
+  // in sync with the markup.
   private static readonly ROOT_WIDTH_UNITS = 60;
+  private static readonly PILL_WIDTH_UNITS = 22;
   private static readonly EXPANDED_MAX_WIDTH = 1.3; // matches PanelUI in index.ts
   private static readonly FALLBACK_PANEL_SCALE = 1.61; // if the doc scale is unreadable
+  // How long the "Tap Hide All" coach mark stays up after entering VR.
+  private static readonly TIP_MS = 10000;
 
   init() {
     // Non-positional UI sounds: a click to confirm button presses and a chime
@@ -218,8 +239,14 @@ export class HudSystem extends createSystem({
             ? icon("log-out") + " Exit VR"
             : icon("glasses") + " Enter VR";
         }
+        // Say it on every entry, not once per browser: this is shared training
+        // hardware, and the next person to put the headset on is usually not the
+        // person who read it last time.
+        if (inXR) this.showTip();
+        else this.hideTip();
       }),
     );
+    this.cleanupFuncs.push(() => this.hideTip());
   }
 
   // Wire a HUD panel entity exactly once. Guarded so the qualify subscription
@@ -250,6 +277,12 @@ export class HudSystem extends createSystem({
     this.xrButton = doc.getElementById("xr-button") as UIKit.Text;
     this.chatSurface = doc.getElementById("hud-chat-surface") as UIKit.Container;
     this.chatToggle = doc.getElementById("hud-chat-toggle") as UIKit.Text;
+    this.hudRoot = doc.getElementById("hud-root") as UIKit.Container;
+    this.hudMain = doc.getElementById("hud-main") as UIKit.Container;
+    this.hudCollapsed = doc.getElementById("hud-collapsed") as UIKit.Container;
+    this.allToggle = doc.getElementById("hud-all-toggle") as UIKit.Text;
+    this.restoreButton = doc.getElementById("hud-restore") as UIKit.Text;
+    this.tip = doc.getElementById("hud-tip") as UIKit.Container;
 
     // HUD buttons proxy to DOM controls (re-uses existing playback/lecture logic)
     this.playText?.addEventListener("click", () =>
@@ -297,15 +330,36 @@ export class HudSystem extends createSystem({
       );
     }
 
-    // Collapse the chat so the panel becomes a slim video-control bar - for the
-    // responder who just wants to watch the lecture. guardedClick, like every
-    // other HUD button, or a push-to-talk release with the laser resting here
-    // would toggle it by accident.
+    // Two degrees of getting out of the way. Hide Chat collapses the chat surface
+    // and leaves a slim video-control bar; Hide All takes the panel down to the
+    // Show Controls pill so nothing but the 360 video is left. Both go through
+    // guardedClick, like every other HUD button - a push-to-talk release with the
+    // laser resting here would otherwise toggle them by accident.
     this.chatToggle?.addEventListener("click", () =>
-      this.guardedClick(() => this.setChatMinimized(!this.chatMinimized)),
+      this.guardedClick(() =>
+        this.setHudState(this.hudState === "chatHidden" ? "full" : "chatHidden"),
+      ),
     );
-    setChatExpandHandler(() => this.setChatMinimized(false));
+    this.allToggle?.addEventListener("click", () =>
+      this.guardedClick(() => this.setHudState("allHidden")),
+    );
+    this.restoreButton?.addEventListener("click", () =>
+      this.guardedClick(() => this.setHudState("full")),
+    );
+    setChatExpandHandler(() => this.setHudState("full"));
     this.cleanupFuncs.push(() => setChatExpandHandler(null));
+
+    // Re-pin the panel scale whenever the root's measured size changes while
+    // collapsed - see setHudState for why the pin is needed at all. Measuring
+    // here rather than assuming ROOT_WIDTH_UNITS makes it exact for both
+    // collapsed widths and immune to padding/box-sizing. This cannot feed back
+    // on itself: UIKit layout units are independent of the Group's scale.
+    const sizeUnsub = this.hudRoot?.size?.subscribe(() => this.pinPanelScale());
+    if (sizeUnsub) this.cleanupFuncs.push(sizeUnsub);
+
+    // Coach mark starts hidden; the visibilityState subscription in init() raises
+    // it on entry into VR. Same display:none pattern as #hud-transcript.
+    this.tip?.setProperties({ display: "none" });
 
     this.xrButton?.addEventListener("click", () =>
       this.guardedClick(() => {
@@ -333,7 +387,7 @@ export class HudSystem extends createSystem({
         this.playChime();
         // Bubbles keep building behind the hidden surface, so restoring is
         // instant - we only need to advertise that something arrived.
-        if (this.chatMinimized) {
+        if (this.hudState !== "full") {
           this.unreadWhileMinimized++;
           this.refreshChatToggleLabel();
         }
@@ -508,45 +562,41 @@ export class HudSystem extends createSystem({
   }
 
   /**
-   * Collapse or restore the chat surface. `display: "none"` (not `visibility`)
-   * because only display reflows - the siblings closing up is the entire point.
+   * Move the panel between its three states (see HudState).
    *
-   * The catch is that the panel auto-rescales when its intrinsic height changes.
+   * `display: "none"` (not `visibility`) because only display reflows - the
+   * siblings closing up is the entire point. When everything is hidden the root
+   * also narrows to PILL_WIDTH_UNITS, otherwise the pill would sit in the middle
+   * of a 60-unit-wide bar and still cover the video.
+   *
+   * The catch is that the panel auto-rescales when its intrinsic size changes.
    * UIKitDocument.updateScaling() sets scale = min(maxWidth / rootWidth,
    * maxHeight / rootHeight) and is subscribed to the root's size signal, so it
-   * fires the instant the chat collapses. Expanded, the panel is HEIGHT-bound
-   * (~1.61); collapsed, height falls by two thirds and it flips to WIDTH-bound
-   * (2.17), which would balloon the little control bar to the full 1.3 m with
-   * ~35% larger glyphs. So we pin maxWidth to the width the expanded panel
-   * renders at, and PanelUISystem - which re-reads maxWidth every frame - holds
-   * the scale steady. Measured rather than hardcoded so it survives markup edits.
-   *
-   * Measured as a running MAX, not as a one-shot read, because the expanded
-   * panel's own width flexes ~5% - #hud-transcript is display:none until a voice
-   * or "Thinking..." status appears, and that extra line makes the panel taller,
-   * hence (height-bound) smaller. A plain read collapses at whatever transient
-   * state happened to be up, so minimizing mid-question gave a bar 5% smaller
-   * than minimizing at rest. The max converges on the resting width and cannot
-   * oscillate.
+   * fires the instant anything collapses. Expanded, the panel is HEIGHT-bound
+   * (~1.61); collapsed it flips to WIDTH-bound and would balloon the little
+   * control bar to the full 1.3 m with ~35% larger glyphs. So we pin maxWidth to
+   * whatever keeps the scale at its expanded value - see pinPanelScale.
    */
-  private setChatMinimized(minimized: boolean) {
-    if (this.chatMinimized === minimized) return;
-    this.chatMinimized = minimized;
+  private setHudState(state: HudState) {
+    if (this.hudState === state) return;
+    this.hudState = state;
 
-    if (minimized && this.hudEntity) {
-      const scale = this.hudDoc?.scale.x || HudSystem.FALLBACK_PANEL_SCALE;
-      this.lockedPanelWidth = Math.max(
-        this.lockedPanelWidth,
-        (HudSystem.ROOT_WIDTH_UNITS / 100) * scale,
-      );
-      this.hudEntity.setValue(PanelUI, "maxWidth", this.lockedPanelWidth);
-    } else if (this.hudEntity) {
-      this.hudEntity.setValue(PanelUI, "maxWidth", HudSystem.EXPANDED_MAX_WIDTH);
-    }
+    const allHidden = state === "allHidden";
+    this.hudMain?.setProperties({ display: allHidden ? "none" : "flex" });
+    this.hudCollapsed?.setProperties({ display: allHidden ? "flex" : "none" });
+    this.chatSurface?.setProperties({
+      display: state === "chatHidden" ? "none" : "flex",
+    });
+    const widthUnits = allHidden
+      ? HudSystem.PILL_WIDTH_UNITS
+      : HudSystem.ROOT_WIDTH_UNITS;
+    this.hudRoot?.setProperties({ width: widthUnits });
 
-    this.chatSurface?.setProperties({ display: minimized ? "none" : "flex" });
+    // The coach mark has done its job the moment the user touches any of this.
+    this.hideTip();
+    this.pinPanelScale(state === "full" ? undefined : widthUnits);
 
-    if (!minimized) {
+    if (state === "full") {
       this.unreadWhileMinimized = 0;
       // Layout is async after the reflow; scrollChatToBottom already retries.
       this.scrollChatToBottom();
@@ -554,14 +604,84 @@ export class HudSystem extends createSystem({
     this.refreshChatToggleLabel();
   }
 
+  /**
+   * Hold the panel's rendered scale steady across collapses.
+   *
+   * While fully expanded we only *record* the scale, as a running MAX rather
+   * than a one-shot read: the expanded panel's own height flexes (#hud-transcript
+   * is display:none until a voice or "Thinking..." status appears, and the coach
+   * mark adds a line for ten seconds), and a height-bound panel is smaller when
+   * it is taller. A plain read would capture whatever transient state happened to
+   * be up, so collapsing mid-question used to give a bar ~5% smaller than
+   * collapsing at rest. The max converges on the resting scale and cannot
+   * oscillate.
+   *
+   * Collapsed, we solve updateScaling() for the maxWidth that reproduces that
+   * scale at the root's *measured* width. maxHeight stays where it is: the
+   * collapsed panel is far shorter, so the height term is never the min.
+   */
+  private pinPanelScale(intendedWidthUnits?: number) {
+    if (!this.hudEntity) return;
+
+    if (this.hudState === "full") {
+      this.sampleScale();
+      this.hudEntity.setValue(PanelUI, "maxWidth", HudSystem.EXPANDED_MAX_WIDTH);
+      return;
+    }
+
+    // setHudState calls this before the reflow lands, so it passes the width it
+    // just asked for; the size subscription calls it afterwards with nothing and
+    // we use what the root actually measured.
+    const measured = this.hudRoot?.size?.value?.[0];
+    const widthUnits =
+      intendedWidthUnits ??
+      (Number.isFinite(measured)
+        ? (measured as number)
+        : this.hudState === "allHidden"
+          ? HudSystem.PILL_WIDTH_UNITS
+          : HudSystem.ROOT_WIDTH_UNITS);
+    const scale = this.lockedScale || HudSystem.FALLBACK_PANEL_SCALE;
+    this.hudEntity.setValue(PanelUI, "maxWidth", (widthUnits / 100) * scale);
+  }
+
+  // Only meaningful while expanded - collapsed, the scale is whatever we pinned
+  // it to, so sampling it there would just echo our own value back.
+  private sampleScale() {
+    if (this.hudState !== "full") return;
+    this.lockedScale = Math.max(this.lockedScale, this.hudDoc?.scale.x || 0);
+  }
+
+  // ---- coach mark -------------------------------------------------------
+  // A responder in the headset for the first time has no reason to guess that
+  // the panel can be put away, so say it once per session, right above the
+  // button that does it.
+
+  private showTip() {
+    if (!this.tip || this.hudState !== "full") return;
+    this.tip.setProperties({ display: "flex" });
+    if (this.tipTimer) clearTimeout(this.tipTimer);
+    this.tipTimer = setTimeout(() => {
+      this.tipTimer = null;
+      this.tip?.setProperties({ display: "none" });
+    }, HudSystem.TIP_MS);
+  }
+
+  private hideTip() {
+    if (this.tipTimer) {
+      clearTimeout(this.tipTimer);
+      this.tipTimer = null;
+    }
+    this.tip?.setProperties({ display: "none" });
+  }
+
+  // Both restore affordances carry the unread count, because either one can be
+  // the only thing on screen when an answer lands.
   private refreshChatToggleLabel() {
-    if (!this.chatToggle) return;
-    const label = this.chatMinimized
-      ? this.unreadWhileMinimized > 0
-        ? `Show Chat (${this.unreadWhileMinimized})`
-        : "Show Chat"
-      : "Hide Chat";
-    this.chatToggle.setProperties({ text: label });
+    const badge = this.unreadWhileMinimized > 0 ? ` (${this.unreadWhileMinimized})` : "";
+    this.chatToggle?.setProperties({
+      text: this.hudState === "chatHidden" ? `Show Chat${badge}` : "Hide Chat",
+    });
+    this.restoreButton?.setProperties({ text: `Show Controls${badge}` });
   }
 
   private seekBy(seconds: number) {
@@ -590,11 +710,25 @@ export class HudSystem extends createSystem({
   update(delta: number) {
     if (!this.hudDoc) return;
 
+    // B (right) / Y (left) puts the whole panel away and brings it back, so a
+    // responder mid-lecture does not have to aim at a button to clear the view.
+    // Hand tracking reports no face buttons, which is why the Show Controls pill
+    // exists as well - this is the shortcut, not the only way back.
+    const rightPad = this.input.xr.gamepads.right;
+    const leftPad = this.input.xr.gamepads.left;
+    if (
+      rightPad?.getButtonDown(InputComponent.B_Button) ||
+      leftPad?.getButtonDown(InputComponent.Y_Button)
+    ) {
+      this.setHudState(this.hudState === "allHidden" ? "full" : "allHidden");
+    }
+
     // Left-thumbstick scrolls the chat history (right hand is push-to-talk).
-    // Unavailable under hand tracking — that is what the on-panel buttons cover.
-    const axes = this.chatMinimized
-      ? null
-      : this.input.xr.gamepads.left?.getAxesValues(InputComponent.Thumbstick);
+    // Unavailable under hand tracking - that is what the on-panel buttons cover.
+    const axes =
+      this.hudState === "full"
+        ? leftPad?.getAxesValues(InputComponent.Thumbstick)
+        : null;
     if (axes && Math.abs(axes.y) > 0.2) {
       this.scrollChatBy(axes.y * delta * 40);
     }
@@ -602,6 +736,10 @@ export class HudSystem extends createSystem({
     this.elapsedSinceUpdate += delta;
     if (this.elapsedSinceUpdate < 0.25) return;
     this.elapsedSinceUpdate = 0;
+
+    // Keep a fresh reading of the expanded scale even if the panel never resized
+    // before the first collapse (the size subscription is the other sampler).
+    this.sampleScale();
 
     const v = getActiveVideo();
     if (!v) return;

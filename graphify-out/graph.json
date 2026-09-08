@@ -622,7 +622,7 @@
       "source_location": "L216",
       "_origin": "ast",
       "id": "src_chat_setinputvalue",
-      "community": 39,
+      "community": 35,
       "norm_label": "setinputvalue()"
     },
     {
@@ -632,7 +632,7 @@
       "source_location": "L254",
       "_origin": "ast",
       "id": "src_chat_focusinput",
-      "community": 39,
+      "community": 0,
       "norm_label": "focusinput()"
     },
     {
@@ -732,7 +732,7 @@
       "source_location": "L25",
       "_origin": "ast",
       "id": "src_hud_mirror_isimmersive",
-      "community": 39,
+      "community": 0,
       "norm_label": "isimmersive()"
     },
     {
@@ -772,7 +772,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "src_hud_mirror_settranscriptlistener",
-      "community": 39,
+      "community": 1,
       "norm_label": "settranscriptlistener()"
     },
     {
@@ -832,7 +832,7 @@
       "source_location": "L118",
       "_origin": "ast",
       "id": "src_hud_mirror_flashhudstatus",
-      "community": 39,
+      "community": 35,
       "norm_label": "flashhudstatus()"
     },
     {
@@ -862,7 +862,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_hud",
-      "community": 30,
+      "community": 1,
       "norm_label": "hud.ts"
     },
     {
@@ -876,10 +876,20 @@
       "norm_label": "rendererprobe"
     },
     {
+      "label": "HudState",
+      "file_type": "code",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "src_hud_hudstate",
+      "community": 1,
+      "norm_label": "hudstate"
+    },
+    {
       "label": "setRendererProbe()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L46",
+      "source_location": "L55",
       "_origin": "ast",
       "id": "src_hud_setrendererprobe",
       "community": 30,
@@ -889,7 +899,7 @@
       "label": "probeString()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L50",
+      "source_location": "L59",
       "_origin": "ast",
       "id": "src_hud_probestring",
       "community": 1,
@@ -899,7 +909,7 @@
       "label": "HudSystem",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L60",
+      "source_location": "L69",
       "_origin": "ast",
       "id": "src_hud_hudsystem",
       "community": 1,
@@ -909,7 +919,7 @@
       "label": ".init()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L114",
+      "source_location": "L135",
       "_origin": "ast",
       "id": "src_hud_hudsystem_init",
       "community": 1,
@@ -919,7 +929,7 @@
       "label": ".adopt()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L227",
+      "source_location": "L254",
       "_origin": "ast",
       "id": "src_hud_hudsystem_adopt",
       "community": 1,
@@ -929,7 +939,7 @@
       "label": ".wireHud()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L235",
+      "source_location": "L262",
       "_origin": "ast",
       "id": "src_hud_hudsystem_wirehud",
       "community": 1,
@@ -939,7 +949,7 @@
       "label": ".renderInitial()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L363",
+      "source_location": "L417",
       "_origin": "ast",
       "id": "src_hud_hudsystem_renderinitial",
       "community": 1,
@@ -949,7 +959,7 @@
       "label": ".appendBubble()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L383",
+      "source_location": "L437",
       "_origin": "ast",
       "id": "src_hud_hudsystem_appendbubble",
       "community": 1,
@@ -959,7 +969,7 @@
       "label": ".showPlaceholder()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L408",
+      "source_location": "L462",
       "_origin": "ast",
       "id": "src_hud_hudsystem_showplaceholder",
       "community": 1,
@@ -969,7 +979,7 @@
       "label": ".scrollChatBy()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L428",
+      "source_location": "L482",
       "_origin": "ast",
       "id": "src_hud_hudsystem_scrollchatby",
       "community": 1,
@@ -979,7 +989,7 @@
       "label": ".scrollChatToBottom()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L441",
+      "source_location": "L495",
       "_origin": "ast",
       "id": "src_hud_hudsystem_scrollchattobottom",
       "community": 1,
@@ -989,7 +999,7 @@
       "label": ".chatPageUnits()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L453",
+      "source_location": "L507",
       "_origin": "ast",
       "id": "src_hud_hudsystem_chatpageunits",
       "community": 1,
@@ -999,7 +1009,7 @@
       "label": ".scrollToBottomSoon()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L462",
+      "source_location": "L516",
       "_origin": "ast",
       "id": "src_hud_hudsystem_scrolltobottomsoon",
       "community": 1,
@@ -1009,27 +1019,67 @@
       "label": ".makeBubble()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L472",
+      "source_location": "L526",
       "_origin": "ast",
       "id": "src_hud_hudsystem_makebubble",
       "community": 1,
       "norm_label": ".makebubble()"
     },
     {
-      "label": ".setChatMinimized()",
+      "label": ".setHudState()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L532",
+      "source_location": "L580",
       "_origin": "ast",
-      "id": "src_hud_hudsystem_setchatminimized",
+      "id": "src_hud_hudsystem_sethudstate",
       "community": 1,
-      "norm_label": ".setchatminimized()"
+      "norm_label": ".sethudstate()"
+    },
+    {
+      "label": ".pinPanelScale()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L623",
+      "_origin": "ast",
+      "id": "src_hud_hudsystem_pinpanelscale",
+      "community": 1,
+      "norm_label": ".pinpanelscale()"
+    },
+    {
+      "label": ".sampleScale()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L649",
+      "_origin": "ast",
+      "id": "src_hud_hudsystem_samplescale",
+      "community": 1,
+      "norm_label": ".samplescale()"
+    },
+    {
+      "label": ".showTip()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L659",
+      "_origin": "ast",
+      "id": "src_hud_hudsystem_showtip",
+      "community": 1,
+      "norm_label": ".showtip()"
+    },
+    {
+      "label": ".hideTip()",
+      "file_type": "code",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L669",
+      "_origin": "ast",
+      "id": "src_hud_hudsystem_hidetip",
+      "community": 1,
+      "norm_label": ".hidetip()"
     },
     {
       "label": ".refreshChatToggleLabel()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L557",
+      "source_location": "L679",
       "_origin": "ast",
       "id": "src_hud_hudsystem_refreshchattogglelabel",
       "community": 1,
@@ -1039,7 +1089,7 @@
       "label": ".seekBy()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L567",
+      "source_location": "L687",
       "_origin": "ast",
       "id": "src_hud_hudsystem_seekby",
       "community": 1,
@@ -1049,7 +1099,7 @@
       "label": ".guardedClick()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L576",
+      "source_location": "L696",
       "_origin": "ast",
       "id": "src_hud_hudsystem_guardedclick",
       "community": 1,
@@ -1059,7 +1109,7 @@
       "label": ".playClick()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L582",
+      "source_location": "L702",
       "_origin": "ast",
       "id": "src_hud_hudsystem_playclick",
       "community": 1,
@@ -1069,7 +1119,7 @@
       "label": ".playChime()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L586",
+      "source_location": "L706",
       "_origin": "ast",
       "id": "src_hud_hudsystem_playchime",
       "community": 1,
@@ -1079,7 +1129,7 @@
       "label": ".update()",
       "file_type": "code",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L590",
+      "source_location": "L710",
       "_origin": "ast",
       "id": "src_hud_hudsystem_update",
       "community": 1,
@@ -1132,7 +1182,7 @@
       "source_location": "L53",
       "_origin": "ast",
       "id": "src_icons_seterrorbanner",
-      "community": 32,
+      "community": 35,
       "norm_label": "seterrorbanner()"
     },
     {
@@ -1472,7 +1522,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "src_videosphere_ensurehls",
-      "community": 32,
+      "community": 35,
       "norm_label": "ensurehls()"
     },
     {
@@ -1702,7 +1752,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "src_voice_startspeechrecognition",
-      "community": 39,
+      "community": 35,
       "norm_label": "startspeechrecognition()"
     },
     {
@@ -1712,7 +1762,7 @@
       "source_location": "L153",
       "_origin": "ast",
       "id": "src_voice_startmediarecording",
-      "community": 39,
+      "community": 35,
       "norm_label": "startmediarecording()"
     },
     {
@@ -1732,7 +1782,7 @@
       "source_location": "L282",
       "_origin": "ast",
       "id": "src_voice_showvoiceerror",
-      "community": 39,
+      "community": 35,
       "norm_label": "showvoiceerror()"
     },
     {
@@ -2422,7 +2472,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_canvas_ui",
-      "community": 88,
+      "community": 68,
       "norm_label": "canvas-ui.ts"
     },
     {
@@ -2432,7 +2482,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_canvas_ui_rect",
-      "community": 64,
+      "community": 68,
       "norm_label": "rect"
     },
     {
@@ -2442,7 +2492,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "src_canvas_ui_c",
-      "community": 88,
+      "community": 68,
       "norm_label": "c"
     },
     {
@@ -2452,7 +2502,7 @@
       "source_location": "L66",
       "_origin": "ast",
       "id": "src_canvas_ui_canvassurface",
-      "community": 88,
+      "community": 68,
       "norm_label": "canvassurface"
     },
     {
@@ -2462,7 +2512,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "src_canvas_ui_surfacefilter",
-      "community": 88,
+      "community": 68,
       "norm_label": "surfacefilter"
     },
     {
@@ -2472,7 +2522,7 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "src_canvas_ui_makecanvassurface",
-      "community": 88,
+      "community": 96,
       "norm_label": "makecanvassurface()"
     },
     {
@@ -2482,7 +2532,7 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "src_canvas_ui_roundrect",
-      "community": 88,
+      "community": 68,
       "norm_label": "roundrect()"
     },
     {
@@ -2512,7 +2562,7 @@
       "source_location": "L193",
       "_origin": "ast",
       "id": "src_canvas_ui_hitat",
-      "community": 88,
+      "community": 71,
       "norm_label": "hitat()"
     },
     {
@@ -2652,7 +2702,7 @@
       "source_location": "L400",
       "_origin": "ast",
       "id": "src_controller_hints_controllerhints_drawbackground",
-      "community": 88,
+      "community": 68,
       "norm_label": ".drawbackground()"
     },
     {
@@ -2792,7 +2842,7 @@
       "source_location": "L706",
       "_origin": "ast",
       "id": "src_controller_hints_planefor",
-      "community": 88,
+      "community": 68,
       "norm_label": "planefor()"
     },
     {
@@ -3252,7 +3302,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "src_hand_input_handinput",
-      "community": 71,
+      "community": 65,
       "norm_label": "handinput"
     },
     {
@@ -3262,7 +3312,7 @@
       "source_location": "L113",
       "_origin": "ast",
       "id": "src_hand_input_handinput_constructor",
-      "community": 71,
+      "community": 65,
       "norm_label": ".constructor()"
     },
     {
@@ -3282,7 +3332,7 @@
       "source_location": "L167",
       "_origin": "ast",
       "id": "src_hand_input_handinput_onevent",
-      "community": 71,
+      "community": 65,
       "norm_label": ".onevent()"
     },
     {
@@ -3292,7 +3342,7 @@
       "source_location": "L171",
       "_origin": "ast",
       "id": "src_hand_input_handinput_emit",
-      "community": 71,
+      "community": 65,
       "norm_label": ".emit()"
     },
     {
@@ -3302,7 +3352,7 @@
       "source_location": "L175",
       "_origin": "ast",
       "id": "src_hand_input_handinput_setvisible",
-      "community": 71,
+      "community": 65,
       "norm_label": ".setvisible()"
     },
     {
@@ -3312,7 +3362,7 @@
       "source_location": "L180",
       "_origin": "ast",
       "id": "src_hand_input_handinput_jointsof",
-      "community": 71,
+      "community": 65,
       "norm_label": ".jointsof()"
     },
     {
@@ -3322,7 +3372,7 @@
       "source_location": "L192",
       "_origin": "ast",
       "id": "src_hand_input_handinput_update",
-      "community": 71,
+      "community": 65,
       "norm_label": ".update()"
     },
     {
@@ -3332,7 +3382,7 @@
       "source_location": "L214",
       "_origin": "ast",
       "id": "src_hand_input_handinput_drawjoints",
-      "community": 71,
+      "community": 65,
       "norm_label": ".drawjoints()"
     },
     {
@@ -3342,7 +3392,7 @@
       "source_location": "L240",
       "_origin": "ast",
       "id": "src_hand_input_handinput_updatepalm",
-      "community": 71,
+      "community": 65,
       "norm_label": ".updatepalm()"
     },
     {
@@ -3352,7 +3402,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_help_panel",
-      "community": 88,
+      "community": 68,
       "norm_label": "help-panel.ts"
     },
     {
@@ -3362,7 +3412,7 @@
       "source_location": "L93",
       "_origin": "ast",
       "id": "src_help_panel_panelaction",
-      "community": 88,
+      "community": 68,
       "norm_label": "panelaction"
     },
     {
@@ -3372,7 +3422,7 @@
       "source_location": "L105",
       "_origin": "ast",
       "id": "src_help_panel_panelstate",
-      "community": 88,
+      "community": 68,
       "norm_label": "panelstate"
     },
     {
@@ -3382,7 +3432,7 @@
       "source_location": "L107",
       "_origin": "ast",
       "id": "src_help_panel_hit",
-      "community": 88,
+      "community": 68,
       "norm_label": "hit"
     },
     {
@@ -3412,7 +3462,7 @@
       "source_location": "L181",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_constructor",
-      "community": 64,
+      "community": 96,
       "norm_label": ".constructor()"
     },
     {
@@ -3452,7 +3502,7 @@
       "source_location": "L386",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_drawbutton",
-      "community": 64,
+      "community": 68,
       "norm_label": ".drawbutton()"
     },
     {
@@ -3572,7 +3622,7 @@
       "source_location": "L565",
       "_origin": "ast",
       "id": "src_help_panel_helppanel_hittest",
-      "community": 88,
+      "community": 71,
       "norm_label": ".hittest()"
     },
     {
@@ -3692,7 +3742,7 @@
       "source_location": "L166",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard",
-      "community": 68,
+      "community": 71,
       "norm_label": "hotspotcard"
     },
     {
@@ -3702,7 +3752,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_constructor",
-      "community": 68,
+      "community": 96,
       "norm_label": ".constructor()"
     },
     {
@@ -3712,7 +3762,7 @@
       "source_location": "L196",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_visible",
-      "community": 68,
+      "community": 71,
       "norm_label": ".visible()"
     },
     {
@@ -3722,7 +3772,7 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_hotspot",
-      "community": 68,
+      "community": 78,
       "norm_label": ".hotspot()"
     },
     {
@@ -3732,7 +3782,7 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_mesh",
-      "community": 68,
+      "community": 71,
       "norm_label": ".mesh()"
     },
     {
@@ -3742,7 +3792,7 @@
       "source_location": "L210",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_layout",
-      "community": 68,
+      "community": 71,
       "norm_label": ".layout()"
     },
     {
@@ -3752,7 +3802,7 @@
       "source_location": "L215",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_anchor",
-      "community": 68,
+      "community": 71,
       "norm_label": ".anchor()"
     },
     {
@@ -3762,7 +3812,7 @@
       "source_location": "L226",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_show",
-      "community": 68,
+      "community": 71,
       "norm_label": ".show()"
     },
     {
@@ -3772,7 +3822,7 @@
       "source_location": "L260",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_hide",
-      "community": 68,
+      "community": 71,
       "norm_label": ".hide()"
     },
     {
@@ -3782,7 +3832,7 @@
       "source_location": "L276",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_face",
-      "community": 68,
+      "community": 71,
       "norm_label": ".face()"
     },
     {
@@ -3792,7 +3842,7 @@
       "source_location": "L289",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_hittest",
-      "community": 88,
+      "community": 71,
       "norm_label": ".hittest()"
     },
     {
@@ -3802,7 +3852,7 @@
       "source_location": "L305",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_intersects",
-      "community": 68,
+      "community": 71,
       "norm_label": ".intersects()"
     },
     {
@@ -3832,7 +3882,7 @@
       "source_location": "L447",
       "_origin": "ast",
       "id": "src_hotspot_card_hotspotcard_dispose",
-      "community": 68,
+      "community": 71,
       "norm_label": ".dispose()"
     },
     {
@@ -3862,7 +3912,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "src_hotspots_data_hotspot",
-      "community": 68,
+      "community": 78,
       "norm_label": "hotspot"
     },
     {
@@ -4132,7 +4182,7 @@
       "source_location": "L350",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_byid",
-      "community": 68,
+      "community": 78,
       "norm_label": ".byid()"
     },
     {
@@ -4152,7 +4202,7 @@
       "source_location": "L370",
       "_origin": "ast",
       "id": "src_hotspots_hotspots_clear",
-      "community": 78,
+      "community": 67,
       "norm_label": ".clear()"
     },
     {
@@ -4302,7 +4352,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "src_input_sources_inputsources_indexof",
-      "community": 25,
+      "community": 54,
       "norm_label": ".indexof()"
     },
     {
@@ -5422,7 +5472,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "src_vr_input_comfortsettings",
-      "community": 64,
+      "community": 25,
       "norm_label": "comfortsettings"
     },
     {
@@ -5692,7 +5742,7 @@
       "source_location": "L451",
       "_origin": "ast",
       "id": "src_vr_input_vrinput_inputmode",
-      "community": 28,
+      "community": 64,
       "norm_label": ".inputmode()"
     },
     {
@@ -7529,7 +7579,7 @@
       "label": "graphify",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L524",
+      "source_location": "L531",
       "_origin": "ast",
       "id": "claude_graphify",
       "community": 26,
@@ -7539,7 +7589,7 @@
       "label": "Workflow tooling",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L542",
+      "source_location": "L549",
       "_origin": "ast",
       "id": "claude_workflow_tooling",
       "community": 26,
@@ -7549,7 +7599,7 @@
       "label": "NEXT STEPS (parked \u2014 build next session, do not auto-start)",
       "file_type": "document",
       "source_file": "CLAUDE.md",
-      "source_location": "L561",
+      "source_location": "L568",
       "_origin": "ast",
       "id": "claude_next_steps_parked_build_next_session_do_not_auto_start",
       "community": 26,
@@ -8362,7 +8412,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_ev_responder_qa_comparison",
-      "community": 69,
+      "community": 70,
       "norm_label": "ev_responder_qa_comparison.md"
     },
     {
@@ -10142,7 +10192,7 @@
       "source_location": "L1057",
       "_origin": "ast",
       "id": "progress_2026_06_22_router_re_diagnosis_real_bug_was_retrieval_depth_prompt_contradiction_weak_model_supersedes_the_06_18_3_missing_tools_theory_eval_set_60_90_skill_cleanup",
-      "community": 198,
+      "community": 89,
       "norm_label": "2026-06-22 \u2014 router re-diagnosis: real bug was retrieval depth + prompt contradiction + weak model (supersedes the 06-18 \"3 missing tools\" theory) + eval set 60\u219290 + skill cleanup"
     },
     {
@@ -10152,7 +10202,7 @@
       "source_location": "L1062",
       "_origin": "ast",
       "id": "progress_context_the_professor_s_report_take_two",
-      "community": 198,
+      "community": 89,
       "norm_label": "context \u2014 the professor's report, take two"
     },
     {
@@ -10162,7 +10212,7 @@
       "source_location": "L1070",
       "_origin": "ast",
       "id": "progress_what_the_re_audit_ruled_out_the_assumed_causes_were_wrong",
-      "community": 198,
+      "community": 89,
       "norm_label": "what the re-audit ruled out (the assumed causes were wrong)"
     },
     {
@@ -10172,7 +10222,7 @@
       "source_location": "L1079",
       "_origin": "ast",
       "id": "progress_the_real_root_causes_all_in_the_live_workflow_none_in_the_repo_data",
-      "community": 198,
+      "community": 89,
       "norm_label": "the real root causes (all in the live workflow, none in the repo data)"
     },
     {
@@ -10182,7 +10232,7 @@
       "source_location": "L1092",
       "_origin": "ast",
       "id": "progress_the_fix_applied_via_the_n8n_public_api_get_mutate_put",
-      "community": 198,
+      "community": 89,
       "norm_label": "the fix (applied via the n8n public api \u2014 get \u2192 mutate \u2192 put)"
     },
     {
@@ -10192,7 +10242,7 @@
       "source_location": "L1109",
       "_origin": "ast",
       "id": "progress_eval_set_expanded_60_90_live_class_questions",
-      "community": 198,
+      "community": 89,
       "norm_label": "eval set expanded 60 \u2192 90 (live-class questions)"
     },
     {
@@ -10202,7 +10252,7 @@
       "source_location": "L1118",
       "_origin": "ast",
       "id": "progress_repo_skill_cleanup",
-      "community": 198,
+      "community": 89,
       "norm_label": "repo / skill cleanup"
     },
     {
@@ -10212,7 +10262,7 @@
       "source_location": "L1126",
       "_origin": "ast",
       "id": "progress_changes_1126",
-      "community": 198,
+      "community": 89,
       "norm_label": "changes"
     },
     {
@@ -10704,6 +10754,66 @@
       "id": "progress_deferred_on_purpose",
       "community": 14,
       "norm_label": "deferred, on purpose"
+    },
+    {
+      "label": "2026-09-08 \u2014 Hide the whole in-VR HUD, with a coach mark pointing at the button",
+      "file_type": "document",
+      "source_file": "progress.md",
+      "source_location": "L2116",
+      "_origin": "ast",
+      "id": "progress_2026_09_08_hide_the_whole_in_vr_hud_with_a_coach_mark_pointing_at_the_button",
+      "community": 90,
+      "norm_label": "2026-09-08 \u2014 hide the whole in-vr hud, with a coach mark pointing at the button"
+    },
+    {
+      "label": "What changed",
+      "file_type": "document",
+      "source_file": "progress.md",
+      "source_location": "L2122",
+      "_origin": "ast",
+      "id": "progress_what_changed",
+      "community": 90,
+      "norm_label": "what changed"
+    },
+    {
+      "label": "The panel-scale lock, generalized",
+      "file_type": "document",
+      "source_file": "progress.md",
+      "source_location": "L2147",
+      "_origin": "ast",
+      "id": "progress_the_panel_scale_lock_generalized",
+      "community": 90,
+      "norm_label": "the panel-scale lock, generalized"
+    },
+    {
+      "label": "Verified in the IWER emulator, not assumed",
+      "file_type": "document",
+      "source_file": "progress.md",
+      "source_location": "L2159",
+      "_origin": "ast",
+      "id": "progress_verified_in_the_iwer_emulator_not_assumed",
+      "community": 90,
+      "norm_label": "verified in the iwer emulator, not assumed"
+    },
+    {
+      "label": "Shipped",
+      "file_type": "document",
+      "source_file": "progress.md",
+      "source_location": "L2177",
+      "_origin": "ast",
+      "id": "progress_shipped",
+      "community": 90,
+      "norm_label": "shipped"
+    },
+    {
+      "label": "Still device-only",
+      "file_type": "document",
+      "source_file": "progress.md",
+      "source_location": "L2182",
+      "_origin": "ast",
+      "id": "progress_still_device_only",
+      "community": 90,
+      "norm_label": "still device-only"
     },
     {
       "label": "Ford F-150 Lightning 2026 ERG",
@@ -13860,9 +13970,9 @@
       "source_file": "apps/portal/src/hud-mirror.ts",
       "source_location": "L88",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_hud_mirror",
-      "target": "src_hud_mirror_requestchatexpand",
-      "confidence_score": 1.0
+      "target": "src_hud_mirror_requestchatexpand"
     },
     {
       "relation": "contains",
@@ -13870,9 +13980,9 @@
       "source_file": "apps/portal/src/hud-mirror.ts",
       "source_location": "L84",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_hud_mirror",
-      "target": "src_hud_mirror_setchatexpandhandler",
-      "confidence_score": 1.0
+      "target": "src_hud_mirror_setchatexpandhandler"
     },
     {
       "relation": "contains",
@@ -13973,9 +14083,9 @@
       "source_file": "apps/portal/src/push-to-talk.ts",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_push_to_talk",
-      "target": "src_hud_mirror",
-      "confidence_score": 1.0
+      "target": "src_hud_mirror"
     },
     {
       "relation": "imports_from",
@@ -14200,9 +14310,9 @@
       "source_file": "apps/portal/src/hud.ts",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_hud",
-      "target": "src_hud_mirror_setchatexpandhandler",
-      "confidence_score": 1.0
+      "target": "src_hud_mirror_setchatexpandhandler"
     },
     {
       "relation": "calls",
@@ -14222,9 +14332,9 @@
       "source_file": "apps/portal/src/push-to-talk.ts",
       "source_location": "L2",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_push_to_talk",
-      "target": "src_hud_mirror_requestchatexpand",
-      "confidence_score": 1.0
+      "target": "src_hud_mirror_requestchatexpand"
     },
     {
       "relation": "calls",
@@ -14390,6 +14500,16 @@
       "weight": 1.0,
       "source": "src_hud_hudsystem_renderinitial",
       "target": "src_hud_mirror_getchathistory"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "src_hud",
+      "target": "src_hud_hudstate",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -14640,6 +14760,16 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L669",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem",
+      "target": "src_hud_hudsystem_hidetip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
       "source_location": "L43",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -14655,6 +14785,16 @@
       "confidence_score": 1.0,
       "source": "src_hud_hudsystem",
       "target": "src_hud_hudsystem_makebubble"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L623",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem",
+      "target": "src_hud_hudsystem_pinpanelscale",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -14682,9 +14822,9 @@
       "source_file": "apps/portal/src/hud.ts",
       "source_location": "L557",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_hud_hudsystem",
-      "target": "src_hud_hudsystem_refreshchattogglelabel",
-      "confidence_score": 1.0
+      "target": "src_hud_hudsystem_refreshchattogglelabel"
     },
     {
       "relation": "method",
@@ -14695,6 +14835,16 @@
       "confidence_score": 1.0,
       "source": "src_hud_hudsystem",
       "target": "src_hud_hudsystem_renderinitial"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L649",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem",
+      "target": "src_hud_hudsystem_samplescale",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -14740,10 +14890,10 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L532",
+      "source_location": "L580",
       "weight": 1.0,
       "source": "src_hud_hudsystem",
-      "target": "src_hud_hudsystem_setchatminimized",
+      "target": "src_hud_hudsystem_sethudstate",
       "confidence_score": 1.0
     },
     {
@@ -14755,6 +14905,16 @@
       "confidence_score": 1.0,
       "source": "src_hud_hudsystem",
       "target": "src_hud_hudsystem_showplaceholder"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L659",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem",
+      "target": "src_hud_hudsystem_showtip",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -14910,9 +15070,9 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L552",
+      "source_location": "L602",
       "weight": 1.0,
-      "source": "src_hud_hudsystem_setchatminimized",
+      "source": "src_hud_hudsystem_sethudstate",
       "target": "src_hud_hudsystem_scrollchattobottom",
       "confidence_score": 1.0
     },
@@ -14921,10 +15081,65 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "apps/portal/src/hud.ts",
-      "source_location": "L554",
+      "source_location": "L596",
       "weight": 1.0,
-      "source": "src_hud_hudsystem_setchatminimized",
+      "source": "src_hud_hudsystem_sethudstate",
+      "target": "src_hud_hudsystem_hidetip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L597",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem_sethudstate",
+      "target": "src_hud_hudsystem_pinpanelscale",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L604",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem_sethudstate",
       "target": "src_hud_hudsystem_refreshchattogglelabel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L723",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem_update",
+      "target": "src_hud_hudsystem_sethudstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L627",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem_pinpanelscale",
+      "target": "src_hud_hudsystem_samplescale",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "apps/portal/src/hud.ts",
+      "source_location": "L742",
+      "weight": 1.0,
+      "source": "src_hud_hudsystem_update",
+      "target": "src_hud_hudsystem_samplescale",
       "confidence_score": 1.0
     },
     {
@@ -17438,9 +17653,9 @@
       "source_file": "apps/splat-vr/src/controller-hints.ts",
       "source_location": "L132",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_controller_hints",
-      "target": "src_controller_hints_roll_axis",
-      "confidence_score": 1.0
+      "target": "src_controller_hints_roll_axis"
     },
     {
       "relation": "contains",
@@ -17749,9 +17964,9 @@
       "source_file": "apps/splat-vr/src/controller-hints.ts",
       "source_location": "L658",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_controller_hints_controllerhints",
-      "target": "src_controller_hints_controllerhints_rollprobe",
-      "confidence_score": 1.0
+      "target": "src_controller_hints_controllerhints_rollprobe"
     },
     {
       "relation": "method",
@@ -18098,9 +18313,9 @@
       "source_file": "apps/splat-vr/src/controller-hints.ts",
       "source_location": "L664",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_controller_hints_controllerhints_rollprobe",
-      "target": "src_controller_hints_controllerhints_update",
-      "confidence_score": 1.0
+      "target": "src_controller_hints_controllerhints_update"
     },
     {
       "relation": "calls",
@@ -18142,9 +18357,9 @@
       "source_file": "apps/splat-vr/src/controller-hints.ts",
       "source_location": "L658",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_controller_hints_controllerhints_rollprobe",
-      "target": "src_vr_input_handedness",
-      "confidence_score": 1.0
+      "target": "src_vr_input_handedness"
     },
     {
       "relation": "contains",
@@ -27805,6 +28020,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "progress.md",
+      "source_location": "L2116",
+      "weight": 1.0,
+      "source": "progress_project_progress_ford_mustang_mach_e_2026_first_responder_rag_portal",
+      "target": "progress_2026_09_08_hide_the_whole_in_vr_hud_with_a_coach_mark_pointing_at_the_button",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "progress.md",
       "source_location": "L93",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -29190,6 +29415,56 @@
       "confidence_score": 1.0,
       "source": "progress_2026_09_07_v2_s3_root_cutover_the_iwsdk_portal_is_now_the_portal",
       "target": "progress_what_shipped"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "progress.md",
+      "source_location": "L2177",
+      "weight": 1.0,
+      "source": "progress_2026_09_08_hide_the_whole_in_vr_hud_with_a_coach_mark_pointing_at_the_button",
+      "target": "progress_shipped",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "progress.md",
+      "source_location": "L2182",
+      "weight": 1.0,
+      "source": "progress_2026_09_08_hide_the_whole_in_vr_hud_with_a_coach_mark_pointing_at_the_button",
+      "target": "progress_still_device_only",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "progress.md",
+      "source_location": "L2147",
+      "weight": 1.0,
+      "source": "progress_2026_09_08_hide_the_whole_in_vr_hud_with_a_coach_mark_pointing_at_the_button",
+      "target": "progress_the_panel_scale_lock_generalized",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "progress.md",
+      "source_location": "L2159",
+      "weight": 1.0,
+      "source": "progress_2026_09_08_hide_the_whole_in_vr_hud_with_a_coach_mark_pointing_at_the_button",
+      "target": "progress_verified_in_the_iwer_emulator_not_assumed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "progress.md",
+      "source_location": "L2122",
+      "weight": 1.0,
+      "source": "progress_2026_09_08_hide_the_whole_in_vr_hud_with_a_coach_mark_pointing_at_the_button",
+      "target": "progress_what_changed",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -30863,5 +31138,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "5c9d4951f960e91a4020cb0c060769d40f9a874b"
+  "built_at_commit": "14d345397d2c1b4df9518d35bd2fadb72c81e841"
 }
