@@ -11,12 +11,12 @@ import {
 import "./chat-panel.css";
 
 import { initChatBindings } from "./chat.js";
-import { initVoiceBindings } from "./voice.js";
-import { initVideosphere } from "./videosphere.js";
+import { cancelRecording, initVoiceBindings } from "./voice.js";
+import { initVideosphere, suspendPlayback } from "./videosphere.js";
 import { HudSystem, setRendererProbe } from "./hud.js";
 import { PushToTalkSystem } from "./push-to-talk.js";
 import { DesktopLookSystem } from "./look-controls.js";
-import { flashHudStatus, setImmersive } from "./hud-mirror.js";
+import { flashHudStatus, isImmersive, setImmersive } from "./hud-mirror.js";
 import { archivePreviousRun, crumb, installCrumbsInspector } from "./breadcrumbs.js";
 
 // Rotate the previous run's breadcrumbs into the archive BEFORE anything else
@@ -55,6 +55,30 @@ window.addEventListener("unhandledrejection", (e) => {
   crumb("fatal", "unhandled rejection:", e.reason);
 });
 
+// Nothing this page starts should outlive the page being put away. Left running,
+// the 4K lecture keeps decoding with audio and an in-flight push-to-talk keeps
+// the microphone open — which is what a headset reports back as the site still
+// running in the background, and what makes the tab awkward to close.
+//
+// `pagehide` rather than `beforeunload`: the latter is not fired reliably on
+// mobile/standalone browsers (the Quest Browser included) and blocks bfcache.
+function releaseBackgroundWork(reason: string) {
+  crumb("lifecycle", "releasing background work:", reason);
+  suspendPlayback();
+  cancelRecording();
+}
+window.addEventListener("visibilitychange", () => {
+  // Guarded on the immersive flag, not just document.hidden. An immersive
+  // session goes on rendering through the headset while the flat document can
+  // report itself hidden (and does, on some Quest Browser builds, the moment the
+  // 2D panel is dismissed) — pausing there would stop the lecture at exactly the
+  // point someone put the headset on. Taking the headset off mid-session is a
+  // blur, not an exit, so this stays hands-off there too and playback is still
+  // running when they put it back on.
+  if (document.hidden && !isImmersive()) releaseBackgroundWork("tab hidden");
+});
+window.addEventListener("pagehide", () => releaseBackgroundWork("pagehide"));
+
 initChatBindings();
 initVoiceBindings();
 
@@ -68,7 +92,27 @@ const USE_WEBXR_LAYERS = true;
 World.create(document.getElementById("scene-container") as HTMLDivElement, {
   xr: {
     sessionMode: SessionMode.ImmersiveVR,
-    offer: "always",
+    // NOT "always". That mode calls navigator.xr.offerSession() at load and
+    // RE-OFFERS on every session end (@iwsdk/core init/world-initializer.js
+    // manageOfferFlow), so the page never leaves the immersive-eligible state —
+    // exiting VR was reported back as "the immersive environment is still
+    // running in the background", and the tab would not close cleanly. Its offer
+    // promise also has no .catch, so an offer aborted by our own
+    // requestSession() escapes as an unhandled rejection.
+    //
+    // We don't need it: entry is the Enter VR button in the video bar and its
+    // twin on the in-VR HUD, both gated on the isSessionSupported probe in
+    // hud.ts. Do not "restore" this to the SDK default.
+    //
+    // Dev is the exception, and only for tooling: IWER grants requestSession()
+    // directly, so the buttons work either way, but `npx iwsdk xr enter` /
+    // xr_accept_session can only accept an OFFERED session and fails with "No
+    // session has been offered" without this. "once" rather than "always", so
+    // the re-offer loop is gone in dev too. Nothing is lost by the split —
+    // IWER's offerSession() is a stub that stores the config and never settles
+    // (iwer/lib/initialization/XRSystem.js), so the emulator cannot exercise
+    // this behaviour in either direction; only a Quest can.
+    offer: import.meta.env.DEV ? "once" : "none",
     features: { handTracking: true, layers: USE_WEBXR_LAYERS },
   },
   features: {
@@ -101,6 +145,10 @@ World.create(document.getElementById("scene-container") as HTMLDivElement, {
   });
   world.renderer.xr.addEventListener("sessionend", () => {
     setImmersive(false);
+    // A push-to-talk release can no longer reach us: PushToTalkSystem reads it
+    // off the right controller's gamepad, and that gamepad is already gone. If
+    // the session ended mid-press, this is the only thing that closes the mic.
+    cancelRecording();
     crumb("xr", "session end");
   });
 

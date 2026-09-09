@@ -2182,3 +2182,145 @@ bundle-hash-verified against `dist/`), `CACHE_BUST` → `20260908d`.
 ### Still device-only
 
 Pill legibility/reach at 1.4 m, and push-to-talk restore with a real microphone.
+
+## 2026-09-09 — Nothing was stopping when VR ended: session, mic and video all kept running
+
+Reported from a headset: exiting the scene said the immersive environment was
+*still running in the background*, and the tab then would not close. Reading the
+exit path turned up that **there was no XR teardown at all** — `sessionend`
+flipped one boolean (`setImmersive(false)`) and nothing else stopped. Four
+separate defects, three of them provable from source.
+
+### 1. `world.exitXR()` could silently do nothing — the headline bug
+
+`World.exitXR()` is `this.session?.end()`, but IWSDK assigns `world.session`
+only **after** `await renderer.xr.setSession()` resolves, and **never at all**
+if `resolveReferenceSpaceType()` throws (`@iwsdk/core init/xr.js`
+`onSessionStart` ends the session in a `catch` and leaves the field undefined).
+In either window both Exit VR buttons — the DOM one and the in-HUD one — did
+nothing at all: no error, no exit. The only way out was the Meta button, which
+**suspends** a session rather than ending it. That is exactly the reported
+symptom.
+
+`renderer.xr` always holds the live handle, so `HudSystem.endXRSession()` now
+ends `renderer.xr.getSession() ?? world.session`, and catches the `end()`
+rejection (an unhandled one would land in the fatal-crumb handler and read as a
+crash).
+
+### 2. `offer: "always"` re-armed the offer on every session end
+
+`manageOfferFlow()` (`@iwsdk/core init/world-initializer.js`) calls
+`navigator.xr.offerSession()` at load and **re-offers the moment a session
+ends**, so the page never leaves the immersive-eligible state. Its `try` has a
+`finally` but no `catch`, so an offer aborted by our own `requestSession()`
+escapes as an unhandled rejection.
+
+Now `offer: import.meta.env.DEV ? "once" : "none"`. Production has no offer at
+all — entry is the Enter VR button in the video bar and its twin on the HUD,
+both already gated on the `isSessionSupported` probe. **Dev keeps one offer
+purely for tooling**: IWER grants `requestSession()` directly so the buttons
+work either way, but `npx iwsdk xr enter` / `xr_accept_session` can only accept
+an *offered* session and fails with "No session has been offered" without it.
+The split costs nothing real — IWER's `offerSession()` is a stub that stores the
+config and never settles, so the emulator cannot exercise this behaviour in
+either direction. Only a Quest can.
+
+### 3. The microphone leaked when the session ended mid-press
+
+`PushToTalkSystem` only ever sees a release through the right controller's
+gamepad, and that gamepad is gone the instant the session ends — so `update()`
+bails at `if (!right) return` and `stopRecognition()` never runs. On Quest the
+voice path is *always* `MediaRecorder` (no native STT), and the tracks are only
+stopped inside `onstop`: the mic stayed open on a page the user was trying to
+close, and `isRecording` stayed `true`, which wedges the guard in
+`startRecognition()` for the rest of the page's life.
+
+New `cancelRecording()` in `voice.ts` aborts without transcribing, hard-stops
+every track, and resets the state machine. A `cancelled` flag makes both
+`onstop` and `onend` clean up and return rather than POSTing — and, more
+importantly, rather than **sending** a half-captured question nobody is waiting
+on. Called from `sessionend` and from page-lifecycle teardown.
+
+### 4. The 360 video never stopped
+
+Nothing paused `activeVideo` on hide or unload, so a backgrounded tab kept
+decoding 4K with audio. New `suspendPlayback()`, wired to `visibilitychange` →
+`document.hidden` and to `pagehide` (not `beforeunload`: unreliable on
+mobile/standalone browsers and it blocks bfcache).
+
+**Deliberately not wired to `sessionend`** — exiting VR lands the user on the 2D
+page with the same lecture on screen, and pausing it there would be a surprise.
+Pausing alone is enough: `maxBufferLength: 20` caps hls.js's fetching once
+playback stops, so there is no `stopLoad()`/`startLoad()` dance to unwind.
+
+The tab-hide handler is guarded on `isImmersive()`, not on `document.hidden`
+alone. An immersive session goes on rendering through the headset while the flat
+document can report itself hidden — unguarded, this would have stopped the
+lecture at exactly the moment someone put the headset on. Taking the headset off
+mid-session is a blur, not an exit, so it stays hands-off there too.
+
+### The `Show Controls` pill now parks in the top-right corner at 65%
+
+Second report: collapsed, the one remaining button sat dead centre, over the
+video it was meant to uncover. Narrowing the root was only ever half the job —
+the panel entity stays on its `Follower` anchor.
+
+Two dead ends found while checking the fix, both worth recording:
+
+- **`FollowBehavior.PivotY` discards the Y offset.** `ui/follow.js` overwrites
+  `strictFollowTarget.y` with the head's world Y. So the `-0.2` in `index.ts`
+  has never done anything, and the pill cannot be raised via `offsetPosition`
+  without switching behaviour and taking pitch/roll with it.
+- **`entity.setValue()` throws for `Types.Vec3`** (`elics/lib/entity.js`) —
+  `offsetPosition` is writable only through `getVectorView()`.
+
+Done in UIKit instead: `transformTranslateX/Y` + `opacity` on `#hud-root` in
+`setHudState`. `transformTranslate` moves what is drawn **without changing
+layout size**, so the panel scale, the `pinPanelScale()` pin and the follow
+logic are all untouched, and — the thing that had to be checked — the pointer
+geometry moves with it, so the pill is clickable where it is drawn. `+X` is
+right; Y is CSS-signed, so **negative is up**. `(19, -26)` units at the locked
+~1.61 scale and UIKit's 0.01 `pixelSize` is ~0.31 m right / ~0.42 m up: the
+top-right corner of the footprint the expanded panel used to occupy.
+
+Root, not the button: the root paints the chip's background and border, so
+translating only its child would have left that background in the middle of the
+video, and a translucent button over an opaque backing panel would gain nothing.
+`opacity` is an inherited UIKit property, so one value on the root dims panel,
+border and glyphs together; `.hud-restore:hover` sets `opacity: 1`, which
+*replaces* the inherited value rather than multiplying it, so the button under
+the laser goes solid while the chip around it stays dim.
+
+A full-size transparent root was rejected: it would leave a ~1 m invisible ray
+target in front of the user, and `PushToTalkSystem` suppresses voice while the
+laser is over the panel.
+
+### Verified in the IWER emulator
+
+`iwsdk-runtime` / `iwsdk-reference` MCP both failed to connect again; `npx
+iwsdk` has full CLI parity, so verification ran through that. Ray-driven
+(`xr look-at` + `xr select`) and screenshotted at each step: `Hide All` → pill in
+the upper right, visibly translucent (the ceiling grid reads through it), video
+unobstructed; **clicked the pill in its new position** → panel restored to
+centre, fully opaque, glyphs the same size as before (the scale pin held);
+`Exit VR` → `sessionActive: false`, `[xr] session end`, no rejection; back on the
+2D page the button relabels to Enter VR and the lecture is **still playing**,
+confirming the deliberate no-pause-on-exit. Coach mark still appears and expires.
+Console clean apart from the pre-existing `Can't change size while VR device is
+presenting` warning.
+
+Two notes for anyone repeating this. `xr set-gamepad-state` with a raw index
+does not fire `getButtonDown` — `InputComponent.B_Button` is the profile
+component id `"b-button"`, not a gamepad index; ray-clicking the button is the
+reliable path (and the one hand-tracking users take anyway). And a page that has
+been reloaded many times hits `THREE.WebGLRenderer: A WebGL context could not be
+created. Reason: Web page caused context loss and was blocked`, which surfaces
+as `TypeError: error3 is not a function` inside `new WebGLRenderer` — that is
+Chrome blocking WebGL, not a bug in the app. `npx iwsdk dev restart` clears it.
+
+### Still device-only
+
+Findings 2-4 cannot be confirmed anywhere but a Quest: the offer loop, the mic
+indicator and the background-media notification are all Quest Browser
+behaviours. Check `frCrumbs()` over `chrome://inspect` for `[lifecycle]` entries
+and for any unhandled rejection around session start/end.

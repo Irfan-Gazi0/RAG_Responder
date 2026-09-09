@@ -229,7 +229,9 @@
 
   /* All that is left of the panel once "Hide All" is pressed. It has to be a
      real on-panel button, not just the B/Y controller shortcut, because hand
-     tracking reports no face buttons at all. */
+     tracking reports no face buttons at all. hud.ts parks the whole root in the
+     top-right corner and drops it to 65% opacity while this is the only thing
+     showing - see PILL_OFFSET_X / PILL_OPACITY there. */
   .collapsed-row {
     display: none;
     flex-direction: row;
@@ -249,9 +251,15 @@
     cursor: pointer;
   }
 
+  /* opacity is inherited, so this button sits at the root's 0.65 by default.
+     Setting it explicitly here REPLACES the inherited value rather than
+     multiplying it, so the button under the laser goes fully solid while the
+     chip around it stays dim - which is the aim confirmation a 65% target
+     needs. */
   .hud-restore:hover {
     background-color: #1e3a8a;
     border-color: #60a5fa;
+    opacity: 1;
   }
 
   #xr-button {

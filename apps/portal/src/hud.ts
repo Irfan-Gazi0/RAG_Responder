@@ -127,6 +127,34 @@ export class HudSystem extends createSystem({
   // in sync with the markup.
   private static readonly ROOT_WIDTH_UNITS = 60;
   private static readonly PILL_WIDTH_UNITS = 22;
+  // Where the pill parks once everything is hidden. Narrowing the root was only
+  // half the job: the panel entity stays on its Follower anchor (dead ahead at
+  // eye level), so a narrower root still put the one remaining button in the
+  // middle of the video it was meant to uncover.
+  //
+  // UIKit layout units, applied as a transform on #hud-root. +X is right; Y is
+  // CSS-signed, so NEGATIVE is up. At the locked panel scale (~1.61) and UIKit's
+  // 0.01 pixelSize that is ~0.31 m right / ~0.42 m up, i.e. ~12 deg right and
+  // ~17 deg up at the 1.4 m follow distance — the top-right corner of the
+  // footprint the expanded panel used to occupy, so it reads as the panel having
+  // folded into the corner.
+  //
+  // A transform, NOT a bigger root or a Follower offset:
+  //  - transformTranslate moves what is drawn without touching layout size, so
+  //    the panel scale, the pin below, and the follow logic are all untouched;
+  //  - a full-size transparent root would keep a 1 m invisible ray target in
+  //    front of the user, and PushToTalkSystem suppresses voice while the laser
+  //    is over the panel (hud.ts guardedClick / Hovered);
+  //  - Follower can't do it anyway: PivotY overwrites the Y offset with the
+  //    head's own height (@iwsdk/core ui/follow.js), which is also why the -0.2
+  //    in index.ts has never had any effect.
+  private static readonly PILL_OFFSET_X = 19;
+  private static readonly PILL_OFFSET_Y = -26;
+  // Enough of the scene shows through to keep watching past it. `opacity` is an
+  // inherited UIKit property, so setting it on the root dims the chip's panel,
+  // its border and its glyphs as one; .hud-restore:hover overrides it back to 1
+  // so the laser still confirms the aim.
+  private static readonly PILL_OPACITY = 0.65;
   private static readonly EXPANDED_MAX_WIDTH = 1.3; // matches PanelUI in index.ts
   private static readonly FALLBACK_PANEL_SCALE = 1.61; // if the doc scale is unreadable
   // How long the "Tap Hide All" coach mark stays up after entering VR.
@@ -195,7 +223,7 @@ export class HudSystem extends createSystem({
     if (enterBtn) {
       enterBtn.addEventListener("click", () => {
         if (this.world.visibilityState.value !== VisibilityState.NonImmersive) {
-          this.world.exitXR();
+          this.endXRSession();
           return;
         }
         if (this.xrSupported === false) {
@@ -366,7 +394,7 @@ export class HudSystem extends createSystem({
         if (this.world.visibilityState.value === VisibilityState.NonImmersive) {
           this.world.launchXR();
         } else {
-          this.world.exitXR();
+          this.endXRSession();
         }
       }),
     );
@@ -590,7 +618,25 @@ export class HudSystem extends createSystem({
     const widthUnits = allHidden
       ? HudSystem.PILL_WIDTH_UNITS
       : HudSystem.ROOT_WIDTH_UNITS;
-    this.hudRoot?.setProperties({ width: widthUnits });
+    // Park and dim the ROOT, not the button: the root paints the chip's own
+    // background and border, so translating only its child would leave that
+    // background sitting in the middle of the video, and a translucent button
+    // over an opaque backing panel would gain nothing.
+    this.hudRoot?.setProperties(
+      allHidden
+        ? {
+            width: widthUnits,
+            transformTranslateX: HudSystem.PILL_OFFSET_X,
+            transformTranslateY: HudSystem.PILL_OFFSET_Y,
+            opacity: HudSystem.PILL_OPACITY,
+          }
+        : {
+            width: widthUnits,
+            transformTranslateX: 0,
+            transformTranslateY: 0,
+            opacity: 1,
+          },
+    );
 
     // The coach mark has done its job the moment the user touches any of this.
     this.hideTip();
@@ -688,6 +734,29 @@ export class HudSystem extends createSystem({
     const v = getActiveVideo();
     if (!v || !v.duration || isNaN(v.duration)) return;
     v.currentTime = Math.max(0, Math.min(v.duration, v.currentTime + seconds));
+  }
+
+  /**
+   * End the immersive session for real.
+   *
+   * NOT world.exitXR(): that reads `world.session`, which IWSDK assigns only
+   * AFTER `await renderer.xr.setSession()` resolves, and never at all if the
+   * reference-space probe throws (@iwsdk/core init/xr.js onSessionStart). In
+   * either window both Exit VR buttons silently did nothing and the only way
+   * out was the Meta button — which SUSPENDS the session rather than ending it,
+   * leaving the headset reporting the immersive environment as still running.
+   *
+   * renderer.xr always holds the live handle, so end that and fall back to
+   * world.session. `end()` is a promise; an unhandled rejection here would land
+   * in the fatal-crumb handler in index.ts and read as a crash.
+   */
+  private endXRSession() {
+    const session = this.world.renderer.xr.getSession() ?? this.world.session;
+    if (!session) {
+      crumb("xr", "exit requested but no live session handle");
+      return;
+    }
+    session.end().catch((e) => crumb("xr", "session.end() rejected:", String(e)));
   }
 
   // Suppress the phantom click UIKit dispatches when a push-to-talk release

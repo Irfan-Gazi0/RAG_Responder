@@ -267,6 +267,26 @@ export function activatePanorama(idx: number) {
   updatePlayButton();
 }
 
+/**
+ * Pause the lecture. Called when the tab goes to the background or the page is
+ * being torn down.
+ *
+ * The <video> is `display:none` (it exists to feed a VideoTexture), so nothing
+ * on screen suggests it is still running: a backgrounded tab kept decoding 4K
+ * and playing audio, which is one of the things a Quest reports as the site
+ * still running in the background. Pausing is enough on its own - `maxBufferLength`
+ * caps hls.js's fetching once playback stops - so there is no stopLoad()/
+ * startLoad() dance to unwind on the way back.
+ *
+ * Deliberately NOT wired to the XR session ending: exiting VR lands the user on
+ * the 2D page with the same lecture on screen, and pausing it there would be a
+ * surprise. Both DOM and HUD play buttons repaint themselves from the element's
+ * own `pause` event, so nothing else has to be told.
+ */
+export function suspendPlayback() {
+  activeVideo?.pause();
+}
+
 export function switchVideo(idx: number) {
   if (idx === currentVideoIdx) return;
   currentVideoIdx = idx;

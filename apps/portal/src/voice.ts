@@ -59,6 +59,12 @@ let mediaChunks: Blob[] = [];
 let isRecording = false;
 let activeMode: Mode = null;
 
+// Set by cancelRecording() so the recorder's / recognizer's own end handler
+// cleans up and returns instead of transcribing and SENDING a half-captured
+// question. Cleared on the next start rather than in cancelRecording(), because
+// both `onstop` and `onend` fire asynchronously, after we have returned.
+let cancelled = false;
+
 export function isVoiceSupported(): boolean {
   return Boolean(SpeechRecognition) || hasMediaRecorder;
 }
@@ -76,8 +82,45 @@ export function stopRecognition() {
   }
 }
 
+/**
+ * Abort voice capture and release the microphone. No transcription, no send.
+ *
+ * This exists for the XR session ending mid-press. PushToTalkSystem only ever
+ * sees a release through the right controller's gamepad, and that gamepad is
+ * gone the instant the session ends - so its update() bails at `if (!right)`
+ * and the release never arrives. Without this the mic stays OPEN on a page the
+ * user is trying to close (the tracks are only stopped inside `onstop`), and
+ * `isRecording` stays true, which wedges the guard in startRecognition() for
+ * the rest of the page's life.
+ *
+ * Safe to call at any time, including when nothing is recording.
+ */
+export function cancelRecording() {
+  if (!isRecording && !mediaStream && !mediaRecorder) return;
+  cancelled = true;
+  try {
+    recognition?.stop();
+  } catch {
+    /* already stopped */
+  }
+  try {
+    if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
+  } catch {
+    /* already stopped */
+  }
+  // Idempotent with the same call in onstop - whichever runs first wins.
+  mediaStream?.getTracks().forEach((t) => t.stop());
+  mediaStream = null;
+  mediaRecorder = null;
+  mediaChunks = [];
+  isRecording = false;
+  activeMode = null;
+  setHudTranscript("");
+}
+
 export function startRecognition(opts: { source?: "vr" | "desktop" } = {}) {
   if (isRecording) return;
+  cancelled = false;
   const vrMode = opts.source === "vr";
   if (SpeechRecognition) {
     startSpeechRecognition(vrMode);
@@ -132,6 +175,9 @@ function startSpeechRecognition(vrMode: boolean) {
   recognition.onend = () => {
     isRecording = false;
     activeMode = null;
+    // Cancelled out from under us (session end / tab hide): whatever was heard
+    // is a fragment of a question nobody is waiting on. Don't send it.
+    if (cancelled) return;
     if (vrMode) {
       setHudTranscript("");
       if (lastTranscript) {
@@ -208,6 +254,16 @@ async function startMediaRecording(vrMode: boolean) {
 
   mediaRecorder.onstop = async () => {
     isRecording = false;
+    // Same as the recognition path above - plus the tracks, which are ours to
+    // release whether or not cancelRecording() already got to them.
+    if (cancelled) {
+      mediaStream?.getTracks().forEach((t) => t.stop());
+      mediaStream = null;
+      mediaRecorder = null;
+      mediaChunks = [];
+      activeMode = null;
+      return;
+    }
     if (vrMode) setHudTranscript("Transcribing...");
     else {
       micBtn.classList.remove("recording");
